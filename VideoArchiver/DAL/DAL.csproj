@@ -11,7 +11,14 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.3" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
+      <Reference Include="Microsoft.AspNetCore">
+        <HintPath>..\..\..\..\..\..\usr\share\dotnet\shared\Microsoft.AspNetCore.App\7.0.2\Microsoft.AspNetCore.dll</HintPath>
+      </Reference>
       <Reference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore">
         <HintPath>..\..\..\..\..\..\..\..\.nuget\packages\microsoft.aspnetcore.identity.entityframeworkcore\7.0.2\lib\net7.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll</HintPath>
       </Reference>
@@ -23,6 +30,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Domain\Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Migrations\Postgres" />
+      <Folder Include="Migrations\Sqlite" />
     </ItemGroup>
 
 </Project>

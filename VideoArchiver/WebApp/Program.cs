@@ -1,7 +1,6 @@
 using DAL;
 using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebApp;
 
@@ -12,11 +11,11 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        ConfigureDbOptions(builder.Configuration, builder.Services);
+        AppDbContextFactory.RegisterDbContext(builder.Services, builder.Configuration);
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddEntityFrameworkStores<AbstractAppDbContext>();
         builder.Services.AddControllersWithViews();
         builder.Services.Configure<IdentityOptions>(options =>
         {
@@ -55,43 +54,14 @@ public class Program
         app.Run();
     }
 
-    // Used for creating DB context at design time (migrations etc)
+    // May be used for creating DB context at design time (migrations etc)
     public static IHostBuilder CreateHostBuilder(string[] args)
     {
         return Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostContext, services) =>
             {
                 var configuration = hostContext.Configuration;
-                ConfigureDbOptions(configuration, services);
+                AppDbContextFactory.RegisterDbContext(services, configuration);
             });
-    }
-
-    private static void ConfigureDbOptions(IConfiguration configuration, IServiceCollection services)
-    {
-        var postgresConnectionString = configuration.GetConnectionString("DefaultConnection") ?? configuration.GetConnectionString("PostgresConnection");
-        if (postgresConnectionString == null)
-        {
-            var sqlitePath = GetLocalDbSqlitePath();
-            Console.WriteLine($"No connection string found, using local DB at {sqlitePath}");
-
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite($"Data source={sqlitePath}"));
-        }
-        else
-        {
-            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(postgresConnectionString));
-        }
-    }
-
-    private static string GetLocalDbSqlitePath()
-    {
-        var directorySeparator = Path.DirectorySeparatorChar;
-        var sqliteRepoDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) +
-                                  directorySeparator + "ICD0021_22-23_VideoArchiver" +
-                                  directorySeparator + "Data" +
-                                  directorySeparator;
-
-        Directory.CreateDirectory(sqliteRepoDirectory);
-
-        return sqliteRepoDirectory + "app.db";
     }
 }
