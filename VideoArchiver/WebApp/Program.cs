@@ -8,6 +8,13 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        if (args.Any(s =>
+                string.Equals(s, "PrintSqlitePath", StringComparison.CurrentCultureIgnoreCase)))
+        {
+            Console.WriteLine($"Default local SQLite DB path = '{AppDbContextFactory.GetLocalDbSqlitePath()}'");
+            return;
+        }
+
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.

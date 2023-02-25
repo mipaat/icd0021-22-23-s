@@ -10,16 +10,15 @@ public class AppDbContextFactory
     private static AbstractAppDbContext CreateDbContext(IConfiguration? configuration = null)
     {
         configuration ??= GetDefaultConfig();
-        var optionsBuilder = new DbContextOptionsBuilder();
-
         var connectionInfos = GetConnectionInfos(configuration);
         foreach (var connectionInfo in connectionInfos)
         {
-            ConfigureDbOptions(connectionInfo, optionsBuilder);
             return connectionInfo.Provider switch
             {
-                EDbProvider.Postgres => new PostgresAppDbContext(ConfigureDbOptions<PostgresAppDbContext>(connectionInfo).Options),
-                EDbProvider.Sqlite => new SqliteAppDbContext(ConfigureDbOptions<SqliteAppDbContext>(connectionInfo).Options),
+                EDbProvider.Postgres => new PostgresAppDbContext(
+                    ConfigureDbOptions<PostgresAppDbContext>(connectionInfo).Options),
+                EDbProvider.Sqlite => new SqliteAppDbContext(
+                    ConfigureDbOptions<SqliteAppDbContext>(connectionInfo).Options),
                 _ => throw new UnsupportedDatabaseProviderException(connectionInfo)
             };
         }
@@ -39,7 +38,7 @@ public class AppDbContextFactory
         return appName == null ? GetLocalDbSqlitePath() : GetLocalDbSqlitePath(appName);
     }
 
-    private static string GetLocalDbSqlitePath(string appName = "ICD0021_22-23_VideoArchiver")
+    public static string GetLocalDbSqlitePath(string appName = "ICD0021_22-23_VideoArchiver")
     {
         var directorySeparator = Path.DirectorySeparatorChar;
         var sqliteRepoDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) +
@@ -79,7 +78,8 @@ public class AppDbContextFactory
         }
     }
 
-    private static DbContextOptionsBuilder<T> ConfigureDbOptions<T>(ConnectionInfo connectionInfo, DbContextOptionsBuilder<T>? optionsBuilder = null) where T : AbstractAppDbContext
+    private static DbContextOptionsBuilder<T> ConfigureDbOptions<T>(ConnectionInfo connectionInfo,
+        DbContextOptionsBuilder<T>? optionsBuilder = null) where T : AbstractAppDbContext
     {
         optionsBuilder ??= new DbContextOptionsBuilder<T>();
         ConfigureDbOptions(connectionInfo, optionsBuilder as DbContextOptionsBuilder);
@@ -96,8 +96,6 @@ public class AppDbContextFactory
                 optionsBuilder.UseNpgsql(connectionInfo.ConnectionString);
                 break;
             case EDbProvider.Sqlite:
-                Console.WriteLine(
-                    $"Using local DB with '{connectionInfo.ConnectionString}'");
                 optionsBuilder.UseSqlite(connectionInfo.ConnectionString);
                 break;
             default:
@@ -107,7 +105,7 @@ public class AppDbContextFactory
         return optionsBuilder;
     }
 
-    private static IEnumerable<ConnectionInfo> GetConnectionInfos(IConfiguration configuration)
+    private static List<ConnectionInfo> GetConnectionInfos(IConfiguration configuration)
     {
         var result = new List<ConnectionInfo>();
 
