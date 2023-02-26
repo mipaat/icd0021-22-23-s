@@ -16,6 +16,8 @@ public class AuthorHistory : AbstractIdDatabaseEntity
     public string? DisplayName { get; set; }
     public LangString? Bio { get; set; }
 
+    public int? SubscriberCount { get; set; }
+
     public List<ImageFile>? ProfileImages { get; set; }
     public List<ImageFile>? Banners { get; set; }
     public List<ImageFile>? Thumbnails { get; set; }

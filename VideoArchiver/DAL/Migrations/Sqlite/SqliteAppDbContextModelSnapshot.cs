@@ -76,6 +76,9 @@ namespace DAL.Migrations.Sqlite
                     b.Property<string>("ProfileImages")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("SubscriberCount")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Thumbnails")
                         .HasColumnType("TEXT");
 
@@ -153,6 +156,9 @@ namespace DAL.Migrations.Sqlite
 
                     b.Property<string>("ProfileImages")
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("SubscriberCount")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Thumbnails")
                         .HasColumnType("TEXT");
@@ -284,6 +290,7 @@ namespace DAL.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Platform")
+                        .HasMaxLength(64)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("SupportsAuthors")
