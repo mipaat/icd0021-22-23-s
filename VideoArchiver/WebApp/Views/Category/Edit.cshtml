@@ -1,0 +1,74 @@
+@model Domain.Category
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Category</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsPublic" /> @Html.DisplayNameFor(model => model.IsPublic)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="SupportsAuthors" /> @Html.DisplayNameFor(model => model.SupportsAuthors)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="SupportsVideos" /> @Html.DisplayNameFor(model => model.SupportsVideos)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="SupportsPlaylists" /> @Html.DisplayNameFor(model => model.SupportsPlaylists)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsAssignable" /> @Html.DisplayNameFor(model => model.IsAssignable)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="ParentCategoryId" class="control-label"></label>
+                <select asp-for="ParentCategoryId" class="form-control" asp-items="ViewBag.ParentCategoryId"></select>
+                <span asp-validation-for="ParentCategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Platform" class="control-label"></label>
+                <input asp-for="Platform" class="form-control" />
+                <span asp-validation-for="Platform" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatorId" class="control-label"></label>
+                <select asp-for="CreatorId" class="form-control" asp-items="ViewBag.CreatorId"></select>
+                <span asp-validation-for="CreatorId" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

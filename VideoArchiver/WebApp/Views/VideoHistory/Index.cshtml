@@ -1,0 +1,203 @@
+@model IEnumerable<Domain.VideoHistory>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Video)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdOnPlatform)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DefaultLanguage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DefaultAudioLanguage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Duration)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Width)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Height)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BitrateBps)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ViewCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LikeCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DislikeCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CommentCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HasCaptions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Captions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Thumbnails)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tags)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsLivestreamRecording)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StreamId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LivestreamStartedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LivestreamEndedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PublishedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecordedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LocalVideoFiles)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastValidAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InternalPrivacyStatus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.VideoId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdOnPlatform)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DefaultLanguage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DefaultAudioLanguage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Duration)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Width)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Height)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BitrateBps)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ViewCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LikeCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DislikeCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CommentCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HasCaptions)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Captions)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Thumbnails)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tags)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsLivestreamRecording)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StreamId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LivestreamStartedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LivestreamEndedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PublishedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecordedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LocalVideoFiles)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastValidAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InternalPrivacyStatus)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

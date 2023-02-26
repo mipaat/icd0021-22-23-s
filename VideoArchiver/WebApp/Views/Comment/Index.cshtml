@@ -1,0 +1,149 @@
+@model IEnumerable<Domain.Comment>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Platform)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdOnPlatform)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Video)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReplyTarget)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ConversationRoot)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LikeCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DislikeCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReplyCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAtVideoTimecode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrivacyStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsAvailable)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InternalPrivacyStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Etag)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastFetched)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FetchSuccess)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AddedToArchiveAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Platform)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdOnPlatform)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AuthorId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VideoId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReplyTargetId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ConversationRootId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LikeCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DislikeCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReplyCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAtVideoTimecode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrivacyStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsAvailable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InternalPrivacyStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Etag)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastFetched)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FetchSuccess)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AddedToArchiveAt)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

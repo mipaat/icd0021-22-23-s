@@ -1,0 +1,48 @@
+@model Domain.AuthorSubscription
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>AuthorSubscription</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Platform)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Platform)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Subscriber)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SubscriberId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SubscriptionTarget)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SubscriptionTargetId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LastFetched)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LastFetched)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Priority)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Priority)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
