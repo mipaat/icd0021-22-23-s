@@ -8,7 +8,7 @@ namespace Domain;
 public class QueueItem : AbstractIdDatabaseEntity
 {
     [MaxLength(4096)] public string? Url { get; set; }
-    [MaxLength(64)] public Platform? Platform { get; set; }
+    public Platform? Platform { get; set; }
     [MaxLength(64)] public string? IdOnPlatform { get; set; }
 
     public bool Monitor { get; set; } = true;

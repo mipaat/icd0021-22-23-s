@@ -9,7 +9,7 @@ namespace Domain;
 
 public class Author : AbstractIdDatabaseEntity
 {
-    [MaxLength(64)] public Platform Platform { get; set; } = default!;
+    public Platform Platform { get; set; } = default!;
     [MaxLength(64)] public string IdOnPlatform { get; set; } = default!;
 
     public string? UserName { get; set; }

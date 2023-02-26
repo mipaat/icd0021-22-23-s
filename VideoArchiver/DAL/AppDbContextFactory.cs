@@ -1,12 +1,18 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DAL;
 
-public class AppDbContextFactory
+public class AppDbContextFactory : IDesignTimeDbContextFactory<AbstractAppDbContext>
 {
+    public AbstractAppDbContext CreateDbContext(string[] args)
+    {
+        return CreateDbContext();
+    }
+
     private static AbstractAppDbContext CreateDbContext(IConfiguration? configuration = null)
     {
         configuration ??= GetDefaultConfig();
@@ -51,8 +57,9 @@ public class AppDbContextFactory
         return sqliteRepoDirectory + "app.db";
     }
 
-    public static void RegisterDbContext(IServiceCollection services, IConfiguration configuration)
+    public static void RegisterDbContext(IServiceCollection services, IConfiguration? configuration = null)
     {
+        configuration ??= GetDefaultConfig();
         services.AddScoped<AbstractAppDbContext>(_ => CreateDbContext(configuration));
 
         var connectionInfos = GetConnectionInfos(configuration);

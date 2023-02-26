@@ -1,6 +1,8 @@
 using DAL;
+using Domain.Enums;
 using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
+using WebApp.MyLibraries.ModelBinders;
 
 namespace WebApp;
 
@@ -23,7 +25,11 @@ public class Program
 
         builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddEntityFrameworkStores<AbstractAppDbContext>();
-        builder.Services.AddControllersWithViews();
+        builder.Services.AddControllersWithViews()
+            .AddMvcOptions(options =>
+            {
+                options.ModelBinderProviders.Insert(0, new CustomModelBinderProvider<Platform>());
+            });
         builder.Services.Configure<IdentityOptions>(options =>
         {
             options.Password.RequireDigit = false;

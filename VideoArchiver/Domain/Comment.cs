@@ -7,7 +7,7 @@ namespace Domain;
 
 public class Comment : AbstractIdDatabaseEntity
 {
-    [MaxLength(64)] public Platform Platform { get; set; } = default!;
+    public Platform Platform { get; set; } = default!;
     [MaxLength(64)] public string IdOnPlatform { get; set; } = default!;
 
     public Author? Author { get; set; }

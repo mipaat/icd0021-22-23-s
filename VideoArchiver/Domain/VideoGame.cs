@@ -12,7 +12,7 @@ public class VideoGame : AbstractIdDatabaseEntity
     public Guid? GameId { get; set; }
 
     [MaxLength(16)] public string? IgdbId { get; set; }
-    [MaxLength(64)] public Platform? Platform { get; set; } = default!;
+    public Platform? Platform { get; set; } = default!;
     [MaxLength(64)] public string? IdOnPlatform { get; set; } = default!;
 
     [MaxLength(512)] public string? Name { get; set; }

@@ -11,6 +11,10 @@ namespace DAL;
 public class AbstractAppDbContext : IdentityDbContext<User, Role, Guid, IdentityUserClaim<Guid>, UserRole,
     IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
 {
+    public AbstractAppDbContext(DbContextOptions<AbstractAppDbContext> options) : this(options as DbContextOptions)
+    {
+    }
+
     public AbstractAppDbContext(DbContextOptions options) : base(options)
     {
     }
@@ -68,7 +72,8 @@ public class AbstractAppDbContext : IdentityDbContext<User, Role, Guid, Identity
 
         configurationBuilder
             .Properties<Platform>()
-            .HaveConversion<PlatformConverter>();
+            .HaveConversion<PlatformConverter>()
+            .HaveMaxLength(64);
         configurationBuilder
             .Properties<DateTime>()
             .HaveConversion<DateTimeConverter>();

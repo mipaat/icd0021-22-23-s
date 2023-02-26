@@ -15,4 +15,4 @@ Or, alternatively, remove that option entirely to use a local SQLite database.
 
 ## ASP.NET DB Scaffolding
 (In WebApp directory)  
-`dotnet aspnet-codegenerator controller -m Entity -dc ApplicationDbContext -udl -outDir Controllers --referenceScriptLibraries`
+`dotnet aspnet-codegenerator controller -m Entity -dc AbstractAppDbContext -udl -outDir Controllers --referenceScriptLibraries`
