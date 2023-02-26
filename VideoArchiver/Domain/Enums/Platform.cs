@@ -24,6 +24,11 @@ public class Platform
         YouTube
     };
 
+    public override string ToString()
+    {
+        return Name;
+    }
+
     public static implicit operator Platform(string name) => DefinedPlatforms.Find(p => p.Name == name) ??
                                                              new Platform(name);
 
