@@ -5,7 +5,7 @@ public abstract class AbstractIdDatabaseEntity : IIdDatabaseEntity
     public Guid Id { get; set; } = new();
 }
 
-public abstract class AbstractIdDatabaseEntity<TKey> : IIdDatabaseEntity<TKey> where TKey : IEquatable<TKey>
+public abstract class AbstractIdDatabaseEntity<TKey> : IIdDatabaseEntity<TKey> where TKey : struct, IEquatable<TKey>
 {
     public TKey Id { get; set; } = default!;
 }
