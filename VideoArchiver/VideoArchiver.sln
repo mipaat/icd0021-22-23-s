@@ -8,13 +8,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Base", "Domain.Base\Domain.Base.csproj", "{49D17A5F-8B2A-4AB9-BFA9-83DD993C9083}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppForTesting", "ConsoleAppForTesting\ConsoleAppForTesting.csproj", "{CB5FFCCE-9579-4B09-AF30-D101E3D87027}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{F0C932B5-CC6E-4D03-8DA9-AA66999D60C1}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "APP", "APP", "{A1E8F747-4664-4DCE-B777-B3C4C8A1E95D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BASE", "BASE", "{388A6624-FA13-4FC9-B405-BFAB5D705D64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,9 +40,11 @@ Global
 		{49D17A5F-8B2A-4AB9-BFA9-83DD993C9083}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49D17A5F-8B2A-4AB9-BFA9-83DD993C9083}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49D17A5F-8B2A-4AB9-BFA9-83DD993C9083}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CB5FFCCE-9579-4B09-AF30-D101E3D87027}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CB5FFCCE-9579-4B09-AF30-D101E3D87027}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CB5FFCCE-9579-4B09-AF30-D101E3D87027}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CB5FFCCE-9579-4B09-AF30-D101E3D87027}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{516EAF77-6681-4110-9232-5EEF24C1F45C} = {A1E8F747-4664-4DCE-B777-B3C4C8A1E95D}
+		{49D17A5F-8B2A-4AB9-BFA9-83DD993C9083} = {388A6624-FA13-4FC9-B405-BFAB5D705D64}
+		{86D63190-56DC-4473-90E3-00361EA53AD9} = {A1E8F747-4664-4DCE-B777-B3C4C8A1E95D}
+		{443BA34A-7F1E-4637-B747-93DF030C69E0} = {A1E8F747-4664-4DCE-B777-B3C4C8A1E95D}
 	EndGlobalSection
 EndGlobal
