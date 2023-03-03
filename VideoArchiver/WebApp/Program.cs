@@ -23,8 +23,10 @@ public class Program
         AppDbContextFactory.RegisterDbContext(builder.Services, builder.Configuration);
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-        builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<AbstractAppDbContext>();
+        builder.Services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = false)
+            .AddEntityFrameworkStores<AbstractAppDbContext>()
+            .AddDefaultTokenProviders()
+            .AddDefaultUI();
         builder.Services.AddControllersWithViews()
             .AddMvcOptions(options =>
             {
