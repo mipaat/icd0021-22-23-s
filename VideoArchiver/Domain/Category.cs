@@ -8,9 +8,9 @@ public class Category : AbstractIdDatabaseEntity
 {
     public LangString Name { get; set; } = default!;
     public bool IsPublic { get; set; }
-    public bool SupportsAuthors { get; set; }
-    public bool SupportsVideos { get; set; }
-    public bool SupportsPlaylists { get; set; }
+    public bool SupportsAuthors { get; set; } = true;
+    public bool SupportsVideos { get; set; } = true;
+    public bool SupportsPlaylists { get; set; } = true;
     public bool IsAssignable { get; set; }
     public Category? ParentCategory { get; set; }
     public Guid? ParentCategoryId { get; set; }

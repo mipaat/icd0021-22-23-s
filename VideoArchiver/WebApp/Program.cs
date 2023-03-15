@@ -42,6 +42,8 @@ public class Program
 
         var app = builder.Build();
 
+        SetupAppData(app, app.Configuration);
+
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
@@ -67,6 +69,64 @@ public class Program
         app.MapRazorPages();
 
         app.Run();
+    }
+
+    private static T RaiseIfNull<T>(T? dependency, string? dependencyDisplayName = null)
+    {
+        if (dependency != null) return dependency;
+        throw new ApplicationException($"Failed to initialize {dependencyDisplayName ?? typeof(T).FullName}");
+    }
+
+    private static void SetupAppData(IApplicationBuilder app, IConfiguration configuration)
+    {
+        using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+        using var context = RaiseIfNull(serviceScope.ServiceProvider.GetService<AbstractAppDbContext>());
+
+        var logger = RaiseIfNull(serviceScope.ServiceProvider.GetService<ILogger<IApplicationBuilder>>());
+
+        if (context.Database.ProviderName!.Contains("InMemory"))
+        {
+            logger.LogInformation("In memory DB provider detected, skipping data setup");
+            return;
+        }
+
+        const string dataInitConfigSection = "DataInitialization";
+        
+        if (configuration.GetValue<bool>($"{dataInitConfigSection}:DropDatabase"))
+        {
+            logger.LogWarning("Drop database");
+            AppDataInit.DropDatabase(context);
+        }
+
+        if (configuration.GetValue<bool>($"{dataInitConfigSection}:MigrateDatabase"))
+        {
+            logger.LogInformation("Migrate database");
+            AppDataInit.MigrateDatabase(context);
+        }
+
+        using var userManager = RaiseIfNull(serviceScope.ServiceProvider.GetService<UserManager<User>>());
+        using var roleManager = RaiseIfNull(serviceScope.ServiceProvider.GetService<RoleManager<Role>>());
+
+        if (configuration.GetValue<bool>($"{dataInitConfigSection}:SeedIdentity"))
+        {
+            logger.LogInformation("Seed identity data");
+            AppDataInit.SeedIdentity(userManager, roleManager);
+        }
+
+        if (configuration.GetValue<bool>($"{dataInitConfigSection}:SeedAppData"))
+        {
+            logger.LogInformation("Seed application data");
+            AppDataInit.SeedAppData(context);
+        }
+
+        if (configuration.GetValue<bool>($"{dataInitConfigSection}:SeedDemoIdentity"))
+        {
+            logger.LogInformation("Seed demo identity data");
+            AppDataInit.SeedDemoIdentity(userManager, roleManager,
+                configuration.GetValue<bool>($"{dataInitConfigSection}:SeedIdentity"));
+        }
+
+        context.SaveChanges();
     }
 
     // May be used for creating DB context at design time (migrations etc)
