@@ -1,0 +1,96 @@
+@using Domain.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Domain.AuthorHistory
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>AuthorHistory</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="AuthorId" class="control-label"></label>
+                <select asp-for="AuthorId" class="form-control" asp-items="ViewBag.AuthorId"></select>
+                <span asp-validation-for="AuthorId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdOnPlatform" class="control-label"></label>
+                <input asp-for="IdOnPlatform" class="form-control" />
+                <span asp-validation-for="IdOnPlatform" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DisplayName" class="control-label"></label>
+                <input asp-for="DisplayName" class="form-control" />
+                <span asp-validation-for="DisplayName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bio" class="control-label"></label>
+                <input asp-for="Bio" class="form-control" />
+                <span asp-validation-for="Bio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SubscriberCount" class="control-label"></label>
+                <input asp-for="SubscriberCount" class="form-control" />
+                <span asp-validation-for="SubscriberCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProfileImages" class="control-label"></label>
+                <input asp-for="ProfileImages" class="form-control" />
+                <span asp-validation-for="ProfileImages" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Banners" class="control-label"></label>
+                <input asp-for="Banners" class="form-control" />
+                <span asp-validation-for="Banners" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Thumbnails" class="control-label"></label>
+                <input asp-for="Thumbnails" class="form-control" />
+                <span asp-validation-for="Thumbnails" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedAt" class="control-label"></label>
+                <input asp-for="CreatedAt" class="form-control" />
+                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdatedAt" class="control-label"></label>
+                <input asp-for="UpdatedAt" class="form-control" />
+                <span asp-validation-for="UpdatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastValidAt" class="control-label"></label>
+                <input asp-for="LastValidAt" class="form-control" />
+                <span asp-validation-for="LastValidAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InternalPrivacyStatus" class="control-label"></label>
+                <select asp-for="InternalPrivacyStatus" class="form-control" asp-items="@Html.GetEnumSelectList<EPrivacyStatus>()"></select>
+                <span asp-validation-for="InternalPrivacyStatus" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

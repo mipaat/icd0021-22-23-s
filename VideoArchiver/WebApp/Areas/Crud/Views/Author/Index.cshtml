@@ -1,0 +1,155 @@
+@model IEnumerable<Domain.Author>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Platform)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdOnPlatform)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DisplayName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubscriberCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProfileImages)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Banners)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Thumbnails)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrivacyStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsAvailable)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InternalPrivacyStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Etag)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastFetched)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastSuccessfulFetch)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AddedToArchiveAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Monitor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Download)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Platform)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdOnPlatform)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DisplayName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubscriberCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProfileImages)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Banners)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Thumbnails)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrivacyStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsAvailable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InternalPrivacyStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Etag)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastFetched)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastSuccessfulFetch)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AddedToArchiveAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Monitor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Download)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -64,6 +64,7 @@ public class Program
 
         app.UseAuthorization();
 
+        app.MapAreaControllerRoute(name: "crud", areaName: "Crud", pattern: "Crud/{controller}/{action=Index}/{id?}");
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");

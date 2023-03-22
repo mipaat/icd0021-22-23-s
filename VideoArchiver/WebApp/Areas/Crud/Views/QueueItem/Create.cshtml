@@ -1,0 +1,103 @@
+@model Domain.QueueItem
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>QueueItem</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Url" class="control-label"></label>
+                <input asp-for="Url" class="form-control" />
+                <span asp-validation-for="Url" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Platform" class="control-label"></label>
+                <input asp-for="Platform" class="form-control" />
+                <span asp-validation-for="Platform" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdOnPlatform" class="control-label"></label>
+                <input asp-for="IdOnPlatform" class="form-control" />
+                <span asp-validation-for="IdOnPlatform" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Monitor" /> @Html.DisplayNameFor(model => model.Monitor)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Download" /> @Html.DisplayNameFor(model => model.Download)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="WebHookUrl" class="control-label"></label>
+                <input asp-for="WebHookUrl" class="form-control" />
+                <span asp-validation-for="WebHookUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WebhookSecret" class="control-label"></label>
+                <input asp-for="WebhookSecret" class="form-control" />
+                <span asp-validation-for="WebhookSecret" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WebhookData" class="control-label"></label>
+                <input asp-for="WebhookData" class="form-control" />
+                <span asp-validation-for="WebhookData" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AddedById" class="control-label"></label>
+                <select asp-for="AddedById" class ="form-control" asp-items="ViewBag.AddedById"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="AddedAt" class="control-label"></label>
+                <input asp-for="AddedAt" class="form-control" />
+                <span asp-validation-for="AddedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApprovedById" class="control-label"></label>
+                <select asp-for="ApprovedById" class ="form-control" asp-items="ViewBag.ApprovedById"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApprovedAt" class="control-label"></label>
+                <input asp-for="ApprovedAt" class="form-control" />
+                <span asp-validation-for="ApprovedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompletedAt" class="control-label"></label>
+                <input asp-for="CompletedAt" class="form-control" />
+                <span asp-validation-for="CompletedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AuthorId" class="control-label"></label>
+                <select asp-for="AuthorId" class ="form-control" asp-items="ViewBag.AuthorId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="VideoId" class="control-label"></label>
+                <select asp-for="VideoId" class ="form-control" asp-items="ViewBag.VideoId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="PlaylistId" class="control-label"></label>
+                <select asp-for="PlaylistId" class ="form-control" asp-items="ViewBag.PlaylistId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

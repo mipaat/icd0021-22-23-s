@@ -1,0 +1,176 @@
+@using Domain.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Domain.VideoHistory
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>VideoHistory</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="VideoId" class="control-label"></label>
+                <select asp-for="VideoId" class="form-control" asp-items="ViewBag.VideoId"></select>
+                <span asp-validation-for="VideoId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdOnPlatform" class="control-label"></label>
+                <input asp-for="IdOnPlatform" class="form-control" />
+                <span asp-validation-for="IdOnPlatform" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DefaultLanguage" class="control-label"></label>
+                <input asp-for="DefaultLanguage" class="form-control" />
+                <span asp-validation-for="DefaultLanguage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DefaultAudioLanguage" class="control-label"></label>
+                <input asp-for="DefaultAudioLanguage" class="form-control" />
+                <span asp-validation-for="DefaultAudioLanguage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Duration" class="control-label"></label>
+                <input asp-for="Duration" class="form-control" />
+                <span asp-validation-for="Duration" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Width" class="control-label"></label>
+                <input asp-for="Width" class="form-control" />
+                <span asp-validation-for="Width" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Height" class="control-label"></label>
+                <input asp-for="Height" class="form-control" />
+                <span asp-validation-for="Height" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BitrateBps" class="control-label"></label>
+                <input asp-for="BitrateBps" class="form-control" />
+                <span asp-validation-for="BitrateBps" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ViewCount" class="control-label"></label>
+                <input asp-for="ViewCount" class="form-control" />
+                <span asp-validation-for="ViewCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LikeCount" class="control-label"></label>
+                <input asp-for="LikeCount" class="form-control" />
+                <span asp-validation-for="LikeCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DislikeCount" class="control-label"></label>
+                <input asp-for="DislikeCount" class="form-control" />
+                <span asp-validation-for="DislikeCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CommentCount" class="control-label"></label>
+                <input asp-for="CommentCount" class="form-control" />
+                <span asp-validation-for="CommentCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HasCaptions" class="control-label"></label>
+                <input asp-for="HasCaptions" class="form-control" />
+                <span asp-validation-for="HasCaptions" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Captions" class="control-label"></label>
+                <input asp-for="Captions" class="form-control" />
+                <span asp-validation-for="Captions" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Thumbnails" class="control-label"></label>
+                <input asp-for="Thumbnails" class="form-control" />
+                <span asp-validation-for="Thumbnails" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tags" class="control-label"></label>
+                <input asp-for="Tags" class="form-control" />
+                <span asp-validation-for="Tags" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsLivestreamRecording" class="control-label"></label>
+                <input asp-for="IsLivestreamRecording" class="form-control" />
+                <span asp-validation-for="IsLivestreamRecording" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StreamId" class="control-label"></label>
+                <input asp-for="StreamId" class="form-control" />
+                <span asp-validation-for="StreamId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LivestreamStartedAt" class="control-label"></label>
+                <input asp-for="LivestreamStartedAt" class="form-control" />
+                <span asp-validation-for="LivestreamStartedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LivestreamEndedAt" class="control-label"></label>
+                <input asp-for="LivestreamEndedAt" class="form-control" />
+                <span asp-validation-for="LivestreamEndedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedAt" class="control-label"></label>
+                <input asp-for="CreatedAt" class="form-control" />
+                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PublishedAt" class="control-label"></label>
+                <input asp-for="PublishedAt" class="form-control" />
+                <span asp-validation-for="PublishedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdatedAt" class="control-label"></label>
+                <input asp-for="UpdatedAt" class="form-control" />
+                <span asp-validation-for="UpdatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecordedAt" class="control-label"></label>
+                <input asp-for="RecordedAt" class="form-control" />
+                <span asp-validation-for="RecordedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LocalVideoFiles" class="control-label"></label>
+                <input asp-for="LocalVideoFiles" class="form-control" />
+                <span asp-validation-for="LocalVideoFiles" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastValidAt" class="control-label"></label>
+                <input asp-for="LastValidAt" class="form-control" />
+                <span asp-validation-for="LastValidAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InternalPrivacyStatus" class="control-label"></label>
+                <select asp-for="InternalPrivacyStatus" class="form-control" asp-items="@Html.GetEnumSelectList<EPrivacyStatus>()"></select>
+                <span asp-validation-for="InternalPrivacyStatus" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
