@@ -39,10 +39,15 @@ namespace WebApp.Areas.Crud.Controllers
             return View(authorHistory);
         }
 
+        private async Task SetupViewData(AuthorHistory? authorHistory = null)
+        {
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", authorHistory?.AuthorId);            
+        }
+        
         // GET: AuthorHistory/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform");
+            await SetupViewData();
             return View();
         }
 
@@ -60,7 +65,8 @@ namespace WebApp.Areas.Crud.Controllers
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", authorHistory.AuthorId);
+
+            await SetupViewData(authorHistory);
             return View(authorHistory);
         }
 
@@ -77,7 +83,8 @@ namespace WebApp.Areas.Crud.Controllers
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", authorHistory.AuthorId);
+
+            await SetupViewData(authorHistory);
             return View(authorHistory);
         }
 
@@ -111,7 +118,8 @@ namespace WebApp.Areas.Crud.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", authorHistory.AuthorId);
+
+            await SetupViewData(authorHistory);
             return View(authorHistory);
         }
 

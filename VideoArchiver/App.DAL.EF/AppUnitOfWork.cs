@@ -48,4 +48,13 @@ public class AppUnitOfWork : BaseUnitOfWork<AbstractAppDbContext>, IAppUnitOfWor
 
     private IGameRepository? _games;
     public IGameRepository Games => _games ??= new GameRepository(DbContext);
+
+    private IPlaylistAuthorRepository? _playlistAuthors;
+    public IPlaylistAuthorRepository PlaylistAuthors => _playlistAuthors ??= new PlaylistAuthorRepository(DbContext);
+
+    private IPlaylistRepository? _playlists;
+    public IPlaylistRepository Playlists => _playlists ??= new PlaylistRepository(DbContext);
+
+    private IPlaylistCategoryRepository? _playlistCategories;
+    public IPlaylistCategoryRepository PlaylistCategories => _playlistCategories ??= new PlaylistCategoryRepository(DbContext);
 }

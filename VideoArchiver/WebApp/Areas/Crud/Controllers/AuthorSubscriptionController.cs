@@ -39,12 +39,17 @@ namespace WebApp.Areas.Crud.Controllers
             return View(authorSubscription);
         }
 
+        private async Task SetupViewData(AuthorSubscription? authorSubscription = null)
+        {
+            var authors = await _uow.Authors.GetAllAsync();
+            ViewData["SubscriberId"] = new SelectList(authors, "Id", "IdOnPlatform", authorSubscription?.SubscriberId);
+            ViewData["SubscriptionTargetId"] = new SelectList(authors, "Id", "IdOnPlatform", authorSubscription?.SubscriptionTargetId);
+        }
+
         // GET: AuthorSubscription/Create
         public async Task<IActionResult> Create()
         {
-            var authors = await _uow.Authors.GetAllAsync();
-            ViewData["SubscriberId"] = new SelectList(authors, "Id", "IdOnPlatform");
-            ViewData["SubscriptionTargetId"] = new SelectList(authors, "Id", "IdOnPlatform");
+            await SetupViewData();
             return View();
         }
 
@@ -63,9 +68,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var authors = await _uow.Authors.GetAllAsync();
-            ViewData["SubscriberId"] = new SelectList(authors, "Id", "IdOnPlatform", authorSubscription.SubscriberId);
-            ViewData["SubscriptionTargetId"] = new SelectList(authors, "Id", "IdOnPlatform", authorSubscription.SubscriptionTargetId);
+            await SetupViewData(authorSubscription);
             return View(authorSubscription);
         }
 
@@ -83,9 +86,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return NotFound();
             }
 
-            var authors = await _uow.Authors.GetAllAsync();
-            ViewData["SubscriberId"] = new SelectList(authors, "Id", "IdOnPlatform", authorSubscription.SubscriberId);
-            ViewData["SubscriptionTargetId"] = new SelectList(authors, "Id", "IdOnPlatform", authorSubscription.SubscriptionTargetId);
+            await SetupViewData(authorSubscription);
             return View(authorSubscription);
         }
 
@@ -120,9 +121,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var authors = await _uow.Authors.GetAllAsync();
-            ViewData["SubscriberId"] = new SelectList(authors, "Id", "IdOnPlatform", authorSubscription.SubscriberId);
-            ViewData["SubscriptionTargetId"] = new SelectList(authors, "Id", "IdOnPlatform", authorSubscription.SubscriptionTargetId);
+            await SetupViewData(authorSubscription);
             return View(authorSubscription);
         }
 

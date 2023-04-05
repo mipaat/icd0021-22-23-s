@@ -43,10 +43,15 @@ namespace WebApp.Areas.Crud.Controllers
             return View(author);
         }
 
-        // GET: Author/Create
-        public IActionResult Create()
+        private async Task SetupViewData(Author? author = null)
         {
-            ViewData["UserId"] = new SelectList(_userManager.Users, "Id", "Id");
+            ViewData["UserId"] = new SelectList(await _userManager.Users.ToListAsync(), "Id", "Id", author?.UserId);
+        }
+        
+        // GET: Author/Create
+        public async Task<IActionResult> Create()
+        {
+            await SetupViewData();
             return View();
         }
 
@@ -68,7 +73,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["UserId"] = new SelectList(_userManager.Users, "Id", "Id", author.UserId);
+            await SetupViewData(author);
             return View(author);
         }
 
@@ -86,7 +91,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return NotFound();
             }
 
-            ViewData["UserId"] = new SelectList(_userManager.Users, "Id", "Id", author.UserId);
+            await SetupViewData(author);
             return View(author);
         }
 
@@ -125,7 +130,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["UserId"] = new SelectList(_userManager.Users, "Id", "Id", author.UserId);
+            await SetupViewData(author);
             return View(author);
         }
 

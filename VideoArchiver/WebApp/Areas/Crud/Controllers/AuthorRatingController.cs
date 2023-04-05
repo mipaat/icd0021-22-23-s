@@ -39,13 +39,18 @@ namespace WebApp.Areas.Crud.Controllers
             return View(authorRating);
         }
 
+        private async Task SetupViewData(AuthorRating? authorRating = null)
+        {
+            var authors = await _uow.Authors.GetAllAsync();
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", authorRating?.CategoryId);
+            ViewData["RatedId"] = new SelectList(authors, "Id", "IdOnPlatform", authorRating?.RatedId);
+            ViewData["RaterId"] = new SelectList(authors, "Id", "IdOnPlatform", authorRating?.RaterId);
+        }
+
         // GET: AuthorRating/Create
         public async Task<IActionResult> Create()
         {
-            var authors = await _uow.Authors.GetAllAsync();
-            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id");
-            ViewData["RatedId"] = new SelectList(authors, "Id", "IdOnPlatform");
-            ViewData["RaterId"] = new SelectList(authors, "Id", "IdOnPlatform");
+            await SetupViewData();
             return View();
         }
 
@@ -64,10 +69,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var authors = await _uow.Authors.GetAllAsync();
-            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", authorRating.CategoryId);
-            ViewData["RatedId"] = new SelectList(authors, "Id", "IdOnPlatform", authorRating.RatedId);
-            ViewData["RaterId"] = new SelectList(authors, "Id", "IdOnPlatform", authorRating.RaterId);
+            await SetupViewData(authorRating);
             return View(authorRating);
         }
 
@@ -85,10 +87,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return NotFound();
             }
 
-            var authors = await _uow.Authors.GetAllAsync();
-            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", authorRating.CategoryId);
-            ViewData["RatedId"] = new SelectList(authors, "Id", "IdOnPlatform", authorRating.RatedId);
-            ViewData["RaterId"] = new SelectList(authors, "Id", "IdOnPlatform", authorRating.RaterId);
+            await SetupViewData(authorRating);
             return View(authorRating);
         }
 
@@ -123,10 +122,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var authors = await _uow.Authors.GetAllAsync();
-            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", authorRating.CategoryId);
-            ViewData["RatedId"] = new SelectList(authors, "Id", "IdOnPlatform", authorRating.RatedId);
-            ViewData["RaterId"] = new SelectList(authors, "Id", "IdOnPlatform", authorRating.RaterId);
+            await SetupViewData(authorRating);
             return View(authorRating);
         }
 

@@ -17,4 +17,7 @@ public interface IAppUnitOfWork : IBaseUnitOfWork
     public ICommentReplyNotificationRepository CommentReplyNotifications { get; }
     public IExternalUserTokenRepository ExternalUserTokens { get; }
     public IGameRepository Games { get; }
+    public IPlaylistAuthorRepository PlaylistAuthors { get; }
+    public IPlaylistRepository Playlists { get; }
+    public IPlaylistCategoryRepository PlaylistCategories { get; }
 }

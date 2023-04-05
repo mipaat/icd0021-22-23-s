@@ -1,4 +1,4 @@
-using DAL;
+using App.Contracts.DAL;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,32 +9,28 @@ namespace WebApp.Areas.Crud.Controllers
     [Area("Crud")]
     public class PlaylistCategoryController : Controller
     {
-        private readonly AbstractAppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public PlaylistCategoryController(AbstractAppDbContext context)
+        public PlaylistCategoryController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: PlaylistCategory
         public async Task<IActionResult> Index()
         {
-            var abstractAppDbContext = _context.PlaylistCategories.Include(p => p.Category).Include(p => p.Playlist);
-            return View(await abstractAppDbContext.ToListAsync());
+            return View(await _uow.PlaylistCategories.GetAllAsync());
         }
 
         // GET: PlaylistCategory/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.PlaylistCategories == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var playlistCategory = await _context.PlaylistCategories
-                .Include(p => p.Category)
-                .Include(p => p.Playlist)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var playlistCategory = await _uow.PlaylistCategories.GetByIdAsync(id.Value);
             if (playlistCategory == null)
             {
                 return NotFound();
@@ -43,11 +39,16 @@ namespace WebApp.Areas.Crud.Controllers
             return View(playlistCategory);
         }
 
-        // GET: PlaylistCategory/Create
-        public IActionResult Create()
+        private async Task SetupViewData(PlaylistCategory? playlistCategory = null)
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
-            ViewData["PlaylistId"] = new SelectList(_context.Playlists, "Id", "IdOnPlatform");
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", playlistCategory?.CategoryId);
+            ViewData["PlaylistId"] = new SelectList(await _uow.Playlists.GetAllAsync(), "Id", "IdOnPlatform", playlistCategory?.PlaylistId);
+        }
+
+        // GET: PlaylistCategory/Create
+        public async Task<IActionResult> Create()
+        {
+            await SetupViewData();
             return View();
         }
 
@@ -61,30 +62,30 @@ namespace WebApp.Areas.Crud.Controllers
             if (ModelState.IsValid)
             {
                 playlistCategory.Id = Guid.NewGuid();
-                _context.Add(playlistCategory);
-                await _context.SaveChangesAsync();
+                _uow.PlaylistCategories.Add(playlistCategory);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", playlistCategory.CategoryId);
-            ViewData["PlaylistId"] = new SelectList(_context.Playlists, "Id", "IdOnPlatform", playlistCategory.PlaylistId);
+
+            await SetupViewData(playlistCategory);
             return View(playlistCategory);
         }
 
         // GET: PlaylistCategory/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.PlaylistCategories == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var playlistCategory = await _context.PlaylistCategories.FindAsync(id);
+            var playlistCategory = await _uow.PlaylistCategories.GetByIdAsync(id.Value);
             if (playlistCategory == null)
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", playlistCategory.CategoryId);
-            ViewData["PlaylistId"] = new SelectList(_context.Playlists, "Id", "IdOnPlatform", playlistCategory.PlaylistId);
+
+            await SetupViewData(playlistCategory);
             return View(playlistCategory);
         }
 
@@ -104,12 +105,12 @@ namespace WebApp.Areas.Crud.Controllers
             {
                 try
                 {
-                    _context.Update(playlistCategory);
-                    await _context.SaveChangesAsync();
+                    _uow.PlaylistCategories.Update(playlistCategory);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PlaylistCategoryExists(playlistCategory.Id))
+                    if (!await _uow.PlaylistCategories.ExistsAsync(playlistCategory.Id))
                     {
                         return NotFound();
                     }
@@ -120,23 +121,20 @@ namespace WebApp.Areas.Crud.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", playlistCategory.CategoryId);
-            ViewData["PlaylistId"] = new SelectList(_context.Playlists, "Id", "IdOnPlatform", playlistCategory.PlaylistId);
+
+            await SetupViewData(playlistCategory);
             return View(playlistCategory);
         }
 
         // GET: PlaylistCategory/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.PlaylistCategories == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var playlistCategory = await _context.PlaylistCategories
-                .Include(p => p.Category)
-                .Include(p => p.Playlist)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var playlistCategory = await _uow.PlaylistCategories.GetByIdAsync(id.Value);
             if (playlistCategory == null)
             {
                 return NotFound();
@@ -150,23 +148,10 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.PlaylistCategories == null)
-            {
-                return Problem("Entity set 'AbstractAppDbContext.PlaylistCategories'  is null.");
-            }
-            var playlistCategory = await _context.PlaylistCategories.FindAsync(id);
-            if (playlistCategory != null)
-            {
-                _context.PlaylistCategories.Remove(playlistCategory);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await _uow.PlaylistCategories.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
 
-        private bool PlaylistCategoryExists(Guid id)
-        {
-          return (_context.PlaylistCategories?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

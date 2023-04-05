@@ -1,5 +1,4 @@
 using App.Contracts.DAL;
-using DAL;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -40,11 +39,16 @@ namespace WebApp.Areas.Crud.Controllers
             return View(authorCategory);
         }
 
+        private async Task SetupViewData(AuthorCategory? authorCategory = null)
+        {
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", authorCategory?.AuthorId);
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", authorCategory?.CategoryId);
+        }
+        
         // GET: AuthorCategory/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform");
-            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id");
+            await SetupViewData();
             return View();
         }
 
@@ -62,8 +66,8 @@ namespace WebApp.Areas.Crud.Controllers
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", authorCategory.AuthorId);
-            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", authorCategory.CategoryId);
+
+            await SetupViewData(authorCategory);
             return View(authorCategory);
         }
 
@@ -80,8 +84,8 @@ namespace WebApp.Areas.Crud.Controllers
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", authorCategory.AuthorId);
-            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", authorCategory.CategoryId);
+
+            await SetupViewData(authorCategory);
             return View(authorCategory);
         }
 
@@ -115,8 +119,8 @@ namespace WebApp.Areas.Crud.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", authorCategory.AuthorId);
-            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", authorCategory.CategoryId);
+
+            await SetupViewData(authorCategory);
             return View(authorCategory);
         }
 

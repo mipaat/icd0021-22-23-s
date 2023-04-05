@@ -40,11 +40,16 @@ namespace WebApp.Areas.Crud.Controllers
             return View(category);
         }
 
+        private async Task SetupViewData(Category? category = null)
+        {
+            ViewData["CreatorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", category?.CreatorId);
+            ViewData["ParentCategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", category?.ParentCategoryId);
+        }
+
         // GET: Category/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["CreatorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform");
-            ViewData["ParentCategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id");
+            await SetupViewData();
             return View();
         }
 
@@ -62,8 +67,8 @@ namespace WebApp.Areas.Crud.Controllers
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", category.CreatorId);
-            ViewData["ParentCategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", category.ParentCategoryId);
+
+            await SetupViewData(category);
             return View(category);
         }
 
@@ -80,8 +85,8 @@ namespace WebApp.Areas.Crud.Controllers
             {
                 return NotFound();
             }
-            ViewData["CreatorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", category.CreatorId);
-            ViewData["ParentCategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", category.ParentCategoryId);
+
+            await SetupViewData(category);
             return View(category);
         }
 
@@ -115,8 +120,8 @@ namespace WebApp.Areas.Crud.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", category.CreatorId);
-            ViewData["ParentCategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", category.ParentCategoryId);
+
+            await SetupViewData(category);
             return View(category);
         }
 

@@ -39,13 +39,13 @@ namespace WebApp.Areas.Crud.Controllers
             return View(comment);
         }
 
-        private async Task SetupViewData()
+        private async Task SetupViewData(Comment? comment = null)
         {
             var comments = await _uow.Comments.GetAllAsync();
-            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform");
-            ViewData["ConversationRootId"] = new SelectList(comments, "Id", "IdOnPlatform");
-            ViewData["ReplyTargetId"] = new SelectList(comments, "Id", "IdOnPlatform");
-            ViewData["VideoId"] = new SelectList(await _uow.Videos.GetAllAsync(), "Id", "IdOnPlatform");
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", comment?.AuthorId);
+            ViewData["ConversationRootId"] = new SelectList(comments, "Id", "IdOnPlatform", comment?.ConversationRootId);
+            ViewData["ReplyTargetId"] = new SelectList(comments, "Id", "IdOnPlatform", comment?.ReplyTargetId);
+            ViewData["VideoId"] = new SelectList(await _uow.Videos.GetAllAsync(), "Id", "IdOnPlatform", comment?.VideoId);
         }
 
         // GET: Comment/Create
@@ -70,7 +70,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            await SetupViewData();
+            await SetupViewData(comment);
             return View(comment);
         }
 
@@ -88,7 +88,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return NotFound();
             }
 
-            await SetupViewData();
+            await SetupViewData(comment);
             return View(comment);
         }
 
@@ -123,7 +123,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            await SetupViewData();
+            await SetupViewData(comment);
             return View(comment);
         }
 

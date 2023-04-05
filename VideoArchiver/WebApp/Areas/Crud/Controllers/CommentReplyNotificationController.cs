@@ -39,12 +39,12 @@ namespace WebApp.Areas.Crud.Controllers
             return View(commentReplyNotification);
         }
 
-        private async Task SetupViewData()
+        private async Task SetupViewData(CommentReplyNotification? commentReplyNotification = null)
         {
             var comments = await _uow.Comments.GetAllAsync();
-            ViewData["CommentId"] = new SelectList(comments, "Id", "IdOnPlatform");
-            ViewData["ReceiverId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform");
-            ViewData["ReplyId"] = new SelectList(comments, "Id", "IdOnPlatform");
+            ViewData["CommentId"] = new SelectList(comments, "Id", "IdOnPlatform", commentReplyNotification?.CommentId);
+            ViewData["ReceiverId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", commentReplyNotification?.ReceiverId);
+            ViewData["ReplyId"] = new SelectList(comments, "Id", "IdOnPlatform", commentReplyNotification?.ReplyId);
         }
 
         // GET: CommentReplyNotification/Create
@@ -69,7 +69,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            await SetupViewData();
+            await SetupViewData(commentReplyNotification);
             return View(commentReplyNotification);
         }
 
@@ -87,7 +87,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return NotFound();
             }
 
-            await SetupViewData();
+            await SetupViewData(commentReplyNotification);
             return View(commentReplyNotification);
         }
 
@@ -122,7 +122,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            await SetupViewData();
+            await SetupViewData(commentReplyNotification);
             return View(commentReplyNotification);
         }
 

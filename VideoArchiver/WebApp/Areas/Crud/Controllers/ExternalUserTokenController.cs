@@ -43,10 +43,10 @@ namespace WebApp.Areas.Crud.Controllers
             return View(externalUserToken);
         }
 
-        private async Task SetupViewData()
+        private async Task SetupViewData(ExternalUserToken? externalUserToken = null)
         {
-            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform");
-            ViewData["UserId"] = new SelectList(await _userManager.Users.ToListAsync(), "Id", "Id");
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", externalUserToken?.AuthorId);
+            ViewData["UserId"] = new SelectList(await _userManager.Users.ToListAsync(), "Id", "Id", externalUserToken?.UserId);
         }
         
         // GET: ExternalUserToken/Create
@@ -71,7 +71,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            await SetupViewData();
+            await SetupViewData(externalUserToken);
             return View(externalUserToken);
         }
 
@@ -89,7 +89,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return NotFound();
             }
 
-            await SetupViewData();
+            await SetupViewData(externalUserToken);
             return View(externalUserToken);
         }
 
@@ -124,7 +124,7 @@ namespace WebApp.Areas.Crud.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            await SetupViewData();
+            await SetupViewData(externalUserToken);
             return View(externalUserToken);
         }
 

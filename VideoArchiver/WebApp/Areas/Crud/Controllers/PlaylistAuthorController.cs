@@ -1,4 +1,4 @@
-using DAL;
+using App.Contracts.DAL;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,32 +9,28 @@ namespace WebApp.Areas.Crud.Controllers
     [Area("Crud")]
     public class PlaylistAuthorController : Controller
     {
-        private readonly AbstractAppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public PlaylistAuthorController(AbstractAppDbContext context)
+        public PlaylistAuthorController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: PlaylistAuthor
         public async Task<IActionResult> Index()
         {
-            var abstractAppDbContext = _context.PlaylistAuthors.Include(p => p.Author).Include(p => p.Playlist);
-            return View(await abstractAppDbContext.ToListAsync());
+            return View(await _uow.PlaylistAuthors.GetAllAsync());
         }
 
         // GET: PlaylistAuthor/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.PlaylistAuthors == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var playlistAuthor = await _context.PlaylistAuthors
-                .Include(p => p.Author)
-                .Include(p => p.Playlist)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var playlistAuthor = await _uow.PlaylistAuthors.GetByIdAsync(id.Value);
             if (playlistAuthor == null)
             {
                 return NotFound();
@@ -43,11 +39,15 @@ namespace WebApp.Areas.Crud.Controllers
             return View(playlistAuthor);
         }
 
+        private async Task SetupViewData(PlaylistAuthor? playlistAuthor = null)
+        {
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", playlistAuthor?.AuthorId);
+            ViewData["PlaylistId"] = new SelectList(await _uow.Playlists.GetAllAsync(), "Id", "IdOnPlatform", playlistAuthor?.PlaylistId);
+        }
+
         // GET: PlaylistAuthor/Create
         public IActionResult Create()
         {
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform");
-            ViewData["PlaylistId"] = new SelectList(_context.Playlists, "Id", "IdOnPlatform");
             return View();
         }
 
@@ -61,30 +61,30 @@ namespace WebApp.Areas.Crud.Controllers
             if (ModelState.IsValid)
             {
                 playlistAuthor.Id = Guid.NewGuid();
-                _context.Add(playlistAuthor);
-                await _context.SaveChangesAsync();
+                _uow.PlaylistAuthors.Add(playlistAuthor);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", playlistAuthor.AuthorId);
-            ViewData["PlaylistId"] = new SelectList(_context.Playlists, "Id", "IdOnPlatform", playlistAuthor.PlaylistId);
+
+            await SetupViewData(playlistAuthor);
             return View(playlistAuthor);
         }
 
         // GET: PlaylistAuthor/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.PlaylistAuthors == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var playlistAuthor = await _context.PlaylistAuthors.FindAsync(id);
+            var playlistAuthor = await _uow.PlaylistAuthors.GetByIdAsync(id.Value);
             if (playlistAuthor == null)
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", playlistAuthor.AuthorId);
-            ViewData["PlaylistId"] = new SelectList(_context.Playlists, "Id", "IdOnPlatform", playlistAuthor.PlaylistId);
+
+            await SetupViewData(playlistAuthor);
             return View(playlistAuthor);
         }
 
@@ -104,12 +104,12 @@ namespace WebApp.Areas.Crud.Controllers
             {
                 try
                 {
-                    _context.Update(playlistAuthor);
-                    await _context.SaveChangesAsync();
+                    _uow.PlaylistAuthors.Update(playlistAuthor);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PlaylistAuthorExists(playlistAuthor.Id))
+                    if (!await _uow.PlaylistAuthors.ExistsAsync(playlistAuthor.Id))
                     {
                         return NotFound();
                     }
@@ -120,23 +120,20 @@ namespace WebApp.Areas.Crud.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", playlistAuthor.AuthorId);
-            ViewData["PlaylistId"] = new SelectList(_context.Playlists, "Id", "IdOnPlatform", playlistAuthor.PlaylistId);
+
+            await SetupViewData(playlistAuthor);
             return View(playlistAuthor);
         }
 
         // GET: PlaylistAuthor/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.PlaylistAuthors == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var playlistAuthor = await _context.PlaylistAuthors
-                .Include(p => p.Author)
-                .Include(p => p.Playlist)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var playlistAuthor = await _uow.PlaylistAuthors.GetByIdAsync(id.Value);
             if (playlistAuthor == null)
             {
                 return NotFound();
@@ -150,23 +147,10 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.PlaylistAuthors == null)
-            {
-                return Problem("Entity set 'AbstractAppDbContext.PlaylistAuthors'  is null.");
-            }
-            var playlistAuthor = await _context.PlaylistAuthors.FindAsync(id);
-            if (playlistAuthor != null)
-            {
-                _context.PlaylistAuthors.Remove(playlistAuthor);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await _uow.PlaylistAuthors.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
 
-        private bool PlaylistAuthorExists(Guid id)
-        {
-          return (_context.PlaylistAuthors?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
