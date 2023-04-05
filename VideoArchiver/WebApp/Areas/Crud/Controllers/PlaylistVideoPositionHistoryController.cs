@@ -1,166 +1,45 @@
-using DAL;
+using App.Contracts.DAL;
+using Base.WebHelpers;
+using Contracts.DAL;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebApp.Areas.Crud.Controllers
 {
     [Area("Crud")]
-    public class PlaylistVideoPositionHistoryController : Controller
+    public class
+        PlaylistVideoPositionHistoryController : BaseEntityCrudController<IAppUnitOfWork, PlaylistVideoPositionHistory>
     {
-        private readonly AbstractAppDbContext _context;
-
-        public PlaylistVideoPositionHistoryController(AbstractAppDbContext context)
+        public PlaylistVideoPositionHistoryController(IAppUnitOfWork uow) : base(uow)
         {
-            _context = context;
         }
 
-        // GET: PlaylistVideoPositionHistory
-        public async Task<IActionResult> Index()
+        protected override IBaseEntityRepository<PlaylistVideoPositionHistory, Guid> Entities =>
+            Uow.PlaylistVideoPositionHistories;
+
+        protected override async Task SetupViewData(PlaylistVideoPositionHistory? entity = null)
         {
-            var abstractAppDbContext = _context.PlaylistVideoPositionHistories.Include(p => p.PlaylistVideo);
-            return View(await abstractAppDbContext.ToListAsync());
+            ViewData["PlaylistVideoId"] = new SelectList(await Uow.PlaylistVideos.GetAllAsync(), "Id", "Id",
+                entity?.PlaylistVideoId);
         }
 
-        // GET: PlaylistVideoPositionHistory/Details/5
-        public async Task<IActionResult> Details(Guid? id)
-        {
-            if (id == null || _context.PlaylistVideoPositionHistories == null)
-            {
-                return NotFound();
-            }
-
-            var playlistVideoPositionHistory = await _context.PlaylistVideoPositionHistories
-                .Include(p => p.PlaylistVideo)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (playlistVideoPositionHistory == null)
-            {
-                return NotFound();
-            }
-
-            return View(playlistVideoPositionHistory);
-        }
-
-        // GET: PlaylistVideoPositionHistory/Create
-        public IActionResult Create()
-        {
-            ViewData["PlaylistVideoId"] = new SelectList(_context.PlaylistVideos, "Id", "Id");
-            return View();
-        }
-
-        // POST: PlaylistVideoPositionHistory/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PlaylistVideoId,Position,ValidSince,ValidUntil,Id")] PlaylistVideoPositionHistory playlistVideoPositionHistory)
+        public async Task<IActionResult> Create(
+            [Bind("PlaylistVideoId,Position,ValidSince,ValidUntil,Id")]
+            PlaylistVideoPositionHistory entity)
         {
-            if (ModelState.IsValid)
-            {
-                playlistVideoPositionHistory.Id = Guid.NewGuid();
-                _context.Add(playlistVideoPositionHistory);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["PlaylistVideoId"] = new SelectList(_context.PlaylistVideos, "Id", "Id", playlistVideoPositionHistory.PlaylistVideoId);
-            return View(playlistVideoPositionHistory);
+            return await CreateInternal(entity);
         }
 
-        // GET: PlaylistVideoPositionHistory/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
-        {
-            if (id == null || _context.PlaylistVideoPositionHistories == null)
-            {
-                return NotFound();
-            }
-
-            var playlistVideoPositionHistory = await _context.PlaylistVideoPositionHistories.FindAsync(id);
-            if (playlistVideoPositionHistory == null)
-            {
-                return NotFound();
-            }
-            ViewData["PlaylistVideoId"] = new SelectList(_context.PlaylistVideos, "Id", "Id", playlistVideoPositionHistory.PlaylistVideoId);
-            return View(playlistVideoPositionHistory);
-        }
-
-        // POST: PlaylistVideoPositionHistory/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("PlaylistVideoId,Position,ValidSince,ValidUntil,Id")] PlaylistVideoPositionHistory playlistVideoPositionHistory)
+        public async Task<IActionResult> Edit(Guid id,
+            [Bind("PlaylistVideoId,Position,ValidSince,ValidUntil,Id")]
+            PlaylistVideoPositionHistory entity)
         {
-            if (id != playlistVideoPositionHistory.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(playlistVideoPositionHistory);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PlaylistVideoPositionHistoryExists(playlistVideoPositionHistory.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["PlaylistVideoId"] = new SelectList(_context.PlaylistVideos, "Id", "Id", playlistVideoPositionHistory.PlaylistVideoId);
-            return View(playlistVideoPositionHistory);
-        }
-
-        // GET: PlaylistVideoPositionHistory/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null || _context.PlaylistVideoPositionHistories == null)
-            {
-                return NotFound();
-            }
-
-            var playlistVideoPositionHistory = await _context.PlaylistVideoPositionHistories
-                .Include(p => p.PlaylistVideo)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (playlistVideoPositionHistory == null)
-            {
-                return NotFound();
-            }
-
-            return View(playlistVideoPositionHistory);
-        }
-
-        // POST: PlaylistVideoPositionHistory/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            if (_context.PlaylistVideoPositionHistories == null)
-            {
-                return Problem("Entity set 'AbstractAppDbContext.PlaylistVideoPositionHistories'  is null.");
-            }
-            var playlistVideoPositionHistory = await _context.PlaylistVideoPositionHistories.FindAsync(id);
-            if (playlistVideoPositionHistory != null)
-            {
-                _context.PlaylistVideoPositionHistories.Remove(playlistVideoPositionHistory);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool PlaylistVideoPositionHistoryExists(Guid id)
-        {
-          return (_context.PlaylistVideoPositionHistories?.Any(e => e.Id == id)).GetValueOrDefault();
+            return await EditInternal(id, entity);
         }
     }
 }

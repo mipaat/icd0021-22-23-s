@@ -56,7 +56,7 @@ public class LangString : Dictionary<string, string>
         }
 
         // try to find the default culture
-        key = Keys.FirstOrDefault(t => culture.StartsWith(DefaultCulture));
+        key = Keys.FirstOrDefault(_ => culture.StartsWith(DefaultCulture));
         if (key != null)
         {
             return this[key];

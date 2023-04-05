@@ -32,19 +32,22 @@ public class AppUnitOfWork : BaseUnitOfWork<AbstractAppDbContext>, IAppUnitOfWor
     public IAuthorRatingRepository AuthorRatings => _authorRatings ??= new AuthorRatingRepository(DbContext);
 
     private IAuthorSubscriptionRepository? _authorSubscriptions;
-    public IAuthorSubscriptionRepository AuthorSubscriptions => _authorSubscriptions ??= new AuthorSubscriptionRepository(DbContext);
+
+    public IAuthorSubscriptionRepository AuthorSubscriptions =>
+        _authorSubscriptions ??= new AuthorSubscriptionRepository(DbContext);
 
     private ICommentRepository? _comments;
     public ICommentRepository Comments => _comments ??= new CommentRepository(DbContext);
 
-    private IVideoRepository? _videos;
-    public IVideoRepository Videos => _videos ??= new VideoRepository(DbContext);
-
     private ICommentReplyNotificationRepository? _commentReplyNotifications;
-    public ICommentReplyNotificationRepository CommentReplyNotifications => _commentReplyNotifications ??= new CommentReplyNotificationRepository(DbContext);
+
+    public ICommentReplyNotificationRepository CommentReplyNotifications =>
+        _commentReplyNotifications ??= new CommentReplyNotificationRepository(DbContext);
 
     private IExternalUserTokenRepository? _externalUserTokens;
-    public IExternalUserTokenRepository ExternalUserTokens => _externalUserTokens ??= new ExternalUserTokenRepository(DbContext);
+
+    public IExternalUserTokenRepository ExternalUserTokens =>
+        _externalUserTokens ??= new ExternalUserTokenRepository(DbContext);
 
     private IGameRepository? _games;
     public IGameRepository Games => _games ??= new GameRepository(DbContext);
@@ -52,9 +55,68 @@ public class AppUnitOfWork : BaseUnitOfWork<AbstractAppDbContext>, IAppUnitOfWor
     private IPlaylistAuthorRepository? _playlistAuthors;
     public IPlaylistAuthorRepository PlaylistAuthors => _playlistAuthors ??= new PlaylistAuthorRepository(DbContext);
 
+    private IPlaylistCategoryRepository? _playlistCategories;
+
+    public IPlaylistCategoryRepository PlaylistCategories =>
+        _playlistCategories ??= new PlaylistCategoryRepository(DbContext);
+
+    private IPlaylistHistoryRepository? _playlistHistories;
+
+    public IPlaylistHistoryRepository PlaylistHistories =>
+        _playlistHistories ??= new PlaylistHistoryRepository(DbContext);
+
+    private IPlaylistRatingRepository? _playlistRatings;
+    public IPlaylistRatingRepository PlaylistRatings => _playlistRatings ??= new PlaylistRatingRepository(DbContext);
+
     private IPlaylistRepository? _playlists;
     public IPlaylistRepository Playlists => _playlists ??= new PlaylistRepository(DbContext);
 
-    private IPlaylistCategoryRepository? _playlistCategories;
-    public IPlaylistCategoryRepository PlaylistCategories => _playlistCategories ??= new PlaylistCategoryRepository(DbContext);
+    private IPlaylistSubscriptionRepository? _playlistSubscriptions;
+
+    public IPlaylistSubscriptionRepository PlaylistSubscriptions =>
+        _playlistSubscriptions ??= new PlaylistSubscriptionRepository(DbContext);
+
+    private IPlaylistVideoPositionHistoryRepository? _playlistVideoPositionHistories;
+
+    public IPlaylistVideoPositionHistoryRepository PlaylistVideoPositionHistories => _playlistVideoPositionHistories ??=
+        new PlaylistVideoPositionHistoryRepository(DbContext);
+
+    private IPlaylistVideoRepository? _playlistVideos;
+    public IPlaylistVideoRepository PlaylistVideos => _playlistVideos ??= new PlaylistVideoRepository(DbContext);
+
+    private IQueueItemRepository? _queueItems;
+    public IQueueItemRepository QueueItems => _queueItems ??= new QueueItemRepository(DbContext);
+
+    private IStatusChangeEventRepository? _statusChangeEvents;
+
+    public IStatusChangeEventRepository StatusChangeEvents =>
+        _statusChangeEvents ??= new StatusChangeEventRepository(DbContext);
+
+    private IStatusChangeNotificationRepository? _statusChangeNotifications;
+
+    public IStatusChangeNotificationRepository StatusChangeNotifications =>
+        _statusChangeNotifications ??= new StatusChangeNotificationRepository(DbContext);
+
+    private IVideoAuthorRepository? _videoAuthors;
+    public IVideoAuthorRepository VideoAuthors => _videoAuthors ??= new VideoAuthorRepository(DbContext);
+
+    private IVideoCategoryRepository? _videoCategories;
+    public IVideoCategoryRepository VideoCategories => _videoCategories ??= new VideoCategoryRepository(DbContext);
+
+    private IVideoGameRepository? _videoGames;
+    public IVideoGameRepository VideoGames => _videoGames ??= new VideoGameRepository(DbContext);
+
+    private IVideoHistoryRepository? _videoHistories;
+    public IVideoHistoryRepository VideoHistories => _videoHistories ??= new VideoHistoryRepository(DbContext);
+
+    private IVideoRatingRepository? _videoRatings;
+    public IVideoRatingRepository VideoRatings => _videoRatings ??= new VideoRatingRepository(DbContext);
+
+    private IVideoRepository? _videos;
+    public IVideoRepository Videos => _videos ??= new VideoRepository(DbContext);
+
+    private IVideoUploadNotificationRepository? _videoUploadNotifications;
+
+    public IVideoUploadNotificationRepository VideoUploadNotifications =>
+        _videoUploadNotifications ??= new VideoUploadNotificationRepository(DbContext);
 }

@@ -1,172 +1,45 @@
-using DAL;
+using App.Contracts.DAL;
+using Base.WebHelpers;
+using Contracts.DAL;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebApp.Areas.Crud.Controllers
 {
     [Area("Crud")]
-    public class VideoGameController : Controller
+    public class VideoGameController : BaseEntityCrudController<IAppUnitOfWork, VideoGame>
     {
-        private readonly AbstractAppDbContext _context;
-
-        public VideoGameController(AbstractAppDbContext context)
+        public VideoGameController(IAppUnitOfWork uow) : base(uow)
         {
-            _context = context;
         }
 
-        // GET: VideoGame
-        public async Task<IActionResult> Index()
+        protected override IBaseEntityRepository<VideoGame, Guid> Entities => Uow.VideoGames;
+
+        protected override async Task SetupViewData(VideoGame? entity = null)
         {
-            var abstractAppDbContext = _context.VideoGames.Include(v => v.Game).Include(v => v.Video);
-            return View(await abstractAppDbContext.ToListAsync());
+            ViewData["GameId"] = new SelectList(await Uow.Games.GetAllAsync(), "Id", "IgdbId", entity?.GameId);
+            ViewData["VideoId"] = new SelectList(await Uow.Videos.GetAllAsync(), "Id", "IdOnPlatform", entity?.VideoId);
         }
 
-        // GET: VideoGame/Details/5
-        public async Task<IActionResult> Details(Guid? id)
-        {
-            if (id == null || _context.VideoGames == null)
-            {
-                return NotFound();
-            }
-
-            var videoGame = await _context.VideoGames
-                .Include(v => v.Game)
-                .Include(v => v.Video)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (videoGame == null)
-            {
-                return NotFound();
-            }
-
-            return View(videoGame);
-        }
-
-        // GET: VideoGame/Create
-        public IActionResult Create()
-        {
-            ViewData["GameId"] = new SelectList(_context.Games, "Id", "IgdbId");
-            ViewData["VideoId"] = new SelectList(_context.Videos, "Id", "IdOnPlatform");
-            return View();
-        }
-
-        // POST: VideoGame/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("VideoId,GameId,IgdbId,Platform,IdOnPlatform,Name,BoxArtUrl,FromTimecode,ToTimecode,ValidSince,ValidUntil,Id")] VideoGame videoGame)
+        public async Task<IActionResult> Create(
+            [Bind(
+                "VideoId,GameId,IgdbId,Platform,IdOnPlatform,Name,BoxArtUrl,FromTimecode,ToTimecode,ValidSince,ValidUntil,Id")]
+            VideoGame entity)
         {
-            if (ModelState.IsValid)
-            {
-                videoGame.Id = Guid.NewGuid();
-                _context.Add(videoGame);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["GameId"] = new SelectList(_context.Games, "Id", "IgdbId", videoGame.GameId);
-            ViewData["VideoId"] = new SelectList(_context.Videos, "Id", "IdOnPlatform", videoGame.VideoId);
-            return View(videoGame);
+            return await CreateInternal(entity);
         }
 
-        // GET: VideoGame/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
-        {
-            if (id == null || _context.VideoGames == null)
-            {
-                return NotFound();
-            }
-
-            var videoGame = await _context.VideoGames.FindAsync(id);
-            if (videoGame == null)
-            {
-                return NotFound();
-            }
-            ViewData["GameId"] = new SelectList(_context.Games, "Id", "IgdbId", videoGame.GameId);
-            ViewData["VideoId"] = new SelectList(_context.Videos, "Id", "IdOnPlatform", videoGame.VideoId);
-            return View(videoGame);
-        }
-
-        // POST: VideoGame/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("VideoId,GameId,IgdbId,Platform,IdOnPlatform,Name,BoxArtUrl,FromTimecode,ToTimecode,ValidSince,ValidUntil,Id")] VideoGame videoGame)
+        public async Task<IActionResult> Edit(Guid id,
+            [Bind(
+                "VideoId,GameId,IgdbId,Platform,IdOnPlatform,Name,BoxArtUrl,FromTimecode,ToTimecode,ValidSince,ValidUntil,Id")]
+            VideoGame entity)
         {
-            if (id != videoGame.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(videoGame);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!VideoGameExists(videoGame.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["GameId"] = new SelectList(_context.Games, "Id", "IgdbId", videoGame.GameId);
-            ViewData["VideoId"] = new SelectList(_context.Videos, "Id", "IdOnPlatform", videoGame.VideoId);
-            return View(videoGame);
-        }
-
-        // GET: VideoGame/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null || _context.VideoGames == null)
-            {
-                return NotFound();
-            }
-
-            var videoGame = await _context.VideoGames
-                .Include(v => v.Game)
-                .Include(v => v.Video)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (videoGame == null)
-            {
-                return NotFound();
-            }
-
-            return View(videoGame);
-        }
-
-        // POST: VideoGame/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            if (_context.VideoGames == null)
-            {
-                return Problem("Entity set 'AbstractAppDbContext.VideoGames'  is null.");
-            }
-            var videoGame = await _context.VideoGames.FindAsync(id);
-            if (videoGame != null)
-            {
-                _context.VideoGames.Remove(videoGame);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool VideoGameExists(Guid id)
-        {
-          return (_context.VideoGames?.Any(e => e.Id == id)).GetValueOrDefault();
+            return await EditInternal(id, entity);
         }
     }
 }

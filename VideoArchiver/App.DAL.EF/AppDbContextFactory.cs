@@ -134,9 +134,7 @@ internal enum EDbProvider
     Sqlite
 }
 
-internal record ConnectionInfo(EDbProvider Provider, string ConnectionString)
-{
-}
+internal record ConnectionInfo(EDbProvider Provider, string ConnectionString);
 
 internal class UnsupportedDatabaseProviderException : Exception
 {

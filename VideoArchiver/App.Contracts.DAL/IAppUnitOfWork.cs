@@ -13,11 +13,25 @@ public interface IAppUnitOfWork : IBaseUnitOfWork
     public IAuthorRatingRepository AuthorRatings { get; }
     public IAuthorSubscriptionRepository AuthorSubscriptions { get; }
     public ICommentRepository Comments { get; }
-    public IVideoRepository Videos { get; }
     public ICommentReplyNotificationRepository CommentReplyNotifications { get; }
     public IExternalUserTokenRepository ExternalUserTokens { get; }
     public IGameRepository Games { get; }
     public IPlaylistAuthorRepository PlaylistAuthors { get; }
-    public IPlaylistRepository Playlists { get; }
     public IPlaylistCategoryRepository PlaylistCategories { get; }
+    public IPlaylistRepository Playlists { get; }
+    public IPlaylistHistoryRepository PlaylistHistories { get; }
+    public IPlaylistRatingRepository PlaylistRatings { get; }
+    public IPlaylistSubscriptionRepository PlaylistSubscriptions { get; }
+    public IPlaylistVideoPositionHistoryRepository PlaylistVideoPositionHistories { get; }
+    public IPlaylistVideoRepository PlaylistVideos { get; }
+    public IQueueItemRepository QueueItems { get; }
+    public IStatusChangeEventRepository StatusChangeEvents { get; }
+    public IStatusChangeNotificationRepository StatusChangeNotifications { get; }
+    public IVideoAuthorRepository VideoAuthors { get; }
+    public IVideoCategoryRepository VideoCategories { get; }
+    public IVideoGameRepository VideoGames { get; }
+    public IVideoHistoryRepository VideoHistories { get; }
+    public IVideoRatingRepository VideoRatings { get; }
+    public IVideoRepository Videos { get; }
+    public IVideoUploadNotificationRepository VideoUploadNotifications { get; }
 }

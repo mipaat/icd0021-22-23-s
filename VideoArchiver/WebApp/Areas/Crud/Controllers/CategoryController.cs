@@ -1,156 +1,47 @@
 using App.Contracts.DAL;
-using DAL;
+using Base.WebHelpers;
+using Contracts.DAL;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebApp.Areas.Crud.Controllers
 {
     [Area("Crud")]
-    public class CategoryController : Controller
+    public class CategoryController : BaseEntityCrudController<IAppUnitOfWork, Category>
     {
-        private readonly IAppUnitOfWork _uow;
-
-        public CategoryController(IAppUnitOfWork uow)
+        public CategoryController(IAppUnitOfWork uow) : base(uow)
         {
-            _uow = uow;
         }
 
-        // GET: Category
-        public async Task<IActionResult> Index()
+        protected override IBaseEntityRepository<Category, Guid> Entities => Uow.Categories;
+
+        protected override async Task SetupViewData(Category? entity = null)
         {
-            return View(await _uow.Categories.GetAllAsync());
+            ViewData["CreatorId"] =
+                new SelectList(await Uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", entity?.CreatorId);
+            ViewData["ParentCategoryId"] =
+                new SelectList(await Uow.Categories.GetAllAsync(), "Id", "Id", entity?.ParentCategoryId);
         }
 
-        // GET: Category/Details/5
-        public async Task<IActionResult> Details(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var category = await _uow.Categories.GetByIdAsync(id.Value);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
-        }
-
-        private async Task SetupViewData(Category? category = null)
-        {
-            ViewData["CreatorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", category?.CreatorId);
-            ViewData["ParentCategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", category?.ParentCategoryId);
-        }
-
-        // GET: Category/Create
-        public async Task<IActionResult> Create()
-        {
-            await SetupViewData();
-            return View();
-        }
-
-        // POST: Category/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,IsPublic,SupportsAuthors,SupportsVideos,SupportsPlaylists,IsAssignable,ParentCategoryId,Platform,CreatorId,Id")] Category category)
+        public async Task<IActionResult> Create(
+            [Bind(
+                "Name,IsPublic,SupportsAuthors,SupportsVideos,SupportsPlaylists,IsAssignable,ParentCategoryId,Platform,CreatorId,Id")]
+            Category entity)
         {
-            if (ModelState.IsValid)
-            {
-                category.Id = Guid.NewGuid();
-                _uow.Categories.Add(category);
-                await _uow.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-
-            await SetupViewData(category);
-            return View(category);
+            return await CreateInternal(entity);
         }
 
-        // GET: Category/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var category = await _uow.Categories.GetByIdAsync(id.Value);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            await SetupViewData(category);
-            return View(category);
-        }
-
-        // POST: Category/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,IsPublic,SupportsAuthors,SupportsVideos,SupportsPlaylists,IsAssignable,ParentCategoryId,Platform,CreatorId,Id")] Category category)
+        public async Task<IActionResult> Edit(Guid id,
+            [Bind(
+                "Name,IsPublic,SupportsAuthors,SupportsVideos,SupportsPlaylists,IsAssignable,ParentCategoryId,Platform,CreatorId,Id")]
+            Category entity)
         {
-            if (id != category.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _uow.Categories.Update(category);
-                    await _uow.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await _uow.Categories.ExistsAsync(category.Id))
-                    {
-                        return NotFound();
-                    }
-
-                    throw;
-                }
-                return RedirectToAction(nameof(Index));
-            }
-
-            await SetupViewData(category);
-            return View(category);
-        }
-
-        // GET: Category/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var category = await _uow.Categories.GetByIdAsync(id.Value);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
-        }
-
-        // POST: Category/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            await _uow.Categories.RemoveAsync(id);
-            await _uow.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
+            return await EditInternal(id, entity);
         }
     }
 }
