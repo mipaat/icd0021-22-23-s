@@ -1,5 +1,7 @@
-using DAL;
+using App.Contracts.DAL;
 using Domain;
+using Domain.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,31 +11,30 @@ namespace WebApp.Areas.Crud.Controllers
     [Area("Crud")]
     public class AuthorController : Controller
     {
-        private readonly AbstractAppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
+        private readonly UserManager<User> _userManager;
 
-        public AuthorController(AbstractAppDbContext context)
+        public AuthorController(IAppUnitOfWork uow, UserManager<User> userManager)
         {
-            _context = context;
+            _uow = uow;
+            _userManager = userManager;
         }
 
         // GET: Author
         public async Task<IActionResult> Index()
         {
-            var abstractAppDbContext = _context.Authors.Include(a => a.User);
-            return View(await abstractAppDbContext.ToListAsync());
+            return View(await _uow.Authors.GetAllAsync());
         }
 
         // GET: Author/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.Authors == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var author = await _context.Authors
-                .Include(a => a.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var author = await _uow.Authors.GetByIdAsync(id.Value);
             if (author == null)
             {
                 return NotFound();
@@ -45,7 +46,7 @@ namespace WebApp.Areas.Crud.Controllers
         // GET: Author/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["UserId"] = new SelectList(_userManager.Users, "Id", "Id");
             return View();
         }
 
@@ -54,33 +55,38 @@ namespace WebApp.Areas.Crud.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Platform,IdOnPlatform,UserName,DisplayName,Bio,ProfileImages,Banners,Thumbnails,CreatedAt,UpdatedAt,UserId,PrivacyStatus,IsAvailable,InternalPrivacyStatus,Etag,LastFetched,LastSuccessfulFetch,AddedToArchiveAt,Monitor,Download,Id")] Author author)
+        public async Task<IActionResult> Create(
+            [Bind(
+                "Platform,IdOnPlatform,UserName,DisplayName,Bio,ProfileImages,Banners,Thumbnails,CreatedAt,UpdatedAt,UserId,PrivacyStatus,IsAvailable,InternalPrivacyStatus,Etag,LastFetched,LastSuccessfulFetch,AddedToArchiveAt,Monitor,Download,Id")]
+            Author author)
         {
             if (ModelState.IsValid)
             {
                 author.Id = Guid.NewGuid();
-                _context.Add(author);
-                await _context.SaveChangesAsync();
+                _uow.Authors.Add(author);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", author.UserId);
+
+            ViewData["UserId"] = new SelectList(_userManager.Users, "Id", "Id", author.UserId);
             return View(author);
         }
 
         // GET: Author/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.Authors == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var author = await _context.Authors.FindAsync(id);
+            var author = await _uow.Authors.GetByIdAsync(id.Value);
             if (author == null)
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", author.UserId);
+
+            ViewData["UserId"] = new SelectList(_userManager.Users, "Id", "Id", author.UserId);
             return View(author);
         }
 
@@ -89,7 +95,10 @@ namespace WebApp.Areas.Crud.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Platform,IdOnPlatform,UserName,DisplayName,Bio,ProfileImages,Banners,Thumbnails,CreatedAt,UpdatedAt,UserId,PrivacyStatus,IsAvailable,InternalPrivacyStatus,Etag,LastFetched,LastSuccessfulFetch,AddedToArchiveAt,Monitor,Download,Id")] Author author)
+        public async Task<IActionResult> Edit(Guid id,
+            [Bind(
+                "Platform,IdOnPlatform,UserName,DisplayName,Bio,ProfileImages,Banners,Thumbnails,CreatedAt,UpdatedAt,UserId,PrivacyStatus,IsAvailable,InternalPrivacyStatus,Etag,LastFetched,LastSuccessfulFetch,AddedToArchiveAt,Monitor,Download,Id")]
+            Author author)
         {
             if (id != author.Id)
             {
@@ -100,37 +109,35 @@ namespace WebApp.Areas.Crud.Controllers
             {
                 try
                 {
-                    _context.Update(author);
-                    await _context.SaveChangesAsync();
+                    _uow.Authors.Update(author);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AuthorExists(author.Id))
+                    if (!await _uow.Authors.ExistsAsync(author.Id))
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", author.UserId);
+
+            ViewData["UserId"] = new SelectList(_userManager.Users, "Id", "Id", author.UserId);
             return View(author);
         }
 
         // GET: Author/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.Authors == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var author = await _context.Authors
-                .Include(a => a.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var author = await _uow.Authors.GetByIdAsync(id.Value);
             if (author == null)
             {
                 return NotFound();
@@ -144,23 +151,10 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.Authors == null)
-            {
-                return Problem("Entity set 'AbstractAppDbContext.Authors'  is null.");
-            }
-            var author = await _context.Authors.FindAsync(id);
-            if (author != null)
-            {
-                _context.Authors.Remove(author);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await _uow.Authors.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
 
-        private bool AuthorExists(Guid id)
-        {
-          return (_context.Authors?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -1,3 +1,4 @@
+using App.Contracts.DAL;
 using DAL;
 using Domain.Enums;
 using Domain.Identity;
@@ -21,7 +22,7 @@ public class Program
 
         // Add services to the container.
         AppDbContextFactory.RegisterDbContext(builder.Services, builder.Configuration);
-        builder.Services.AddScoped<RepositoryContext>();
+        builder.Services.AddScoped<IAppUnitOfWork, AppUnitOfWork>();
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = false)
