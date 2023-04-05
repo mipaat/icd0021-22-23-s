@@ -1,3 +1,4 @@
+using App.Contracts.DAL;
 using DAL;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
@@ -9,32 +10,28 @@ namespace WebApp.Areas.Crud.Controllers
     [Area("Crud")]
     public class AuthorCategoryController : Controller
     {
-        private readonly AbstractAppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public AuthorCategoryController(AbstractAppDbContext context)
+        public AuthorCategoryController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: AuthorCategory
         public async Task<IActionResult> Index()
         {
-            var abstractAppDbContext = _context.AuthorCategories.Include(a => a.Author).Include(a => a.Category);
-            return View(await abstractAppDbContext.ToListAsync());
+            return View(await _uow.AuthorCategories.GetAllAsync());
         }
 
         // GET: AuthorCategory/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.AuthorCategories == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var authorCategory = await _context.AuthorCategories
-                .Include(a => a.Author)
-                .Include(a => a.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var authorCategory = await _uow.AuthorCategories.GetByIdAsync(id.Value);
             if (authorCategory == null)
             {
                 return NotFound();
@@ -44,10 +41,10 @@ namespace WebApp.Areas.Crud.Controllers
         }
 
         // GET: AuthorCategory/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform");
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform");
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id");
             return View();
         }
 
@@ -61,30 +58,30 @@ namespace WebApp.Areas.Crud.Controllers
             if (ModelState.IsValid)
             {
                 authorCategory.Id = Guid.NewGuid();
-                _context.Add(authorCategory);
-                await _context.SaveChangesAsync();
+                _uow.AuthorCategories.Add(authorCategory);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorCategory.AuthorId);
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", authorCategory.CategoryId);
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", authorCategory.AuthorId);
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", authorCategory.CategoryId);
             return View(authorCategory);
         }
 
         // GET: AuthorCategory/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.AuthorCategories == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var authorCategory = await _context.AuthorCategories.FindAsync(id);
+            var authorCategory = await _uow.AuthorCategories.GetByIdAsync(id.Value);
             if (authorCategory == null)
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorCategory.AuthorId);
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", authorCategory.CategoryId);
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", authorCategory.AuthorId);
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", authorCategory.CategoryId);
             return View(authorCategory);
         }
 
@@ -104,39 +101,34 @@ namespace WebApp.Areas.Crud.Controllers
             {
                 try
                 {
-                    _context.Update(authorCategory);
-                    await _context.SaveChangesAsync();
+                    _uow.AuthorCategories.Update(authorCategory);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AuthorCategoryExists(authorCategory.Id))
+                    if (!await _uow.AuthorCategories.ExistsAsync(authorCategory.Id))
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorCategory.AuthorId);
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", authorCategory.CategoryId);
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", authorCategory.AuthorId);
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", authorCategory.CategoryId);
             return View(authorCategory);
         }
 
         // GET: AuthorCategory/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.AuthorCategories == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var authorCategory = await _context.AuthorCategories
-                .Include(a => a.Author)
-                .Include(a => a.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var authorCategory = await _uow.AuthorCategories.GetByIdAsync(id.Value);
             if (authorCategory == null)
             {
                 return NotFound();
@@ -150,23 +142,10 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.AuthorCategories == null)
-            {
-                return Problem("Entity set 'AbstractAppDbContext.AuthorCategories'  is null.");
-            }
-            var authorCategory = await _context.AuthorCategories.FindAsync(id);
-            if (authorCategory != null)
-            {
-                _context.AuthorCategories.Remove(authorCategory);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await _uow.AuthorCategories.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
 
-        private bool AuthorCategoryExists(Guid id)
-        {
-          return (_context.AuthorCategories?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -15,4 +15,10 @@ public class AppUnitOfWork : BaseUnitOfWork<AbstractAppDbContext>, IAppUnitOfWor
 
     private IAuthorRepository? _authors;
     public IAuthorRepository Authors => _authors ??= new AuthorRepository(DbContext);
+
+    private IAuthorCategoryRepository? _authorCategories;
+    public IAuthorCategoryRepository AuthorCategories => _authorCategories ??= new AuthorCategoryRepository(DbContext);
+
+    private ICategoryRepository? _categories;
+    public ICategoryRepository Categories => _categories ??= new CategoryRepository(DbContext);
 }

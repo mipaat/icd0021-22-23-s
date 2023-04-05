@@ -6,4 +6,6 @@ namespace App.Contracts.DAL;
 public interface IAppUnitOfWork : IBaseUnitOfWork
 {
     public IAuthorRepository Authors { get; }
+    public IAuthorCategoryRepository AuthorCategories { get; }
+    public ICategoryRepository Categories { get; }
 }

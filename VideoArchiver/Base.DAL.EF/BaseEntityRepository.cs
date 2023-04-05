@@ -12,7 +12,7 @@ public class BaseEntityRepository<TEntity, TKey, TDbContext> : IBaseEntityReposi
 {
     public TDbContext DbContext { get; }
 
-    protected BaseEntityRepository(TDbContext dbContext)
+    public BaseEntityRepository(TDbContext dbContext)
     {
         DbContext = dbContext;
     }
@@ -26,19 +26,36 @@ public class BaseEntityRepository<TEntity, TKey, TDbContext> : IBaseEntityReposi
         throw new ApplicationException(
             $"Failed to fetch DbSet for Entity type {typeof(TEntity)} from {typeof(DbContext)}");
 
-    public async Task<TEntity?> GetByIdAsync(TKey id)
+    protected virtual DbSet<TEntity> DefaultIncludes(DbSet<TEntity> entities)
     {
-        return await Entities.FindAsync(id);
+        return entities;
     }
 
-    public async Task<ICollection<TEntity>> GetAllAsync(params Expression<Func<TEntity, bool>>[] filters)
+    public async Task<TEntity?> GetByIdAsync(TKey id)
     {
-        IQueryable<TEntity> result = Entities;
+        return await DefaultIncludes(Entities).FindAsync(id);
+    }
+
+    protected IQueryable<TEntity> GetAll(params Expression<Func<TEntity, bool>>[] filters)
+    {
+        return GetAll(DefaultIncludes, filters);
+    }
+
+    protected IQueryable<TEntity> GetAll(Func<DbSet<TEntity>, DbSet<TEntity>> includes, params Expression<Func<TEntity, bool>>[] filters)
+    {
+        IQueryable<TEntity> result = includes(Entities);
+
         foreach (var filter in filters)
         {
             result = result.Where(filter);
         }
+        
+        return result;
+    }
 
+    public async Task<ICollection<TEntity>> GetAllAsync(params Expression<Func<TEntity, bool>>[] filters)
+    {
+        var result = GetAll(filters);
         return await result.ToListAsync();
     }
 
@@ -74,7 +91,7 @@ public class BaseEntityRepository<TEntity, TDbContext> :
     where TEntity : class, IIdDatabaseEntity<Guid>
     where TDbContext : DbContext
 {
-    protected BaseEntityRepository(TDbContext dbContext) : base(dbContext)
+    public BaseEntityRepository(TDbContext dbContext) : base(dbContext)
     {
     }
 }

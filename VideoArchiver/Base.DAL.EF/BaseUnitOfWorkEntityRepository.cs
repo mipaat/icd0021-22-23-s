@@ -11,7 +11,7 @@ public class
     where TDbContext : DbContext
     where TUnitOfWork : IBaseUnitOfWork
 {
-    protected BaseUnitOfWorkEntityRepository(TDbContext dbContext, TUnitOfWork repositoryContext) :
+    public BaseUnitOfWorkEntityRepository(TDbContext dbContext, TUnitOfWork repositoryContext) :
         base(dbContext, repositoryContext)
     {
     }
@@ -28,7 +28,7 @@ public class
 {
     public TUnitOfWork Uow { get; }
 
-    protected BaseUnitOfWorkEntityRepository(TDbContext dbContext, TUnitOfWork repositoryContext) :
+    public BaseUnitOfWorkEntityRepository(TDbContext dbContext, TUnitOfWork repositoryContext) :
         base(dbContext)
     {
         Uow = repositoryContext;
