@@ -21,4 +21,31 @@ public class AppUnitOfWork : BaseUnitOfWork<AbstractAppDbContext>, IAppUnitOfWor
 
     private ICategoryRepository? _categories;
     public ICategoryRepository Categories => _categories ??= new CategoryRepository(DbContext);
+
+    private IAuthorHistoryRepository? _authorHistories;
+    public IAuthorHistoryRepository AuthorHistories => _authorHistories ??= new AuthorHistoryRepository(DbContext);
+
+    private IAuthorPubSubRepository? _authorPubSubs;
+    public IAuthorPubSubRepository AuthorPubSubs => _authorPubSubs ??= new AuthorPubSubRepository(DbContext);
+
+    private IAuthorRatingRepository? _authorRatings;
+    public IAuthorRatingRepository AuthorRatings => _authorRatings ??= new AuthorRatingRepository(DbContext);
+
+    private IAuthorSubscriptionRepository? _authorSubscriptions;
+    public IAuthorSubscriptionRepository AuthorSubscriptions => _authorSubscriptions ??= new AuthorSubscriptionRepository(DbContext);
+
+    private ICommentRepository? _comments;
+    public ICommentRepository Comments => _comments ??= new CommentRepository(DbContext);
+
+    private IVideoRepository? _videos;
+    public IVideoRepository Videos => _videos ??= new VideoRepository(DbContext);
+
+    private ICommentReplyNotificationRepository? _commentReplyNotifications;
+    public ICommentReplyNotificationRepository CommentReplyNotifications => _commentReplyNotifications ??= new CommentReplyNotificationRepository(DbContext);
+
+    private IExternalUserTokenRepository? _externalUserTokens;
+    public IExternalUserTokenRepository ExternalUserTokens => _externalUserTokens ??= new ExternalUserTokenRepository(DbContext);
+
+    private IGameRepository? _games;
+    public IGameRepository Games => _games ??= new GameRepository(DbContext);
 }

@@ -1,3 +1,4 @@
+using App.Contracts.DAL;
 using DAL;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
@@ -9,31 +10,28 @@ namespace WebApp.Areas.Crud.Controllers
     [Area("Crud")]
     public class AuthorPubSubController : Controller
     {
-        private readonly AbstractAppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public AuthorPubSubController(AbstractAppDbContext context)
+        public AuthorPubSubController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: AuthorPubSub
         public async Task<IActionResult> Index()
         {
-            var abstractAppDbContext = _context.AuthorPubSubs.Include(a => a.Author);
-            return View(await abstractAppDbContext.ToListAsync());
+            return View(await _uow.AuthorPubSubs.GetAllAsync());
         }
 
         // GET: AuthorPubSub/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.AuthorPubSubs == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var authorPubSub = await _context.AuthorPubSubs
-                .Include(a => a.Author)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var authorPubSub = await _uow.AuthorPubSubs.GetByIdAsync(id.Value);
             if (authorPubSub == null)
             {
                 return NotFound();
@@ -43,9 +41,9 @@ namespace WebApp.Areas.Crud.Controllers
         }
 
         // GET: AuthorPubSub/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform");
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform");
             return View();
         }
 
@@ -54,33 +52,38 @@ namespace WebApp.Areas.Crud.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LeasedAt,LeaseDuration,Secret,AuthorId,Id")] AuthorPubSub authorPubSub)
+        public async Task<IActionResult> Create(
+            [Bind("LeasedAt,LeaseDuration,Secret,AuthorId,Id")] AuthorPubSub authorPubSub)
         {
             if (ModelState.IsValid)
             {
                 authorPubSub.Id = Guid.NewGuid();
-                _context.Add(authorPubSub);
-                await _context.SaveChangesAsync();
+                _uow.AuthorPubSubs.Add(authorPubSub);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorPubSub.AuthorId);
+
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform",
+                authorPubSub.AuthorId);
             return View(authorPubSub);
         }
 
         // GET: AuthorPubSub/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.AuthorPubSubs == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var authorPubSub = await _context.AuthorPubSubs.FindAsync(id);
+            var authorPubSub = await _uow.AuthorPubSubs.GetByIdAsync(id.Value);
             if (authorPubSub == null)
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorPubSub.AuthorId);
+
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform",
+                authorPubSub.AuthorId);
             return View(authorPubSub);
         }
 
@@ -89,7 +92,8 @@ namespace WebApp.Areas.Crud.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("LeasedAt,LeaseDuration,Secret,AuthorId,Id")] AuthorPubSub authorPubSub)
+        public async Task<IActionResult> Edit(Guid id,
+            [Bind("LeasedAt,LeaseDuration,Secret,AuthorId,Id")] AuthorPubSub authorPubSub)
         {
             if (id != authorPubSub.Id)
             {
@@ -100,37 +104,36 @@ namespace WebApp.Areas.Crud.Controllers
             {
                 try
                 {
-                    _context.Update(authorPubSub);
-                    await _context.SaveChangesAsync();
+                    _uow.AuthorPubSubs.Update(authorPubSub);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AuthorPubSubExists(authorPubSub.Id))
+                    if (!await _uow.AuthorPubSubs.ExistsAsync(authorPubSub.Id))
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorPubSub.AuthorId);
+
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform",
+                authorPubSub.AuthorId);
             return View(authorPubSub);
         }
 
         // GET: AuthorPubSub/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.AuthorPubSubs == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var authorPubSub = await _context.AuthorPubSubs
-                .Include(a => a.Author)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var authorPubSub = await _uow.AuthorPubSubs.GetByIdAsync(id.Value);
             if (authorPubSub == null)
             {
                 return NotFound();
@@ -144,23 +147,10 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.AuthorPubSubs == null)
-            {
-                return Problem("Entity set 'AbstractAppDbContext.AuthorPubSubs'  is null.");
-            }
-            var authorPubSub = await _context.AuthorPubSubs.FindAsync(id);
-            if (authorPubSub != null)
-            {
-                _context.AuthorPubSubs.Remove(authorPubSub);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await _uow.AuthorPubSubs.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
 
-        private bool AuthorPubSubExists(Guid id)
-        {
-          return (_context.AuthorPubSubs?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

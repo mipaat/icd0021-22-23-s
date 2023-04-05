@@ -1,4 +1,4 @@
-using DAL;
+using App.Contracts.DAL;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,33 +9,28 @@ namespace WebApp.Areas.Crud.Controllers
     [Area("Crud")]
     public class CommentReplyNotificationController : Controller
     {
-        private readonly AbstractAppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public CommentReplyNotificationController(AbstractAppDbContext context)
+        public CommentReplyNotificationController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: CommentReplyNotification
         public async Task<IActionResult> Index()
         {
-            var abstractAppDbContext = _context.CommentReplyNotifications.Include(c => c.Comment).Include(c => c.Receiver).Include(c => c.Reply);
-            return View(await abstractAppDbContext.ToListAsync());
+            return View(await _uow.CommentReplyNotifications.GetAllAsync());
         }
 
         // GET: CommentReplyNotification/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.CommentReplyNotifications == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var commentReplyNotification = await _context.CommentReplyNotifications
-                .Include(c => c.Comment)
-                .Include(c => c.Receiver)
-                .Include(c => c.Reply)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var commentReplyNotification = await _uow.CommentReplyNotifications.GetByIdAsync(id.Value);
             if (commentReplyNotification == null)
             {
                 return NotFound();
@@ -44,12 +39,18 @@ namespace WebApp.Areas.Crud.Controllers
             return View(commentReplyNotification);
         }
 
-        // GET: CommentReplyNotification/Create
-        public IActionResult Create()
+        private async Task SetupViewData()
         {
-            ViewData["CommentId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform");
-            ViewData["ReceiverId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform");
-            ViewData["ReplyId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform");
+            var comments = await _uow.Comments.GetAllAsync();
+            ViewData["CommentId"] = new SelectList(comments, "Id", "IdOnPlatform");
+            ViewData["ReceiverId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform");
+            ViewData["ReplyId"] = new SelectList(comments, "Id", "IdOnPlatform");
+        }
+
+        // GET: CommentReplyNotification/Create
+        public async Task<IActionResult> Create()
+        {
+            await SetupViewData();
             return View();
         }
 
@@ -63,32 +64,30 @@ namespace WebApp.Areas.Crud.Controllers
             if (ModelState.IsValid)
             {
                 commentReplyNotification.Id = Guid.NewGuid();
-                _context.Add(commentReplyNotification);
-                await _context.SaveChangesAsync();
+                _uow.CommentReplyNotifications.Add(commentReplyNotification);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CommentId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform", commentReplyNotification.CommentId);
-            ViewData["ReceiverId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", commentReplyNotification.ReceiverId);
-            ViewData["ReplyId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform", commentReplyNotification.ReplyId);
+
+            await SetupViewData();
             return View(commentReplyNotification);
         }
 
         // GET: CommentReplyNotification/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.CommentReplyNotifications == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var commentReplyNotification = await _context.CommentReplyNotifications.FindAsync(id);
+            var commentReplyNotification = await _uow.CommentReplyNotifications.GetByIdAsync(id.Value);
             if (commentReplyNotification == null)
             {
                 return NotFound();
             }
-            ViewData["CommentId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform", commentReplyNotification.CommentId);
-            ViewData["ReceiverId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", commentReplyNotification.ReceiverId);
-            ViewData["ReplyId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform", commentReplyNotification.ReplyId);
+
+            await SetupViewData();
             return View(commentReplyNotification);
         }
 
@@ -108,41 +107,34 @@ namespace WebApp.Areas.Crud.Controllers
             {
                 try
                 {
-                    _context.Update(commentReplyNotification);
-                    await _context.SaveChangesAsync();
+                    _uow.CommentReplyNotifications.Update(commentReplyNotification);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CommentReplyNotificationExists(commentReplyNotification.Id))
+                    if (!await _uow.CommentReplyNotifications.ExistsAsync(commentReplyNotification.Id))
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CommentId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform", commentReplyNotification.CommentId);
-            ViewData["ReceiverId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", commentReplyNotification.ReceiverId);
-            ViewData["ReplyId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform", commentReplyNotification.ReplyId);
+
+            await SetupViewData();
             return View(commentReplyNotification);
         }
 
         // GET: CommentReplyNotification/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.CommentReplyNotifications == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var commentReplyNotification = await _context.CommentReplyNotifications
-                .Include(c => c.Comment)
-                .Include(c => c.Receiver)
-                .Include(c => c.Reply)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var commentReplyNotification = await _uow.CommentReplyNotifications.GetByIdAsync(id.Value);
             if (commentReplyNotification == null)
             {
                 return NotFound();
@@ -156,23 +148,10 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.CommentReplyNotifications == null)
-            {
-                return Problem("Entity set 'AbstractAppDbContext.CommentReplyNotifications'  is null.");
-            }
-            var commentReplyNotification = await _context.CommentReplyNotifications.FindAsync(id);
-            if (commentReplyNotification != null)
-            {
-                _context.CommentReplyNotifications.Remove(commentReplyNotification);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await _uow.CommentReplyNotifications.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
 
-        private bool CommentReplyNotificationExists(Guid id)
-        {
-          return (_context.CommentReplyNotifications?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

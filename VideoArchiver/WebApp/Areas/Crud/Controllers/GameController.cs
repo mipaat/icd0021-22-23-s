@@ -1,4 +1,4 @@
-using DAL;
+using App.Contracts.DAL;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,31 +8,28 @@ namespace WebApp.Areas.Crud.Controllers
     [Area("Crud")]
     public class GameController : Controller
     {
-        private readonly AbstractAppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public GameController(AbstractAppDbContext context)
+        public GameController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: Game
         public async Task<IActionResult> Index()
         {
-              return _context.Games != null ? 
-                          View(await _context.Games.ToListAsync()) :
-                          Problem("Entity set 'AbstractAppDbContext.Games'  is null.");
+            return View(await _uow.Games.GetAllAsync());
         }
 
         // GET: Game/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.Games == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var game = await _context.Games
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var game = await _uow.Games.GetByIdAsync(id.Value);
             if (game == null)
             {
                 return NotFound();
@@ -57,8 +54,8 @@ namespace WebApp.Areas.Crud.Controllers
             if (ModelState.IsValid)
             {
                 game.Id = Guid.NewGuid();
-                _context.Add(game);
-                await _context.SaveChangesAsync();
+                _uow.Games.Add(game);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(game);
@@ -67,12 +64,12 @@ namespace WebApp.Areas.Crud.Controllers
         // GET: Game/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.Games == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var game = await _context.Games.FindAsync(id);
+            var game = await _uow.Games.GetByIdAsync(id.Value);
             if (game == null)
             {
                 return NotFound();
@@ -96,19 +93,17 @@ namespace WebApp.Areas.Crud.Controllers
             {
                 try
                 {
-                    _context.Update(game);
-                    await _context.SaveChangesAsync();
+                    _uow.Games.Update(game);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GameExists(game.Id))
+                    if (!await _uow.Games.ExistsAsync(game.Id))
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -118,13 +113,12 @@ namespace WebApp.Areas.Crud.Controllers
         // GET: Game/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.Games == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var game = await _context.Games
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var game = await _uow.Games.GetByIdAsync(id.Value);
             if (game == null)
             {
                 return NotFound();
@@ -138,23 +132,10 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.Games == null)
-            {
-                return Problem("Entity set 'AbstractAppDbContext.Games'  is null.");
-            }
-            var game = await _context.Games.FindAsync(id);
-            if (game != null)
-            {
-                _context.Games.Remove(game);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await _uow.Games.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
 
-        private bool GameExists(Guid id)
-        {
-          return (_context.Games?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -1,4 +1,4 @@
-using DAL;
+using App.Contracts.DAL;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,33 +9,28 @@ namespace WebApp.Areas.Crud.Controllers
     [Area("Crud")]
     public class AuthorRatingController : Controller
     {
-        private readonly AbstractAppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public AuthorRatingController(AbstractAppDbContext context)
+        public AuthorRatingController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: AuthorRating
         public async Task<IActionResult> Index()
         {
-            var abstractAppDbContext = _context.AuthorRatings.Include(a => a.Category).Include(a => a.Rated).Include(a => a.Rater);
-            return View(await abstractAppDbContext.ToListAsync());
+            return View(await _uow.AuthorRatings.GetAllAsync());
         }
 
         // GET: AuthorRating/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.AuthorRatings == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var authorRating = await _context.AuthorRatings
-                .Include(a => a.Category)
-                .Include(a => a.Rated)
-                .Include(a => a.Rater)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var authorRating = await _uow.AuthorRatings.GetByIdAsync(id.Value);
             if (authorRating == null)
             {
                 return NotFound();
@@ -45,11 +40,12 @@ namespace WebApp.Areas.Crud.Controllers
         }
 
         // GET: AuthorRating/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
-            ViewData["RatedId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform");
-            ViewData["RaterId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform");
+            var authors = await _uow.Authors.GetAllAsync();
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id");
+            ViewData["RatedId"] = new SelectList(authors, "Id", "IdOnPlatform");
+            ViewData["RaterId"] = new SelectList(authors, "Id", "IdOnPlatform");
             return View();
         }
 
@@ -63,32 +59,36 @@ namespace WebApp.Areas.Crud.Controllers
             if (ModelState.IsValid)
             {
                 authorRating.Id = Guid.NewGuid();
-                _context.Add(authorRating);
-                await _context.SaveChangesAsync();
+                _uow.AuthorRatings.Add(authorRating);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", authorRating.CategoryId);
-            ViewData["RatedId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorRating.RatedId);
-            ViewData["RaterId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorRating.RaterId);
+
+            var authors = await _uow.Authors.GetAllAsync();
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", authorRating.CategoryId);
+            ViewData["RatedId"] = new SelectList(authors, "Id", "IdOnPlatform", authorRating.RatedId);
+            ViewData["RaterId"] = new SelectList(authors, "Id", "IdOnPlatform", authorRating.RaterId);
             return View(authorRating);
         }
 
         // GET: AuthorRating/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.AuthorRatings == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var authorRating = await _context.AuthorRatings.FindAsync(id);
+            var authorRating = await _uow.AuthorRatings.GetByIdAsync(id.Value);
             if (authorRating == null)
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", authorRating.CategoryId);
-            ViewData["RatedId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorRating.RatedId);
-            ViewData["RaterId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorRating.RaterId);
+
+            var authors = await _uow.Authors.GetAllAsync();
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", authorRating.CategoryId);
+            ViewData["RatedId"] = new SelectList(authors, "Id", "IdOnPlatform", authorRating.RatedId);
+            ViewData["RaterId"] = new SelectList(authors, "Id", "IdOnPlatform", authorRating.RaterId);
             return View(authorRating);
         }
 
@@ -108,41 +108,37 @@ namespace WebApp.Areas.Crud.Controllers
             {
                 try
                 {
-                    _context.Update(authorRating);
-                    await _context.SaveChangesAsync();
+                    _uow.AuthorRatings.Update(authorRating);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AuthorRatingExists(authorRating.Id))
+                    if (!await _uow.AuthorRatings.ExistsAsync(authorRating.Id))
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", authorRating.CategoryId);
-            ViewData["RatedId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorRating.RatedId);
-            ViewData["RaterId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorRating.RaterId);
+
+            var authors = await _uow.Authors.GetAllAsync();
+            ViewData["CategoryId"] = new SelectList(await _uow.Categories.GetAllAsync(), "Id", "Id", authorRating.CategoryId);
+            ViewData["RatedId"] = new SelectList(authors, "Id", "IdOnPlatform", authorRating.RatedId);
+            ViewData["RaterId"] = new SelectList(authors, "Id", "IdOnPlatform", authorRating.RaterId);
             return View(authorRating);
         }
 
         // GET: AuthorRating/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.AuthorRatings == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var authorRating = await _context.AuthorRatings
-                .Include(a => a.Category)
-                .Include(a => a.Rated)
-                .Include(a => a.Rater)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var authorRating = await _uow.AuthorRatings.GetByIdAsync(id.Value);
             if (authorRating == null)
             {
                 return NotFound();
@@ -156,23 +152,10 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.AuthorRatings == null)
-            {
-                return Problem("Entity set 'AbstractAppDbContext.AuthorRatings'  is null.");
-            }
-            var authorRating = await _context.AuthorRatings.FindAsync(id);
-            if (authorRating != null)
-            {
-                _context.AuthorRatings.Remove(authorRating);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await _uow.AuthorRatings.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
 
-        private bool AuthorRatingExists(Guid id)
-        {
-          return (_context.AuthorRatings?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

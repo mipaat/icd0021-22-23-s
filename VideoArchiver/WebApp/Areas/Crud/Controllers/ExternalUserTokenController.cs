@@ -1,5 +1,7 @@
-using DAL;
+using App.Contracts.DAL;
 using Domain;
+using Domain.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,32 +11,30 @@ namespace WebApp.Areas.Crud.Controllers
     [Area("Crud")]
     public class ExternalUserTokenController : Controller
     {
-        private readonly AbstractAppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
+        private readonly UserManager<User> _userManager;
 
-        public ExternalUserTokenController(AbstractAppDbContext context)
+        public ExternalUserTokenController(IAppUnitOfWork uow, UserManager<User> userManager)
         {
-            _context = context;
+            _uow = uow;
+            _userManager = userManager;
         }
 
         // GET: ExternalUserToken
         public async Task<IActionResult> Index()
         {
-            var abstractAppDbContext = _context.ExternalUserTokens.Include(e => e.Author).Include(e => e.User);
-            return View(await abstractAppDbContext.ToListAsync());
+            return View(await _uow.ExternalUserTokens.GetAllAsync());
         }
 
         // GET: ExternalUserToken/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.ExternalUserTokens == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var externalUserToken = await _context.ExternalUserTokens
-                .Include(e => e.Author)
-                .Include(e => e.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var externalUserToken = await _uow.ExternalUserTokens.GetByIdAsync(id.Value);
             if (externalUserToken == null)
             {
                 return NotFound();
@@ -43,11 +43,16 @@ namespace WebApp.Areas.Crud.Controllers
             return View(externalUserToken);
         }
 
-        // GET: ExternalUserToken/Create
-        public IActionResult Create()
+        private async Task SetupViewData()
         {
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform");
+            ViewData["UserId"] = new SelectList(await _userManager.Users.ToListAsync(), "Id", "Id");
+        }
+        
+        // GET: ExternalUserToken/Create
+        public async Task<IActionResult> Create()
+        {
+            await SetupViewData();
             return View();
         }
 
@@ -61,30 +66,30 @@ namespace WebApp.Areas.Crud.Controllers
             if (ModelState.IsValid)
             {
                 externalUserToken.Id = Guid.NewGuid();
-                _context.Add(externalUserToken);
-                await _context.SaveChangesAsync();
+                _uow.ExternalUserTokens.Add(externalUserToken);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", externalUserToken.AuthorId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", externalUserToken.UserId);
+
+            await SetupViewData();
             return View(externalUserToken);
         }
 
         // GET: ExternalUserToken/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.ExternalUserTokens == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var externalUserToken = await _context.ExternalUserTokens.FindAsync(id);
+            var externalUserToken = await _uow.ExternalUserTokens.GetByIdAsync(id.Value);
             if (externalUserToken == null)
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", externalUserToken.AuthorId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", externalUserToken.UserId);
+
+            await SetupViewData();
             return View(externalUserToken);
         }
 
@@ -104,39 +109,34 @@ namespace WebApp.Areas.Crud.Controllers
             {
                 try
                 {
-                    _context.Update(externalUserToken);
-                    await _context.SaveChangesAsync();
+                    _uow.ExternalUserTokens.Update(externalUserToken);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ExternalUserTokenExists(externalUserToken.Id))
+                    if (!await _uow.ExternalUserTokens.ExistsAsync(externalUserToken.Id))
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", externalUserToken.AuthorId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", externalUserToken.UserId);
+
+            await SetupViewData();
             return View(externalUserToken);
         }
 
         // GET: ExternalUserToken/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.ExternalUserTokens == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var externalUserToken = await _context.ExternalUserTokens
-                .Include(e => e.Author)
-                .Include(e => e.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var externalUserToken = await _uow.ExternalUserTokens.GetByIdAsync(id.Value);
             if (externalUserToken == null)
             {
                 return NotFound();
@@ -150,23 +150,10 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.ExternalUserTokens == null)
-            {
-                return Problem("Entity set 'AbstractAppDbContext.ExternalUserTokens'  is null.");
-            }
-            var externalUserToken = await _context.ExternalUserTokens.FindAsync(id);
-            if (externalUserToken != null)
-            {
-                _context.ExternalUserTokens.Remove(externalUserToken);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await _uow.ExternalUserTokens.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
 
-        private bool ExternalUserTokenExists(Guid id)
-        {
-          return (_context.ExternalUserTokens?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

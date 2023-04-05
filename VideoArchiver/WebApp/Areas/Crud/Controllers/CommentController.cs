@@ -1,4 +1,4 @@
-using DAL;
+using App.Contracts.DAL;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,34 +9,28 @@ namespace WebApp.Areas.Crud.Controllers
     [Area("Crud")]
     public class CommentController : Controller
     {
-        private readonly AbstractAppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public CommentController(AbstractAppDbContext context)
+        public CommentController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: Comment
         public async Task<IActionResult> Index()
         {
-            var abstractAppDbContext = _context.Comments.Include(c => c.Author).Include(c => c.ConversationRoot).Include(c => c.ReplyTarget).Include(c => c.Video);
-            return View(await abstractAppDbContext.ToListAsync());
+            return View(await _uow.Comments.GetAllAsync());
         }
 
         // GET: Comment/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.Comments == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var comment = await _context.Comments
-                .Include(c => c.Author)
-                .Include(c => c.ConversationRoot)
-                .Include(c => c.ReplyTarget)
-                .Include(c => c.Video)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var comment = await _uow.Comments.GetByIdAsync(id.Value);
             if (comment == null)
             {
                 return NotFound();
@@ -45,13 +39,19 @@ namespace WebApp.Areas.Crud.Controllers
             return View(comment);
         }
 
-        // GET: Comment/Create
-        public IActionResult Create()
+        private async Task SetupViewData()
         {
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform");
-            ViewData["ConversationRootId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform");
-            ViewData["ReplyTargetId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform");
-            ViewData["VideoId"] = new SelectList(_context.Videos, "Id", "IdOnPlatform");
+            var comments = await _uow.Comments.GetAllAsync();
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform");
+            ViewData["ConversationRootId"] = new SelectList(comments, "Id", "IdOnPlatform");
+            ViewData["ReplyTargetId"] = new SelectList(comments, "Id", "IdOnPlatform");
+            ViewData["VideoId"] = new SelectList(await _uow.Videos.GetAllAsync(), "Id", "IdOnPlatform");
+        }
+
+        // GET: Comment/Create
+        public async Task<IActionResult> Create()
+        {
+            await SetupViewData();
             return View();
         }
 
@@ -65,34 +65,30 @@ namespace WebApp.Areas.Crud.Controllers
             if (ModelState.IsValid)
             {
                 comment.Id = Guid.NewGuid();
-                _context.Add(comment);
-                await _context.SaveChangesAsync();
+                _uow.Comments.Add(comment);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", comment.AuthorId);
-            ViewData["ConversationRootId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform", comment.ConversationRootId);
-            ViewData["ReplyTargetId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform", comment.ReplyTargetId);
-            ViewData["VideoId"] = new SelectList(_context.Videos, "Id", "IdOnPlatform", comment.VideoId);
+
+            await SetupViewData();
             return View(comment);
         }
 
         // GET: Comment/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.Comments == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var comment = await _context.Comments.FindAsync(id);
+            var comment = await _uow.Comments.GetByIdAsync(id.Value);
             if (comment == null)
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", comment.AuthorId);
-            ViewData["ConversationRootId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform", comment.ConversationRootId);
-            ViewData["ReplyTargetId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform", comment.ReplyTargetId);
-            ViewData["VideoId"] = new SelectList(_context.Videos, "Id", "IdOnPlatform", comment.VideoId);
+
+            await SetupViewData();
             return View(comment);
         }
 
@@ -112,43 +108,34 @@ namespace WebApp.Areas.Crud.Controllers
             {
                 try
                 {
-                    _context.Update(comment);
-                    await _context.SaveChangesAsync();
+                    _uow.Comments.Update(comment);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CommentExists(comment.Id))
+                    if (!await _uow.Comments.ExistsAsync(comment.Id))
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", comment.AuthorId);
-            ViewData["ConversationRootId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform", comment.ConversationRootId);
-            ViewData["ReplyTargetId"] = new SelectList(_context.Comments, "Id", "IdOnPlatform", comment.ReplyTargetId);
-            ViewData["VideoId"] = new SelectList(_context.Videos, "Id", "IdOnPlatform", comment.VideoId);
+
+            await SetupViewData();
             return View(comment);
         }
 
         // GET: Comment/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.Comments == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var comment = await _context.Comments
-                .Include(c => c.Author)
-                .Include(c => c.ConversationRoot)
-                .Include(c => c.ReplyTarget)
-                .Include(c => c.Video)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var comment = await _uow.Comments.GetByIdAsync(id.Value);
             if (comment == null)
             {
                 return NotFound();
@@ -162,23 +149,10 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.Comments == null)
-            {
-                return Problem("Entity set 'AbstractAppDbContext.Comments'  is null.");
-            }
-            var comment = await _context.Comments.FindAsync(id);
-            if (comment != null)
-            {
-                _context.Comments.Remove(comment);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await _uow.Comments.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
 
-        private bool CommentExists(Guid id)
-        {
-          return (_context.Comments?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -1,4 +1,4 @@
-using DAL;
+using App.Contracts.DAL;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,31 +9,28 @@ namespace WebApp.Areas.Crud.Controllers
     [Area("Crud")]
     public class AuthorHistoryController : Controller
     {
-        private readonly AbstractAppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public AuthorHistoryController(AbstractAppDbContext context)
+        public AuthorHistoryController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: AuthorHistory
         public async Task<IActionResult> Index()
         {
-            var abstractAppDbContext = _context.AuthorHistories.Include(a => a.Author);
-            return View(await abstractAppDbContext.ToListAsync());
+            return View(await _uow.AuthorHistories.GetAllAsync());
         }
 
         // GET: AuthorHistory/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.AuthorHistories == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var authorHistory = await _context.AuthorHistories
-                .Include(a => a.Author)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var authorHistory = await _uow.AuthorHistories.GetByIdAsync(id.Value);
             if (authorHistory == null)
             {
                 return NotFound();
@@ -43,9 +40,9 @@ namespace WebApp.Areas.Crud.Controllers
         }
 
         // GET: AuthorHistory/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform");
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform");
             return View();
         }
 
@@ -59,28 +56,28 @@ namespace WebApp.Areas.Crud.Controllers
             if (ModelState.IsValid)
             {
                 authorHistory.Id = Guid.NewGuid();
-                _context.Add(authorHistory);
-                await _context.SaveChangesAsync();
+                _uow.AuthorHistories.Add(authorHistory);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorHistory.AuthorId);
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", authorHistory.AuthorId);
             return View(authorHistory);
         }
 
         // GET: AuthorHistory/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.AuthorHistories == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var authorHistory = await _context.AuthorHistories.FindAsync(id);
+            var authorHistory = await _uow.AuthorHistories.GetByIdAsync(id.Value);
             if (authorHistory == null)
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorHistory.AuthorId);
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", authorHistory.AuthorId);
             return View(authorHistory);
         }
 
@@ -100,37 +97,33 @@ namespace WebApp.Areas.Crud.Controllers
             {
                 try
                 {
-                    _context.Update(authorHistory);
-                    await _context.SaveChangesAsync();
+                    _uow.AuthorHistories.Update(authorHistory);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AuthorHistoryExists(authorHistory.Id))
+                    if (!await _uow.AuthorHistories.ExistsAsync(authorHistory.Id))
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorHistory.AuthorId);
+            ViewData["AuthorId"] = new SelectList(await _uow.Authors.GetAllAsync(), "Id", "IdOnPlatform", authorHistory.AuthorId);
             return View(authorHistory);
         }
 
         // GET: AuthorHistory/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.AuthorHistories == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var authorHistory = await _context.AuthorHistories
-                .Include(a => a.Author)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var authorHistory = await _uow.AuthorHistories.GetByIdAsync(id.Value);
             if (authorHistory == null)
             {
                 return NotFound();
@@ -144,23 +137,10 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.AuthorHistories == null)
-            {
-                return Problem("Entity set 'AbstractAppDbContext.AuthorHistories'  is null.");
-            }
-            var authorHistory = await _context.AuthorHistories.FindAsync(id);
-            if (authorHistory != null)
-            {
-                _context.AuthorHistories.Remove(authorHistory);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await _uow.AuthorHistories.RemoveAsync(id);
 
-        private bool AuthorHistoryExists(Guid id)
-        {
-          return (_context.AuthorHistories?.Any(e => e.Id == id)).GetValueOrDefault();
+            await _uow.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

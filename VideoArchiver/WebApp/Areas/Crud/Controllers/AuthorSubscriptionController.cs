@@ -1,4 +1,4 @@
-using DAL;
+using App.Contracts.DAL;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,32 +9,28 @@ namespace WebApp.Areas.Crud.Controllers
     [Area("Crud")]
     public class AuthorSubscriptionController : Controller
     {
-        private readonly AbstractAppDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public AuthorSubscriptionController(AbstractAppDbContext context)
+        public AuthorSubscriptionController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: AuthorSubscription
         public async Task<IActionResult> Index()
         {
-            var abstractAppDbContext = _context.AuthorSubscriptions.Include(a => a.Subscriber).Include(a => a.SubscriptionTarget);
-            return View(await abstractAppDbContext.ToListAsync());
+            return View(await _uow.AuthorSubscriptions.GetAllAsync());
         }
 
         // GET: AuthorSubscription/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null || _context.AuthorSubscriptions == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var authorSubscription = await _context.AuthorSubscriptions
-                .Include(a => a.Subscriber)
-                .Include(a => a.SubscriptionTarget)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var authorSubscription = await _uow.AuthorSubscriptions.GetByIdAsync(id.Value);
             if (authorSubscription == null)
             {
                 return NotFound();
@@ -44,10 +40,11 @@ namespace WebApp.Areas.Crud.Controllers
         }
 
         // GET: AuthorSubscription/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["SubscriberId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform");
-            ViewData["SubscriptionTargetId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform");
+            var authors = await _uow.Authors.GetAllAsync();
+            ViewData["SubscriberId"] = new SelectList(authors, "Id", "IdOnPlatform");
+            ViewData["SubscriptionTargetId"] = new SelectList(authors, "Id", "IdOnPlatform");
             return View();
         }
 
@@ -61,30 +58,34 @@ namespace WebApp.Areas.Crud.Controllers
             if (ModelState.IsValid)
             {
                 authorSubscription.Id = Guid.NewGuid();
-                _context.Add(authorSubscription);
-                await _context.SaveChangesAsync();
+                _uow.AuthorSubscriptions.Add(authorSubscription);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SubscriberId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorSubscription.SubscriberId);
-            ViewData["SubscriptionTargetId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorSubscription.SubscriptionTargetId);
+
+            var authors = await _uow.Authors.GetAllAsync();
+            ViewData["SubscriberId"] = new SelectList(authors, "Id", "IdOnPlatform", authorSubscription.SubscriberId);
+            ViewData["SubscriptionTargetId"] = new SelectList(authors, "Id", "IdOnPlatform", authorSubscription.SubscriptionTargetId);
             return View(authorSubscription);
         }
 
         // GET: AuthorSubscription/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.AuthorSubscriptions == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var authorSubscription = await _context.AuthorSubscriptions.FindAsync(id);
+            var authorSubscription = await _uow.AuthorSubscriptions.GetByIdAsync(id.Value);
             if (authorSubscription == null)
             {
                 return NotFound();
             }
-            ViewData["SubscriberId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorSubscription.SubscriberId);
-            ViewData["SubscriptionTargetId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorSubscription.SubscriptionTargetId);
+
+            var authors = await _uow.Authors.GetAllAsync();
+            ViewData["SubscriberId"] = new SelectList(authors, "Id", "IdOnPlatform", authorSubscription.SubscriberId);
+            ViewData["SubscriptionTargetId"] = new SelectList(authors, "Id", "IdOnPlatform", authorSubscription.SubscriptionTargetId);
             return View(authorSubscription);
         }
 
@@ -104,39 +105,36 @@ namespace WebApp.Areas.Crud.Controllers
             {
                 try
                 {
-                    _context.Update(authorSubscription);
-                    await _context.SaveChangesAsync();
+                    _uow.AuthorSubscriptions.Update(authorSubscription);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AuthorSubscriptionExists(authorSubscription.Id))
+                    if (!await _uow.AuthorSubscriptions.ExistsAsync(authorSubscription.Id))
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SubscriberId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorSubscription.SubscriberId);
-            ViewData["SubscriptionTargetId"] = new SelectList(_context.Authors, "Id", "IdOnPlatform", authorSubscription.SubscriptionTargetId);
+
+            var authors = await _uow.Authors.GetAllAsync();
+            ViewData["SubscriberId"] = new SelectList(authors, "Id", "IdOnPlatform", authorSubscription.SubscriberId);
+            ViewData["SubscriptionTargetId"] = new SelectList(authors, "Id", "IdOnPlatform", authorSubscription.SubscriptionTargetId);
             return View(authorSubscription);
         }
 
         // GET: AuthorSubscription/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.AuthorSubscriptions == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var authorSubscription = await _context.AuthorSubscriptions
-                .Include(a => a.Subscriber)
-                .Include(a => a.SubscriptionTarget)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var authorSubscription = await _uow.AuthorSubscriptions.GetByIdAsync(id.Value);
             if (authorSubscription == null)
             {
                 return NotFound();
@@ -150,23 +148,10 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.AuthorSubscriptions == null)
-            {
-                return Problem("Entity set 'AbstractAppDbContext.AuthorSubscriptions'  is null.");
-            }
-            var authorSubscription = await _context.AuthorSubscriptions.FindAsync(id);
-            if (authorSubscription != null)
-            {
-                _context.AuthorSubscriptions.Remove(authorSubscription);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await _uow.AuthorSubscriptions.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
 
-        private bool AuthorSubscriptionExists(Guid id)
-        {
-          return (_context.AuthorSubscriptions?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
