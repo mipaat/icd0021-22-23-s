@@ -17,6 +17,103 @@
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        CRUD
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="Author" asp-action="Index">Author</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="AuthorCategory" asp-action="Index">AuthorCategory</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="AuthorHistory" asp-action="Index">AuthorHistory</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="AuthorPubSub" asp-action="Index">AuthorPubSub</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="AuthorRating" asp-action="Index">AuthorRating</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="AuthorSubscription" asp-action="Index">AuthorSubscription</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="Category" asp-action="Index">Category</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="Comment" asp-action="Index">Comment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="CommentReplyNotification" asp-action="Index">CommentReplyNotification</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="ExternalUserToken" asp-action="Index">ExternalUserToken</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="Game" asp-action="Index">Game</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="Playlist" asp-action="Index">Playlist</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="PlaylistAuthor" asp-action="Index">PlaylistAuthor</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="PlaylistCategory" asp-action="Index">PlaylistCategory</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="PlaylistHistory" asp-action="Index">PlaylistHistory</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="PlaylistRating" asp-action="Index">PlaylistRating</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="PlaylistSubscription" asp-action="Index">PlaylistSubscription</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="PlaylistVideo" asp-action="Index">PlaylistVideo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="PlaylistVideoPositionHistory" asp-action="Index">PlaylistVideoPositionHistory</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="QueueItem" asp-action="Index">QueueItem</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="StatusChangeEvent" asp-action="Index">StatusChangeEvent</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="StatusChangeNotification" asp-action="Index">StatusChangeNotification</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="Video" asp-action="Index">Video</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="VideoAuthor" asp-action="Index">VideoAuthor</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="VideoCategory" asp-action="Index">VideoCategory</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="VideoGame" asp-action="Index">VideoGame</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="VideoHistory" asp-action="Index">VideoHistory</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="VideoRating" asp-action="Index">VideoRating</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item nav-link text-dark" asp-area="Crud" asp-controller="VideoUploadNotification" asp-action="Index">VideoUploadNotification</a>
+                        </li>
+                    </ul>
+                </div>
+            }
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
@@ -24,96 +121,6 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="Author" asp-action="Index">Author</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="AuthorCategory" asp-action="Index">AuthorCategory</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="AuthorHistory" asp-action="Index">AuthorHistory</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="AuthorPubSub" asp-action="Index">AuthorPubSub</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="AuthorRating" asp-action="Index">AuthorRating</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="AuthorSubscription" asp-action="Index">AuthorSubscription</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="Category" asp-action="Index">Category</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="Comment" asp-action="Index">Comment</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="CommentReplyNotification" asp-action="Index">CommentReplyNotification</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="ExternalUserToken" asp-action="Index">ExternalUserToken</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="Game" asp-action="Index">Game</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="Playlist" asp-action="Index">Playlist</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="PlaylistAuthor" asp-action="Index">PlaylistAuthor</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="PlaylistCategory" asp-action="Index">PlaylistCategory</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="PlaylistHistory" asp-action="Index">PlaylistHistory</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="PlaylistRating" asp-action="Index">PlaylistRating</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="PlaylistSubscription" asp-action="Index">PlaylistSubscription</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="PlaylistVideo" asp-action="Index">PlaylistVideo</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="PlaylistVideoPositionHistory" asp-action="Index">PlaylistVideoPositionHistory</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="QueueItem" asp-action="Index">QueueItem</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="StatusChangeEvent" asp-action="Index">StatusChangeEvent</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="StatusChangeNotification" asp-action="Index">StatusChangeNotification</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="Video" asp-action="Index">Video</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="VideoAuthor" asp-action="Index">VideoAuthor</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="VideoCategory" asp-action="Index">VideoCategory</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="VideoGame" asp-action="Index">VideoGame</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="VideoHistory" asp-action="Index">VideoHistory</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="VideoRating" asp-action="Index">VideoRating</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Crud" asp-controller="VideoUploadNotification" asp-action="Index">VideoUploadNotification</a>
                     </li>
                 </ul>
                 <partial name="_LoginPartial"/>

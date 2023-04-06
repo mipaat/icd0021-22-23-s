@@ -2,11 +2,13 @@ using App.Contracts.DAL;
 using Base.WebHelpers;
 using Contracts.DAL;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp.Areas.Crud.Controllers
 {
     [Area("Crud")]
+    [Authorize(Roles = "Admin")]
     public class PlaylistController : BaseEntityCrudController<IAppUnitOfWork, Playlist>
     {
         public PlaylistController(IAppUnitOfWork uow) : base(uow)

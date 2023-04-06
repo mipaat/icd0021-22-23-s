@@ -3,6 +3,7 @@ using Base.WebHelpers;
 using Contracts.DAL;
 using Domain;
 using Domain.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace WebApp.Areas.Crud.Controllers
 {
     [Area("Crud")]
+    [Authorize(Roles = "Admin")]
     public class ExternalUserTokenController : BaseEntityCrudController<IAppUnitOfWork, ExternalUserToken>
     {
         private readonly UserManager<User> _userManager;

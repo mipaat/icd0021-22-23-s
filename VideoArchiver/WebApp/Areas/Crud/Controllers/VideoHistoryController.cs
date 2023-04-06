@@ -2,12 +2,14 @@ using App.Contracts.DAL;
 using Base.WebHelpers;
 using Contracts.DAL;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebApp.Areas.Crud.Controllers
 {
     [Area("Crud")]
+    [Authorize(Roles = "Admin")]
     public class VideoHistoryController : BaseEntityCrudController<IAppUnitOfWork, VideoHistory>
     {
         public VideoHistoryController(IAppUnitOfWork uow) : base(uow)
