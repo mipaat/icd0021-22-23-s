@@ -34,6 +34,18 @@ public class Program
             {
                 options.ModelBinderProviders.Insert(0, new CustomModelBinderProvider<Platform>());
             });
+
+        const string corsAllowAllName = "CorsAllowAll";
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(corsAllowAllName, policy =>
+            {
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+                policy.AllowAnyOrigin();
+            });
+        });
+
         builder.Services.Configure<IdentityOptions>(options =>
         {
             options.Password.RequireDigit = false;
@@ -62,6 +74,8 @@ public class Program
         app.UseStaticFiles();
 
         app.UseRouting();
+
+        app.UseCors(corsAllowAllName);
 
         app.UseAuthorization();
 
@@ -94,7 +108,7 @@ public class Program
         }
 
         const string dataInitConfigSection = "DataInitialization";
-        
+
         if (configuration.GetValue<bool>($"{dataInitConfigSection}:DropDatabase"))
         {
             logger.LogWarning("Drop database");
