@@ -20,6 +20,7 @@ public class AbstractAppDbContext : IdentityDbContext<User, Role, Guid, Identity
     }
 
     // ASP.NET Core Identity entities' DbSets are mapped in parent class
+    public DbSet<RefreshToken> RefreshTokens { get; set; } = default!;
 
     public DbSet<Video> Videos { get; set; } = default!;
     public DbSet<Author> Authors { get; set; } = default!;

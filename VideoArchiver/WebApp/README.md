@@ -8,10 +8,10 @@ Or, alternatively, remove that option entirely to use a local SQLite database.
 
 ## Migrations
 (In solution root directory - VideoArchiver)  
-`dotnet ef migrations add --context DbContextClassName MigrationName --project DAL --startup-project WebApp`  
-`dotnet ef migrations remove --context DbContextClassName --project DAL --startup-project WebApp`  
-`dotnet ef database update --context DbContextClassName --project DAL --startup-project WebApp`  
-`dotnet ef database update --context DbContextClassName MigrationName --project DAL --startup-project WebApp`  
+`dotnet ef migrations add --context DbContextClassName MigrationName --project App.DAL.EF --startup-project WebApp`  
+`dotnet ef migrations remove --context DbContextClassName --project App.DAL.EF --startup-project WebApp`  
+`dotnet ef database update --context DbContextClassName --project App.DAL.EF --startup-project WebApp`  
+`dotnet ef database update --context DbContextClassName MigrationName --project App.DAL.EF --startup-project WebApp`  
 
 ## ASP.NET DB Scaffolding
 (In WebApp directory)  

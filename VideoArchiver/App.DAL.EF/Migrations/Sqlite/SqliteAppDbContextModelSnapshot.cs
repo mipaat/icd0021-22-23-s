@@ -15,9 +15,9 @@ namespace DAL.Migrations.Sqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.5");
 
-            modelBuilder.Entity("App.Domain.Author", b =>
+            modelBuilder.Entity("Domain.Author", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -98,7 +98,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("App.Domain.AuthorCategory", b =>
+            modelBuilder.Entity("Domain.AuthorCategory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -122,7 +122,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("AuthorCategories");
                 });
 
-            modelBuilder.Entity("App.Domain.AuthorHistory", b =>
+            modelBuilder.Entity("Domain.AuthorHistory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -176,7 +176,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("AuthorHistories");
                 });
 
-            modelBuilder.Entity("App.Domain.AuthorPubSub", b =>
+            modelBuilder.Entity("Domain.AuthorPubSub", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -203,7 +203,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("AuthorPubSubs");
                 });
 
-            modelBuilder.Entity("App.Domain.AuthorRating", b =>
+            modelBuilder.Entity("Domain.AuthorRating", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -235,7 +235,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("AuthorRatings");
                 });
 
-            modelBuilder.Entity("App.Domain.AuthorSubscription", b =>
+            modelBuilder.Entity("Domain.AuthorSubscription", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -267,7 +267,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("AuthorSubscriptions");
                 });
 
-            modelBuilder.Entity("App.Domain.Category", b =>
+            modelBuilder.Entity("Domain.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -311,7 +311,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("App.Domain.Comment", b =>
+            modelBuilder.Entity("Domain.Comment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -395,7 +395,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("App.Domain.CommentReplyNotification", b =>
+            modelBuilder.Entity("Domain.CommentReplyNotification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -427,7 +427,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("CommentReplyNotifications");
                 });
 
-            modelBuilder.Entity("App.Domain.ExternalUserToken", b =>
+            modelBuilder.Entity("Domain.ExternalUserToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -472,7 +472,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("ExternalUserTokens");
                 });
 
-            modelBuilder.Entity("App.Domain.Game", b =>
+            modelBuilder.Entity("Domain.Game", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -507,7 +507,38 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("App.Domain.Identity.Role", b =>
+            modelBuilder.Entity("Domain.Identity.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("PreviousExpiresAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PreviousRefreshToken")
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("Domain.Identity.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -534,7 +565,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("App.Domain.Identity.User", b =>
+            modelBuilder.Entity("Domain.Identity.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -599,7 +630,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("App.Domain.Identity.UserRole", b =>
+            modelBuilder.Entity("Domain.Identity.UserRole", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
@@ -614,7 +645,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("App.Domain.Playlist", b =>
+            modelBuilder.Entity("Domain.Playlist", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -684,7 +715,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("Playlists");
                 });
 
-            modelBuilder.Entity("App.Domain.PlaylistAuthor", b =>
+            modelBuilder.Entity("Domain.PlaylistAuthor", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -708,7 +739,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("PlaylistAuthors");
                 });
 
-            modelBuilder.Entity("App.Domain.PlaylistCategory", b =>
+            modelBuilder.Entity("Domain.PlaylistCategory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -732,7 +763,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("PlaylistCategories");
                 });
 
-            modelBuilder.Entity("App.Domain.PlaylistHistory", b =>
+            modelBuilder.Entity("Domain.PlaylistHistory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -780,7 +811,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("PlaylistHistories");
                 });
 
-            modelBuilder.Entity("App.Domain.PlaylistRating", b =>
+            modelBuilder.Entity("Domain.PlaylistRating", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -812,7 +843,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("PlaylistRatings");
                 });
 
-            modelBuilder.Entity("App.Domain.PlaylistSubscription", b =>
+            modelBuilder.Entity("Domain.PlaylistSubscription", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -836,7 +867,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("PlaylistSubscriptions");
                 });
 
-            modelBuilder.Entity("App.Domain.PlaylistVideo", b =>
+            modelBuilder.Entity("Domain.PlaylistVideo", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -876,7 +907,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("PlaylistVideos");
                 });
 
-            modelBuilder.Entity("App.Domain.PlaylistVideoPositionHistory", b =>
+            modelBuilder.Entity("Domain.PlaylistVideoPositionHistory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -901,7 +932,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("PlaylistVideoPositionHistories");
                 });
 
-            modelBuilder.Entity("App.Domain.QueueItem", b =>
+            modelBuilder.Entity("Domain.QueueItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -975,7 +1006,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("QueueItems");
                 });
 
-            modelBuilder.Entity("App.Domain.StatusChangeEvent", b =>
+            modelBuilder.Entity("Domain.StatusChangeEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1016,7 +1047,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("StatusChangeEvents");
                 });
 
-            modelBuilder.Entity("App.Domain.StatusChangeNotification", b =>
+            modelBuilder.Entity("Domain.StatusChangeNotification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1043,7 +1074,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("StatusChangeNotifications");
                 });
 
-            modelBuilder.Entity("App.Domain.Video", b =>
+            modelBuilder.Entity("Domain.Video", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1170,7 +1201,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("Videos");
                 });
 
-            modelBuilder.Entity("App.Domain.VideoAuthor", b =>
+            modelBuilder.Entity("Domain.VideoAuthor", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1194,7 +1225,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("VideoAuthors");
                 });
 
-            modelBuilder.Entity("App.Domain.VideoCategory", b =>
+            modelBuilder.Entity("Domain.VideoCategory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1218,7 +1249,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("VideoCategories");
                 });
 
-            modelBuilder.Entity("App.Domain.VideoGame", b =>
+            modelBuilder.Entity("Domain.VideoGame", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1271,7 +1302,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("VideoGames");
                 });
 
-            modelBuilder.Entity("App.Domain.VideoHistory", b =>
+            modelBuilder.Entity("Domain.VideoHistory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1376,7 +1407,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("VideoHistories");
                 });
 
-            modelBuilder.Entity("App.Domain.VideoRating", b =>
+            modelBuilder.Entity("Domain.VideoRating", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1408,7 +1439,7 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("VideoRatings");
                 });
 
-            modelBuilder.Entity("App.Domain.VideoUploadNotification", b =>
+            modelBuilder.Entity("Domain.VideoUploadNotification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1522,9 +1553,9 @@ namespace DAL.Migrations.Sqlite
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("App.Domain.Author", b =>
+            modelBuilder.Entity("Domain.Author", b =>
                 {
-                    b.HasOne("App.Domain.Identity.User", "User")
+                    b.HasOne("Domain.Identity.User", "User")
                         .WithMany("Authors")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1532,15 +1563,15 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("App.Domain.AuthorCategory", b =>
+            modelBuilder.Entity("Domain.AuthorCategory", b =>
                 {
-                    b.HasOne("App.Domain.Author", "Author")
+                    b.HasOne("Domain.Author", "Author")
                         .WithMany("AuthorCategories")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Category", "Category")
+                    b.HasOne("Domain.Category", "Category")
                         .WithMany("AuthorCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1551,9 +1582,9 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("App.Domain.AuthorHistory", b =>
+            modelBuilder.Entity("Domain.AuthorHistory", b =>
                 {
-                    b.HasOne("App.Domain.Author", "Author")
+                    b.HasOne("Domain.Author", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1562,9 +1593,9 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("App.Domain.AuthorPubSub", b =>
+            modelBuilder.Entity("Domain.AuthorPubSub", b =>
                 {
-                    b.HasOne("App.Domain.Author", "Author")
+                    b.HasOne("Domain.Author", "Author")
                         .WithMany("AuthorPubSubs")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1573,21 +1604,21 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("App.Domain.AuthorRating", b =>
+            modelBuilder.Entity("Domain.AuthorRating", b =>
                 {
-                    b.HasOne("App.Domain.Category", "Category")
+                    b.HasOne("Domain.Category", "Category")
                         .WithMany("AuthorRatings")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Author", "Rated")
+                    b.HasOne("Domain.Author", "Rated")
                         .WithMany("ReceivedAuthorRatings")
                         .HasForeignKey("RatedId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Author", "Rater")
+                    b.HasOne("Domain.Author", "Rater")
                         .WithMany("AuthorRatings")
                         .HasForeignKey("RaterId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1600,15 +1631,15 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Rater");
                 });
 
-            modelBuilder.Entity("App.Domain.AuthorSubscription", b =>
+            modelBuilder.Entity("Domain.AuthorSubscription", b =>
                 {
-                    b.HasOne("App.Domain.Author", "Subscriber")
+                    b.HasOne("Domain.Author", "Subscriber")
                         .WithMany("SubscribedAuthorSubscriptions")
                         .HasForeignKey("SubscriberId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Author", "SubscriptionTarget")
+                    b.HasOne("Domain.Author", "SubscriptionTarget")
                         .WithMany("SubscriberAuthorSubscriptions")
                         .HasForeignKey("SubscriptionTargetId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1619,14 +1650,14 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("SubscriptionTarget");
                 });
 
-            modelBuilder.Entity("App.Domain.Category", b =>
+            modelBuilder.Entity("Domain.Category", b =>
                 {
-                    b.HasOne("App.Domain.Author", "Creator")
+                    b.HasOne("Domain.Author", "Creator")
                         .WithMany("Categories")
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("App.Domain.Category", "ParentCategory")
+                    b.HasOne("Domain.Category", "ParentCategory")
                         .WithMany("DirectChildCategories")
                         .HasForeignKey("ParentCategoryId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1636,25 +1667,25 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("ParentCategory");
                 });
 
-            modelBuilder.Entity("App.Domain.Comment", b =>
+            modelBuilder.Entity("Domain.Comment", b =>
                 {
-                    b.HasOne("App.Domain.Author", "Author")
+                    b.HasOne("Domain.Author", "Author")
                         .WithMany("Comments")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Comment", "ConversationRoot")
+                    b.HasOne("Domain.Comment", "ConversationRoot")
                         .WithMany("ConversationReplies")
                         .HasForeignKey("ConversationRootId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("App.Domain.Comment", "ReplyTarget")
+                    b.HasOne("Domain.Comment", "ReplyTarget")
                         .WithMany("DirectReplies")
                         .HasForeignKey("ReplyTargetId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("App.Domain.Video", "Video")
+                    b.HasOne("Domain.Video", "Video")
                         .WithMany("Comments")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1669,21 +1700,21 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("App.Domain.CommentReplyNotification", b =>
+            modelBuilder.Entity("Domain.CommentReplyNotification", b =>
                 {
-                    b.HasOne("App.Domain.Comment", "Comment")
+                    b.HasOne("Domain.Comment", "Comment")
                         .WithMany()
                         .HasForeignKey("CommentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Author", "Receiver")
+                    b.HasOne("Domain.Author", "Receiver")
                         .WithMany("CommentReplyNotifications")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Comment", "Reply")
+                    b.HasOne("Domain.Comment", "Reply")
                         .WithMany()
                         .HasForeignKey("ReplyId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1696,15 +1727,15 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Reply");
                 });
 
-            modelBuilder.Entity("App.Domain.ExternalUserToken", b =>
+            modelBuilder.Entity("Domain.ExternalUserToken", b =>
                 {
-                    b.HasOne("App.Domain.Author", "Author")
+                    b.HasOne("Domain.Author", "Author")
                         .WithMany("ExternalUserTokens")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Identity.User", "User")
+                    b.HasOne("Domain.Identity.User", "User")
                         .WithMany("ExternalUserTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1715,30 +1746,41 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("App.Domain.Identity.UserRole", b =>
+            modelBuilder.Entity("Domain.Identity.RefreshToken", b =>
                 {
-                    b.HasOne("App.Domain.Identity.Role", null)
+                    b.HasOne("Domain.Identity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Identity.UserRole", b =>
+                {
+                    b.HasOne("Domain.Identity.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Identity.User", null)
+                    b.HasOne("Domain.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("App.Domain.PlaylistAuthor", b =>
+            modelBuilder.Entity("Domain.PlaylistAuthor", b =>
                 {
-                    b.HasOne("App.Domain.Author", "Author")
+                    b.HasOne("Domain.Author", "Author")
                         .WithMany("PlaylistAuthors")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Playlist", "Playlist")
+                    b.HasOne("Domain.Playlist", "Playlist")
                         .WithMany("PlaylistAuthors")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1749,15 +1791,15 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Playlist");
                 });
 
-            modelBuilder.Entity("App.Domain.PlaylistCategory", b =>
+            modelBuilder.Entity("Domain.PlaylistCategory", b =>
                 {
-                    b.HasOne("App.Domain.Category", "Category")
+                    b.HasOne("Domain.Category", "Category")
                         .WithMany("PlaylistCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Playlist", "Playlist")
+                    b.HasOne("Domain.Playlist", "Playlist")
                         .WithMany("PlaylistCategories")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1768,9 +1810,9 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Playlist");
                 });
 
-            modelBuilder.Entity("App.Domain.PlaylistHistory", b =>
+            modelBuilder.Entity("Domain.PlaylistHistory", b =>
                 {
-                    b.HasOne("App.Domain.Playlist", "Playlist")
+                    b.HasOne("Domain.Playlist", "Playlist")
                         .WithMany("PlaylistHistories")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1779,21 +1821,21 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Playlist");
                 });
 
-            modelBuilder.Entity("App.Domain.PlaylistRating", b =>
+            modelBuilder.Entity("Domain.PlaylistRating", b =>
                 {
-                    b.HasOne("App.Domain.Author", "Author")
+                    b.HasOne("Domain.Author", "Author")
                         .WithMany("PlaylistRatings")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Category", "Category")
+                    b.HasOne("Domain.Category", "Category")
                         .WithMany("PlaylistRatings")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Playlist", "Playlist")
+                    b.HasOne("Domain.Playlist", "Playlist")
                         .WithMany("PlaylistRatings")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1806,15 +1848,15 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Playlist");
                 });
 
-            modelBuilder.Entity("App.Domain.PlaylistSubscription", b =>
+            modelBuilder.Entity("Domain.PlaylistSubscription", b =>
                 {
-                    b.HasOne("App.Domain.Playlist", "Playlist")
+                    b.HasOne("Domain.Playlist", "Playlist")
                         .WithMany("PlaylistSubscriptions")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Author", "Subscriber")
+                    b.HasOne("Domain.Author", "Subscriber")
                         .WithMany("PlaylistSubscriptions")
                         .HasForeignKey("SubscriberId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1825,25 +1867,25 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Subscriber");
                 });
 
-            modelBuilder.Entity("App.Domain.PlaylistVideo", b =>
+            modelBuilder.Entity("Domain.PlaylistVideo", b =>
                 {
-                    b.HasOne("App.Domain.Author", "AddedBy")
+                    b.HasOne("Domain.Author", "AddedBy")
                         .WithMany()
                         .HasForeignKey("AddedById")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("App.Domain.Playlist", "Playlist")
+                    b.HasOne("Domain.Playlist", "Playlist")
                         .WithMany("PlaylistVideos")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Author", "RemovedBy")
+                    b.HasOne("Domain.Author", "RemovedBy")
                         .WithMany()
                         .HasForeignKey("RemovedById")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("App.Domain.Video", "Video")
+                    b.HasOne("Domain.Video", "Video")
                         .WithMany()
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1858,9 +1900,9 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("App.Domain.PlaylistVideoPositionHistory", b =>
+            modelBuilder.Entity("Domain.PlaylistVideoPositionHistory", b =>
                 {
-                    b.HasOne("App.Domain.PlaylistVideo", "PlaylistVideo")
+                    b.HasOne("Domain.PlaylistVideo", "PlaylistVideo")
                         .WithMany("PositionHistories")
                         .HasForeignKey("PlaylistVideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1869,30 +1911,30 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("PlaylistVideo");
                 });
 
-            modelBuilder.Entity("App.Domain.QueueItem", b =>
+            modelBuilder.Entity("Domain.QueueItem", b =>
                 {
-                    b.HasOne("App.Domain.Identity.User", "AddedBy")
+                    b.HasOne("Domain.Identity.User", "AddedBy")
                         .WithMany("AddedQueueItems")
                         .HasForeignKey("AddedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Identity.User", "ApprovedBy")
+                    b.HasOne("Domain.Identity.User", "ApprovedBy")
                         .WithMany("ApprovedQueueItems")
                         .HasForeignKey("ApprovedById")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("App.Domain.Author", "Author")
+                    b.HasOne("Domain.Author", "Author")
                         .WithMany("QueueItems")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("App.Domain.Playlist", "Playlist")
+                    b.HasOne("Domain.Playlist", "Playlist")
                         .WithMany("QueueItems")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("App.Domain.Video", "Video")
+                    b.HasOne("Domain.Video", "Video")
                         .WithMany()
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1908,19 +1950,19 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("App.Domain.StatusChangeEvent", b =>
+            modelBuilder.Entity("Domain.StatusChangeEvent", b =>
                 {
-                    b.HasOne("App.Domain.Author", "Author")
+                    b.HasOne("Domain.Author", "Author")
                         .WithMany("StatusChangeEvents")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("App.Domain.Playlist", "Playlist")
+                    b.HasOne("Domain.Playlist", "Playlist")
                         .WithMany("StatusChangeEvents")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("App.Domain.Video", "Video")
+                    b.HasOne("Domain.Video", "Video")
                         .WithMany("StatusChangeEvents")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1932,15 +1974,15 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("App.Domain.StatusChangeNotification", b =>
+            modelBuilder.Entity("Domain.StatusChangeNotification", b =>
                 {
-                    b.HasOne("App.Domain.Identity.User", "Receiver")
+                    b.HasOne("Domain.Identity.User", "Receiver")
                         .WithMany("StatusChangeNotifications")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.StatusChangeEvent", "StatusChangeEvent")
+                    b.HasOne("Domain.StatusChangeEvent", "StatusChangeEvent")
                         .WithMany()
                         .HasForeignKey("StatusChangeEventId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1951,15 +1993,15 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("StatusChangeEvent");
                 });
 
-            modelBuilder.Entity("App.Domain.VideoAuthor", b =>
+            modelBuilder.Entity("Domain.VideoAuthor", b =>
                 {
-                    b.HasOne("App.Domain.Author", "Author")
+                    b.HasOne("Domain.Author", "Author")
                         .WithMany("VideoAuthors")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Video", "Video")
+                    b.HasOne("Domain.Video", "Video")
                         .WithMany("VideoAuthors")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1970,15 +2012,15 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("App.Domain.VideoCategory", b =>
+            modelBuilder.Entity("Domain.VideoCategory", b =>
                 {
-                    b.HasOne("App.Domain.Category", "Category")
+                    b.HasOne("Domain.Category", "Category")
                         .WithMany("VideoCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Video", "Video")
+                    b.HasOne("Domain.Video", "Video")
                         .WithMany("VideoCategories")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1989,14 +2031,14 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("App.Domain.VideoGame", b =>
+            modelBuilder.Entity("Domain.VideoGame", b =>
                 {
-                    b.HasOne("App.Domain.Game", "Game")
+                    b.HasOne("Domain.Game", "Game")
                         .WithMany("VideoGames")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("App.Domain.Video", "Video")
+                    b.HasOne("Domain.Video", "Video")
                         .WithMany("VideoGames")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2007,9 +2049,9 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("App.Domain.VideoHistory", b =>
+            modelBuilder.Entity("Domain.VideoHistory", b =>
                 {
-                    b.HasOne("App.Domain.Video", "Video")
+                    b.HasOne("Domain.Video", "Video")
                         .WithMany("VideoHistories")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2018,21 +2060,21 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("App.Domain.VideoRating", b =>
+            modelBuilder.Entity("Domain.VideoRating", b =>
                 {
-                    b.HasOne("App.Domain.Author", "Author")
+                    b.HasOne("Domain.Author", "Author")
                         .WithMany("VideoRatings")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Category", "Category")
+                    b.HasOne("Domain.Category", "Category")
                         .WithMany("VideoRatings")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Video", "Video")
+                    b.HasOne("Domain.Video", "Video")
                         .WithMany("VideoRatings")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2045,15 +2087,15 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("App.Domain.VideoUploadNotification", b =>
+            modelBuilder.Entity("Domain.VideoUploadNotification", b =>
                 {
-                    b.HasOne("App.Domain.Author", "Receiver")
+                    b.HasOne("Domain.Author", "Receiver")
                         .WithMany("VideoUploadNotifications")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Video", "Video")
+                    b.HasOne("Domain.Video", "Video")
                         .WithMany()
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2066,7 +2108,7 @@ namespace DAL.Migrations.Sqlite
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("App.Domain.Identity.Role", null)
+                    b.HasOne("Domain.Identity.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2075,7 +2117,7 @@ namespace DAL.Migrations.Sqlite
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("App.Domain.Identity.User", null)
+                    b.HasOne("Domain.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2084,7 +2126,7 @@ namespace DAL.Migrations.Sqlite
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("App.Domain.Identity.User", null)
+                    b.HasOne("Domain.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2093,14 +2135,14 @@ namespace DAL.Migrations.Sqlite
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("App.Domain.Identity.User", null)
+                    b.HasOne("Domain.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("App.Domain.Author", b =>
+            modelBuilder.Entity("Domain.Author", b =>
                 {
                     b.Navigation("AuthorCategories");
 
@@ -2139,7 +2181,7 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("VideoUploadNotifications");
                 });
 
-            modelBuilder.Entity("App.Domain.Category", b =>
+            modelBuilder.Entity("Domain.Category", b =>
                 {
                     b.Navigation("AuthorCategories");
 
@@ -2156,19 +2198,19 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("VideoRatings");
                 });
 
-            modelBuilder.Entity("App.Domain.Comment", b =>
+            modelBuilder.Entity("Domain.Comment", b =>
                 {
                     b.Navigation("ConversationReplies");
 
                     b.Navigation("DirectReplies");
                 });
 
-            modelBuilder.Entity("App.Domain.Game", b =>
+            modelBuilder.Entity("Domain.Game", b =>
                 {
                     b.Navigation("VideoGames");
                 });
 
-            modelBuilder.Entity("App.Domain.Identity.User", b =>
+            modelBuilder.Entity("Domain.Identity.User", b =>
                 {
                     b.Navigation("AddedQueueItems");
 
@@ -2181,7 +2223,7 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("StatusChangeNotifications");
                 });
 
-            modelBuilder.Entity("App.Domain.Playlist", b =>
+            modelBuilder.Entity("Domain.Playlist", b =>
                 {
                     b.Navigation("PlaylistAuthors");
 
@@ -2200,12 +2242,12 @@ namespace DAL.Migrations.Sqlite
                     b.Navigation("StatusChangeEvents");
                 });
 
-            modelBuilder.Entity("App.Domain.PlaylistVideo", b =>
+            modelBuilder.Entity("Domain.PlaylistVideo", b =>
                 {
                     b.Navigation("PositionHistories");
                 });
 
-            modelBuilder.Entity("App.Domain.Video", b =>
+            modelBuilder.Entity("Domain.Video", b =>
                 {
                     b.Navigation("Comments");
 

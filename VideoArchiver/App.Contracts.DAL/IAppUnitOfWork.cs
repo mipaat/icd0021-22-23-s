@@ -1,4 +1,5 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
+using App.Contracts.DAL.Repositories.EntityRepositories.Identity;
 using Contracts.DAL;
 
 namespace App.Contracts.DAL;
@@ -34,4 +35,7 @@ public interface IAppUnitOfWork : IBaseUnitOfWork
     public IVideoRatingRepository VideoRatings { get; }
     public IVideoRepository Videos { get; }
     public IVideoUploadNotificationRepository VideoUploadNotifications { get; }
+
+    public IRefreshTokenRepository RefreshTokens { get; }
+    public IUserRepository Users { get; }
 }

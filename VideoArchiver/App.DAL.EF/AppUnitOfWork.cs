@@ -1,7 +1,9 @@
 ﻿using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories;
+using App.Contracts.DAL.Repositories.EntityRepositories.Identity;
 using DAL.Base;
 using DAL.Repositories.EntityRepositories;
+using DAL.Repositories.EntityRepositories.Identity;
 
 namespace DAL;
 
@@ -119,4 +121,11 @@ public class AppUnitOfWork : BaseUnitOfWork<AbstractAppDbContext>, IAppUnitOfWor
 
     public IVideoUploadNotificationRepository VideoUploadNotifications =>
         _videoUploadNotifications ??= new VideoUploadNotificationRepository(DbContext);
+
+    // Identity
+    private IRefreshTokenRepository? _refreshTokens;
+    public IRefreshTokenRepository RefreshTokens => _refreshTokens ??= new RefreshTokenRepository(DbContext);
+
+    private IUserRepository? _users;
+    public IUserRepository Users => _users ??= new UserRepository(DbContext);
 }

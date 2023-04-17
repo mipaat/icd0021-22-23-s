@@ -13,4 +13,6 @@ public class User : IdentityUser<Guid>, IIdDatabaseEntity
     public ICollection<QueueItem>? ApprovedQueueItems { get; set; }
     public ICollection<ExternalUserToken>? ExternalUserTokens { get; set; }
     public ICollection<StatusChangeNotification>? StatusChangeNotifications { get; set; }
+
+    public ICollection<RefreshToken>? RefreshTokens { get; set; }
 }
