@@ -7,7 +7,11 @@ public class RefreshToken : BaseRefreshToken
     public Guid UserId { get; set; }
     public User? User { get; set; }
 
-    public RefreshToken(double expiresInDays = 7) : base(TimeSpan.FromDays(expiresInDays))
+    public RefreshToken() : this(7)
+    {
+    }
+
+    public RefreshToken(double expiresInDays) : base(TimeSpan.FromDays(expiresInDays))
     {
     }
 }
