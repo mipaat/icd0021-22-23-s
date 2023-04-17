@@ -3,6 +3,7 @@ using DAL;
 using Domain.Enums;
 using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
+using WebApp.Config;
 using WebApp.MyLibraries.ModelBinders;
 
 namespace WebApp;
@@ -107,43 +108,45 @@ public class Program
             return;
         }
 
-        const string dataInitConfigSection = "DataInitialization";
-
-        if (configuration.GetValue<bool>($"{dataInitConfigSection}:DropDatabase"))
+        var dataInitSettings = configuration.GetRequiredSection(DataInitializationSettings.SectionKey).Get<DataInitializationSettings>();
+        if (dataInitSettings != null)
         {
-            logger.LogWarning("Drop database");
-            AppDataInit.DropDatabase(context);
+            if (dataInitSettings.DropDatabase)
+            {
+                logger.LogWarning("Drop database");
+                AppDataInit.DropDatabase(context);
+            }
+            
+            if (dataInitSettings.MigrateDatabase)
+            {
+                logger.LogInformation("Migrate database");
+                AppDataInit.MigrateDatabase(context);
+            }
+            
+            using var userManager = RaiseIfNull(serviceScope.ServiceProvider.GetService<UserManager<User>>());
+            using var roleManager = RaiseIfNull(serviceScope.ServiceProvider.GetService<RoleManager<Role>>());
+            
+            if (dataInitSettings.SeedIdentity)
+            {
+                logger.LogInformation("Seed identity data");
+                AppDataInit.SeedIdentity(userManager, roleManager);
+            }
+            
+            if (dataInitSettings.SeedAppData)
+            {
+                logger.LogInformation("Seed application data");
+                AppDataInit.SeedAppData(context);
+            }
+
+            if (dataInitSettings.SeedDemoIdentity)
+            {
+                logger.LogInformation("Seed demo identity data");
+                AppDataInit.SeedDemoIdentity(userManager, roleManager,
+                    dataInitSettings.SeedIdentity);
+            }
+            
+            context.SaveChanges();
         }
-
-        if (configuration.GetValue<bool>($"{dataInitConfigSection}:MigrateDatabase"))
-        {
-            logger.LogInformation("Migrate database");
-            AppDataInit.MigrateDatabase(context);
-        }
-
-        using var userManager = RaiseIfNull(serviceScope.ServiceProvider.GetService<UserManager<User>>());
-        using var roleManager = RaiseIfNull(serviceScope.ServiceProvider.GetService<RoleManager<Role>>());
-
-        if (configuration.GetValue<bool>($"{dataInitConfigSection}:SeedIdentity"))
-        {
-            logger.LogInformation("Seed identity data");
-            AppDataInit.SeedIdentity(userManager, roleManager);
-        }
-
-        if (configuration.GetValue<bool>($"{dataInitConfigSection}:SeedAppData"))
-        {
-            logger.LogInformation("Seed application data");
-            AppDataInit.SeedAppData(context);
-        }
-
-        if (configuration.GetValue<bool>($"{dataInitConfigSection}:SeedDemoIdentity"))
-        {
-            logger.LogInformation("Seed demo identity data");
-            AppDataInit.SeedDemoIdentity(userManager, roleManager,
-                configuration.GetValue<bool>($"{dataInitConfigSection}:SeedIdentity"));
-        }
-
-        context.SaveChanges();
     }
 
     // May be used for creating DB context at design time (migrations etc)

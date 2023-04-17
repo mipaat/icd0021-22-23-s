@@ -2,7 +2,7 @@
 
 public class JwtSettings
 {
-    public static readonly string SectionKey = "JWT";
+    public const string SectionKey = "JWT";
 
     public string Key { get; set; } = default!;
 
