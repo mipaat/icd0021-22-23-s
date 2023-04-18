@@ -1,8 +1,10 @@
+using System.Text;
 using App.Contracts.DAL;
 using DAL;
 using Domain.Enums;
 using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using WebApp.Config;
 using WebApp.MyLibraries.ModelBinders;
 
@@ -30,6 +32,25 @@ public class Program
             .AddEntityFrameworkStores<AbstractAppDbContext>()
             .AddDefaultTokenProviders()
             .AddDefaultUI();
+
+        var jwtSettings = builder.Configuration.GetRequiredSection(JwtSettings.SectionKey).Get<JwtSettings>();
+
+        builder.Services
+            .AddAuthentication()
+            .AddCookie(options => { options.SlidingExpiration = true; })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = false;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidIssuer = jwtSettings!.Issuer,
+                    ValidAudience = jwtSettings.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+                    ClockSkew = TimeSpan.Zero,
+                };
+            });
+        
         builder.Services.AddControllersWithViews()
             .AddMvcOptions(options =>
             {
@@ -108,7 +129,8 @@ public class Program
             return;
         }
 
-        var dataInitSettings = configuration.GetRequiredSection(DataInitializationSettings.SectionKey).Get<DataInitializationSettings>();
+        var dataInitSettings = configuration.GetRequiredSection(DataInitializationSettings.SectionKey)
+            .Get<DataInitializationSettings>();
         if (dataInitSettings != null)
         {
             if (dataInitSettings.DropDatabase)
@@ -116,22 +138,22 @@ public class Program
                 logger.LogWarning("Drop database");
                 AppDataInit.DropDatabase(context);
             }
-            
+
             if (dataInitSettings.MigrateDatabase)
             {
                 logger.LogInformation("Migrate database");
                 AppDataInit.MigrateDatabase(context);
             }
-            
+
             using var userManager = RaiseIfNull(serviceScope.ServiceProvider.GetService<UserManager<User>>());
             using var roleManager = RaiseIfNull(serviceScope.ServiceProvider.GetService<RoleManager<Role>>());
-            
+
             if (dataInitSettings.SeedIdentity)
             {
                 logger.LogInformation("Seed identity data");
                 AppDataInit.SeedIdentity(userManager, roleManager);
             }
-            
+
             if (dataInitSettings.SeedAppData)
             {
                 logger.LogInformation("Seed application data");
@@ -144,7 +166,7 @@ public class Program
                 AppDataInit.SeedDemoIdentity(userManager, roleManager,
                     dataInitSettings.SeedIdentity);
             }
-            
+
             context.SaveChanges();
         }
     }
