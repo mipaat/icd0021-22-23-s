@@ -4,4 +4,5 @@ public class JwtResponse
 {
     public string Jwt { get; set; } = default!;
     public string RefreshToken { get; set; } = default!;
+    public DateTime RefreshTokenExpiresAt { get; set; } = default!;
 }

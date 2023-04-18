@@ -117,6 +117,7 @@ public class AccountController : ControllerBase
         {
             Jwt = jwt,
             RefreshToken = refreshToken.RefreshToken,
+            RefreshTokenExpiresAt = refreshToken.ExpiresAt,
         };
         return Ok(res);
     }
@@ -185,18 +186,18 @@ public class AccountController : ControllerBase
 
         var jwt = GenerateJwt(claimsPrincipal, expiresInSeconds.Value);
 
-        var res = new JwtResponse()
+        var res = new JwtResponse
         {
             Jwt = jwt,
             RefreshToken = refreshToken.RefreshToken,
+            RefreshTokenExpiresAt = refreshToken.ExpiresAt,
         };
 
         return Ok(res);
     }
 
-
     [HttpPost]
-    public async Task<ActionResult> RefreshToken(
+    public async Task<ActionResult<JwtResponse>> RefreshToken(
         [FromBody] RefreshTokenModel refreshTokenModel,
         [FromQuery] int? expiresInSeconds = null)
     {
@@ -313,6 +314,7 @@ public class AccountController : ControllerBase
         {
             Jwt = jwt,
             RefreshToken = refreshToken.RefreshToken,
+            RefreshTokenExpiresAt = refreshToken.ExpiresAt,
         };
 
         return Ok(res);
