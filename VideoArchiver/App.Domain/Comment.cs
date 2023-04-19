@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using App.Domain.Enums;
 using Domain.Base;
-using Domain.Enums;
 
-namespace Domain;
+namespace App.Domain;
 
 public class Comment : AbstractIdDatabaseEntity
 {

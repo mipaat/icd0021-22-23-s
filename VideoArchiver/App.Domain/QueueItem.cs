@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using App.Domain.Enums;
+using App.Domain.Identity;
 using Domain.Base;
-using Domain.Enums;
-using Domain.Identity;
 
-namespace Domain;
+namespace App.Domain;
 
 public class QueueItem : AbstractIdDatabaseEntity
 {

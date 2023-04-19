@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Domain.Base;
 
-namespace Domain;
+namespace App.Domain;
 
 public class Game : AbstractIdDatabaseEntity
 {

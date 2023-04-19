@@ -1,8 +1,8 @@
 using System.Text;
 using App.Contracts.DAL;
+using App.Domain.Enums;
+using App.Domain.Identity;
 using DAL;
-using Domain.Enums;
-using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using WebApp.Config;

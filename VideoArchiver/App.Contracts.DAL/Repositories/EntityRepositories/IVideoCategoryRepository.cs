@@ -1,3 +1,4 @@
+using App.Domain;
 using Contracts.DAL;
 using Domain;
 

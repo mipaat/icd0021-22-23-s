@@ -1,4 +1,4 @@
-﻿using Domain.NotMapped;
+﻿using App.Domain.NotMapped;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL;

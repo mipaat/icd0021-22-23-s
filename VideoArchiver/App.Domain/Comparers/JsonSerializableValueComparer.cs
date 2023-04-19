@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Domain.Comparers;
+namespace App.Domain.Comparers;
 
 public class JsonSerializableValueComparer<T> : ValueComparer<T> where T : new()
 {

@@ -1,7 +1,8 @@
+using App.Domain;
+using App.Domain.Converters;
+using App.Domain.Enums;
+using App.Domain.Identity;
 using Domain;
-using Domain.Converters;
-using Domain.Enums;
-using Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Enums;
+using App.Domain.Enums;
 
-namespace Domain.NotMapped;
+namespace App.Domain.NotMapped;
 
 [NotMapped]
 public class Caption

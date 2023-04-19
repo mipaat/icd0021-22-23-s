@@ -1,8 +1,8 @@
+using App.Domain.Enums;
+using App.Domain.NotMapped;
 using Domain.Base;
-using Domain.Enums;
-using Domain.NotMapped;
 
-namespace Domain;
+namespace App.Domain;
 
 public class Category : AbstractIdDatabaseEntity
 {

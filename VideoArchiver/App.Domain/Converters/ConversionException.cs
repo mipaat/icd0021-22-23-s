@@ -1,4 +1,4 @@
-namespace Domain.Converters;
+namespace App.Domain.Converters;
 
 public class ConversionException : Exception
 {

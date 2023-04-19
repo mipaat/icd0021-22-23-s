@@ -1,4 +1,5 @@
 using App.Contracts.DAL;
+using App.Domain;
 using Base.WebHelpers;
 using Contracts.DAL;
 using Domain;

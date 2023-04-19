@@ -3,10 +3,10 @@
 #nullable disable
 
 using System.ComponentModel.DataAnnotations;
+using App.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Domain.Identity;
 
 namespace WebApp.Areas.Identity.Pages.Account.Manage
 {

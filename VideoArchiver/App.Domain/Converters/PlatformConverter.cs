@@ -1,7 +1,7 @@
-using Domain.Enums;
+using App.Domain.Enums;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Domain.Converters;
+namespace App.Domain.Converters;
 
 public class PlatformConverter : ValueConverter<Platform, string>
 {

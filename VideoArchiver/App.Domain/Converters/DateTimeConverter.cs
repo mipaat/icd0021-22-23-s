@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Domain.Converters;
+namespace App.Domain.Converters;
 
 public class DateTimeConverter : ValueConverter<DateTime, DateTime>
 {

@@ -1,6 +1,6 @@
 ﻿using Domain.Base;
 
-namespace Domain.Identity;
+namespace App.Domain.Identity;
 
 public class RefreshToken : BaseRefreshToken
 {

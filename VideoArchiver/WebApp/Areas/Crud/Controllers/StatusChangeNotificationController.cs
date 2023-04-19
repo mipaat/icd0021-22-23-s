@@ -1,8 +1,9 @@
 using App.Contracts.DAL;
+using App.Domain;
+using App.Domain.Identity;
 using Base.WebHelpers;
 using Contracts.DAL;
 using Domain;
-using Domain.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

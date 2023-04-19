@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
+using App.Domain.Identity;
 using Domain.Base;
-using Domain.Identity;
 
-namespace Domain;
+namespace App.Domain;
 
 public class ExternalUserToken : AbstractIdDatabaseEntity
 {

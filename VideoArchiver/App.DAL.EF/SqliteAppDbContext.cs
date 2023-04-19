@@ -1,5 +1,5 @@
-using Domain.Comparers;
-using Domain.NotMapped;
+using App.Domain.Comparers;
+using App.Domain.NotMapped;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 

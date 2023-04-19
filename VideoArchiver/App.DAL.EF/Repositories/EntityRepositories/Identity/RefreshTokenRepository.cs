@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using App.Contracts.DAL.Repositories.EntityRepositories.Identity;
+using App.Domain.Identity;
 using DAL.Base;
-using Domain.Identity;
 
 namespace DAL.Repositories.EntityRepositories.Identity;
 

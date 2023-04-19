@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Enums;
+namespace App.Domain.Enums;
 
 [NotMapped]
 public class Platform

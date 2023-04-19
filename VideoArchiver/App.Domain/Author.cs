@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using App.Domain.Enums;
+using App.Domain.Identity;
+using App.Domain.NotMapped;
 using Domain.Base;
-using Domain.Enums;
-using Domain.Identity;
-using Domain.NotMapped;
 
-namespace Domain;
+namespace App.Domain;
 
 public class Author : AbstractIdDatabaseEntity
 {

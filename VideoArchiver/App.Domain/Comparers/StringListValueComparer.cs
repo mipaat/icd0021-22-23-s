@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Domain.Comparers;
+namespace App.Domain.Comparers;
 
 public class StringListValueComparer : ValueComparer<List<string>>
 {

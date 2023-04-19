@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.NotMapped;
+namespace App.Domain.NotMapped;
 
 [NotMapped]
 public class VideoFile

@@ -1,6 +1,6 @@
 using Domain.Base;
 
-namespace Domain;
+namespace App.Domain;
 
 public class CommentReplyNotification : AbstractIdDatabaseEntity
 {

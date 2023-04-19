@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
+using App.Domain.Enums;
 using Domain.Base;
-using Domain.Enums;
 
-namespace Domain;
+namespace App.Domain;
 
 public class VideoGame : AbstractIdDatabaseEntity
 {

@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Domain.Converters;
+namespace App.Domain.Converters;
 
 public class JsonConverter<TValue> : ValueConverter<TValue, string>
 {

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
+using App.Domain.Identity;
 using Contracts.DAL;
-using Domain.Identity;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories.Identity;
 

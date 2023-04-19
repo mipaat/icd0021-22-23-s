@@ -1,5 +1,5 @@
-@using Domain.Identity
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using App.Domain.Identity
 @inject SignInManager<User> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();

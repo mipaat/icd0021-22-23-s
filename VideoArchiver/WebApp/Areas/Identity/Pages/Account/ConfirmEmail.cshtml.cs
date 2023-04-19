@@ -3,11 +3,11 @@
 #nullable disable
 
 using System.Text;
+using App.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Domain.Identity;
 
 namespace WebApp.Areas.Identity.Pages.Account
 {

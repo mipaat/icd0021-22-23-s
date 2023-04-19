@@ -1,5 +1,5 @@
-﻿using Contracts.DAL;
-using Domain.Identity;
+﻿using App.Domain.Identity;
+using Contracts.DAL;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories.Identity;
 

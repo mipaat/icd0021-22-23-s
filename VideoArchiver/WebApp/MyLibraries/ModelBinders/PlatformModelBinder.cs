@@ -1,4 +1,4 @@
-using Domain.Enums;
+using App.Domain.Enums;
 
 namespace WebApp.MyLibraries.ModelBinders;
 
