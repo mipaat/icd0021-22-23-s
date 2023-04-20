@@ -1,4 +1,4 @@
-﻿using System.Configuration;
+using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
@@ -341,11 +341,11 @@ public class AccountController : ControllerBase
             });
         }
 
-        await _uow.RefreshTokens.GetAllByUserIdAsync(user.Id, r =>
+        var refreshTokens = await _uow.RefreshTokens.GetAllByUserIdAsync(user.Id, r =>
             r.RefreshToken == logout.RefreshToken ||
             r.PreviousRefreshToken == logout.RefreshToken);
 
-        foreach (var appRefreshToken in user.RefreshTokens!)
+        foreach (var appRefreshToken in refreshTokens)
         {
             _uow.RefreshTokens.Remove(appRefreshToken);
         }
