@@ -2,12 +2,13 @@ using App.Domain.Comparers;
 using App.Domain.NotMapped;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace DAL;
 
 public class SqliteAppDbContext : AbstractAppDbContext
 {
-    public SqliteAppDbContext(DbContextOptions<SqliteAppDbContext> options) : base(options)
+    public SqliteAppDbContext(DbContextOptions<SqliteAppDbContext> options, IConfiguration configuration) : base(options, configuration)
     {
     }
 

@@ -22,9 +22,9 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AbstractAppDbCont
             return connectionInfo.Provider switch
             {
                 EDbProvider.Postgres => new PostgresAppDbContext(
-                    ConfigureDbOptions<PostgresAppDbContext>(connectionInfo).Options),
+                    ConfigureDbOptions<PostgresAppDbContext>(connectionInfo).Options, configuration),
                 EDbProvider.Sqlite => new SqliteAppDbContext(
-                    ConfigureDbOptions<SqliteAppDbContext>(connectionInfo).Options),
+                    ConfigureDbOptions<SqliteAppDbContext>(connectionInfo).Options, configuration),
                 _ => throw new UnsupportedDatabaseProviderException(connectionInfo)
             };
         }

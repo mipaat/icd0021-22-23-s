@@ -14,6 +14,9 @@ public class RefreshTokenRepository : BaseEntityRepository<RefreshToken, Abstrac
     public async Task<ICollection<RefreshToken>> GetAllByUserIdAsync(Guid userId,
         params Expression<Func<RefreshToken, bool>>[] filters)
     {
-        return await GetAllAsync(rt => rt.UserId == userId);
+        var newFilters = new List<Expression<Func<RefreshToken, bool>>>();
+        newFilters.Add(rt => rt.UserId == userId);
+        newFilters.AddRange(filters);
+        return await GetAllAsync(newFilters.ToArray());
     }
 }

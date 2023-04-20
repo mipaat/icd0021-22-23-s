@@ -2,22 +2,32 @@ using App.Domain;
 using App.Domain.Converters;
 using App.Domain.Enums;
 using App.Domain.Identity;
-using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace DAL;
 
 public class AbstractAppDbContext : IdentityDbContext<User, Role, Guid, IdentityUserClaim<Guid>, UserRole,
     IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
 {
-    public AbstractAppDbContext(DbContextOptions<AbstractAppDbContext> options) : this(options as DbContextOptions)
+    private readonly ILoggerFactory _loggerFactory;
+    private readonly bool _sensitiveDataLogging;
+
+    public AbstractAppDbContext(DbContextOptions<AbstractAppDbContext> options, IConfiguration configuration) : this(options as DbContextOptions, configuration)
     {
     }
 
-    public AbstractAppDbContext(DbContextOptions options) : base(options)
+    public AbstractAppDbContext(DbContextOptions options, IConfiguration configuration) : base(options)
     {
+        _loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder.AddConsole();
+            builder.AddConfiguration(configuration);
+        });
+        _sensitiveDataLogging = configuration.GetValue<bool>("Logging:DB:SensitiveDataLogging");
     }
 
     // ASP.NET Core Identity entities' DbSets are mapped in parent class
@@ -79,5 +89,16 @@ public class AbstractAppDbContext : IdentityDbContext<User, Role, Guid, Identity
         configurationBuilder
             .Properties<DateTime>()
             .HaveConversion<DateTimeConverter>();
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+        optionsBuilder
+            .UseLoggerFactory(_loggerFactory);
+        if (_sensitiveDataLogging)
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+        }
     }
 }
