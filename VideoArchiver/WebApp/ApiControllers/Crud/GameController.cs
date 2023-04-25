@@ -1,8 +1,10 @@
 using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Public.DTO.Mappers;
 using Public.DTO.v1.Domain;
 
 namespace WebApp.ApiControllers.Crud;
@@ -13,10 +15,12 @@ namespace WebApp.ApiControllers.Crud;
 public class GamesController : ControllerBase
 {
     private readonly IAppUnitOfWork _uow;
-    
-    public GamesController(IAppUnitOfWork uow)
+    private readonly GameMapper _gameMapper;
+
+    public GamesController(IAppUnitOfWork uow, IMapper mapper)
     {
         _uow = uow;
+        _gameMapper = new GameMapper(mapper);
     }
 
     public IGameRepository Entities => _uow.Games;
@@ -24,14 +28,7 @@ public class GamesController : ControllerBase
     public async Task<ActionResult<ICollection<GameWithId>>> ListAll()
     {
         var entities = await Entities.GetAllAsync();
-        var result = new List<GameWithId>();
-        foreach (var entity in entities)
-        {
-            var gameWithId = new GameWithId();
-            gameWithId.FromDomainEntity(entity);
-            result.Add(gameWithId);
-        }
-        return Ok(result);
+        return entities.Select(e => _gameMapper.Map(e)!).ToList();
     }
 
     [HttpDelete]
@@ -49,16 +46,16 @@ public class GamesController : ControllerBase
     public async Task<IActionResult> Update([FromBody] GameWithId entity)
     {
         if (!await Entities.ExistsAsync(entity.Id)) return NotFound();
-        
-        Entities.Update(entity.ToDomainEntity());
+
+        Entities.Update(_gameMapper.Map(entity)!);
         await _uow.SaveChangesAsync();
         return Ok();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Game entity)
+    public async Task<IActionResult> Create([FromBody] GameWithoutId entity)
     {
-        Entities.Add(entity.ToDomainEntity());
+        Entities.Add(_gameMapper.MapWithoutId(entity));
         await _uow.SaveChangesAsync();
         return Ok();
     }
@@ -67,8 +64,6 @@ public class GamesController : ControllerBase
     {
         var entity = await Entities.GetByIdAsync(id);
         if (entity == null) return NotFound();
-        var dtoEntity = new GameWithId();
-        dtoEntity.FromDomainEntity(entity);
-        return Ok(dtoEntity);
+        return _gameMapper.Map(entity)!;
     }
 }

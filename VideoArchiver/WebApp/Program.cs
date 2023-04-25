@@ -50,7 +50,7 @@ public class Program
                     ClockSkew = TimeSpan.Zero,
                 };
             });
-        
+
         builder.Services.AddControllersWithViews()
             .AddMvcOptions(options =>
             {
@@ -67,6 +67,10 @@ public class Program
                 policy.AllowAnyOrigin();
             });
         });
+
+        builder.Services.AddAutoMapper(
+            typeof(Public.DTO.AutoMapperConfig)
+        );
 
         builder.Services.Configure<IdentityOptions>(options =>
         {
