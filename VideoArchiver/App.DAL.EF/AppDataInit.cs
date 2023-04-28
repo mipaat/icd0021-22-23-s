@@ -1,5 +1,6 @@
 using App.Domain;
 using App.Domain.Identity;
+using App.DTO;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,12 @@ namespace DAL;
 
 public static class AppDataInit
 {
+    private static readonly BasicRoleData AdminRoleData =
+        new(Guid.Parse("FC151E0A-D22E-4F31-A750-FA7E71AC87FA"), RoleNames.Admin);
+
+    private static readonly BasicRoleData HelperRoleData =
+        new(Guid.Parse("8F9D122E-9B7E-4879-94E0-75D3422BD403"), RoleNames.Helper);
+
     public static void MigrateDatabase(AbstractAppDbContext context)
     {
         context.Database.Migrate();
@@ -18,18 +25,24 @@ public static class AppDataInit
         context.Database.EnsureDeleted();
     }
 
-    public static void SeedIdentity(UserManager<User> userManager, RoleManager<Role> roleManager)
+    private static async Task SeedRolesAsync(RoleManager<Role> roleManager)
+    {
+        await GetOrCreateRoleAsync(roleManager, AdminRoleData);
+        await GetOrCreateRoleAsync(roleManager, HelperRoleData);
+    }
+
+    public static async Task SeedIdentityAsync(UserManager<User> userManager, RoleManager<Role> roleManager)
     {
         var adminUserData = new BasicUserData(Guid.Parse("61F32996-082F-4B41-B1F5-20071452EF41"), "admin@test.com",
             "admin123");
-        var adminUser = GetOrCreateUser(userManager, adminUserData);
+        var adminUser = await GetOrCreateUserAsync(userManager, adminUserData);
 
-        var adminRoleData = new BasicRoleData(Guid.Parse("FC151E0A-D22E-4F31-A750-FA7E71AC87FA"), "Admin");
-        var adminRole = GetOrCreateRole(roleManager, adminRoleData);
+        await SeedRolesAsync(roleManager);
+        var adminRole = await GetOrCreateRoleAsync(roleManager, AdminRoleData);
 
-        if (!userManager.IsInRoleAsync(adminUser, adminRoleData.Name).Result)
+        if (!await userManager.IsInRoleAsync(adminUser, AdminRoleData.Name))
         {
-            var result = userManager.AddToRoleAsync(adminUser, adminRoleData.Name).Result;
+            var result = await userManager.AddToRoleAsync(adminUser, AdminRoleData.Name);
             if (!result.Succeeded)
             {
                 throw new ApplicationException(
@@ -38,22 +51,22 @@ public static class AppDataInit
         }
     }
 
-    public static void SeedDemoIdentity(UserManager<User> userManager, RoleManager<Role> roleManager,
+    public static async Task SeedDemoIdentityAsync(UserManager<User> userManager, RoleManager<Role> roleManager,
         bool identitySeeded = false)
     {
         if (!identitySeeded)
         {
-            SeedIdentity(userManager, roleManager);
+            await SeedIdentityAsync(userManager, roleManager);
         }
 
         var demoUserData =
             new BasicUserData(Guid.Parse("6514614B-F64E-409D-884C-768EB1DE19F7"), "demo@test.com", "demo123");
-        GetOrCreateUser(userManager, demoUserData);
+        await GetOrCreateUserAsync(userManager, demoUserData);
     }
 
-    private static User GetOrCreateUser(UserManager<User> userManager, BasicUserData userData)
+    private static async Task<User> GetOrCreateUserAsync(UserManager<User> userManager, BasicUserData userData)
     {
-        var user = userManager.FindByIdAsync(userData.Id.ToString()).Result;
+        var user = await userManager.FindByIdAsync(userData.Id.ToString());
         if (user == null)
         {
             user = new User
@@ -63,7 +76,7 @@ public static class AppDataInit
                 EmailConfirmed = true,
                 UserName = userData.Email,
             };
-            var result = userManager.CreateAsync(user, userData.Password).Result;
+            var result = await userManager.CreateAsync(user, userData.Password);
             if (!result.Succeeded)
             {
                 throw new ApplicationException(
@@ -79,9 +92,9 @@ public static class AppDataInit
         return $"[{string.Join(", ", errors.Select(e => $"{e.Code} - {e.Description}"))}]";
     }
 
-    private static Role GetOrCreateRole(RoleManager<Role> roleManager, BasicRoleData roleData)
+    private static async Task<Role> GetOrCreateRoleAsync(RoleManager<Role> roleManager, BasicRoleData roleData)
     {
-        var role = roleManager.FindByIdAsync(roleData.Id.ToString()).Result;
+        var role = await roleManager.FindByIdAsync(roleData.Id.ToString());
         if (role == null)
         {
             role = new Role
@@ -89,7 +102,7 @@ public static class AppDataInit
                 Id = roleData.Id,
                 Name = roleData.Name,
             };
-            var result = roleManager.CreateAsync(role).Result;
+            var result = await roleManager.CreateAsync(role);
             if (!result.Succeeded)
             {
                 throw new ApplicationException(

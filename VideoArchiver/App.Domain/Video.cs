@@ -17,14 +17,11 @@ public class Video : AbstractIdDatabaseEntity
     [MaxLength(32)] public string? DefaultAudioLanguage { get; set; }
 
     public TimeSpan? Duration { get; set; }
-    public int? Width { get; set; }
-    public int? Height { get; set; }
-    public int? BitrateBps { get; set; }
 
-    public int? ViewCount { get; set; }
-    public int? LikeCount { get; set; }
-    public int? DislikeCount { get; set; }
-    public int? CommentCount { get; set; }
+    public long? ViewCount { get; set; }
+    public long? LikeCount { get; set; }
+    public long? DislikeCount { get; set; }
+    public long? CommentCount { get; set; }
 
     public bool? HasCaptions { get; set; }
     public List<Caption>? Captions { get; set; }
@@ -45,14 +42,16 @@ public class Video : AbstractIdDatabaseEntity
 
     public EPrivacyStatus? PrivacyStatus { get; set; }
     public bool IsAvailable { get; set; }
-    public EPrivacyStatus InternalPrivacyStatus { get; set; }
+    public EPrivacyStatus InternalPrivacyStatus { get; set; } = EPrivacyStatus.Private;
 
     [MaxLength(4096)] public string? Etag { get; set; }
-    public DateTime LastFetched { get; set; }
-    public DateTime? LastSuccessfulFetch { get; set; }
-    public DateTime AddedToArchiveAt { get; set; }
-    public bool Monitor { get; set; }
-    public bool Download { get; set; }
+    public DateTime? LastFetchOfficial { get; set; }
+    public DateTime? LastSuccessfulFetchOfficial { get; set; }
+    public DateTime? LastFetchUnofficial { get; set; }
+    public DateTime? LastSuccessfulFetchUnofficial { get; set; }
+    public DateTime AddedToArchiveAt { get; set; } = DateTime.UtcNow;
+    public bool Monitor { get; set; } = true;
+    public bool Download { get; set; } = true;
 
     public ICollection<VideoGame>? VideoGames { set; get; }
     public ICollection<VideoAuthor>? VideoAuthors { get; set; }

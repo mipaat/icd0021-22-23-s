@@ -1,9 +1,13 @@
+using System.Globalization;
 using System.Text;
 using App.Contracts.DAL;
 using App.Domain.Enums;
 using App.Domain.Identity;
+using App.DTO;
 using DAL;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.IdentityModel.Tokens;
 using WebApp.Config;
 using WebApp.MyLibraries.ModelBinders;
@@ -14,13 +18,6 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        if (args.Any(s =>
-                string.Equals(s, "PrintSqlitePath", StringComparison.CurrentCultureIgnoreCase)))
-        {
-            Console.WriteLine($"Default local SQLite DB path = '{AppDbContextFactory.GetLocalDbSqlitePath()}'");
-            return;
-        }
-
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
@@ -80,7 +77,35 @@ public class Program
             options.Password.RequireNonAlphanumeric = false;
         });
 
+        var useHttpLogging = builder.Configuration.GetValue<bool>("Logging::HTTP::Enabled");
+        if (useHttpLogging)
+        {
+            builder.Services.AddHttpLogging(logging => { logging.LoggingFields = HttpLoggingFields.All; });
+        }
+
+        // -------------------------------------
+        // Register BLL services in DI
+        // -------------------------------------
+
+        builder.Services.AddScoped<App.BLL.YouTube.SubmitService>();
+
+        // -------------------------------------
+        
+        // App created
         var app = builder.Build();
+
+        var localizationOptions = new RequestLocalizationOptions
+        {
+            DefaultRequestCulture = new RequestCulture("en-US"),
+            SupportedCultures = CultureInfo.GetCultures(CultureTypes.AllCultures),
+            SupportedUICultures = CultureInfo.GetCultures(CultureTypes.AllCultures),
+        };
+        app.UseRequestLocalization(localizationOptions);
+        
+        if (useHttpLogging)
+        {
+            app.UseHttpLogging();            
+        }
 
         SetupAppData(app, app.Configuration);
 
@@ -155,7 +180,7 @@ public class Program
             if (dataInitSettings.SeedIdentity)
             {
                 logger.LogInformation("Seed identity data");
-                AppDataInit.SeedIdentity(userManager, roleManager);
+                AppDataInit.SeedIdentityAsync(userManager, roleManager).Wait();
             }
 
             if (dataInitSettings.SeedAppData)
@@ -167,8 +192,8 @@ public class Program
             if (dataInitSettings.SeedDemoIdentity)
             {
                 logger.LogInformation("Seed demo identity data");
-                AppDataInit.SeedDemoIdentity(userManager, roleManager,
-                    dataInitSettings.SeedIdentity);
+                AppDataInit.SeedDemoIdentityAsync(userManager, roleManager,
+                    dataInitSettings.SeedIdentity).Wait();
             }
 
             context.SaveChanges();

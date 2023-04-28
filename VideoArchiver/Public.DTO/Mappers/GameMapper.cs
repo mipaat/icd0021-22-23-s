@@ -22,7 +22,7 @@ public class GameMapper : BaseMapper<App.Domain.Game, Public.DTO.v1.Domain.GameW
 
 public static class GameMapperExtensions
 {
-    public static AutoMapperConfig AddGameMapper(this AutoMapperConfig config)
+    public static AutoMapperConfig AddGameMap(this AutoMapperConfig config)
     {
         config.CreateMap<App.Domain.Game, Public.DTO.v1.Domain.GameWithoutId>();
         config.CreateMap<Public.DTO.v1.Domain.GameWithoutId, App.Domain.Game>()

@@ -1,6 +1,7 @@
 using App.Contracts.DAL;
 using App.Domain;
 using App.Domain.Identity;
+using App.DTO;
 using Base.WebHelpers;
 using Contracts.DAL;
 using Domain;
@@ -13,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 namespace WebApp.Areas.Crud.Controllers
 {
     [Area("Crud")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleNames.Admin)]
     public class AuthorController : BaseEntityCrudController<IAppUnitOfWork, Author>
     {
         private readonly UserManager<User> _userManager;

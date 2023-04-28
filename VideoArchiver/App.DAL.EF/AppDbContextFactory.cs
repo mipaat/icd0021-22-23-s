@@ -23,8 +23,6 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AbstractAppDbCont
             {
                 EDbProvider.Postgres => new PostgresAppDbContext(
                     ConfigureDbOptions<PostgresAppDbContext>(connectionInfo).Options, configuration),
-                EDbProvider.Sqlite => new SqliteAppDbContext(
-                    ConfigureDbOptions<SqliteAppDbContext>(connectionInfo).Options, configuration),
                 _ => throw new UnsupportedDatabaseProviderException(connectionInfo)
             };
         }
@@ -36,25 +34,6 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AbstractAppDbCont
     {
         var builder = WebApplication.CreateBuilder();
         return builder.Configuration;
-    }
-
-    private static string GetLocalDbSqlitePath(IConfiguration configuration)
-    {
-        var appName = configuration["AppName"];
-        return appName == null ? GetLocalDbSqlitePath() : GetLocalDbSqlitePath(appName);
-    }
-
-    public static string GetLocalDbSqlitePath(string appName = "ICD0021_22-23_VideoArchiver")
-    {
-        var directorySeparator = Path.DirectorySeparatorChar;
-        var sqliteRepoDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) +
-                                  directorySeparator + appName +
-                                  directorySeparator + "Data" +
-                                  directorySeparator;
-
-        Directory.CreateDirectory(sqliteRepoDirectory);
-
-        return sqliteRepoDirectory + "app.db";
     }
 
     public static void RegisterDbContext(IServiceCollection services, IConfiguration? configuration = null)
@@ -78,9 +57,6 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AbstractAppDbCont
                 case EDbProvider.Postgres:
                     services.AddDbContext<PostgresAppDbContext>(OptionsAction);
                     break;
-                case EDbProvider.Sqlite:
-                    services.AddDbContext<SqliteAppDbContext>(OptionsAction);
-                    break;
             }
         }
     }
@@ -102,9 +78,6 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AbstractAppDbCont
             case EDbProvider.Postgres:
                 optionsBuilder.UseNpgsql(connectionInfo.ConnectionString);
                 break;
-            case EDbProvider.Sqlite:
-                optionsBuilder.UseSqlite(connectionInfo.ConnectionString);
-                break;
             default:
                 throw new UnsupportedDatabaseProviderException(connectionInfo);
         }
@@ -121,17 +94,13 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AbstractAppDbCont
         if (postgresConnectionString != null)
             result.Add(new ConnectionInfo(EDbProvider.Postgres, postgresConnectionString));
 
-        var sqlitePath = GetLocalDbSqlitePath(configuration);
-        result.Add(new ConnectionInfo(EDbProvider.Sqlite, $"Data source={sqlitePath}"));
-
         return result;
     }
 }
 
 internal enum EDbProvider
 {
-    Postgres,
-    Sqlite
+    Postgres
 }
 
 internal record ConnectionInfo(EDbProvider Provider, string ConnectionString);

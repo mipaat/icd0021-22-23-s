@@ -1,5 +1,6 @@
 using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories;
+using App.DTO;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +12,7 @@ namespace WebApp.ApiControllers.Crud;
 
 [ApiController]
 [Route("api/v1/crud/[controller]/[action]")]
-[Authorize(Roles = "Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(Roles = RoleNames.Admin, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class GamesController : ControllerBase
 {
     private readonly IAppUnitOfWork _uow;

@@ -1,5 +1,6 @@
 using App.Contracts.DAL;
 using App.Domain;
+using App.DTO;
 using Base.WebHelpers;
 using Contracts.DAL;
 using Domain;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApp.Areas.Crud.Controllers
 {
     [Area("Crud")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = RoleNames.Admin)]
     public class GameController : BaseEntityCrudController<IAppUnitOfWork, Game>
     {
         public GameController(IAppUnitOfWork uow) : base(uow)

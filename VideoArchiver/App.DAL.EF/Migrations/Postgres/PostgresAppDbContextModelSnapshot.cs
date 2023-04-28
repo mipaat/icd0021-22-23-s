@@ -24,7 +24,7 @@ namespace DAL.Migrations.Postgres
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Author", b =>
+            modelBuilder.Entity("App.Domain.Author", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -105,7 +105,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("Domain.AuthorCategory", b =>
+            modelBuilder.Entity("App.Domain.AuthorCategory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -129,7 +129,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("AuthorCategories");
                 });
 
-            modelBuilder.Entity("Domain.AuthorHistory", b =>
+            modelBuilder.Entity("App.Domain.AuthorHistory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -183,7 +183,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("AuthorHistories");
                 });
 
-            modelBuilder.Entity("Domain.AuthorPubSub", b =>
+            modelBuilder.Entity("App.Domain.AuthorPubSub", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -210,7 +210,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("AuthorPubSubs");
                 });
 
-            modelBuilder.Entity("Domain.AuthorRating", b =>
+            modelBuilder.Entity("App.Domain.AuthorRating", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -242,7 +242,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("AuthorRatings");
                 });
 
-            modelBuilder.Entity("Domain.AuthorSubscription", b =>
+            modelBuilder.Entity("App.Domain.AuthorSubscription", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -274,7 +274,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("AuthorSubscriptions");
                 });
 
-            modelBuilder.Entity("Domain.Category", b =>
+            modelBuilder.Entity("App.Domain.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -318,7 +318,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Domain.Comment", b =>
+            modelBuilder.Entity("App.Domain.Comment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -402,7 +402,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("Domain.CommentReplyNotification", b =>
+            modelBuilder.Entity("App.Domain.CommentReplyNotification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -434,7 +434,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("CommentReplyNotifications");
                 });
 
-            modelBuilder.Entity("Domain.ExternalUserToken", b =>
+            modelBuilder.Entity("App.Domain.ExternalUserToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -479,7 +479,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("ExternalUserTokens");
                 });
 
-            modelBuilder.Entity("Domain.Game", b =>
+            modelBuilder.Entity("App.Domain.Game", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -514,7 +514,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("Domain.Identity.RefreshToken", b =>
+            modelBuilder.Entity("App.Domain.Identity.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -545,7 +545,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("Domain.Identity.Role", b =>
+            modelBuilder.Entity("App.Domain.Identity.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -572,7 +572,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Identity.User", b =>
+            modelBuilder.Entity("App.Domain.Identity.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -637,7 +637,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Identity.UserRole", b =>
+            modelBuilder.Entity("App.Domain.Identity.UserRole", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -652,7 +652,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Playlist", b =>
+            modelBuilder.Entity("App.Domain.Playlist", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -722,7 +722,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("Playlists");
                 });
 
-            modelBuilder.Entity("Domain.PlaylistAuthor", b =>
+            modelBuilder.Entity("App.Domain.PlaylistAuthor", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -746,7 +746,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("PlaylistAuthors");
                 });
 
-            modelBuilder.Entity("Domain.PlaylistCategory", b =>
+            modelBuilder.Entity("App.Domain.PlaylistCategory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -770,7 +770,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("PlaylistCategories");
                 });
 
-            modelBuilder.Entity("Domain.PlaylistHistory", b =>
+            modelBuilder.Entity("App.Domain.PlaylistHistory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -818,7 +818,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("PlaylistHistories");
                 });
 
-            modelBuilder.Entity("Domain.PlaylistRating", b =>
+            modelBuilder.Entity("App.Domain.PlaylistRating", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -850,7 +850,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("PlaylistRatings");
                 });
 
-            modelBuilder.Entity("Domain.PlaylistSubscription", b =>
+            modelBuilder.Entity("App.Domain.PlaylistSubscription", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -874,7 +874,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("PlaylistSubscriptions");
                 });
 
-            modelBuilder.Entity("Domain.PlaylistVideo", b =>
+            modelBuilder.Entity("App.Domain.PlaylistVideo", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -914,7 +914,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("PlaylistVideos");
                 });
 
-            modelBuilder.Entity("Domain.PlaylistVideoPositionHistory", b =>
+            modelBuilder.Entity("App.Domain.PlaylistVideoPositionHistory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -939,7 +939,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("PlaylistVideoPositionHistories");
                 });
 
-            modelBuilder.Entity("Domain.QueueItem", b =>
+            modelBuilder.Entity("App.Domain.QueueItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1013,7 +1013,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("QueueItems");
                 });
 
-            modelBuilder.Entity("Domain.StatusChangeEvent", b =>
+            modelBuilder.Entity("App.Domain.StatusChangeEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1054,7 +1054,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("StatusChangeEvents");
                 });
 
-            modelBuilder.Entity("Domain.StatusChangeNotification", b =>
+            modelBuilder.Entity("App.Domain.StatusChangeNotification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1081,7 +1081,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("StatusChangeNotifications");
                 });
 
-            modelBuilder.Entity("Domain.Video", b =>
+            modelBuilder.Entity("App.Domain.Video", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1090,14 +1090,11 @@ namespace DAL.Migrations.Postgres
                     b.Property<DateTime>("AddedToArchiveAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("BitrateBps")
-                        .HasColumnType("integer");
-
                     b.Property<List<Caption>>("Captions")
                         .HasColumnType("jsonb");
 
-                    b.Property<int?>("CommentCount")
-                        .HasColumnType("integer");
+                    b.Property<long?>("CommentCount")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -1113,8 +1110,8 @@ namespace DAL.Migrations.Postgres
                     b.Property<LangString>("Description")
                         .HasColumnType("jsonb");
 
-                    b.Property<int?>("DislikeCount")
-                        .HasColumnType("integer");
+                    b.Property<long?>("DislikeCount")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("Download")
                         .HasColumnType("boolean");
@@ -1128,9 +1125,6 @@ namespace DAL.Migrations.Postgres
 
                     b.Property<bool?>("HasCaptions")
                         .HasColumnType("boolean");
-
-                    b.Property<int?>("Height")
-                        .HasColumnType("integer");
 
                     b.Property<string>("IdOnPlatform")
                         .IsRequired()
@@ -1146,14 +1140,20 @@ namespace DAL.Migrations.Postgres
                     b.Property<bool?>("IsLivestreamRecording")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastFetched")
+                    b.Property<DateTime?>("LastFetchOfficial")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("LastSuccessfulFetch")
+                    b.Property<DateTime?>("LastFetchUnofficial")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("LikeCount")
-                        .HasColumnType("integer");
+                    b.Property<DateTime?>("LastSuccessfulFetchOfficial")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("LastSuccessfulFetchUnofficial")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("LikeCount")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("LivestreamEndedAt")
                         .HasColumnType("timestamp with time zone");
@@ -1197,18 +1197,15 @@ namespace DAL.Migrations.Postgres
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("ViewCount")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Width")
-                        .HasColumnType("integer");
+                    b.Property<long?>("ViewCount")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.ToTable("Videos");
                 });
 
-            modelBuilder.Entity("Domain.VideoAuthor", b =>
+            modelBuilder.Entity("App.Domain.VideoAuthor", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1232,7 +1229,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("VideoAuthors");
                 });
 
-            modelBuilder.Entity("Domain.VideoCategory", b =>
+            modelBuilder.Entity("App.Domain.VideoCategory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1256,7 +1253,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("VideoCategories");
                 });
 
-            modelBuilder.Entity("Domain.VideoGame", b =>
+            modelBuilder.Entity("App.Domain.VideoGame", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1309,7 +1306,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("VideoGames");
                 });
 
-            modelBuilder.Entity("Domain.VideoHistory", b =>
+            modelBuilder.Entity("App.Domain.VideoHistory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1414,7 +1411,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("VideoHistories");
                 });
 
-            modelBuilder.Entity("Domain.VideoRating", b =>
+            modelBuilder.Entity("App.Domain.VideoRating", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1446,7 +1443,7 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("VideoRatings");
                 });
 
-            modelBuilder.Entity("Domain.VideoUploadNotification", b =>
+            modelBuilder.Entity("App.Domain.VideoUploadNotification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1564,9 +1561,9 @@ namespace DAL.Migrations.Postgres
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Author", b =>
+            modelBuilder.Entity("App.Domain.Author", b =>
                 {
-                    b.HasOne("Domain.Identity.User", "User")
+                    b.HasOne("App.Domain.Identity.User", "User")
                         .WithMany("Authors")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1574,15 +1571,15 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.AuthorCategory", b =>
+            modelBuilder.Entity("App.Domain.AuthorCategory", b =>
                 {
-                    b.HasOne("Domain.Author", "Author")
+                    b.HasOne("App.Domain.Author", "Author")
                         .WithMany("AuthorCategories")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Category", "Category")
+                    b.HasOne("App.Domain.Category", "Category")
                         .WithMany("AuthorCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1593,9 +1590,9 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Domain.AuthorHistory", b =>
+            modelBuilder.Entity("App.Domain.AuthorHistory", b =>
                 {
-                    b.HasOne("Domain.Author", "Author")
+                    b.HasOne("App.Domain.Author", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1604,9 +1601,9 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("Domain.AuthorPubSub", b =>
+            modelBuilder.Entity("App.Domain.AuthorPubSub", b =>
                 {
-                    b.HasOne("Domain.Author", "Author")
+                    b.HasOne("App.Domain.Author", "Author")
                         .WithMany("AuthorPubSubs")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1615,21 +1612,21 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("Domain.AuthorRating", b =>
+            modelBuilder.Entity("App.Domain.AuthorRating", b =>
                 {
-                    b.HasOne("Domain.Category", "Category")
+                    b.HasOne("App.Domain.Category", "Category")
                         .WithMany("AuthorRatings")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Author", "Rated")
+                    b.HasOne("App.Domain.Author", "Rated")
                         .WithMany("ReceivedAuthorRatings")
                         .HasForeignKey("RatedId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Author", "Rater")
+                    b.HasOne("App.Domain.Author", "Rater")
                         .WithMany("AuthorRatings")
                         .HasForeignKey("RaterId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1642,15 +1639,15 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Rater");
                 });
 
-            modelBuilder.Entity("Domain.AuthorSubscription", b =>
+            modelBuilder.Entity("App.Domain.AuthorSubscription", b =>
                 {
-                    b.HasOne("Domain.Author", "Subscriber")
+                    b.HasOne("App.Domain.Author", "Subscriber")
                         .WithMany("SubscribedAuthorSubscriptions")
                         .HasForeignKey("SubscriberId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Author", "SubscriptionTarget")
+                    b.HasOne("App.Domain.Author", "SubscriptionTarget")
                         .WithMany("SubscriberAuthorSubscriptions")
                         .HasForeignKey("SubscriptionTargetId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1661,14 +1658,14 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("SubscriptionTarget");
                 });
 
-            modelBuilder.Entity("Domain.Category", b =>
+            modelBuilder.Entity("App.Domain.Category", b =>
                 {
-                    b.HasOne("Domain.Author", "Creator")
+                    b.HasOne("App.Domain.Author", "Creator")
                         .WithMany("Categories")
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Category", "ParentCategory")
+                    b.HasOne("App.Domain.Category", "ParentCategory")
                         .WithMany("DirectChildCategories")
                         .HasForeignKey("ParentCategoryId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1678,25 +1675,25 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("ParentCategory");
                 });
 
-            modelBuilder.Entity("Domain.Comment", b =>
+            modelBuilder.Entity("App.Domain.Comment", b =>
                 {
-                    b.HasOne("Domain.Author", "Author")
+                    b.HasOne("App.Domain.Author", "Author")
                         .WithMany("Comments")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Comment", "ConversationRoot")
+                    b.HasOne("App.Domain.Comment", "ConversationRoot")
                         .WithMany("ConversationReplies")
                         .HasForeignKey("ConversationRootId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Comment", "ReplyTarget")
+                    b.HasOne("App.Domain.Comment", "ReplyTarget")
                         .WithMany("DirectReplies")
                         .HasForeignKey("ReplyTargetId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Video", "Video")
+                    b.HasOne("App.Domain.Video", "Video")
                         .WithMany("Comments")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1711,21 +1708,21 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("Domain.CommentReplyNotification", b =>
+            modelBuilder.Entity("App.Domain.CommentReplyNotification", b =>
                 {
-                    b.HasOne("Domain.Comment", "Comment")
+                    b.HasOne("App.Domain.Comment", "Comment")
                         .WithMany()
                         .HasForeignKey("CommentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Author", "Receiver")
+                    b.HasOne("App.Domain.Author", "Receiver")
                         .WithMany("CommentReplyNotifications")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Comment", "Reply")
+                    b.HasOne("App.Domain.Comment", "Reply")
                         .WithMany()
                         .HasForeignKey("ReplyId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1738,15 +1735,15 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Reply");
                 });
 
-            modelBuilder.Entity("Domain.ExternalUserToken", b =>
+            modelBuilder.Entity("App.Domain.ExternalUserToken", b =>
                 {
-                    b.HasOne("Domain.Author", "Author")
+                    b.HasOne("App.Domain.Author", "Author")
                         .WithMany("ExternalUserTokens")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Identity.User", "User")
+                    b.HasOne("App.Domain.Identity.User", "User")
                         .WithMany("ExternalUserTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1757,10 +1754,10 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Identity.RefreshToken", b =>
+            modelBuilder.Entity("App.Domain.Identity.RefreshToken", b =>
                 {
-                    b.HasOne("Domain.Identity.User", "User")
-                        .WithMany()
+                    b.HasOne("App.Domain.Identity.User", "User")
+                        .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1768,30 +1765,30 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Identity.UserRole", b =>
+            modelBuilder.Entity("App.Domain.Identity.UserRole", b =>
                 {
-                    b.HasOne("Domain.Identity.Role", null)
+                    b.HasOne("App.Domain.Identity.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Identity.User", null)
+                    b.HasOne("App.Domain.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.PlaylistAuthor", b =>
+            modelBuilder.Entity("App.Domain.PlaylistAuthor", b =>
                 {
-                    b.HasOne("Domain.Author", "Author")
+                    b.HasOne("App.Domain.Author", "Author")
                         .WithMany("PlaylistAuthors")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Playlist", "Playlist")
+                    b.HasOne("App.Domain.Playlist", "Playlist")
                         .WithMany("PlaylistAuthors")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1802,15 +1799,15 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Playlist");
                 });
 
-            modelBuilder.Entity("Domain.PlaylistCategory", b =>
+            modelBuilder.Entity("App.Domain.PlaylistCategory", b =>
                 {
-                    b.HasOne("Domain.Category", "Category")
+                    b.HasOne("App.Domain.Category", "Category")
                         .WithMany("PlaylistCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Playlist", "Playlist")
+                    b.HasOne("App.Domain.Playlist", "Playlist")
                         .WithMany("PlaylistCategories")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1821,9 +1818,9 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Playlist");
                 });
 
-            modelBuilder.Entity("Domain.PlaylistHistory", b =>
+            modelBuilder.Entity("App.Domain.PlaylistHistory", b =>
                 {
-                    b.HasOne("Domain.Playlist", "Playlist")
+                    b.HasOne("App.Domain.Playlist", "Playlist")
                         .WithMany("PlaylistHistories")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1832,21 +1829,21 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Playlist");
                 });
 
-            modelBuilder.Entity("Domain.PlaylistRating", b =>
+            modelBuilder.Entity("App.Domain.PlaylistRating", b =>
                 {
-                    b.HasOne("Domain.Author", "Author")
+                    b.HasOne("App.Domain.Author", "Author")
                         .WithMany("PlaylistRatings")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Category", "Category")
+                    b.HasOne("App.Domain.Category", "Category")
                         .WithMany("PlaylistRatings")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Playlist", "Playlist")
+                    b.HasOne("App.Domain.Playlist", "Playlist")
                         .WithMany("PlaylistRatings")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1859,15 +1856,15 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Playlist");
                 });
 
-            modelBuilder.Entity("Domain.PlaylistSubscription", b =>
+            modelBuilder.Entity("App.Domain.PlaylistSubscription", b =>
                 {
-                    b.HasOne("Domain.Playlist", "Playlist")
+                    b.HasOne("App.Domain.Playlist", "Playlist")
                         .WithMany("PlaylistSubscriptions")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Author", "Subscriber")
+                    b.HasOne("App.Domain.Author", "Subscriber")
                         .WithMany("PlaylistSubscriptions")
                         .HasForeignKey("SubscriberId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1878,25 +1875,25 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Subscriber");
                 });
 
-            modelBuilder.Entity("Domain.PlaylistVideo", b =>
+            modelBuilder.Entity("App.Domain.PlaylistVideo", b =>
                 {
-                    b.HasOne("Domain.Author", "AddedBy")
+                    b.HasOne("App.Domain.Author", "AddedBy")
                         .WithMany()
                         .HasForeignKey("AddedById")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Playlist", "Playlist")
+                    b.HasOne("App.Domain.Playlist", "Playlist")
                         .WithMany("PlaylistVideos")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Author", "RemovedBy")
+                    b.HasOne("App.Domain.Author", "RemovedBy")
                         .WithMany()
                         .HasForeignKey("RemovedById")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Video", "Video")
+                    b.HasOne("App.Domain.Video", "Video")
                         .WithMany()
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1911,9 +1908,9 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("Domain.PlaylistVideoPositionHistory", b =>
+            modelBuilder.Entity("App.Domain.PlaylistVideoPositionHistory", b =>
                 {
-                    b.HasOne("Domain.PlaylistVideo", "PlaylistVideo")
+                    b.HasOne("App.Domain.PlaylistVideo", "PlaylistVideo")
                         .WithMany("PositionHistories")
                         .HasForeignKey("PlaylistVideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1922,30 +1919,30 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("PlaylistVideo");
                 });
 
-            modelBuilder.Entity("Domain.QueueItem", b =>
+            modelBuilder.Entity("App.Domain.QueueItem", b =>
                 {
-                    b.HasOne("Domain.Identity.User", "AddedBy")
+                    b.HasOne("App.Domain.Identity.User", "AddedBy")
                         .WithMany("AddedQueueItems")
                         .HasForeignKey("AddedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Identity.User", "ApprovedBy")
+                    b.HasOne("App.Domain.Identity.User", "ApprovedBy")
                         .WithMany("ApprovedQueueItems")
                         .HasForeignKey("ApprovedById")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Author", "Author")
+                    b.HasOne("App.Domain.Author", "Author")
                         .WithMany("QueueItems")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Playlist", "Playlist")
+                    b.HasOne("App.Domain.Playlist", "Playlist")
                         .WithMany("QueueItems")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Video", "Video")
+                    b.HasOne("App.Domain.Video", "Video")
                         .WithMany()
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1961,19 +1958,19 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("Domain.StatusChangeEvent", b =>
+            modelBuilder.Entity("App.Domain.StatusChangeEvent", b =>
                 {
-                    b.HasOne("Domain.Author", "Author")
+                    b.HasOne("App.Domain.Author", "Author")
                         .WithMany("StatusChangeEvents")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Playlist", "Playlist")
+                    b.HasOne("App.Domain.Playlist", "Playlist")
                         .WithMany("StatusChangeEvents")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Video", "Video")
+                    b.HasOne("App.Domain.Video", "Video")
                         .WithMany("StatusChangeEvents")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1985,15 +1982,15 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("Domain.StatusChangeNotification", b =>
+            modelBuilder.Entity("App.Domain.StatusChangeNotification", b =>
                 {
-                    b.HasOne("Domain.Identity.User", "Receiver")
+                    b.HasOne("App.Domain.Identity.User", "Receiver")
                         .WithMany("StatusChangeNotifications")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.StatusChangeEvent", "StatusChangeEvent")
+                    b.HasOne("App.Domain.StatusChangeEvent", "StatusChangeEvent")
                         .WithMany()
                         .HasForeignKey("StatusChangeEventId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2004,15 +2001,15 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("StatusChangeEvent");
                 });
 
-            modelBuilder.Entity("Domain.VideoAuthor", b =>
+            modelBuilder.Entity("App.Domain.VideoAuthor", b =>
                 {
-                    b.HasOne("Domain.Author", "Author")
+                    b.HasOne("App.Domain.Author", "Author")
                         .WithMany("VideoAuthors")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Video", "Video")
+                    b.HasOne("App.Domain.Video", "Video")
                         .WithMany("VideoAuthors")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2023,15 +2020,15 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("Domain.VideoCategory", b =>
+            modelBuilder.Entity("App.Domain.VideoCategory", b =>
                 {
-                    b.HasOne("Domain.Category", "Category")
+                    b.HasOne("App.Domain.Category", "Category")
                         .WithMany("VideoCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Video", "Video")
+                    b.HasOne("App.Domain.Video", "Video")
                         .WithMany("VideoCategories")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2042,14 +2039,14 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("Domain.VideoGame", b =>
+            modelBuilder.Entity("App.Domain.VideoGame", b =>
                 {
-                    b.HasOne("Domain.Game", "Game")
+                    b.HasOne("App.Domain.Game", "Game")
                         .WithMany("VideoGames")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Video", "Video")
+                    b.HasOne("App.Domain.Video", "Video")
                         .WithMany("VideoGames")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2060,9 +2057,9 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("Domain.VideoHistory", b =>
+            modelBuilder.Entity("App.Domain.VideoHistory", b =>
                 {
-                    b.HasOne("Domain.Video", "Video")
+                    b.HasOne("App.Domain.Video", "Video")
                         .WithMany("VideoHistories")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2071,21 +2068,21 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("Domain.VideoRating", b =>
+            modelBuilder.Entity("App.Domain.VideoRating", b =>
                 {
-                    b.HasOne("Domain.Author", "Author")
+                    b.HasOne("App.Domain.Author", "Author")
                         .WithMany("VideoRatings")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Category", "Category")
+                    b.HasOne("App.Domain.Category", "Category")
                         .WithMany("VideoRatings")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Video", "Video")
+                    b.HasOne("App.Domain.Video", "Video")
                         .WithMany("VideoRatings")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2098,15 +2095,15 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("Domain.VideoUploadNotification", b =>
+            modelBuilder.Entity("App.Domain.VideoUploadNotification", b =>
                 {
-                    b.HasOne("Domain.Author", "Receiver")
+                    b.HasOne("App.Domain.Author", "Receiver")
                         .WithMany("VideoUploadNotifications")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Video", "Video")
+                    b.HasOne("App.Domain.Video", "Video")
                         .WithMany()
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2119,7 +2116,7 @@ namespace DAL.Migrations.Postgres
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Domain.Identity.Role", null)
+                    b.HasOne("App.Domain.Identity.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2128,7 +2125,7 @@ namespace DAL.Migrations.Postgres
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Domain.Identity.User", null)
+                    b.HasOne("App.Domain.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2137,7 +2134,7 @@ namespace DAL.Migrations.Postgres
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("Domain.Identity.User", null)
+                    b.HasOne("App.Domain.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2146,14 +2143,14 @@ namespace DAL.Migrations.Postgres
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("Domain.Identity.User", null)
+                    b.HasOne("App.Domain.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Author", b =>
+            modelBuilder.Entity("App.Domain.Author", b =>
                 {
                     b.Navigation("AuthorCategories");
 
@@ -2192,7 +2189,7 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("VideoUploadNotifications");
                 });
 
-            modelBuilder.Entity("Domain.Category", b =>
+            modelBuilder.Entity("App.Domain.Category", b =>
                 {
                     b.Navigation("AuthorCategories");
 
@@ -2209,19 +2206,19 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("VideoRatings");
                 });
 
-            modelBuilder.Entity("Domain.Comment", b =>
+            modelBuilder.Entity("App.Domain.Comment", b =>
                 {
                     b.Navigation("ConversationReplies");
 
                     b.Navigation("DirectReplies");
                 });
 
-            modelBuilder.Entity("Domain.Game", b =>
+            modelBuilder.Entity("App.Domain.Game", b =>
                 {
                     b.Navigation("VideoGames");
                 });
 
-            modelBuilder.Entity("Domain.Identity.User", b =>
+            modelBuilder.Entity("App.Domain.Identity.User", b =>
                 {
                     b.Navigation("AddedQueueItems");
 
@@ -2231,10 +2228,12 @@ namespace DAL.Migrations.Postgres
 
                     b.Navigation("ExternalUserTokens");
 
+                    b.Navigation("RefreshTokens");
+
                     b.Navigation("StatusChangeNotifications");
                 });
 
-            modelBuilder.Entity("Domain.Playlist", b =>
+            modelBuilder.Entity("App.Domain.Playlist", b =>
                 {
                     b.Navigation("PlaylistAuthors");
 
@@ -2253,12 +2252,12 @@ namespace DAL.Migrations.Postgres
                     b.Navigation("StatusChangeEvents");
                 });
 
-            modelBuilder.Entity("Domain.PlaylistVideo", b =>
+            modelBuilder.Entity("App.Domain.PlaylistVideo", b =>
                 {
                     b.Navigation("PositionHistories");
                 });
 
-            modelBuilder.Entity("Domain.Video", b =>
+            modelBuilder.Entity("App.Domain.Video", b =>
                 {
                     b.Navigation("Comments");
 

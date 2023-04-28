@@ -7,6 +7,6 @@ public class AutoMapperConfig : Profile
 {
     public AutoMapperConfig()
     {
-        this.AddGameMapper();
+        this.AddGameMap();
     }
 }

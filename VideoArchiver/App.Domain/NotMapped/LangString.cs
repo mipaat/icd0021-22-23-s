@@ -6,6 +6,7 @@ namespace App.Domain.NotMapped;
 public class LangString : Dictionary<string, string>
 {
     private const string DefaultCulture = "en";
+    public const string UnknownCulture = "__UNKNOWN__";
 
     public new string this[string key]
     {
@@ -61,9 +62,15 @@ public class LangString : Dictionary<string, string>
         {
             return this[key];
         }
+        
+        // try to use unknown culture
+        if (ContainsKey(UnknownCulture))
+        {
+            return this[UnknownCulture];
+        }
 
         // just return the first in list or null
-        return null;
+        return Values.FirstOrDefault();
     }
 
     public override string ToString()
