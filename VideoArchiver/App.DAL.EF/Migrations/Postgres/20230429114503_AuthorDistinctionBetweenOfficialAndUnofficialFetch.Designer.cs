@@ -5,6 +5,7 @@ using App.Domain.NotMapped;
 using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -13,9 +14,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations.Postgres
 {
     [DbContext(typeof(PostgresAppDbContext))]
-    partial class PostgresAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230429114503_AuthorDistinctionBetweenOfficialAndUnofficialFetch")]
+    partial class AuthorDistinctionBetweenOfficialAndUnofficialFetch
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -691,16 +694,10 @@ namespace DAL.Migrations.Postgres
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime?>("LastFetchOfficial")
+                    b.Property<DateTime>("LastFetched")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("LastFetchUnofficial")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("LastSuccessfulFetchOfficial")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("LastSuccessfulFetchUnofficial")
+                    b.Property<DateTime?>("LastSuccessfulFetch")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("Monitor")
@@ -717,8 +714,8 @@ namespace DAL.Migrations.Postgres
                     b.Property<DateTime?>("PublishedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<List<string>>("Tags")
-                        .HasColumnType("text[]");
+                    b.Property<List<ImageFile>>("Tags")
+                        .HasColumnType("jsonb");
 
                     b.Property<List<ImageFile>>("Thumbnails")
                         .HasColumnType("jsonb");

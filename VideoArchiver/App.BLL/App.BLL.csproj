@@ -13,8 +13,4 @@
       <ProjectReference Include="..\Base.WebHelpers\Base.WebHelpers.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="YouTube" />
-    </ItemGroup>
-
 </Project>

@@ -9,15 +9,16 @@ namespace WebApp.ApiControllers;
 
 [ApiController]
 [Route("api/v1/[controller]/[action]")]
-[Authorize(Roles = UrlSubmissionHandler.AllowedToSubmitRoles, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class SubmitLinkController : ControllerBase
+[Authorize(Roles = UrlSubmissionHandler.AllowedToSubmitRoles,
+    AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+public class LinkSubmitController : ControllerBase
 {
     private readonly UrlSubmissionHandler _urlSubmissionHandler;
     private readonly IAppUnitOfWork _uow;
- 
-    public SubmitLinkController(IAppUnitOfWork uow, App.BLL.YouTube.SubmitService youTubeSubmitService)
+
+    public LinkSubmitController(IAppUnitOfWork uow, UrlSubmissionHandler urlSubmissionHandler)
     {
-        _urlSubmissionHandler = new UrlSubmissionHandler(youTubeSubmitService);
+        _urlSubmissionHandler = urlSubmissionHandler;
         _uow = uow;
     }
 

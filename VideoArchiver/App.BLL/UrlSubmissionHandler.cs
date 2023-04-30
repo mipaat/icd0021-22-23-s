@@ -27,28 +27,19 @@ public class UrlSubmissionHandler
         return AllowedToAutoSubmitRoles.Any(user.IsInRole);
     }
 
-    public async Task<EntityOrQueueItem> SubmitGenericUrlAsync(string url, ClaimsPrincipal user)
+    public async Task<UrlSubmissionResults> SubmitGenericUrlAsync(string url, ClaimsPrincipal user)
     {
         return await SubmitGenericUrlAsync(url, user.GetUserId(), IsAllowedToAutoSubmit(user));
     }
 
-    private async Task<EntityOrQueueItem> SubmitGenericUrlAsync(string url, Guid submitterId, bool autoSubmit)
+    private async Task<UrlSubmissionResults> SubmitGenericUrlAsync(string url, Guid submitterId, bool autoSubmit)
     {
-        try
+        foreach (var urlHandler in _platformUrlSubmissionHandlers)
         {
-            foreach (var urlHandler in _platformUrlSubmissionHandlers)
+            if (urlHandler.IsPlatformUrl(url))
             {
-                if (urlHandler.IsPlatformUrl(url))
-                {
-                    return await urlHandler.SubmitUrl(url, submitterId, autoSubmit);
-                }
+                return await urlHandler.SubmitUrl(url, submitterId, autoSubmit);
             }
-        }
-        catch (EntityAlreadyAddedException e)
-        {
-            EntityOrQueueItem result = e.Entity;
-            result.AlreadyAdded = true;
-            return result;
         }
 
         throw new UnrecognizedUrlException(url);

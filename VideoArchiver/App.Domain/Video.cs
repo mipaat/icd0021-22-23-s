@@ -1,15 +1,11 @@
 using System.ComponentModel.DataAnnotations;
-using App.Domain.Enums;
+using App.Domain.Base;
 using App.Domain.NotMapped;
-using Domain.Base;
 
 namespace App.Domain;
 
-public class Video : AbstractIdDatabaseEntity
+public class Video : BaseArchiveEntity
 {
-    public Platform Platform { get; set; } = default!;
-    [MaxLength(64)] public string IdOnPlatform { get; set; } = default!;
-
     public LangString? Title { get; set; }
     public LangString? Description { get; set; }
 
@@ -33,25 +29,10 @@ public class Video : AbstractIdDatabaseEntity
     public DateTime? LivestreamStartedAt { get; set; }
     public DateTime? LivestreamEndedAt { get; set; }
 
-    public DateTime? CreatedAt { get; set; }
     public DateTime? PublishedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
     public DateTime? RecordedAt { get; set; }
 
     public List<VideoFile>? LocalVideoFiles { get; set; }
-
-    public EPrivacyStatus? PrivacyStatus { get; set; }
-    public bool IsAvailable { get; set; }
-    public EPrivacyStatus InternalPrivacyStatus { get; set; } = EPrivacyStatus.Private;
-
-    [MaxLength(4096)] public string? Etag { get; set; }
-    public DateTime? LastFetchOfficial { get; set; }
-    public DateTime? LastSuccessfulFetchOfficial { get; set; }
-    public DateTime? LastFetchUnofficial { get; set; }
-    public DateTime? LastSuccessfulFetchUnofficial { get; set; }
-    public DateTime AddedToArchiveAt { get; set; } = DateTime.UtcNow;
-    public bool Monitor { get; set; } = true;
-    public bool Download { get; set; } = true;
 
     public ICollection<VideoGame>? VideoGames { set; get; }
     public ICollection<VideoAuthor>? VideoAuthors { get; set; }

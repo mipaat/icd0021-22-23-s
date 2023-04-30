@@ -1,7 +1,7 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.Domain;
+using App.Domain.Enums;
 using DAL.Base;
-using Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories.EntityRepositories;
@@ -12,8 +12,12 @@ public class VideoRepository : BaseEntityRepository<Video, AbstractAppDbContext>
     {
     }
 
-    public async Task<Video?> GetByIdOnPlatformAsync(string idOnPlatform)
+    public async Task<Video?> GetByIdOnPlatformAsync(string idOnPlatform, Platform platform)
     {
-        return await Entities.Where(v => v.IdOnPlatform == idOnPlatform).SingleOrDefaultAsync();
+        return await Entities
+            .Include(v => v.VideoAuthors!)
+            .ThenInclude(va => va.Author)
+            .Where(v => v.IdOnPlatform == idOnPlatform && v.Platform == platform)
+            .SingleOrDefaultAsync();
     }
 }

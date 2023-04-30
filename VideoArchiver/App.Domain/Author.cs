@@ -1,17 +1,12 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using App.Domain.Enums;
+using App.Domain.Base;
 using App.Domain.Identity;
 using App.Domain.NotMapped;
-using Domain.Base;
 
 namespace App.Domain;
 
-public class Author : AbstractIdDatabaseEntity
+public class Author : BaseArchiveEntity
 {
-    public Platform Platform { get; set; } = default!;
-    [MaxLength(64)] public string IdOnPlatform { get; set; } = default!;
-
     public string? UserName { get; set; }
     public string? DisplayName { get; set; }
     public LangString? Bio { get; set; }
@@ -22,22 +17,8 @@ public class Author : AbstractIdDatabaseEntity
     public List<ImageFile>? Banners { get; set; }
     public List<ImageFile>? Thumbnails { get; set; }
 
-    public DateTime? CreatedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
-
     public Guid? UserId { get; set; }
     public User? User { get; set; }
-
-    public EPrivacyStatus? PrivacyStatus { get; set; }
-    public bool IsAvailable { get; set; }
-    public EPrivacyStatus InternalPrivacyStatus { get; set; }
-
-    [MaxLength(4096)] public string? Etag { get; set; }
-    public DateTime LastFetched { get; set; }
-    public DateTime? LastSuccessfulFetch { get; set; }
-    public DateTime AddedToArchiveAt { get; set; }
-    public bool Monitor { get; set; }
-    public bool Download { get; set; }
 
     public ICollection<VideoAuthor>? VideoAuthors { get; set; }
     public ICollection<PlaylistAuthor>? PlaylistAuthors { get; set; }

@@ -1,9 +1,9 @@
 using System.Globalization;
 using System.Text;
+using App.BLL;
 using App.Contracts.DAL;
 using App.Domain.Enums;
 using App.Domain.Identity;
-using App.DTO;
 using DAL;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
@@ -87,10 +87,13 @@ public class Program
         // Register BLL services in DI
         // -------------------------------------
 
+        builder.Services.AddScoped<App.BLL.YouTube.YouTubeUow>();
         builder.Services.AddScoped<App.BLL.YouTube.SubmitService>();
+        builder.Services.AddScoped<UrlSubmissionHandler>(services =>
+            new UrlSubmissionHandler(RaiseIfNull(services.GetService<App.BLL.YouTube.SubmitService>())));
 
         // -------------------------------------
-        
+
         // App created
         var app = builder.Build();
 
@@ -101,10 +104,10 @@ public class Program
             SupportedUICultures = CultureInfo.GetCultures(CultureTypes.AllCultures),
         };
         app.UseRequestLocalization(localizationOptions);
-        
+
         if (useHttpLogging)
         {
-            app.UseHttpLogging();            
+            app.UseHttpLogging();
         }
 
         SetupAppData(app, app.Configuration);

@@ -1,0 +1,8 @@
+﻿@model Public.DTO.v1.LinkSubmission
+
+<h2>Add a YouTube link to the archive</h2>
+<form action="../SubmitLink/Submit" method="POST">
+    <label asp-for="Link"></label>
+    <input asp-for="Link"/>
+    <input type="submit" value="Submit" class="btn btn-primary"/>
+</form>

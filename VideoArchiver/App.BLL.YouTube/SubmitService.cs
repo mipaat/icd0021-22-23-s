@@ -1,65 +1,87 @@
-using System.Configuration;
 using App.BLL.Exceptions;
-using App.Contracts.DAL;
 using App.Domain;
 using App.Domain.Enums;
 using App.DTO;
-using Google.Apis.Services;
-using Google.Apis.YouTube.v3;
-using Microsoft.Extensions.Configuration;
-using YoutubeExplode;
 
 namespace App.BLL.YouTube;
 
-public class SubmitService : IPlatformUrlSubmissionHandler
+public class SubmitService : BaseYouTubeService, IPlatformUrlSubmissionHandler
 {
-    private readonly IAppUnitOfWork _uow;
-    private readonly YoutubeClient _youTubeExplodeClient;
-    private readonly YouTubeSettings _config;
-
-    public SubmitService(IAppUnitOfWork uow, IConfiguration configuration)
+    public SubmitService(YouTubeUow youTubeUow) : base(youTubeUow)
     {
-        _config = configuration.GetRequiredSection(YouTubeSettings.SectionKey).Get<YouTubeSettings>() ?? throw new ConfigurationErrorsException("Failed to read YouTube configuration!");
-        _uow = uow;
-        _youTubeExplodeClient = new YoutubeClient();
     }
 
     public bool IsPlatformUrl(string url) => Url.IsYouTubeUrl(url);
 
-    public async Task<EntityOrQueueItem> SubmitUrl(string url, Guid submitterId, bool autoSubmit)
+    public async Task<UrlSubmissionResults> SubmitUrl(string url, Guid submitterId, bool autoSubmit,
+        bool alsoSubmitPlaylist)
     {
         // TODO: Adding video/playlist authors to video
         // TODO: Scheduled fetching from YouTube official API, accounting for rate limits
-        // TODO: Scheduled? downloads? Comments?
+        // TODO: Scheduled downloads? Comments?
 
         // TODO: What to do when link is a video & playlist link?
 
-        if (Url.IsVideoUrl(url, out var id))
+        var result = new UrlSubmissionResults();
+
+        var isVideoUrl = Url.IsVideoUrl(url, out var videoId);
+        if (isVideoUrl)
         {
-            return await SubmitVideo(id!, submitterId, autoSubmit);
+            result.Add(await SubmitVideo(videoId!, submitterId, autoSubmit));
         }
 
-        // TODO: Playlists, Authors
+        if (Url.IsPlaylistUrl(url, out var playlistId))
+        {
+            if (isVideoUrl)
+            {
+                if (alsoSubmitPlaylist)
+                {
+                    result.Add(await SubmitPlaylist(playlistId!, submitterId, autoSubmit));
+                }
+                else
+                {
+                    var previouslyArchivedPlaylist = await Uow.Playlists.GetByIdOnPlatformAsync(playlistId!, Platform.YouTube);
+                    if (previouslyArchivedPlaylist == null)
+                    {
+                        result.ContainsNonArchivedPlaylist = true;
+                    }
+                    else
+                    {
+                        result.Add(previouslyArchivedPlaylist);
+                    }
+                }
+            }
+            else
+            {
+                result.Add(await SubmitPlaylist(playlistId!, submitterId, autoSubmit));
+            }
+        }
+
+        // TODO: Authors
         // TODO: Content fetching VS metadata fetching?
 
-        throw new UnrecognizedUrlException(url);
+        if (result.Count == 0) throw new UnrecognizedUrlException(url);
+
+        return result;
     }
 
-    private async Task<EntityOrQueueItem> SubmitVideo(string id, Guid submitterId, bool autoSubmit)
+    private async Task<UrlSubmissionResult> SubmitVideo(string id, Guid submitterId, bool autoSubmit)
     {
-        var previouslyArchivedVideo = await _uow.Videos.GetByIdOnPlatformAsync(id);
+        var previouslyArchivedVideo = await Uow.Videos.GetByIdOnPlatformAsync(id, Platform.YouTube);
 
         var queueItem = previouslyArchivedVideo != null
             ? new QueueItem(submitterId, autoSubmit, previouslyArchivedVideo)
             : new QueueItem(id, submitterId, autoSubmit, Platform.YouTube);
-        _uow.QueueItems.Add(queueItem);
+        Uow.QueueItems.Add(queueItem);
 
         if (previouslyArchivedVideo != null)
         {
-            throw new EntityAlreadyAddedException(previouslyArchivedVideo);
+            UrlSubmissionResult result = previouslyArchivedVideo;
+            result.AlreadyAdded = true;
+            return result;
         }
 
-        var video = await _youTubeExplodeClient.Videos.GetAsync(id);
+        var video = await YouTubeExplodeClient.Videos.GetAsync(id);
         if (video == null)
         {
             throw new VideoNotFoundException(id);
@@ -71,7 +93,48 @@ public class SubmitService : IPlatformUrlSubmissionHandler
         }
 
         var domainVideo = video.ToDomainVideo();
-        _uow.Videos.Add(domainVideo);
+        Uow.Videos.Add(domainVideo);
+
+        await YouTubeUow.AuthorService.AddAndSetAuthorIfNotSet(domainVideo, video.Author);
+
         return domainVideo;
+    }
+
+    private async Task<UrlSubmissionResult> SubmitPlaylist(string id, Guid submitterId, bool autoSubmit)
+    {
+        var previouslyArchivedPlaylist = await Uow.Playlists.GetByIdOnPlatformAsync(id, Platform.YouTube);
+
+        var queueItem = previouslyArchivedPlaylist != null
+            ? new QueueItem(submitterId, autoSubmit, previouslyArchivedPlaylist)
+            : new QueueItem(id, submitterId, autoSubmit, Platform.YouTube);
+        Uow.QueueItems.Add(queueItem);
+
+        if (previouslyArchivedPlaylist != null)
+        {
+            UrlSubmissionResult result = previouslyArchivedPlaylist;
+            result.AlreadyAdded = true;
+            return result;
+        }
+
+        var playlist = await YouTubeExplodeClient.Playlists.GetAsync(id);
+        if (playlist == null)
+        {
+            throw new PlaylistNotFoundException(id);
+        }
+
+        if (!autoSubmit)
+        {
+            return queueItem;
+        }
+
+        var domainPlaylist = playlist.ToDomainPlaylist();
+        Uow.Playlists.Add(domainPlaylist);
+
+        if (playlist.Author != null)
+        {
+            await YouTubeUow.AuthorService.AddAndSetAuthorIfNotSet(domainPlaylist, playlist.Author);
+        }
+
+        return domainPlaylist;
     }
 }

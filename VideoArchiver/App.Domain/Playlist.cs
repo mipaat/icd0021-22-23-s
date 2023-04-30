@@ -1,35 +1,18 @@
-using System.ComponentModel.DataAnnotations;
-using App.Domain.Enums;
+using App.Domain.Base;
 using App.Domain.NotMapped;
-using Domain.Base;
 
 namespace App.Domain;
 
-public class Playlist : AbstractIdDatabaseEntity
+public class Playlist : BaseArchiveEntity
 {
-    public Platform Platform { get; set; } = default!;
-    [MaxLength(64)] public string IdOnPlatform { get; set; } = default!;
-
     public LangString? Title { get; set; }
     public LangString? Description { get; set; }
 
     public List<ImageFile>? Thumbnails { get; set; }
-    public List<ImageFile>? Tags { get; set; }
+    public List<string>? Tags { get; set; }
 
-    public DateTime? CreatedAt { get; set; }
     public DateTime? PublishedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
-    
-    public EPrivacyStatus? PrivacyStatus { get; set; }
-    public bool IsAvailable { get; set; }
-    public EPrivacyStatus InternalPrivacyStatus { get; set; }
 
-    [MaxLength(4096)] public string? Etag { get; set; }
-    public DateTime LastFetched { get; set; }
-    public DateTime? LastSuccessfulFetch { get; set; }
-    public DateTime AddedToArchiveAt { get; set; }
-    public bool Monitor { get; set; }
-    public bool Download { get; set; }
 
     public ICollection<PlaylistVideo>? PlaylistVideos { get; set; }
     public ICollection<PlaylistAuthor>? PlaylistAuthors { get; set; }

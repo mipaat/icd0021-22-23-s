@@ -1,6 +1,6 @@
 namespace App.BLL.Exceptions;
 
-public class VideoNotFoundException : NotFoundException
+public class VideoNotFoundException : EntityNotFoundException
 {
     public VideoNotFoundException(string? message = null) : base(message)
     {
