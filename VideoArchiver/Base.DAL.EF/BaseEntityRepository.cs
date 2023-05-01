@@ -59,10 +59,14 @@ public class BaseEntityRepository<TEntity, TKey, TDbContext> : IBaseEntityReposi
         return await result.ToListAsync();
     }
 
-    public void Add(TEntity entity)
+    public TEntity Add(TEntity entity)
     {
-        Entities.Add(entity);
+        return Entities.Add(entity).Entity;
     }
+
+    public void AddRange(IEnumerable<TEntity> entities) => Entities.AddRange(entities);
+
+    public void AddRange(params TEntity[] entities) => Entities.AddRange(entities);
 
     public void Remove(TEntity entity)
     {

@@ -9,7 +9,9 @@ public interface IBaseEntityRepository<TEntity, TKey>
 {
     public Task<TEntity?> GetByIdAsync(TKey id);
     public Task<ICollection<TEntity>> GetAllAsync(params Expression<Func<TEntity, bool>>[] filters);
-    public void Add(TEntity entity);
+    public TEntity Add(TEntity entity);
+    public void AddRange(IEnumerable<TEntity> entities);
+    public void AddRange(params TEntity[] entities);
     public void Remove(TEntity entity);
     public Task RemoveAsync(TKey id);
     public void Update(TEntity entity);

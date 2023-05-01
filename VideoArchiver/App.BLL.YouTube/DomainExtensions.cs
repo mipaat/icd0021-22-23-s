@@ -5,6 +5,17 @@ namespace App.BLL.YouTube;
 
 public static class DomainExtensions
 {
+    public static Domain.Video ToDomainVideo(this YoutubeDLSharp.Metadata.VideoData videoData)
+    {
+        // TODO: !!!! NB !!!!
+        var domainVideo = new Domain.Video
+        {
+            
+        };
+
+        return domainVideo;
+    }
+    
     public static Domain.Video ToDomainVideo(this YoutubeExplode.Videos.Video youTubeVideo)
     {
         var domainVideo = new Domain.Video

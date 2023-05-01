@@ -1,0 +1,12 @@
+**/bin
+**/obj
+**/out
+**/.vscode
+**/.vs
+.dotnet
+.Microsoft.DotNet.ImageBuilder
+
+# Custom
+WebApp/*appsettings*.json
+WebApp/ffmpeg
+WebApp/yt-dlp

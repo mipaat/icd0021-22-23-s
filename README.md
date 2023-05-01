@@ -6,4 +6,4 @@ mipaat
 
 Homeworks are marked with tags
 
-There is another README in the WebApp project
+There is another README in the VideoArchiver solution root directory

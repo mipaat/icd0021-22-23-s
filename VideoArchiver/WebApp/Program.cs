@@ -77,16 +77,17 @@ public class Program
             options.Password.RequireNonAlphanumeric = false;
         });
 
-        var useHttpLogging = builder.Configuration.GetValue<bool>("Logging::HTTP::Enabled");
+        var useHttpLogging = builder.Configuration.GetValue<bool>("Logging:HTTP:Enabled");
         if (useHttpLogging)
         {
             builder.Services.AddHttpLogging(logging => { logging.LoggingFields = HttpLoggingFields.All; });
         }
 
         // -------------------------------------
-        // Register BLL services in DI
+        // Register and set up BLL services in DI
         // -------------------------------------
 
+        App.BLL.YouTube.SetupDependencies.DownloadAndSetupDependencies(builder.Configuration).Wait();
         builder.Services.AddScoped<App.BLL.YouTube.YouTubeUow>();
         builder.Services.AddScoped<App.BLL.YouTube.SubmitService>();
         builder.Services.AddScoped<UrlSubmissionHandler>(services =>

@@ -12,8 +12,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
 		Directory.Build.props = Directory.Build.props
-		..\docker-compose.yml = ..\docker-compose.yml
 		..\README.md = ..\README.md
+		docker-compose.yml = docker-compose.yml
+		Dockerfile = Dockerfile
+		.dockerignore = .dockerignore
+		appsettings_to_env.sh = appsettings_to_env.sh
+		.env = .env
+		example.env = example.env
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "APP", "APP", "{A1E8F747-4664-4DCE-B777-B3C4C8A1E95D}"

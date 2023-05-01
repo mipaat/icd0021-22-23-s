@@ -36,3 +36,7 @@ Desktop.ini
 # Custom
 *appsettings*.json
 !appsettings.*example*.json
+
+VideoArchiver/WebApp/ffmpeg
+VideoArchiver/WebApp/yt-dlp
+VideoArchiver/.env

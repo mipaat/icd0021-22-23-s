@@ -2,6 +2,7 @@ using App.BLL.Exceptions;
 using App.Domain;
 using App.Domain.Enums;
 using App.DTO;
+using YoutubeDLSharp;
 
 namespace App.BLL.YouTube;
 
@@ -68,36 +69,40 @@ public class SubmitService : BaseYouTubeService, IPlatformUrlSubmissionHandler
     private async Task<UrlSubmissionResult> SubmitVideo(string id, Guid submitterId, bool autoSubmit)
     {
         var previouslyArchivedVideo = await Uow.Videos.GetByIdOnPlatformAsync(id, Platform.YouTube);
-
-        var queueItem = previouslyArchivedVideo != null
-            ? new QueueItem(submitterId, autoSubmit, previouslyArchivedVideo)
-            : new QueueItem(id, submitterId, autoSubmit, Platform.YouTube);
-        Uow.QueueItems.Add(queueItem);
-
         if (previouslyArchivedVideo != null)
         {
+            Uow.QueueItems.Add(new QueueItem(submitterId, autoSubmit, previouslyArchivedVideo));
             UrlSubmissionResult result = previouslyArchivedVideo;
             result.AlreadyAdded = true;
             return result;
         }
 
-        var video = await YouTubeExplodeClient.Videos.GetAsync(id);
-        if (video == null)
+        var videoResult = await YoutubeDl.RunVideoDataFetch(Url.ToVideoUrl(id));
+        Console.WriteLine("VIDEORESULT");
+        Console.WriteLine(videoResult);
+        Console.WriteLine(videoResult.Success);
+        Console.WriteLine(videoResult.Data);
+        Console.WriteLine(videoResult.Data.Title);
+        if (videoResult is not { Success: true })
         {
             throw new VideoNotFoundException(id);
         }
 
         if (!autoSubmit)
         {
-            return queueItem;
+            return new QueueItem(id, submitterId, autoSubmit, Platform.YouTube);
         }
 
-        var domainVideo = video.ToDomainVideo();
-        Uow.Videos.Add(domainVideo);
+        var video = videoResult.Data.ToDomainVideo();
+        // TODO: Author
+        Uow.QueueItems.Add(new QueueItem(submitterId, autoSubmit, video));
+        Uow.Videos.Add(video);
+        if (video.Comments != null)
+        {
+            Uow.Comments.AddRange(video.Comments);            
+        }
 
-        await YouTubeUow.AuthorService.AddAndSetAuthorIfNotSet(domainVideo, video.Author);
-
-        return domainVideo;
+        return video;
     }
 
     private async Task<UrlSubmissionResult> SubmitPlaylist(string id, Guid submitterId, bool autoSubmit)

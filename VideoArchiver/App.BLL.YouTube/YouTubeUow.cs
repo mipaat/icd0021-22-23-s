@@ -1,8 +1,10 @@
 ﻿using System.Configuration;
+using System.Runtime.InteropServices;
 using App.Contracts.DAL;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Microsoft.Extensions.Configuration;
+using YoutubeDLSharp;
 using YoutubeExplode;
 
 namespace App.BLL.YouTube;
@@ -41,4 +43,7 @@ public class YouTubeUow
 
     private PlaylistService? _playlistService;
     public PlaylistService PlaylistService => _playlistService ??= new PlaylistService(this);
+
+    private YoutubeDL? _youtubeDl;
+    public YoutubeDL YoutubeDl => _youtubeDl ??= new YoutubeDL();
 }

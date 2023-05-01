@@ -58,4 +58,14 @@ public static class Url
         // TODO
         return false;
     }
+
+    public static string ToVideoUrl(string id)
+    {
+        return $"https://www.youtube.com/watch?v={id}";
+    }
+
+    public static string ToPlaylistUrl(string id)
+    {
+        return $"https://www.youtube.com/playlist?list={id}";
+    }
 }
