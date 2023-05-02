@@ -44,6 +44,9 @@ public class YouTubeUow
     private PlaylistService? _playlistService;
     public PlaylistService PlaylistService => _playlistService ??= new PlaylistService(this);
 
+    private CommentService? _commentService;
+    public CommentService CommentService => _commentService ??= new CommentService(this);
+
     private YoutubeDL? _youtubeDl;
     public YoutubeDL YoutubeDl => _youtubeDl ??= new YoutubeDL();
 }

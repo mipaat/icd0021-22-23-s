@@ -4,5 +4,16 @@ public enum EPrivacyStatus
 {
     Public,
     Unlisted,
-    Private
+    Private,
+    NeedsAuth,
+    PremiumOnly,
+    SubscriberOnly,
+}
+
+public static class PrivacyStatusExtensions
+{
+    public static bool IsAvailable(this EPrivacyStatus? privacyStatus)
+    {
+        return privacyStatus is EPrivacyStatus.Public or EPrivacyStatus.Unlisted;
+    }
 }

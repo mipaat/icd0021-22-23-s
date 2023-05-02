@@ -64,10 +64,16 @@
                 @Html.DisplayNameFor(model => model.Etag)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastFetched)
+                @Html.DisplayNameFor(model => model.LastFetchOfficial)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FetchSuccess)
+                @Html.DisplayNameFor(model => model.LastSuccessfulFetchOfficial)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastFetchUnofficial)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastSuccessfulFetchUnofficial)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.AddedToArchiveAt)
@@ -130,10 +136,16 @@
                 @Html.DisplayFor(modelItem => item.Etag)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LastFetched)
+                @Html.DisplayFor(modelItem => item.LastFetchOfficial)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FetchSuccess)
+                @Html.DisplayFor(modelItem => item.LastSuccessfulFetchOfficial)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastFetchUnofficial)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastSuccessfulFetchUnofficial)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AddedToArchiveAt)

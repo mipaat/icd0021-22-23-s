@@ -23,7 +23,7 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             [Bind(
-                "Platform,IdOnPlatform,Title,Description,DefaultLanguage,DefaultAudioLanguage,Duration,Width,Height,BitrateBps,ViewCount,LikeCount,DislikeCount,CommentCount,HasCaptions,Captions,Thumbnails,Tags,IsLivestreamRecording,StreamId,LivestreamStartedAt,LivestreamEndedAt,CreatedAt,PublishedAt,UpdatedAt,RecordedAt,LocalVideoFiles,PrivacyStatus,IsAvailable,InternalPrivacyStatus,Etag,LastFetchOfficial,LastSuccessfulFetchOfficial,LastFetchUnofficial,LastSuccessfulFetchUnofficial,AddedToArchiveAt,Monitor,Download,Id")]
+                "Platform,IdOnPlatform,Title,Description,DefaultLanguage,DefaultAudioLanguage,Duration,Width,Height,BitrateBps,ViewCount,LikeCount,DislikeCount,CommentCount,Captions,AutomaticCaptions,Thumbnails,Tags,IsLivestreamRecording,StreamId,LivestreamStartedAt,LivestreamEndedAt,CreatedAt,PublishedAt,UpdatedAt,RecordedAt,LocalVideoFiles,PrivacyStatus,IsAvailable,InternalPrivacyStatus,Etag,LastFetchOfficial,LastSuccessfulFetchOfficial,LastFetchUnofficial,LastSuccessfulFetchUnofficial,AddedToArchiveAt,Monitor,Download,Id")]
             Video entity)
         {
             return await CreateInternal(entity);
@@ -33,7 +33,7 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id,
             [Bind(
-                "Platform,IdOnPlatform,Title,Description,DefaultLanguage,DefaultAudioLanguage,Duration,Width,Height,BitrateBps,ViewCount,LikeCount,DislikeCount,CommentCount,HasCaptions,Captions,Thumbnails,Tags,IsLivestreamRecording,StreamId,LivestreamStartedAt,LivestreamEndedAt,CreatedAt,PublishedAt,UpdatedAt,RecordedAt,LocalVideoFiles,PrivacyStatus,IsAvailable,InternalPrivacyStatus,Etag,LastFetchOfficial,LastSuccessfulFetchOfficial,LastFetchUnofficial,LastSuccessfulFetchUnofficial,AddedToArchiveAt,Monitor,Download,Id")]
+                "Platform,IdOnPlatform,Title,Description,DefaultLanguage,DefaultAudioLanguage,Duration,Width,Height,BitrateBps,ViewCount,LikeCount,DislikeCount,CommentCount,Captions,AutomaticCaptions,Thumbnails,Tags,IsLivestreamRecording,StreamId,LivestreamStartedAt,LivestreamEndedAt,CreatedAt,PublishedAt,UpdatedAt,RecordedAt,LocalVideoFiles,PrivacyStatus,IsAvailable,InternalPrivacyStatus,Etag,LastFetchOfficial,LastSuccessfulFetchOfficial,LastFetchUnofficial,LastSuccessfulFetchUnofficial,AddedToArchiveAt,Monitor,Download,Id")]
             Video entity)
         {
             return await EditInternal(id, entity);

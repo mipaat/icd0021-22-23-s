@@ -1,4 +1,6 @@
-﻿using App.Domain.NotMapped;
+﻿using App.Domain.Comparers;
+using App.Domain.Converters;
+using App.Domain.NotMapped;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -18,6 +20,9 @@ public class PostgresAppDbContext : AbstractAppDbContext
             .HaveJsonBConversions<ImageFile>()
             .HaveJsonBConversions<VideoFile>()
             .HaveJsonBConversions<Caption>()
-            .HaveJsonBColumnType<LangString>();
+            .HaveJsonBColumnType<LangString>()
+            .HaveJsonBColumnType<CaptionsDictionary>();
+        configurationBuilder.Properties<CaptionsDictionary>()
+            .HaveConversion<JsonValueConverter<CaptionsDictionary>, CaptionsDictionaryValueComparer>();
     }
 }

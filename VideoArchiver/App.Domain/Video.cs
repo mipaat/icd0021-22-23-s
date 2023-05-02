@@ -19,8 +19,8 @@ public class Video : BaseArchiveEntity
     public long? DislikeCount { get; set; }
     public long? CommentCount { get; set; }
 
-    public bool? HasCaptions { get; set; }
-    public List<Caption>? Captions { get; set; }
+    public CaptionsDictionary? Captions { get; set; }
+    public CaptionsDictionary? AutomaticCaptions { get; set; }
     public List<ImageFile>? Thumbnails { get; set; }
     public List<string>? Tags { get; set; }
 

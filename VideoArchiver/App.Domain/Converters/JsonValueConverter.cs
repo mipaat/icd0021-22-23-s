@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace App.Domain.Converters;
 
-public class JsonConverter<TValue> : ValueConverter<TValue, string>
+public class JsonValueConverter<TValue> : ValueConverter<TValue, string>
 {
-    public JsonConverter() : base(value => Convert(value),
-        serializedValue => Convert(serializedValue))
+    public JsonValueConverter() : base(
+        value => Convert(value),
+        serializedValue => Convert(serializedValue)
+    )
     {
     }
 
@@ -14,5 +16,6 @@ public class JsonConverter<TValue> : ValueConverter<TValue, string>
         JsonSerializer.Deserialize<TValue>(serializedValue)
         ?? throw new ConversionException();
 
-    private static string Convert(TValue value) => JsonSerializer.Serialize(value);
+    private static string Convert(TValue value) =>
+        JsonSerializer.Serialize(value);
 }

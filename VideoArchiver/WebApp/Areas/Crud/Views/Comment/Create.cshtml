@@ -96,14 +96,24 @@
                 <span asp-validation-for="Etag" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LastFetched" class="control-label"></label>
-                <input asp-for="LastFetched" class="form-control" />
-                <span asp-validation-for="LastFetched" class="text-danger"></span>
+                <label asp-for="LastFetchOfficial" class="control-label"></label>
+                <input asp-for="LastFetchOfficial" class="form-control" />
+                <span asp-validation-for="LastFetchOfficial" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="FetchSuccess" /> @Html.DisplayNameFor(model => model.FetchSuccess)
-                </label>
+            <div class="form-group">
+                <label asp-for="LastSuccessfulFetchOfficial" class="control-label"></label>
+                <input asp-for="LastSuccessfulFetchOfficial" class="form-control" />
+                <span asp-validation-for="LastSuccessfulFetchOfficial" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastFetchUnofficial" class="control-label"></label>
+                <input asp-for="LastFetchUnofficial" class="form-control" />
+                <span asp-validation-for="LastFetchUnofficial" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastSuccessfulFetchUnofficial" class="control-label"></label>
+                <input asp-for="LastSuccessfulFetchUnofficial" class="form-control" />
+                <span asp-validation-for="LastSuccessfulFetchUnofficial" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="AddedToArchiveAt" class="control-label"></label>

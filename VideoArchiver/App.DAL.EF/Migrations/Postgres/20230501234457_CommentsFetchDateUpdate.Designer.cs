@@ -5,6 +5,7 @@ using App.Domain.NotMapped;
 using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -13,9 +14,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations.Postgres
 {
     [DbContext(typeof(PostgresAppDbContext))]
-    partial class PostgresAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230501234457_CommentsFetchDateUpdate")]
+    partial class CommentsFetchDateUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,8 +92,8 @@ namespace DAL.Migrations.Postgres
                     b.Property<List<ImageFile>>("ProfileImages")
                         .HasColumnType("jsonb");
 
-                    b.Property<long?>("SubscriberCount")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("SubscriberCount")
+                        .HasColumnType("integer");
 
                     b.Property<List<ImageFile>>("Thumbnails")
                         .HasColumnType("jsonb");
@@ -336,9 +339,6 @@ namespace DAL.Migrations.Postgres
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uuid");
 
-                    b.Property<bool?>("AuthorIsCreator")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("Content")
                         .HasColumnType("text");
 
@@ -367,9 +367,6 @@ namespace DAL.Migrations.Postgres
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsAvailable")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool?>("IsFavorited")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastFetchOfficial")

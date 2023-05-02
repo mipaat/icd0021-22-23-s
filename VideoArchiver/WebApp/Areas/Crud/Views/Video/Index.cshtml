@@ -46,10 +46,10 @@
                 @Html.DisplayNameFor(model => model.CommentCount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.HasCaptions)
+                @Html.DisplayNameFor(model => model.Captions)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Captions)
+                @Html.DisplayNameFor(model => model.AutomaticCaptions)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Thumbnails)
@@ -157,13 +157,13 @@
                 @Html.DisplayFor(modelItem => item.CommentCount)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.HasCaptions)
+                @((item.Captions?.Count ?? 0) > 0 ? $"{item.Captions!.Count}" : "No captions")
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Captions)
+                @((item.AutomaticCaptions?.Count ?? 0) > 0 ? $"{item.AutomaticCaptions!.Count}" : "No captions")
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Thumbnails)
+                @((item.Thumbnails?.Count ?? 0) > 0 ? $"{item.Thumbnails!.Count}" : "No thumbnails")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Tags)

@@ -1,9 +1,13 @@
+using System.Linq.Expressions;
+using App.Domain.Comparers;
 using App.Domain.Converters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DAL;
 
-public static class ConfigurationBuilderExtensions {
+public static class ConfigurationBuilderExtensions
+{
     public const string JsonB = "jsonb";
     public const string Text = "TEXT";
 
@@ -12,11 +16,12 @@ public static class ConfigurationBuilderExtensions {
     {
         configurationBuilder
             .Properties<TValue>()
-            .HaveConversion<JsonConverter<TValue>>();
+            .HaveConversion<JsonValueConverter<TValue>>();
         return configurationBuilder;
     }
 
-    public static ModelConfigurationBuilder HaveJsonBColumnType<TValue>(this ModelConfigurationBuilder configurationBuilder)
+    public static ModelConfigurationBuilder HaveJsonBColumnType<TValue>(
+        this ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder
             .Properties<TValue>()
@@ -40,8 +45,25 @@ public static class ConfigurationBuilderExtensions {
             .HaveJsonBColumnType<List<TValue>>()
             .HaveJsonBColumnType<Dictionary<string, TValue>>();
     }
-    
-    public static ModelConfigurationBuilder HaveTextColumnType<TValue>(this ModelConfigurationBuilder configurationBuilder)
+
+    public static ModelBuilder SetValueComparer<TEntity, TProperty>(
+        this ModelBuilder modelBuilder,
+        Expression<Func<TEntity, TProperty>> propertyExpression,
+        ValueComparer<TProperty>? valueComparer = null)
+        where TEntity : class where TProperty : new()
+    {
+        valueComparer ??= new JsonSerializableValueComparer<TProperty>();
+        modelBuilder
+            .Entity<TEntity>()
+            .Property(propertyExpression)
+            .Metadata
+            .SetValueComparer(valueComparer);
+
+        return modelBuilder;
+    }
+
+    public static ModelConfigurationBuilder HaveTextColumnType<TValue>(
+        this ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder
             .Properties<TValue>()

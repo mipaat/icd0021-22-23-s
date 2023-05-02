@@ -1,9 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using App.Domain.Converters;
 
 namespace App.Domain.Enums;
 
 [NotMapped]
+[JsonConverter(typeof(PlatformJsonConverter))]
 public class Platform
 {
     [MaxLength(64)] public string Name { get; }
@@ -29,8 +32,10 @@ public class Platform
         return Name;
     }
 
-    public static implicit operator Platform(string name) => DefinedPlatforms.Find(p => p.Name == name) ??
-                                                             new Platform(name);
+    private static Platform GetOrCreatePlatform(string name) => DefinedPlatforms.Find(p => p.Name == name) ??
+                                                                new Platform(name);
+
+    public static implicit operator Platform(string name) => GetOrCreatePlatform(name);
 
     public static implicit operator string(Platform platform) => platform.Name;
 }

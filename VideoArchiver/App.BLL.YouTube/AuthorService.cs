@@ -1,5 +1,6 @@
 ﻿using App.Domain;
 using App.Domain.Enums;
+using YoutubeDLSharp.Metadata;
 
 namespace App.BLL.YouTube;
 
@@ -9,25 +10,36 @@ public class AuthorService : BaseYouTubeService
     {
     }
 
-    public async Task AddAndSetAuthorIfNotSet(Video domainVideo, YoutubeExplode.Common.Author youTubeExplodeAuthor)
+    public async Task AddAndSetAuthorIfNotSet(Video domainVideo, VideoData videoData)
     {
-        var domainAuthor = await AddOrGetAuthor(youTubeExplodeAuthor);
+        var domainAuthor = await AddOrGetAuthor(videoData);
         await Uow.VideoAuthors.SetVideoAuthor(domainVideo, domainAuthor);
     }
 
-    public async Task AddAndSetAuthorIfNotSet(Playlist domainPlaylist,
-        YoutubeExplode.Common.Author youTubeExplodeAuthor)
+    public async Task AddAndSetAuthorIfNotSet(Comment domainComment, CommentData commentData)
     {
-        var domainAuthor = await AddOrGetAuthor(youTubeExplodeAuthor);
-        await Uow.PlaylistAuthors.SetPlaylistAuthor(domainPlaylist, domainAuthor);
+        var domainAuthor = await AddOrGetAuthor(commentData);
+        domainComment.Author = domainAuthor;
     }
 
-    public async Task<Author> AddOrGetAuthor(YoutubeExplode.Common.Author youTubeExplodeAuthor)
+    private async Task<Author> AddOrGetAuthor(VideoData videoData)
     {
-        var author = await Uow.Authors.GetByIdOnPlatformAsync(youTubeExplodeAuthor.ChannelId, Platform.YouTube);
+        var author = await Uow.Authors.GetByIdOnPlatformAsync(videoData.ChannelID, Platform.YouTube);
         if (author == null)
         {
-            author = youTubeExplodeAuthor.ToDomainAuthor();
+            author = videoData.ToDomainAuthor();
+            Uow.Authors.Add(author);
+        }
+
+        return author;
+    }
+
+    public async Task<Author> AddOrGetAuthor(CommentData commentData)
+    {
+        var author = await Uow.Authors.GetByIdOnPlatformAsync(commentData.AuthorID, Platform.YouTube);
+        if (author == null)
+        {
+            author = commentData.ToDomainAuthor();
             Uow.Authors.Add(author);
         }
 

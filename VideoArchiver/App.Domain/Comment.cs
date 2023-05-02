@@ -1,15 +1,10 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using App.Domain.Enums;
-using Domain.Base;
+using App.Domain.Base;
 
 namespace App.Domain;
 
-public class Comment : AbstractIdDatabaseEntity
+public class Comment : BaseArchiveEntityNonMonitored
 {
-    public Platform Platform { get; set; } = default!;
-    [MaxLength(64)] public string IdOnPlatform { get; set; } = default!;
-
     public Author? Author { get; set; }
     public Guid AuthorId { get; set; }
     public Video? Video { get; set; }
@@ -26,19 +21,10 @@ public class Comment : AbstractIdDatabaseEntity
     public int? LikeCount { get; set; }
     public int? DislikeCount { get; set; }
     public int? ReplyCount { get; set; }
+    public bool? IsFavorited { get; set; }
+    public bool? AuthorIsCreator { get; set; }
 
-    public DateTime? CreatedAt { get; set; }
     public TimeSpan? CreatedAtVideoTimecode { get; set; }
-    public DateTime? UpdatedAt { get; set; }
-
-    public EPrivacyStatus? PrivacyStatus { get; set; }
-    public bool IsAvailable { get; set; }
-    public EPrivacyStatus InternalPrivacyStatus { get; set; }
-
-    [MaxLength(4096)] public string? Etag { get; set; }
-    public DateTime LastFetched { get; set; }
-    public bool FetchSuccess { get; set; }
-    public DateTime AddedToArchiveAt { get; set; }
 
     [InverseProperty(nameof(ReplyTarget))]
     public ICollection<Comment>? DirectReplies { get; set; }

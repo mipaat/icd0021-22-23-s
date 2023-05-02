@@ -35,7 +35,7 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             [Bind(
-                "Platform,IdOnPlatform,AuthorId,VideoId,ReplyTargetId,ConversationRootId,Content,LikeCount,DislikeCount,ReplyCount,CreatedAt,CreatedAtVideoTimecode,UpdatedAt,PrivacyStatus,IsAvailable,InternalPrivacyStatus,Etag,LastFetched,FetchSuccess,AddedToArchiveAt,Id")]
+                "Platform,IdOnPlatform,AuthorId,VideoId,ReplyTargetId,ConversationRootId,Content,LikeCount,DislikeCount,ReplyCount,CreatedAt,CreatedAtVideoTimecode,UpdatedAt,PrivacyStatus,IsAvailable,InternalPrivacyStatus,Etag,LastFetchOfficial,LastSuccessfulFetchOfficial,LastFetchUnofficial,LastSuccessfulFetchUnofficial,AddedToArchiveAt,Id")]
             Comment entity)
         {
             return await CreateInternal(entity);
@@ -45,7 +45,7 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id,
             [Bind(
-                "Platform,IdOnPlatform,AuthorId,VideoId,ReplyTargetId,ConversationRootId,Content,LikeCount,DislikeCount,ReplyCount,CreatedAt,CreatedAtVideoTimecode,UpdatedAt,PrivacyStatus,IsAvailable,InternalPrivacyStatus,Etag,LastFetched,FetchSuccess,AddedToArchiveAt,Id")]
+                "Platform,IdOnPlatform,AuthorId,VideoId,ReplyTargetId,ConversationRootId,Content,LikeCount,DislikeCount,ReplyCount,CreatedAt,CreatedAtVideoTimecode,UpdatedAt,PrivacyStatus,IsAvailable,InternalPrivacyStatus,Etag,LastFetchOfficial,LastSuccessfulFetchOfficial,LastFetchUnofficial,LastSuccessfulFetchUnofficial,AddedToArchiveAt,Id")]
             Comment entity)
         {
             return await EditInternal(id, entity);
