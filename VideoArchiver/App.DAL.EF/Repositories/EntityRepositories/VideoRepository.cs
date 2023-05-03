@@ -15,9 +15,18 @@ public class VideoRepository : BaseEntityRepository<Video, AbstractAppDbContext>
     public async Task<Video?> GetByIdOnPlatformAsync(string idOnPlatform, Platform platform)
     {
         return await Entities
-            .Include(v => v.VideoAuthors!)
-            .ThenInclude(va => va.Author)
+            // .Include(v => v.VideoAuthors!)
+            // .ThenInclude(va => va.Author)
             .Where(v => v.IdOnPlatform == idOnPlatform && v.Platform == platform)
             .SingleOrDefaultAsync();
+    }
+
+    public async Task<ICollection<string>> GetAllIdsOnPlatformWithUnarchivedComments(Platform platform)
+    {
+        return await Entities
+            .Where(v => v.Platform == platform && v.LastCommentsFetch == null && v.IsAvailable)
+            .OrderBy(v => v.AddedToArchiveAt)
+            .Select(v => v.IdOnPlatform)
+            .ToListAsync();
     }
 }

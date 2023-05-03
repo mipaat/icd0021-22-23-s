@@ -28,6 +28,7 @@
       <ProjectReference Include="..\App.DAL.EF\App.DAL.EF.csproj" />
       <ProjectReference Include="..\Base.WebHelpers\Base.WebHelpers.csproj" />
       <ProjectReference Include="..\Public.DTO\Public.DTO.csproj" />
+      <ProjectReference Include="..\Utils\Utils.csproj" />
     </ItemGroup>
 
     <ItemGroup>

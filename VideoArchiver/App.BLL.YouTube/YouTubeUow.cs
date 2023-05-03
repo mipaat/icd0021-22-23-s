@@ -1,5 +1,5 @@
 ﻿using System.Configuration;
-using System.Runtime.InteropServices;
+using App.BLL.YouTube.Services;
 using App.Contracts.DAL;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
@@ -9,11 +9,12 @@ using YoutubeExplode;
 
 namespace App.BLL.YouTube;
 
-public class YouTubeUow
+public class YouTubeUow : IDisposable
 {
     public readonly IAppUnitOfWork Uow;
+    public readonly YouTubeContext Context;
+    
     private YoutubeClient? _youTubeExplodeClient;
-
     public YoutubeClient YouTubeExplodeClient => _youTubeExplodeClient ??= new YoutubeClient();
 
     private YouTubeService? _youTubeApiService;
@@ -29,11 +30,15 @@ public class YouTubeUow
     public YouTubeSettings Config => _config.GetRequiredSection(YouTubeSettings.SectionKey).Get<YouTubeSettings>() ??
                                      throw new ConfigurationErrorsException("Failed to read YouTube configuration!");
 
-    public YouTubeUow(IAppUnitOfWork uow, IConfiguration config)
+    public YouTubeUow(IAppUnitOfWork uow, IConfiguration config, YouTubeContext youTubeContext)
     {
         Uow = uow;
+        Context = youTubeContext;
         _config = config;
     }
+
+    private YoutubeDL? _youtubeDl;
+    public YoutubeDL YoutubeDl => _youtubeDl ??= new YoutubeDL();
 
     private SubmitService? _submitService;
     public SubmitService SubmitService => _submitService ??= new SubmitService(this);
@@ -47,6 +52,11 @@ public class YouTubeUow
     private CommentService? _commentService;
     public CommentService CommentService => _commentService ??= new CommentService(this);
 
-    private YoutubeDL? _youtubeDl;
-    public YoutubeDL YoutubeDl => _youtubeDl ??= new YoutubeDL();
+    private VideoService? _videoService;
+    public VideoService VideoService => _videoService ??= new VideoService(this);
+
+    public void Dispose()
+    {
+        YouTubeApiService.Dispose();
+    }
 }

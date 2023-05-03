@@ -1,7 +1,9 @@
+using App.BLL.YouTube.Base;
+using App.BLL.YouTube.Extensions;
 using App.Domain;
 using YoutubeDLSharp.Metadata;
 
-namespace App.BLL.YouTube;
+namespace App.BLL.YouTube.Services;
 
 public class CommentService : BaseYouTubeService
 {
@@ -9,7 +11,7 @@ public class CommentService : BaseYouTubeService
     {
     }
 
-    public async Task AddComments(Video video, IEnumerable<CommentData> comments)
+    public async Task AddComments(Video video, IEnumerable<CommentData> comments, CancellationToken ct = default)
     {
         video.Comments ??= new List<Comment>();
         var commentsWithoutParent = new List<(Comment Comment, string Parent)>();

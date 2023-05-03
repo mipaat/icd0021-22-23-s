@@ -13,6 +13,7 @@ public class Playlist : BaseArchiveEntity
 
     public DateTime? PublishedAt { get; set; }
 
+    public DateTime? LastVideosFetch { get; set; }
 
     public ICollection<PlaylistVideo>? PlaylistVideos { get; set; }
     public ICollection<PlaylistAuthor>? PlaylistAuthors { get; set; }

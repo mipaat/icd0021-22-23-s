@@ -7,4 +7,5 @@ namespace App.Contracts.DAL.Repositories.EntityRepositories;
 public interface IVideoRepository : IBaseEntityRepository<Video>
 {
     public Task<Video?> GetByIdOnPlatformAsync(string idOnPlatform, Platform platform);
+    public Task<ICollection<string>> GetAllIdsOnPlatformWithUnarchivedComments(Platform platform);
 }

@@ -1,8 +1,10 @@
-﻿using App.Domain;
+﻿using App.BLL.YouTube.Base;
+using App.BLL.YouTube.Extensions;
+using App.Domain;
 using App.Domain.Enums;
 using YoutubeDLSharp.Metadata;
 
-namespace App.BLL.YouTube;
+namespace App.BLL.YouTube.Services;
 
 public class AuthorService : BaseYouTubeService
 {
@@ -20,6 +22,12 @@ public class AuthorService : BaseYouTubeService
     {
         var domainAuthor = await AddOrGetAuthor(commentData);
         domainComment.Author = domainAuthor;
+    }
+
+    public async Task AddAndSetAuthorIfNotSet(Playlist domainPlaylist, VideoData playlistData)
+    {
+        var domainAuthor = await AddOrGetAuthor(playlistData);
+        await Uow.PlaylistAuthors.SetPlaylistAuthor(domainPlaylist, domainAuthor);
     }
 
     private async Task<Author> AddOrGetAuthor(VideoData videoData)

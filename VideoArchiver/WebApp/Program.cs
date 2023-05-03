@@ -1,6 +1,9 @@
 using System.Globalization;
 using System.Text;
 using App.BLL;
+using App.BLL.YouTube;
+using App.BLL.YouTube.Extensions;
+using App.BLL.YouTube.Services;
 using App.Contracts.DAL;
 using App.Domain.Enums;
 using App.Domain.Identity;
@@ -9,6 +12,7 @@ using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.IdentityModel.Tokens;
+using Utils;
 using WebApp.Config;
 using WebApp.MyLibraries.ModelBinders;
 
@@ -84,14 +88,13 @@ public class Program
         }
 
         // -------------------------------------
-        // Register and set up BLL services in DI
+        // Register and set up BLL services
         // -------------------------------------
 
-        App.BLL.YouTube.SetupDependencies.DownloadAndSetupDependencies(builder.Configuration).Wait();
-        builder.Services.AddScoped<App.BLL.YouTube.YouTubeUow>();
-        builder.Services.AddScoped<App.BLL.YouTube.SubmitService>();
+        SetupDependencies.DownloadAndSetupDependencies(builder.Configuration).Wait();
+        builder.Services.AddYouTube();
         builder.Services.AddScoped<UrlSubmissionHandler>(services =>
-            new UrlSubmissionHandler(RaiseIfNull(services.GetService<App.BLL.YouTube.SubmitService>())));
+            new UrlSubmissionHandler(services.GetService<SubmitService>().RaiseIfNull()));
 
         // -------------------------------------
 
@@ -143,18 +146,12 @@ public class Program
         app.Run();
     }
 
-    private static T RaiseIfNull<T>(T? dependency, string? dependencyDisplayName = null)
-    {
-        if (dependency != null) return dependency;
-        throw new ApplicationException($"Failed to initialize {dependencyDisplayName ?? typeof(T).FullName}");
-    }
-
     private static void SetupAppData(IApplicationBuilder app, IConfiguration configuration)
     {
         using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
-        using var context = RaiseIfNull(serviceScope.ServiceProvider.GetService<AbstractAppDbContext>());
+        using var context = serviceScope.ServiceProvider.GetService<AbstractAppDbContext>().RaiseIfNull();
 
-        var logger = RaiseIfNull(serviceScope.ServiceProvider.GetService<ILogger<IApplicationBuilder>>());
+        var logger = serviceScope.ServiceProvider.GetService<ILogger<IApplicationBuilder>>().RaiseIfNull();
 
         if (context.Database.ProviderName!.Contains("InMemory"))
         {
@@ -178,8 +175,8 @@ public class Program
                 AppDataInit.MigrateDatabase(context);
             }
 
-            using var userManager = RaiseIfNull(serviceScope.ServiceProvider.GetService<UserManager<User>>());
-            using var roleManager = RaiseIfNull(serviceScope.ServiceProvider.GetService<RoleManager<Role>>());
+            using var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>().RaiseIfNull();
+            using var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<Role>>().RaiseIfNull();
 
             if (dataInitSettings.SeedIdentity)
             {

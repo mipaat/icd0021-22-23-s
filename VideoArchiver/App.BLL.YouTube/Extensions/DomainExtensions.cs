@@ -2,7 +2,7 @@ using App.Domain.Enums;
 using App.Domain.NotMapped;
 using YoutubeDLSharp.Metadata;
 
-namespace App.BLL.YouTube;
+namespace App.BLL.YouTube.Extensions;
 
 public static class DomainExtensions
 {
@@ -53,7 +53,7 @@ public static class DomainExtensions
             Platform = Platform.YouTube,
             IdOnPlatform = videoData.ChannelID,
 
-            UserName = videoData.Uploader,
+            UserName = Url.IsAuthorHandleUrl(videoData.ChannelUrl, out var handle) ? handle : null,
             DisplayName = videoData.Channel,
 
             SubscriberCount = videoData.ChannelFollowerCount,
@@ -205,6 +205,34 @@ public static class DomainExtensions
 
             Thumbnails = youTubePlaylist.Thumbnails.Select(t => t.ToDomainImageFile()).ToList(),
 
+            IsAvailable = true,
+            InternalPrivacyStatus = EPrivacyStatus.Private,
+
+            LastFetchUnofficial = DateTime.UtcNow,
+            LastSuccessfulFetchUnofficial = DateTime.UtcNow,
+            AddedToArchiveAt = DateTime.UtcNow,
+
+            Monitor = monitor,
+            Download = download,
+        };
+
+        return domainPlaylist;
+    }
+
+    public static Domain.Playlist ToDomainPlaylist(this VideoData playlistData, bool monitor = false,
+        bool download = false)
+    {
+        var domainPlaylist = new Domain.Playlist
+        {
+            Platform = Platform.YouTube,
+            IdOnPlatform = playlistData.ID,
+
+            Title = new LangString(playlistData.Title),
+            Description = new LangString(playlistData.Description),
+
+            Thumbnails = playlistData.Thumbnails.Select(t => t.ToDomainImageFile()).ToList(),
+
+            PrivacyStatus = playlistData.Availability.ToDomainPrivacyStatus(),
             IsAvailable = true,
             InternalPrivacyStatus = EPrivacyStatus.Private,
 

@@ -25,6 +25,7 @@ public class Comment : BaseArchiveEntityNonMonitored
     public bool? AuthorIsCreator { get; set; }
 
     public TimeSpan? CreatedAtVideoTimecode { get; set; }
+    public DateTime? DeletedAt { get; set; }
 
     [InverseProperty(nameof(ReplyTarget))]
     public ICollection<Comment>? DirectReplies { get; set; }

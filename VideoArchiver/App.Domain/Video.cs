@@ -33,6 +33,8 @@ public class Video : BaseArchiveEntity
     public DateTime? RecordedAt { get; set; }
 
     public List<VideoFile>? LocalVideoFiles { get; set; }
+    
+    public DateTime? LastCommentsFetch { get; set; }
 
     public ICollection<VideoGame>? VideoGames { set; get; }
     public ICollection<VideoAuthor>? VideoAuthors { get; set; }
