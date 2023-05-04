@@ -12,6 +12,8 @@ public class AuthorService : BaseYouTubeService
     {
     }
 
+    private Dictionary<string, Author> _cachedAuthors = new();
+
     public async Task AddAndSetAuthorIfNotSet(Video domainVideo, VideoData videoData)
     {
         var domainAuthor = await AddOrGetAuthor(videoData);
@@ -32,23 +34,40 @@ public class AuthorService : BaseYouTubeService
 
     private async Task<Author> AddOrGetAuthor(VideoData videoData)
     {
-        var author = await Uow.Authors.GetByIdOnPlatformAsync(videoData.ChannelID, Platform.YouTube);
+        return await AddOrGetAuthor(videoData.ChannelID, () => videoData.ToDomainAuthor());
+    }
+
+    private async Task<Author> AddOrGetAuthor(CommentData commentData)
+    {
+        return await AddOrGetAuthor(commentData.AuthorID, commentData.ToDomainAuthor);
+    }
+
+    private async Task<Author> AddOrGetAuthor(string id, Func<Author> newAuthorFunc)
+    {
+        var author = await GetDbOrCachedAuthor(id);
         if (author == null)
         {
-            author = videoData.ToDomainAuthor();
+            author = newAuthorFunc();
             Uow.Authors.Add(author);
+            if (!_cachedAuthors.ContainsKey(id))
+            {
+                _cachedAuthors[id] = author;
+            }
         }
 
         return author;
     }
 
-    public async Task<Author> AddOrGetAuthor(CommentData commentData)
+    private async Task<Author?> GetDbOrCachedAuthor(string id)
     {
-        var author = await Uow.Authors.GetByIdOnPlatformAsync(commentData.AuthorID, Platform.YouTube);
+        var author = _cachedAuthors.GetValueOrDefault(id);
         if (author == null)
         {
-            author = commentData.ToDomainAuthor();
-            Uow.Authors.Add(author);
+            author = await Uow.Authors.GetByIdOnPlatformAsync(id, Platform.YouTube);
+            if (author != null && !_cachedAuthors.ContainsKey(id))
+            {
+                _cachedAuthors[id] = author;
+            }
         }
 
         return author;

@@ -50,7 +50,7 @@ public class VideoService : BaseYouTubeService
          * If application is stopped before comment fetching is finished,
          * comment fetching should resume by fetching video from DB with null comment fetch date. 
          */
-        Context.QueueNewComments(videoData.ID);
+        Uow.SuccessfullySaved += (_, _) => Context.QueueNewComments(videoData.ID);
 
         // TODO: Categories, Games
         Uow.Videos.Add(video);

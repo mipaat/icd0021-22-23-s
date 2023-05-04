@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using App.Domain.Enums;
 using Domain.Base;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.Domain.Base;
 
+[Index(nameof(Platform), nameof(IdOnPlatform), IsUnique = true)]
 public abstract class BaseArchiveEntityNonMonitored : AbstractIdDatabaseEntity
 {
     public Platform Platform { get; set; } = default!;

@@ -26,11 +26,17 @@ public class BaseUnitOfWork<TDbContext> : IBaseUnitOfWork where TDbContext : DbC
 
     public int SaveChanges()
     {
-        return DbContext.SaveChanges();
+        var result = DbContext.SaveChanges();
+        SuccessfullySaved?.Invoke(null, EventArgs.Empty);
+        return result;
     }
 
     public async Task<int> SaveChangesAsync()
     {
-        return await DbContext.SaveChangesAsync();
+        var result = await DbContext.SaveChangesAsync();
+        SuccessfullySaved?.Invoke(null, EventArgs.Empty);
+        return result;
     }
+
+    public event EventHandler? SuccessfullySaved;
 }

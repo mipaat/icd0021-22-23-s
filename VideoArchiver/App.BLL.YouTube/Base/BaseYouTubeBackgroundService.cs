@@ -20,13 +20,13 @@ public abstract class BaseYouTubeBackgroundService<TBackgroundService> : Backgro
 
     public override Task StartAsync(CancellationToken cancellationToken)
     {
-        Logger.LogInformation($"Starting background YouTube service {typeof(TBackgroundService)}");
+        Logger.LogInformation("Starting");
         return base.StartAsync(cancellationToken);
     }
 
     public override Task StopAsync(CancellationToken cancellationToken)
     {
-        Logger.LogInformation($"Stopping background YouTube service {typeof(TBackgroundService)}");
+        Logger.LogInformation("Stopping");
         return base.StopAsync(cancellationToken);
     }
 }

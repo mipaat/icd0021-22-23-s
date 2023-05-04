@@ -23,7 +23,7 @@ public class CommentBackgroundService : BaseYouTubeBackgroundService<CommentBack
 
     private EventHandler<string>? _onNewItemEnqueued;
 
-    private async Task InitialAddUnfinishedCommentsAsync(CancellationToken stoppingToken)
+    private async Task InitialAddUnfinishedCommentsAsync(CancellationToken ct)
     {
         ICollection<string> videoIds;
         using (var scope = Services.CreateScope())
@@ -34,14 +34,14 @@ public class CommentBackgroundService : BaseYouTubeBackgroundService<CommentBack
 
         foreach (var videoId in videoIds)
         {
-            if (stoppingToken.IsCancellationRequested) break;
-            await _taskQueue.QueueBackgroundWorkItemAsync(token => OnNewItemEnqueued(videoId, token), stoppingToken);
+            if (ct.IsCancellationRequested) break;
+            await OnNewItemEnqueued(videoId, ct);
         }
     }
 
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
-        await _taskQueue.QueueBackgroundWorkItemAsync(InitialAddUnfinishedCommentsAsync, ct);
+        await InitialAddUnfinishedCommentsAsync(ct);
 
         _onNewItemEnqueued = (_, videoId) => OnNewItemEnqueued(videoId, ct).Wait(ct);
         Context.NewCommentsQueued += _onNewItemEnqueued;
