@@ -2,17 +2,18 @@
 using App.BLL.YouTube.Extensions;
 using App.Domain;
 using App.Domain.Enums;
+using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
 
 namespace App.BLL.YouTube.Services;
 
-public class AuthorService : BaseYouTubeService
+public class AuthorService : BaseYouTubeService<AuthorService>
 {
-    public AuthorService(YouTubeUow youTubeUow) : base(youTubeUow)
+    private readonly Dictionary<string, Author> _cachedAuthors = new();
+
+    public AuthorService(YouTubeUow youTubeUow, ILogger<AuthorService> logger) : base(youTubeUow, logger)
     {
     }
-
-    private Dictionary<string, Author> _cachedAuthors = new();
 
     public async Task AddAndSetAuthorIfNotSet(Video domainVideo, VideoData videoData)
     {

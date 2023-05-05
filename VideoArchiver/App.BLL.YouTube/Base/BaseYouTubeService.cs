@@ -1,13 +1,15 @@
 ﻿using App.Contracts.DAL;
 using Google.Apis.YouTube.v3;
+using Microsoft.Extensions.Logging;
 using YoutubeDLSharp;
 using YoutubeExplode;
 
 namespace App.BLL.YouTube.Base;
 
-public abstract class BaseYouTubeService
+public abstract class BaseYouTubeService<TYouTubeService>
 {
     protected readonly YouTubeUow YouTubeUow;
+    protected readonly ILogger<TYouTubeService> Logger;
 
     protected YoutubeClient YouTubeExplodeClient => YouTubeUow.YouTubeExplodeClient;
 
@@ -20,8 +22,9 @@ public abstract class BaseYouTubeService
     protected IAppUnitOfWork Uow => YouTubeUow.Uow;
     protected YouTubeContext Context => YouTubeUow.Context;
 
-    protected BaseYouTubeService(YouTubeUow youTubeUow)
+    protected BaseYouTubeService(YouTubeUow youTubeUow, ILogger<TYouTubeService> logger)
     {
         YouTubeUow = youTubeUow;
+        Logger = logger;
     }
 }

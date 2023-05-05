@@ -62,7 +62,7 @@ public class LangString : Dictionary<string, string>
         {
             return this[key];
         }
-        
+
         // try to use unknown culture
         if (ContainsKey(UnknownCulture))
         {
@@ -80,4 +80,38 @@ public class LangString : Dictionary<string, string>
 
     public static implicit operator string(LangString? l) => l?.ToString() ?? "null";
     public static implicit operator LangString(string s) => new(s);
+
+    public static bool operator ==(LangString? l, LangString? r)
+    {
+        return l?.Equals(r) ?? r is null;
+    }
+
+    public static bool operator !=(LangString? l, LangString? r)
+    {
+        return !(l == r);
+    }
+
+    private bool Equals(LangString? other)
+    {
+        if (other is null) return false;
+        if (ReferenceEquals(this, other)) return true;
+
+        if (Count != other.Count) return false;
+        return Keys.All(other.ContainsKey) &&
+               this.All(kvp => other.GetValueOrDefault(kvp.Key) == kvp.Value);
+    }
+
+    public bool IsUnspecified => Count == 1 && ContainsKey(UnknownCulture);
+
+    public bool IsSpecifiedVersionOf(LangString other)
+    {
+        if (!other.IsUnspecified) return false;
+        var otherValue = other[UnknownCulture];
+        return Values.Any(v => v == otherValue);
+    }
+
+    public bool IsUnspecifiedVersionOf(LangString? other)
+    {
+        return other != null && IsUnspecified && other.Values.Any(v => v == this[UnknownCulture]);
+    }
 }

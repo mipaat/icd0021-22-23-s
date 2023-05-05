@@ -19,14 +19,11 @@ public class VideoHistory : AbstractIdDatabaseEntity
     [MaxLength(32)] public string? DefaultAudioLanguage { get; set; }
 
     public TimeSpan? Duration { get; set; }
-    public int? Width { get; set; }
-    public int? Height { get; set; }
-    public int? BitrateBps { get; set; }
 
-    public int? ViewCount { get; set; }
-    public int? LikeCount { get; set; }
-    public int? DislikeCount { get; set; }
-    public int? CommentCount { get; set; }
+    public long? ViewCount { get; set; }
+    public long? LikeCount { get; set; }
+    public long? DislikeCount { get; set; }
+    public long? CommentCount { get; set; }
 
     public CaptionsDictionary? Captions { get; set; }
     public CaptionsDictionary? AutomaticCaptions { get; set; }

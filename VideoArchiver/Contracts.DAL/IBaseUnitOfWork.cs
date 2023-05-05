@@ -2,8 +2,12 @@ namespace Contracts.DAL;
 
 public interface IBaseUnitOfWork : IDisposable, IAsyncDisposable
 {
-    public int SaveChanges();
     public Task<int> SaveChangesAsync();
 
-    public event EventHandler SuccessfullySaved;
+    public event EventHandler SavedChanges;
+
+    public void AddConcurrencyConflictResolver<TEntity>(
+        ConcurrencyConflictResolverAsync<TEntity> concurrencyConflictResolver);
+    public void AddConcurrencyConflictResolver<TEntity>(
+        ConcurrencyConflictResolver<TEntity> concurrencyConflictResolver);
 }

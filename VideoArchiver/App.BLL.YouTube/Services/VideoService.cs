@@ -3,13 +3,14 @@ using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
 using App.Domain;
 using App.Domain.Enums;
+using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
 
 namespace App.BLL.YouTube.Services;
 
-public class VideoService : BaseYouTubeService
+public class VideoService : BaseYouTubeService<VideoService>
 {
-    public VideoService(YouTubeUow youTubeUow) : base(youTubeUow)
+    public VideoService(YouTubeUow youTubeUow, ILogger<VideoService> logger) : base(youTubeUow, logger)
     {
     }
 
@@ -18,7 +19,17 @@ public class VideoService : BaseYouTubeService
         var videoResult = await YoutubeDl.RunVideoDataFetch(Url.ToVideoUrl(id), fetchComments: fetchComments, ct: ct);
         if (videoResult is not { Success: true })
         {
-            throw new VideoNotFoundException(id);
+            ct.ThrowIfCancellationRequested();
+
+            var failedVideo = await Uow.Videos.GetByIdOnPlatformAsync(id, Platform.YouTube);
+            if (failedVideo != null)
+            {
+                // TODO: Status changes and notifications (Add StatusChange BG service to general BLL?)???
+                failedVideo.PrivacyStatus = null;
+                failedVideo.IsAvailable = false;
+            }
+
+            throw new VideoNotFoundOnPlatformException(id, Platform.YouTube);
         }
 
         return videoResult.Data;
@@ -50,7 +61,7 @@ public class VideoService : BaseYouTubeService
          * If application is stopped before comment fetching is finished,
          * comment fetching should resume by fetching video from DB with null comment fetch date. 
          */
-        Uow.SuccessfullySaved += (_, _) => Context.QueueNewComments(videoData.ID);
+        Uow.SavedChanges += (_, _) => Context.QueueNewComments(videoData.ID);
 
         // TODO: Categories, Games
         Uow.Videos.Add(video);

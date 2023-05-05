@@ -67,6 +67,7 @@ public class AbstractAppDbContext : IdentityDbContext<User, Role, Guid, Identity
     public DbSet<AuthorHistory> AuthorHistories { get; set; } = default!;
     public DbSet<PlaylistHistory> PlaylistHistories { get; set; } = default!;
     public DbSet<VideoHistory> VideoHistories { get; set; } = default!;
+    public DbSet<CommentHistory> CommentHistories { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

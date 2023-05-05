@@ -1,9 +1,9 @@
 using System.Globalization;
 using System.Text;
 using App.BLL;
+using App.BLL.Extensions;
 using App.BLL.YouTube;
 using App.BLL.YouTube.Extensions;
-using App.BLL.YouTube.Services;
 using App.Contracts.DAL;
 using App.Domain.Enums;
 using App.Domain.Identity;
@@ -91,10 +91,9 @@ public class Program
         // Register and set up BLL services
         // -------------------------------------
 
+        builder.Services.AddGeneralBll();
         SetupDependencies.DownloadAndSetupDependencies(builder.Configuration).Wait();
         builder.Services.AddYouTube();
-        builder.Services.AddScoped<UrlSubmissionHandler>(services =>
-            new UrlSubmissionHandler(services.GetService<SubmitService>().RaiseIfNull()));
 
         // -------------------------------------
 

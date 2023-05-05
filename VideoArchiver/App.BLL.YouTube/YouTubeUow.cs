@@ -4,6 +4,7 @@ using App.Contracts.DAL;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using YoutubeDLSharp;
 using YoutubeExplode;
 
@@ -13,6 +14,8 @@ public class YouTubeUow : IDisposable
 {
     public readonly IAppUnitOfWork Uow;
     public readonly YouTubeContext Context;
+
+    private readonly IServiceProvider _services;
     
     private YoutubeClient? _youTubeExplodeClient;
     public YoutubeClient YouTubeExplodeClient => _youTubeExplodeClient ??= new YoutubeClient();
@@ -30,10 +33,11 @@ public class YouTubeUow : IDisposable
     public YouTubeSettings Config => _config.GetRequiredSection(YouTubeSettings.SectionKey).Get<YouTubeSettings>() ??
                                      throw new ConfigurationErrorsException("Failed to read YouTube configuration!");
 
-    public YouTubeUow(IAppUnitOfWork uow, IConfiguration config, YouTubeContext youTubeContext)
+    public YouTubeUow(IAppUnitOfWork uow, IConfiguration config, YouTubeContext youTubeContext, IServiceProvider services)
     {
         Uow = uow;
         Context = youTubeContext;
+        _services = services;
         _config = config;
     }
 
@@ -41,19 +45,19 @@ public class YouTubeUow : IDisposable
     public YoutubeDL YoutubeDl => _youtubeDl ??= new YoutubeDL();
 
     private SubmitService? _submitService;
-    public SubmitService SubmitService => _submitService ??= new SubmitService(this);
+    public SubmitService SubmitService => _submitService ??= _services.GetRequiredService<SubmitService>();
 
     private AuthorService? _authorService;
-    public AuthorService AuthorService => _authorService ??= new AuthorService(this);
+    public AuthorService AuthorService => _authorService ??= _services.GetRequiredService<AuthorService>();
 
     private PlaylistService? _playlistService;
-    public PlaylistService PlaylistService => _playlistService ??= new PlaylistService(this);
+    public PlaylistService PlaylistService => _playlistService ??= _services.GetRequiredService<PlaylistService>();
 
     private CommentService? _commentService;
-    public CommentService CommentService => _commentService ??= new CommentService(this);
+    public CommentService CommentService => _commentService ??= _services.GetRequiredService<CommentService>();
 
     private VideoService? _videoService;
-    public VideoService VideoService => _videoService ??= new VideoService(this);
+    public VideoService VideoService => _videoService ??= _services.GetRequiredService<VideoService>();
 
     public void Dispose()
     {

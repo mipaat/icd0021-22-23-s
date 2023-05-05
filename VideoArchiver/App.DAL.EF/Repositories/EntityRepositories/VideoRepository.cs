@@ -29,4 +29,12 @@ public class VideoRepository : BaseEntityRepository<Video, AbstractAppDbContext>
             .Select(v => v.IdOnPlatform)
             .ToListAsync();
     }
+
+    public async Task<Video?> GetByIdOnPlatformWithCommentsAsync(string idOnPlatform, Platform platform)
+    {
+        return await Entities
+            .Where(v => v.Platform == platform && v.Platform == platform)
+            .Include(v => v.Comments)
+            .SingleOrDefaultAsync();
+    }
 }

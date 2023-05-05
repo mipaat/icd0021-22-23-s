@@ -4,12 +4,13 @@ using App.BLL.YouTube.Extensions;
 using App.Domain;
 using App.Domain.Enums;
 using App.DTO;
+using Microsoft.Extensions.Logging;
 
 namespace App.BLL.YouTube.Services;
 
-public class SubmitService : BaseYouTubeService, IPlatformUrlSubmissionHandler
+public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubmissionHandler
 {
-    public SubmitService(YouTubeUow youTubeUow) : base(youTubeUow)
+    public SubmitService(YouTubeUow youTubeUow, ILogger<SubmitService> logger) : base(youTubeUow, logger)
     {
     }
 
@@ -18,8 +19,7 @@ public class SubmitService : BaseYouTubeService, IPlatformUrlSubmissionHandler
     public async Task<UrlSubmissionResults> SubmitUrl(string url, Guid submitterId, bool autoSubmit,
         bool alsoSubmitPlaylist)
     {
-        // TODO: Adding video/playlist authors to video
-        // TODO: Scheduled fetching from YouTube official API, accounting for rate limits
+        // TODO: Scheduled fetching from YouTube official API (for localized titles/descriptions), accounting for rate limits
         // TODO: Scheduled downloads? Comments?
 
         // TODO: What to do when link is a video & playlist link?
@@ -106,7 +106,7 @@ public class SubmitService : BaseYouTubeService, IPlatformUrlSubmissionHandler
         var playlistResult = await YoutubeDl.RunVideoDataFetch(Url.ToPlaylistUrl(id));
         if (playlistResult is not { Success: true })
         {
-            throw new PlaylistNotFoundException(id);
+            throw new PlaylistNotFoundOnPlatformException(id, Platform.YouTube);
         }
 
         if (!autoSubmit)

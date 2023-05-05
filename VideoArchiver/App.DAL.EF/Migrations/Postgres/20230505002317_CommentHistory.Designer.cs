@@ -5,6 +5,7 @@ using App.Domain.NotMapped;
 using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -13,9 +14,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations.Postgres
 {
     [DbContext(typeof(PostgresAppDbContext))]
-    partial class PostgresAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230505002317_CommentHistory")]
+    partial class CommentHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1402,11 +1405,14 @@ namespace DAL.Migrations.Postgres
                     b.Property<string>("AutomaticCaptions")
                         .HasColumnType("jsonb");
 
+                    b.Property<int?>("BitrateBps")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Captions")
                         .HasColumnType("jsonb");
 
-                    b.Property<long?>("CommentCount")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("CommentCount")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -1422,11 +1428,14 @@ namespace DAL.Migrations.Postgres
                     b.Property<LangString>("Description")
                         .HasColumnType("jsonb");
 
-                    b.Property<long?>("DislikeCount")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("DislikeCount")
+                        .HasColumnType("integer");
 
                     b.Property<TimeSpan?>("Duration")
                         .HasColumnType("interval");
+
+                    b.Property<int?>("Height")
+                        .HasColumnType("integer");
 
                     b.Property<string>("IdOnPlatform")
                         .IsRequired()
@@ -1442,8 +1451,8 @@ namespace DAL.Migrations.Postgres
                     b.Property<DateTime>("LastValidAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long?>("LikeCount")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("LikeCount")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("LivestreamEndedAt")
                         .HasColumnType("timestamp with time zone");
@@ -1479,8 +1488,11 @@ namespace DAL.Migrations.Postgres
                     b.Property<Guid>("VideoId")
                         .HasColumnType("uuid");
 
-                    b.Property<long?>("ViewCount")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("ViewCount")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Width")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

@@ -3,13 +3,14 @@ using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
 using App.Domain;
 using App.Domain.Enums;
+using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
 
 namespace App.BLL.YouTube.Services;
 
-public class PlaylistService : BaseYouTubeService
+public class PlaylistService : BaseYouTubeService<PlaylistService>
 {
-    public PlaylistService(YouTubeUow youTubeUow) : base(youTubeUow)
+    public PlaylistService(YouTubeUow youTubeUow, ILogger<PlaylistService> logger) : base(youTubeUow, logger)
     {
     }
 
@@ -18,7 +19,17 @@ public class PlaylistService : BaseYouTubeService
         var playlistResult = await YoutubeDl.RunVideoDataFetch(Url.ToPlaylistUrl(id), ct: ct);
         if (playlistResult is not { Success: true })
         {
-            throw new PlaylistNotFoundException(id);
+            ct.ThrowIfCancellationRequested();
+
+            var failedPlaylist = await Uow.Playlists.GetByIdOnPlatformAsync(id, Platform.YouTube);
+            if (failedPlaylist != null)
+            {
+                // TODO: Status changes and notifications (Add StatusChange BG service to general BLL?)???
+                failedPlaylist.PrivacyStatus = null;
+                failedPlaylist.IsAvailable = false;
+            }
+
+            throw new PlaylistNotFoundOnPlatformException(id, Platform.YouTube);
         }
 
         return playlistResult.Data;

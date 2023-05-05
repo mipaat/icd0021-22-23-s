@@ -1,0 +1,22 @@
+using System.ComponentModel.DataAnnotations;
+using App.Domain.Enums;
+using Domain.Base;
+
+namespace App.Domain;
+
+public class CommentHistory : AbstractIdDatabaseEntity
+{
+    public Comment? Comment { get; set; }
+    public Guid CommentId { get; set; }
+
+    [MaxLength(64)] public string IdOnPlatform { get; set; } = default!;
+
+    public string? Content { get; set; }
+    public int? LikeCount { get; set; }
+    public int? DislikeCount { get; set; }
+    public int? ReplyCount { get; set; }
+    public bool? IsFavorited { get; set; }
+
+    public DateTime LastValidAt { get; set; }
+    public EPrivacyStatus InternalPrivacyStatus { get; set; }
+}

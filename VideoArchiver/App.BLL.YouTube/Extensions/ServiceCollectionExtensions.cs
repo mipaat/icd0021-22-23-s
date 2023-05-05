@@ -1,5 +1,6 @@
 using App.BLL.YouTube.BackgroundServices;
 using App.BLL.YouTube.Services;
+using App.DTO;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace App.BLL.YouTube.Extensions;
@@ -11,7 +12,12 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<YouTubeContext>();
 
         services.AddScoped<YouTubeUow>();
+        services.AddScoped<IPlatformUrlSubmissionHandler, SubmitService>();
         services.AddScoped<SubmitService>();
+        services.AddScoped<AuthorService>();
+        services.AddScoped<PlaylistService>();
+        services.AddScoped<CommentService>();
+        services.AddScoped<VideoService>();
 
         services.AddHostedService<CommentBackgroundService>();
     }

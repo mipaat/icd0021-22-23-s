@@ -14,6 +14,7 @@ public interface IAppUnitOfWork : IBaseUnitOfWork
     public IAuthorRatingRepository AuthorRatings { get; }
     public IAuthorSubscriptionRepository AuthorSubscriptions { get; }
     public ICommentRepository Comments { get; }
+    public ICommentHistoryRepository CommentHistories { get; }
     public ICommentReplyNotificationRepository CommentReplyNotifications { get; }
     public IExternalUserTokenRepository ExternalUserTokens { get; }
     public IGameRepository Games { get; }

@@ -1,22 +1,52 @@
+using App.BLL.Exceptions;
 using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
 using App.Domain;
+using App.Domain.Enums;
+using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
 
 namespace App.BLL.YouTube.Services;
 
-public class CommentService : BaseYouTubeService
+public class CommentService : BaseYouTubeService<CommentService>
 {
-    public CommentService(YouTubeUow youTubeUow) : base(youTubeUow)
+    public CommentService(YouTubeUow youTubeUow, ILogger<CommentService> logger) : base(youTubeUow, logger)
     {
     }
 
-    public async Task AddComments(Video video, IEnumerable<CommentData> comments, CancellationToken ct = default)
+    public async Task UpdateComments(Video video, CancellationToken ct)
     {
+        var videoData = await YouTubeUow.VideoService.FetchVideoDataYtdl(video.IdOnPlatform, true, ct);
+        await UpdateComments(video, videoData.Comments);
+    }
+
+    public async Task UpdateComments(string videoId, CancellationToken ct)
+    {
+        var videoData = await YouTubeUow.VideoService.FetchVideoDataYtdl(videoId, true, ct);
+
+        Video? video = null;
+        for (int i = 0; i < 3; i++)
+        {
+            video = await Uow.Videos.GetByIdOnPlatformWithCommentsAsync(videoId, Platform.YouTube);
+            if (video == null) ct.WaitHandle.WaitOne(10000);
+        }
+
+        if (video == null)
+        {
+            throw new VideoNotFoundInArchiveException(videoId, Platform.YouTube);
+        }
+
+        await UpdateComments(video, videoData.Comments);
+    }
+
+    private async Task UpdateComments(Video video, IEnumerable<CommentData> comments)
+    {
+        // TODO: What to do if video has 20000 comments? Memory issues?
         video.Comments ??= new List<Comment>();
         var commentsWithoutParent = new List<(Comment Comment, string Parent)>();
         foreach (var commentData in comments)
         {
+            // TODO: Proper updates. Integrate with EntityUpdateHandler
             var domainComment = commentData.ToDomainComment();
             await YouTubeUow.AuthorService.AddAndSetAuthorIfNotSet(domainComment, commentData);
             domainComment.Video = video;

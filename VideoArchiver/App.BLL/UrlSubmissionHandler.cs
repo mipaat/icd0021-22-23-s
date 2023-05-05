@@ -8,7 +8,7 @@ namespace App.BLL;
 
 public class UrlSubmissionHandler
 {
-    private readonly IReadOnlyList<IPlatformUrlSubmissionHandler> _platformUrlSubmissionHandlers;
+    private readonly IEnumerable<IPlatformUrlSubmissionHandler> _platformUrlSubmissionHandlers;
 
     public const string AllowedToSubmitRoles = $"{RoleNames.Admin},{RoleNames.Helper}";
 
@@ -17,7 +17,7 @@ public class UrlSubmissionHandler
         RoleNames.Admin
     };
 
-    public UrlSubmissionHandler(params IPlatformUrlSubmissionHandler[] platformUrlSubmissionHandlers)
+    public UrlSubmissionHandler(IEnumerable<IPlatformUrlSubmissionHandler> platformUrlSubmissionHandlers)
     {
         _platformUrlSubmissionHandlers = platformUrlSubmissionHandlers;
     }

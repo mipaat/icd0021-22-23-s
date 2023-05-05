@@ -41,6 +41,9 @@ public class AppUnitOfWork : BaseUnitOfWork<AbstractAppDbContext>, IAppUnitOfWor
     private ICommentRepository? _comments;
     public ICommentRepository Comments => _comments ??= new CommentRepository(DbContext);
 
+    private ICommentHistoryRepository? _commentHistories;
+    public ICommentHistoryRepository CommentHistories => _commentHistories ??= new CommentHistoryRepository(DbContext);
+
     private ICommentReplyNotificationRepository? _commentReplyNotifications;
 
     public ICommentReplyNotificationRepository CommentReplyNotifications =>
