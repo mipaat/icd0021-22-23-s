@@ -3,7 +3,6 @@ using App.Domain;
 using App.DTO;
 using Base.WebHelpers;
 using Contracts.DAL;
-using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -29,7 +28,7 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             [Bind(
-                "PlaylistId,IdOnPlatform,Title,Description,Thumbnails,Tags,CreatedAt,PublishedAt,UpdatedAt,LastValidAt,InternalPrivacyStatus,Id")]
+                "PlaylistId,IdOnPlatform,Title,Description,Thumbnails,Tags,CreatedAt,PublishedAt,UpdatedAt,LastValidAt,Id")]
             PlaylistHistory entity)
         {
             return await CreateInternal(entity);
@@ -39,7 +38,7 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id,
             [Bind(
-                "PlaylistId,IdOnPlatform,Title,Description,Thumbnails,Tags,CreatedAt,PublishedAt,UpdatedAt,LastValidAt,InternalPrivacyStatus,Id")]
+                "PlaylistId,IdOnPlatform,Title,Description,Thumbnails,Tags,CreatedAt,PublishedAt,UpdatedAt,LastValidAt,Id")]
             PlaylistHistory entity)
         {
             return await EditInternal(id, entity);

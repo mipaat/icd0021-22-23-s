@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using App.Domain.Enums;
 using App.Domain.NotMapped;
 using Domain.Base;
 
@@ -44,5 +43,4 @@ public class VideoHistory : AbstractIdDatabaseEntity
 
     public DateTime LastValidAt { get; set; }
 
-    public EPrivacyStatus InternalPrivacyStatus { get; set; }
 }

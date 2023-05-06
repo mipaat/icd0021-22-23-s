@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Text;
-using App.BLL;
 using App.BLL.Extensions;
 using App.BLL.YouTube;
 using App.BLL.YouTube.Extensions;
@@ -26,7 +25,9 @@ public class Program
 
         // Add services to the container.
         AppDbContextFactory.RegisterDbContext(builder.Services, builder.Configuration);
-        builder.Services.AddScoped<IAppUnitOfWork, AppUnitOfWork>();
+        builder.Services.AddScoped<IAppUnitOfWork>(provider =>
+            new AppUnitOfWork(provider.GetRequiredService<AbstractAppDbContext>())
+                .AddDefaultConcurrencyConflictResolvers(provider));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = false)

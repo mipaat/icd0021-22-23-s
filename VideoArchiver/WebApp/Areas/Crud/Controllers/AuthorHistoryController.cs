@@ -30,7 +30,7 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             [Bind(
-                "AuthorId,IdOnPlatform,UserName,DisplayName,Bio,ProfileImages,Banners,Thumbnails,CreatedAt,UpdatedAt,LastValidAt,InternalPrivacyStatus,Id")]
+                "AuthorId,IdOnPlatform,UserName,DisplayName,Bio,ProfileImages,Banners,Thumbnails,CreatedAt,UpdatedAt,LastValidAt,Id")]
             AuthorHistory entity)
         {
             return await CreateInternal(entity);
@@ -40,7 +40,7 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id,
             [Bind(
-                "AuthorId,IdOnPlatform,UserName,DisplayName,Bio,ProfileImages,Banners,Thumbnails,CreatedAt,UpdatedAt,LastValidAt,InternalPrivacyStatus,Id")]
+                "AuthorId,IdOnPlatform,UserName,DisplayName,Bio,ProfileImages,Banners,Thumbnails,CreatedAt,UpdatedAt,LastValidAt,Id")]
             AuthorHistory entity)
         {
             return await EditInternal(id, entity);

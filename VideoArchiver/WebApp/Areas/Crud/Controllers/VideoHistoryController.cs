@@ -3,7 +3,6 @@ using App.Domain;
 using App.DTO;
 using Base.WebHelpers;
 using Contracts.DAL;
-using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -29,7 +28,7 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             [Bind(
-                "VideoId,IdOnPlatform,Title,Description,DefaultLanguage,DefaultAudioLanguage,Duration,ViewCount,LikeCount,DislikeCount,CommentCount,Captions,AutomaticCaptions,Thumbnails,Tags,IsLivestreamRecording,StreamId,LivestreamStartedAt,LivestreamEndedAt,CreatedAt,PublishedAt,UpdatedAt,RecordedAt,LocalVideoFiles,LastValidAt,InternalPrivacyStatus,Id")]
+                "VideoId,IdOnPlatform,Title,Description,DefaultLanguage,DefaultAudioLanguage,Duration,ViewCount,LikeCount,DislikeCount,CommentCount,Captions,AutomaticCaptions,Thumbnails,Tags,IsLivestreamRecording,StreamId,LivestreamStartedAt,LivestreamEndedAt,CreatedAt,PublishedAt,UpdatedAt,RecordedAt,LocalVideoFiles,LastValidAt,Id")]
             VideoHistory entity)
         {
             return await CreateInternal(entity);
@@ -39,7 +38,7 @@ namespace WebApp.Areas.Crud.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id,
             [Bind(
-                "VideoId,IdOnPlatform,Title,Description,DefaultLanguage,DefaultAudioLanguage,Duration,ViewCount,LikeCount,DislikeCount,CommentCount,HasCaptions,Captions,Thumbnails,Tags,IsLivestreamRecording,StreamId,LivestreamStartedAt,LivestreamEndedAt,CreatedAt,PublishedAt,UpdatedAt,RecordedAt,LocalVideoFiles,LastValidAt,InternalPrivacyStatus,Id")]
+                "VideoId,IdOnPlatform,Title,Description,DefaultLanguage,DefaultAudioLanguage,Duration,ViewCount,LikeCount,DislikeCount,CommentCount,HasCaptions,Captions,Thumbnails,Tags,IsLivestreamRecording,StreamId,LivestreamStartedAt,LivestreamEndedAt,CreatedAt,PublishedAt,UpdatedAt,RecordedAt,LocalVideoFiles,LastValidAt,Id")]
             VideoHistory entity)
         {
             return await EditInternal(id, entity);

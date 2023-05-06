@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using App.Domain.Enums;
 using App.Domain.NotMapped;
 using Domain.Base;
 
@@ -26,5 +25,4 @@ public class AuthorHistory : AbstractIdDatabaseEntity
     public DateTime? UpdatedAt { get; set; }
 
     public DateTime LastValidAt { get; set; }
-    public EPrivacyStatus InternalPrivacyStatus { get; set; }
 }

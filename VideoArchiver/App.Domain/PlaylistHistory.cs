@@ -23,5 +23,4 @@ public class PlaylistHistory : AbstractIdDatabaseEntity
     public DateTime? UpdatedAt { get; set; }
     
     public DateTime LastValidAt { get; set; }
-    public EPrivacyStatus InternalPrivacyStatus { get; set; }
 }

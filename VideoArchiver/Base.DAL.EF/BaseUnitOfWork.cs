@@ -36,6 +36,14 @@ public class BaseUnitOfWork<TDbContext> : IBaseUnitOfWork where TDbContext : DbC
             {
                 var result = await DbContext.SaveChangesAsync();
                 SavedChanges?.Invoke(null, EventArgs.Empty);
+                if (SavedChanges != null)
+                {
+                    foreach (var subscriber in SavedChanges.GetInvocationList())
+                    {
+                        SavedChanges -= subscriber as EventHandler;
+                    }
+                }
+
                 return result;
             }
             catch (DbUpdateConcurrencyException e)
@@ -46,6 +54,7 @@ public class BaseUnitOfWork<TDbContext> : IBaseUnitOfWork where TDbContext : DbC
                 {
                     throw new FailedToResolveConcurrencyException(e);
                 }
+
                 foreach (var entry in e.Entries)
                 {
                     var entityType = entry.Metadata.ClrType;
@@ -58,6 +67,8 @@ public class BaseUnitOfWork<TDbContext> : IBaseUnitOfWork where TDbContext : DbC
                         var currentEntity = entry.Entity;
                         var dbValues = await entry.GetDatabaseValuesAsync();
                         var dbEntity = dbValues?.ToObject();
+
+                        var dbSet = new ReflectionDbSet(DbContext, entityType);
 
                         foreach (var conflictResolver in conflictResolversAsync)
                         {
@@ -97,13 +108,19 @@ public class BaseUnitOfWork<TDbContext> : IBaseUnitOfWork where TDbContext : DbC
                         {
                             entry.CurrentValues.SetValues(updatedEntity);
                         }
-                        // TODO: Else delete entity? How?
+                        else
+                        {
+                            dbSet.Remove(entry.Entity);
+                        }
 
                         if (dbValues != null)
                         {
                             entry.OriginalValues.SetValues(dbValues);
                         }
-                        // TODO: Else add entity??? Is that even needed? How?
+                        else if (updatedEntity != null)
+                        {
+                            dbSet.Add(entry.Entity);
+                        }
                     }
                 }
             }
@@ -112,30 +129,85 @@ public class BaseUnitOfWork<TDbContext> : IBaseUnitOfWork where TDbContext : DbC
 
     public event EventHandler? SavedChanges;
 
-    private readonly Dictionary<Type, HashSet<ConcurrencyConflictResolverUntypedAsync>> _concurrencyConflictResolversAsync =
-        new();
+    private readonly Dictionary<Type, List<ConcurrencyConflictResolverUntypedAsync>>
+        _concurrencyConflictResolversAsync =
+            new();
 
-    private readonly Dictionary<Type, HashSet<ConcurrencyConflictResolverUntyped>> _concurrencyConflictResolvers = new();
+    private readonly Dictionary<Type, List<ConcurrencyConflictResolverUntyped>> _concurrencyConflictResolvers = new();
 
-    public void AddConcurrencyConflictResolver<TEntity>(ConcurrencyConflictResolverAsync<TEntity> concurrencyConflictResolver)
+    public void AddConcurrencyConflictResolver<TEntity>(
+        ConcurrencyConflictResolverAsync<TEntity> concurrencyConflictResolver)
     {
         if (!_concurrencyConflictResolversAsync.ContainsKey(typeof(TEntity)))
         {
             _concurrencyConflictResolversAsync[typeof(TEntity)] =
-                new HashSet<ConcurrencyConflictResolverUntypedAsync>();
+                new List<ConcurrencyConflictResolverUntypedAsync>();
         }
 
         _concurrencyConflictResolversAsync[typeof(TEntity)]
-            .Add(concurrencyConflictResolver.ToUntypedConcurrencyConflictResolver());
+            .Insert(0, concurrencyConflictResolver.ToUntypedConcurrencyConflictResolver());
     }
 
-    public void AddConcurrencyConflictResolver<TEntity>(ConcurrencyConflictResolver<TEntity> concurrencyConflictResolver)
+    public void AddConcurrencyConflictResolver<TEntity>(
+        ConcurrencyConflictResolver<TEntity> concurrencyConflictResolver)
     {
         if (!_concurrencyConflictResolvers.ContainsKey(typeof(TEntity)))
         {
-            _concurrencyConflictResolvers[typeof(TEntity)] = new HashSet<ConcurrencyConflictResolverUntyped>();
+            _concurrencyConflictResolvers[typeof(TEntity)] = new List<ConcurrencyConflictResolverUntyped>();
         }
 
-        _concurrencyConflictResolvers[typeof(TEntity)].Add(concurrencyConflictResolver.ToUntypedConcurrencyConflictResolver());
+        _concurrencyConflictResolvers[typeof(TEntity)]
+            .Insert(0, concurrencyConflictResolver.ToUntypedConcurrencyConflictResolver());
+    }
+}
+
+internal class ReflectionDbSet
+{
+    private readonly Type _entityType;
+    private readonly DbContext _dbContext;
+    private object? _dbSetInstance;
+
+    private object DbSetInstance
+    {
+        get
+        {
+            return _dbSetInstance ??=
+                typeof(DbContext)
+                    .GetMethod("Set")?
+                    .MakeGenericMethod(_entityType)
+                    .Invoke(_dbContext, null)
+                ?? throw new NullReferenceException(
+                    $"Failed to construct generic DbSet for type {_entityType} using reflection!");
+        }
+    }
+
+    public ReflectionDbSet(DbContext dbContext, Type entityType)
+    {
+        _entityType = entityType;
+        _dbContext = dbContext;
+    }
+
+    public void Remove(object entity)
+    {
+        var removeMethod = DbSetInstance.GetType().GetMethod("Remove");
+        if (removeMethod == null)
+        {
+            throw new NullReferenceException(
+                $"Failed to construct generic DbSet remove method for type {_entityType} using reflection!");
+        }
+
+        removeMethod.Invoke(_dbSetInstance, new[] { entity });
+    }
+
+    public void Add(object entity)
+    {
+        var addMethod = DbSetInstance.GetType().GetMethod("Add");
+        if (addMethod == null)
+        {
+            throw new NullReferenceException(
+                $"Failed to construct generic DbSet add method for type {_entityType} using reflection!");
+        }
+
+        addMethod.Invoke(_dbSetInstance, new[] { entity });
     }
 }

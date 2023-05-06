@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using App.Domain.Enums;
 using Domain.Base;
 
 namespace App.Domain;
@@ -18,5 +17,4 @@ public class CommentHistory : AbstractIdDatabaseEntity
     public bool? IsFavorited { get; set; }
 
     public DateTime LastValidAt { get; set; }
-    public EPrivacyStatus InternalPrivacyStatus { get; set; }
 }

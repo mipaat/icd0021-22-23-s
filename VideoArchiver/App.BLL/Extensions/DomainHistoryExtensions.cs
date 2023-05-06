@@ -39,6 +39,28 @@ public static class DomainHistoryExtensions
             PublishedAt = video.PublishedAt,
             UpdatedAt = video.UpdatedAt,
             RecordedAt = video.RecordedAt,
+
+            LocalVideoFiles = video.LocalVideoFiles,
+
+            LastValidAt = DateTime.UtcNow,
+        };
+    }
+
+    public static CommentHistory ToHistory(this Comment comment)
+    {
+        return new CommentHistory
+        {
+            Comment = comment,
+            
+            IdOnPlatform = comment.IdOnPlatform,
+            
+            Content = comment.Content,
+            LikeCount = comment.LikeCount,
+            DislikeCount = comment.DislikeCount,
+            ReplyCount = comment.ReplyCount,
+            IsFavorited = comment.IsFavorited,
+
+            LastValidAt = DateTime.UtcNow,
         };
     }
 }

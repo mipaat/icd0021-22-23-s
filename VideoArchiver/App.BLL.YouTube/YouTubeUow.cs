@@ -16,28 +16,30 @@ public class YouTubeUow : IDisposable
     public readonly YouTubeContext Context;
 
     private readonly IServiceProvider _services;
-    
+
     private YoutubeClient? _youTubeExplodeClient;
     public YoutubeClient YouTubeExplodeClient => _youTubeExplodeClient ??= new YoutubeClient();
 
     private YouTubeService? _youTubeApiService;
 
-    public YouTubeService YouTubeApiService => _youTubeApiService ??= new YouTubeService(new BaseClientService.Initializer
-    {
-        ApiKey = Config.ApiKey,
-        ApplicationName = Config.ApplicationName
-    });
+    public YouTubeService YouTubeApiService => _youTubeApiService ??= new YouTubeService(
+        new BaseClientService.Initializer
+        {
+            ApiKey = Config.ApiKey,
+            ApplicationName = Config.ApplicationName
+        });
 
     private readonly IConfiguration _config;
 
     public YouTubeSettings Config => _config.GetRequiredSection(YouTubeSettings.SectionKey).Get<YouTubeSettings>() ??
                                      throw new ConfigurationErrorsException("Failed to read YouTube configuration!");
 
-    public YouTubeUow(IAppUnitOfWork uow, IConfiguration config, YouTubeContext youTubeContext, IServiceProvider services)
+    public YouTubeUow(IAppUnitOfWork uow, IConfiguration config, YouTubeContext youTubeContext,
+        IServiceProvider services)
     {
         Uow = uow;
         Context = youTubeContext;
-        _services = services;
+        _services = services; // The IServiceProvider should be the IServiceProvider for the current scope, not the root IServiceProvider
         _config = config;
     }
 

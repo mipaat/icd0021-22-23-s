@@ -91,14 +91,27 @@ public class LangString : Dictionary<string, string>
         return !(l == r);
     }
 
-    private bool Equals(LangString? other)
+    public override bool Equals(object? obj)
     {
-        if (other is null) return false;
-        if (ReferenceEquals(this, other)) return true;
-
+        if (obj is null || ReferenceEquals(this, obj)) return true;
+        if (obj is not LangString other) return false;
         if (Count != other.Count) return false;
         return Keys.All(other.ContainsKey) &&
                this.All(kvp => other.GetValueOrDefault(kvp.Key) == kvp.Value);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            var hash = 17;
+            foreach (var kvp in this.OrderBy(kvp => kvp.Key))
+            {
+                hash = hash * 23 + kvp.Key.GetHashCode();
+                hash = hash * 23 + kvp.Value.GetHashCode();
+            }
+            return hash;
+        }
     }
 
     public bool IsUnspecified => Count == 1 && ContainsKey(UnknownCulture);
