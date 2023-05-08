@@ -10,3 +10,5 @@
 WebApp/*appsettings*.json
 WebApp/ffmpeg
 WebApp/yt-dlp
+
+WebApp/downloads
