@@ -1,4 +1,5 @@
 using App.Domain;
+using App.Domain.Comparers;
 using App.Domain.Converters;
 using App.Domain.Enums;
 using App.Domain.Identity;
@@ -69,6 +70,8 @@ public class AbstractAppDbContext : IdentityDbContext<User, Role, Guid, Identity
     public DbSet<VideoHistory> VideoHistories { get; set; } = default!;
     public DbSet<CommentHistory> CommentHistories { get; set; } = default!;
 
+    public DbSet<ApiQuotaUsage> ApiQuotaUsages { get; set; } = default!;
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -77,6 +80,16 @@ public class AbstractAppDbContext : IdentityDbContext<User, Role, Guid, Identity
         {
             foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
         }
+
+        var stringListUnorderedValueComparer = new StringListUnorderedValueComparer();
+        builder.Entity<Video>().Property(v => v.Tags).Metadata
+            .SetValueComparer(stringListUnorderedValueComparer);
+        builder.Entity<VideoHistory>().Property(v => v.Tags).Metadata
+            .SetValueComparer(stringListUnorderedValueComparer);
+        builder.Entity<Playlist>().Property(v => v.Tags).Metadata
+            .SetValueComparer(stringListUnorderedValueComparer);
+        builder.Entity<PlaylistHistory>().Property(v => v.Tags).Metadata
+            .SetValueComparer(stringListUnorderedValueComparer);
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

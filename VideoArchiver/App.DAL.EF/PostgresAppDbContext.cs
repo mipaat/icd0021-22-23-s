@@ -17,7 +17,8 @@ public class PostgresAppDbContext : AbstractAppDbContext
         base.ConfigureConventions(configurationBuilder);
 
         configurationBuilder
-            .HaveJsonBConversions<ImageFile>()
+            .HaveJsonBColumnType<ImageFileList>()
+            .HaveConversionAndComparer<ImageFileList, JsonValueConverter<ImageFileList>, ImageFileListValueComparer>()
             .HaveJsonBConversions<VideoFile>()
             .HaveJsonBConversions<Caption>()
             .HaveJsonBColumnType<LangString>()

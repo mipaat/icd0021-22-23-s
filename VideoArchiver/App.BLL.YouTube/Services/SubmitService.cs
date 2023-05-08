@@ -10,7 +10,7 @@ namespace App.BLL.YouTube.Services;
 
 public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubmissionHandler
 {
-    public SubmitService(YouTubeUow youTubeUow, ILogger<SubmitService> logger) : base(youTubeUow, logger)
+    public SubmitService(ServiceUow serviceUow, ILogger<SubmitService> logger, YouTubeUow youTubeUow) : base(serviceUow, logger, youTubeUow)
     {
     }
 
@@ -103,22 +103,15 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubm
             return result;
         }
 
-        var playlistResult = await YoutubeDl.RunVideoDataFetch(Url.ToPlaylistUrl(id));
-        if (playlistResult is not { Success: true })
-        {
-            throw new PlaylistNotFoundOnPlatformException(id, Platform.YouTube);
-        }
+        var playlistData = await YouTubeUow.PlaylistService.FetchPlaylistDataYtdl(id);
 
         if (!autoSubmit)
         {
             return Uow.QueueItems.Add(new QueueItem(id, submitterId, autoSubmit, Platform.YouTube));
         }
 
-        var playlist = playlistResult.Data.ToDomainPlaylist();
-        await YouTubeUow.AuthorService.AddAndSetAuthorIfNotSet(playlist, playlistResult.Data);
-        await YouTubeUow.PlaylistService.AddAndSetVideos(playlist, playlistResult.Data);
+        var playlist = await YouTubeUow.PlaylistService.AddPlaylist(playlistData);
         Uow.QueueItems.Add(new QueueItem(submitterId, autoSubmit, playlist));
-        Uow.Playlists.Add(playlist);
 
         return playlist;
     }

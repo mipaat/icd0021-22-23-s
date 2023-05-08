@@ -12,4 +12,10 @@ public static class Utils
         if (left == null) return false;
         return left > right;
     }
+
+    public static bool EqualsOrNull<T>(T? value1, T? value2)
+    {
+        if (value1 == null || value2 == null) return true;
+        return value1.Equals(value2);
+    }
 }

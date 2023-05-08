@@ -63,4 +63,26 @@ public static class DomainHistoryExtensions
             LastValidAt = DateTime.UtcNow,
         };
     }
+
+    public static PlaylistHistory ToHistory(this Playlist playlist)
+    {
+        return new PlaylistHistory
+        {
+            Playlist = playlist,
+
+            IdOnPlatform = playlist.IdOnPlatform,
+
+            Title = playlist.Title,
+            Description = playlist.Description,
+
+            Thumbnails = playlist.Thumbnails,
+            Tags = playlist.Tags,
+
+            CreatedAt = playlist.CreatedAt,
+            PublishedAt = playlist.UpdatedAt,
+            UpdatedAt = playlist.UpdatedAt,
+
+            LastValidAt = DateTime.UtcNow,
+        };
+    }
 }

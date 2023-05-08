@@ -13,12 +13,15 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<YouTubeUow>();
         services.AddScoped<IPlatformUrlSubmissionHandler, SubmitService>();
+
         services.AddScoped<SubmitService>();
         services.AddScoped<AuthorService>();
         services.AddScoped<PlaylistService>();
         services.AddScoped<CommentService>();
         services.AddScoped<VideoService>();
+        services.AddScoped<ApiService>();
 
         services.AddHostedService<CommentBackgroundService>();
+        services.AddHostedService<OfficialApiTimedBackgroundService>();
     }
 }

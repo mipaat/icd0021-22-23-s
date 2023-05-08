@@ -20,6 +20,15 @@ public static class ConfigurationBuilderExtensions
         return configurationBuilder;
     }
 
+    public static ModelConfigurationBuilder HaveConversionAndComparer<TValue, TConverter, TComparer>(
+        this ModelConfigurationBuilder configurationBuilder) where TComparer : ValueComparer<TValue?>
+    {
+        configurationBuilder
+            .Properties<TValue>()
+            .HaveConversion<TConverter, TComparer>();
+        return configurationBuilder;
+    }
+
     public static ModelConfigurationBuilder HaveJsonBColumnType<TValue>(
         this ModelConfigurationBuilder configurationBuilder)
     {

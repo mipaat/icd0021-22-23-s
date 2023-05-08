@@ -33,8 +33,35 @@ public class VideoRepository : BaseEntityRepository<Video, AbstractAppDbContext>
     public async Task<Video?> GetByIdOnPlatformWithCommentsAsync(string idOnPlatform, Platform platform)
     {
         return await Entities
-            .Where(v => v.Platform == platform && v.Platform == platform)
+            .Where(v => v.Platform == platform && v.IdOnPlatform == idOnPlatform)
             .Include(v => v.Comments)
             .SingleOrDefaultAsync();
+    }
+
+    public async Task<ICollection<Video>> GetAllNotOfficiallyFetched(Platform platform, int? limit = null)
+    {
+        IQueryable<Video> query = Entities
+            .Where(v => v.Platform == platform && v.IsAvailable && v.LastSuccessfulFetchOfficial == null)
+            .OrderBy(v => v.AddedToArchiveAt);
+        if (limit != null)
+        {
+            query = query.Take(limit.Value);
+        }
+
+        return await query.ToListAsync();
+    }
+
+    public async Task<ICollection<Video>> GetAllBeforeOfficialApiFetch(Platform platform, DateTime cutoff, int? limit = null)
+    {
+        IQueryable<Video> query = Entities
+            .Where(v => v.Platform == platform && v.IsAvailable &&
+                        v.LastFetchOfficial != null && v.LastFetchOfficial < cutoff)
+            .OrderBy(v => v.LastFetchOfficial);
+        if (limit != null)
+        {
+            query = query.Take(limit.Value);
+        }
+
+        return await query.ToListAsync();
     }
 }

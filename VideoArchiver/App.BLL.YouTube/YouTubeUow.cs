@@ -1,4 +1,4 @@
-﻿using System.Configuration;
+﻿using App.BLL.Services;
 using App.BLL.YouTube.Services;
 using App.Contracts.DAL;
 using Google.Apis.Services;
@@ -12,10 +12,7 @@ namespace App.BLL.YouTube;
 
 public class YouTubeUow : IDisposable
 {
-    public readonly IAppUnitOfWork Uow;
     public readonly YouTubeContext Context;
-
-    private readonly IServiceProvider _services;
 
     private YoutubeClient? _youTubeExplodeClient;
     public YoutubeClient YouTubeExplodeClient => _youTubeExplodeClient ??= new YoutubeClient();
@@ -25,41 +22,44 @@ public class YouTubeUow : IDisposable
     public YouTubeService YouTubeApiService => _youTubeApiService ??= new YouTubeService(
         new BaseClientService.Initializer
         {
-            ApiKey = Config.ApiKey,
-            ApplicationName = Config.ApplicationName
+            ApiKey = YouTubeConfig.ApiKey,
+            ApplicationName = YouTubeConfig.ApplicationName
         });
 
-    private readonly IConfiguration _config;
+    public YouTubeSettings YouTubeConfig => YouTubeSettings.FromConfiguration(Config);
 
-    public YouTubeSettings Config => _config.GetRequiredSection(YouTubeSettings.SectionKey).Get<YouTubeSettings>() ??
-                                     throw new ConfigurationErrorsException("Failed to read YouTube configuration!");
+    public readonly ServiceUow ServiceUow;
 
-    public YouTubeUow(IAppUnitOfWork uow, IConfiguration config, YouTubeContext youTubeContext,
-        IServiceProvider services)
+    public YouTubeUow(ServiceUow serviceUow, YouTubeContext context)
     {
-        Uow = uow;
-        Context = youTubeContext;
-        _services = services; // The IServiceProvider should be the IServiceProvider for the current scope, not the root IServiceProvider
-        _config = config;
+        ServiceUow = serviceUow;
+        Context = context;
     }
+
+    public IAppUnitOfWork Uow => ServiceUow.Uow;
+    private IConfiguration Config => ServiceUow.Config;
+    private IServiceProvider Services => ServiceUow.Services;
 
     private YoutubeDL? _youtubeDl;
     public YoutubeDL YoutubeDl => _youtubeDl ??= new YoutubeDL();
 
     private SubmitService? _submitService;
-    public SubmitService SubmitService => _submitService ??= _services.GetRequiredService<SubmitService>();
+    public SubmitService SubmitService => _submitService ??= Services.GetRequiredService<SubmitService>();
 
     private AuthorService? _authorService;
-    public AuthorService AuthorService => _authorService ??= _services.GetRequiredService<AuthorService>();
+    public AuthorService AuthorService => _authorService ??= Services.GetRequiredService<AuthorService>();
 
     private PlaylistService? _playlistService;
-    public PlaylistService PlaylistService => _playlistService ??= _services.GetRequiredService<PlaylistService>();
+    public PlaylistService PlaylistService => _playlistService ??= Services.GetRequiredService<PlaylistService>();
 
     private CommentService? _commentService;
-    public CommentService CommentService => _commentService ??= _services.GetRequiredService<CommentService>();
+    public CommentService CommentService => _commentService ??= Services.GetRequiredService<CommentService>();
 
     private VideoService? _videoService;
-    public VideoService VideoService => _videoService ??= _services.GetRequiredService<VideoService>();
+    public VideoService VideoService => _videoService ??= Services.GetRequiredService<VideoService>();
+
+    private ApiService? _apiService;
+    public ApiService ApiService => _apiService ??= Services.GetRequiredService<ApiService>();
 
     public void Dispose()
     {

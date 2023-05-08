@@ -11,7 +11,8 @@ public class AuthorService : BaseYouTubeService<AuthorService>
 {
     private readonly Dictionary<string, Author> _cachedAuthors = new();
 
-    public AuthorService(YouTubeUow youTubeUow, ILogger<AuthorService> logger) : base(youTubeUow, logger)
+    public AuthorService(ServiceUow serviceUow, ILogger<AuthorService> logger, YouTubeUow youTubeUow) : base(serviceUow,
+        logger, youTubeUow)
     {
     }
 
@@ -50,6 +51,7 @@ public class AuthorService : BaseYouTubeService<AuthorService>
         {
             author = newAuthorFunc();
             Uow.Authors.Add(author);
+            await ServiceUow.ImageService.UpdateProfileImages(author);
             if (!_cachedAuthors.ContainsKey(id))
             {
                 _cachedAuthors[id] = author;

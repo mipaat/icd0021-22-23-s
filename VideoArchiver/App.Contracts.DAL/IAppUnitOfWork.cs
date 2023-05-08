@@ -39,4 +39,6 @@ public interface IAppUnitOfWork : IBaseUnitOfWork
 
     public IRefreshTokenRepository RefreshTokens { get; }
     public IUserRepository Users { get; }
+    
+    public IApiQuotaUsageRepository ApiQuotaUsages { get; }
 }

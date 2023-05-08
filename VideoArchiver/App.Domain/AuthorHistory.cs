@@ -17,9 +17,9 @@ public class AuthorHistory : AbstractIdDatabaseEntity
 
     public int? SubscriberCount { get; set; }
 
-    public List<ImageFile>? ProfileImages { get; set; }
-    public List<ImageFile>? Banners { get; set; }
-    public List<ImageFile>? Thumbnails { get; set; }
+    public ImageFileList? ProfileImages { get; set; }
+    public ImageFileList? Banners { get; set; }
+    public ImageFileList? Thumbnails { get; set; }
 
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }

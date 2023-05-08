@@ -1,3 +1,4 @@
+using App.BLL.Services;
 using App.Domain;
 using App.Domain.Base;
 using Contracts.DAL;
@@ -6,60 +7,60 @@ namespace App.BLL;
 
 public class EntityConcurrencyResolver
 {
-    private readonly EntityUpdateHandler _entityUpdateHandler;
+    private readonly EntityUpdateService _entityUpdateService;
 
-    public EntityConcurrencyResolver(EntityUpdateHandler entityUpdateHandler)
+    public EntityConcurrencyResolver(EntityUpdateService entityUpdateService)
     {
-        _entityUpdateHandler = entityUpdateHandler;
+        _entityUpdateService = entityUpdateService;
     }
 
-    public Video ResolveVideoConcurrency(Video currentVideo, Video? dbVideo, Exception sourceException)
+    public async Task<Video> ResolveVideoConcurrency(Video currentVideo, Video? dbVideo, Exception sourceException)
     {
-        return ResolveEntityConcurrency(currentVideo, dbVideo, _entityUpdateHandler.UpdateVideo, sourceException);
+        return await ResolveEntityConcurrency(currentVideo, dbVideo, _entityUpdateService.UpdateVideo, sourceException);
     }
 
-    public Comment ResolveCommentConcurrency(Comment currentComment, Comment? dbComment, Exception sourceException)
+    public async Task<Comment> ResolveCommentConcurrency(Comment currentComment, Comment? dbComment, Exception sourceException)
     {
-        return ResolveEntityConcurrency(currentComment, dbComment, _entityUpdateHandler.UpdateComment, sourceException);
+        return await ResolveEntityConcurrency(currentComment, dbComment, _entityUpdateService.UpdateComment, sourceException);
     }
 
-    private TEntity ResolveEntityConcurrency<TEntity>(TEntity currentEntity, TEntity? dbEntity, Action<TEntity, TEntity> updateFunc, Exception sourceException)
+    private async Task<TEntity> ResolveEntityConcurrency<TEntity>(TEntity currentEntity, TEntity? dbEntity, Func<TEntity, TEntity, Task> updateFunc, Exception sourceException)
         where TEntity : BaseArchiveEntityNonMonitored
     {
         if (dbEntity == null) return currentEntity;
         if (Utils.Utils.LaterThan(currentEntity.UpdatedAt, dbEntity.UpdatedAt))
         {
-            updateFunc(dbEntity, currentEntity);
+            await updateFunc(dbEntity, currentEntity);
             return dbEntity;
         }
 
         if (Utils.Utils.LaterThan(dbEntity.UpdatedAt, currentEntity.UpdatedAt))
         {
-            updateFunc(currentEntity, dbEntity);
+            await updateFunc(currentEntity, dbEntity);
             return currentEntity;
         }
 
         if (Utils.Utils.LaterThan(currentEntity.LastSuccessfulFetchOfficial, dbEntity.LastSuccessfulFetchOfficial))
         {
-            updateFunc(dbEntity, currentEntity);
+            await updateFunc(dbEntity, currentEntity);
             return dbEntity;
         }
 
         if (Utils.Utils.LaterThan(dbEntity.LastSuccessfulFetchOfficial, currentEntity.LastSuccessfulFetchOfficial))
         {
-            updateFunc(currentEntity, dbEntity);
+            await updateFunc(currentEntity, dbEntity);
             return currentEntity;
         }
 
         if (Utils.Utils.LaterThan(currentEntity.LastSuccessfulFetchUnofficial, dbEntity.LastSuccessfulFetchUnofficial))
         {
-            updateFunc(dbEntity, currentEntity);
+            await updateFunc(dbEntity, currentEntity);
             return dbEntity;
         }
 
         if (Utils.Utils.LaterThan(dbEntity.LastSuccessfulFetchUnofficial, currentEntity.LastSuccessfulFetchUnofficial))
         {
-            updateFunc(currentEntity, dbEntity);
+            await updateFunc(currentEntity, dbEntity);
             return currentEntity;
         }
 

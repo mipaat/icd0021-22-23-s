@@ -21,4 +21,31 @@ public class PlaylistRepository : BaseEntityRepository<Playlist, AbstractAppDbCo
             .Where(pl => pl.IdOnPlatform == idOnPlatform && pl.Platform == platform)
             .SingleOrDefaultAsync();
     }
+
+    public async Task<ICollection<Playlist>> GetAllNotOfficiallyFetched(Platform platform, int? limit = null)
+    {
+        IQueryable<Playlist> query = Entities
+            .Where(v => v.Platform == platform && v.IsAvailable && v.LastSuccessfulFetchOfficial == null)
+            .OrderBy(v => v.AddedToArchiveAt);
+        if (limit != null)
+        {
+            query = query.Take(limit.Value);
+        }
+
+        return await query.ToListAsync();
+    }
+
+    public async Task<ICollection<Playlist>> GetAllBeforeOfficialApiFetch(Platform platform, DateTime cutoff, int? limit = null)
+    {
+        IQueryable<Playlist> query = Entities
+            .Where(v => v.Platform == platform && v.IsAvailable &&
+                        v.LastFetchOfficial != null && v.LastFetchOfficial < cutoff)
+            .OrderBy(v => v.LastFetchOfficial);
+        if (limit != null)
+        {
+            query = query.Take(limit.Value);
+        }
+
+        return await query.ToListAsync();
+    }
 }

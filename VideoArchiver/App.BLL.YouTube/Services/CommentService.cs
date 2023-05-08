@@ -1,4 +1,5 @@
 using App.BLL.Exceptions;
+using App.BLL.Services;
 using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
 using App.Domain;
@@ -10,11 +11,11 @@ namespace App.BLL.YouTube.Services;
 
 public class CommentService : BaseYouTubeService<CommentService>
 {
-    private readonly EntityUpdateHandler _entityUpdateHandler;
+    private readonly EntityUpdateService _entityUpdateService;
     
-    public CommentService(YouTubeUow youTubeUow, ILogger<CommentService> logger, EntityUpdateHandler entityUpdateHandler) : base(youTubeUow, logger)
+    public CommentService(ServiceUow serviceUow, ILogger<CommentService> logger, YouTubeUow youTubeUow, EntityUpdateService entityUpdateService) : base(serviceUow, logger, youTubeUow)
     {
-        _entityUpdateHandler = entityUpdateHandler;
+        _entityUpdateService = entityUpdateService;
     }
 
     public async Task UpdateComments(Video video, CancellationToken ct)
@@ -26,9 +27,10 @@ public class CommentService : BaseYouTubeService<CommentService>
     public async Task UpdateComments(string videoId, CancellationToken ct)
     {
         var videoData = await YouTubeUow.VideoService.FetchVideoDataYtdl(videoId, true, ct);
+        var commentsFetched = DateTime.UtcNow;
 
         Video? video = null;
-        for (var i = 0; i < 3; i++)
+        for (var i = 0; i < 3 && video == null; i++)
         {
             video = await Uow.Videos.GetByIdOnPlatformWithCommentsAsync(videoId, Platform.YouTube);
             if (video == null) ct.WaitHandle.WaitOne(10000);
@@ -38,6 +40,8 @@ public class CommentService : BaseYouTubeService<CommentService>
         {
             throw new VideoNotFoundInArchiveException(videoId, Platform.YouTube);
         }
+
+        video.LastCommentsFetch = commentsFetched;
 
         await UpdateComments(video, videoData.Comments);
     }
@@ -60,7 +64,7 @@ public class CommentService : BaseYouTubeService<CommentService>
             var existingDomainComment = video.Comments.SingleOrDefault(c => c.IdOnPlatform == commentData.ID);
             if (existingDomainComment != null)
             {
-                _entityUpdateHandler.UpdateComment(existingDomainComment, domainComment);
+                await _entityUpdateService.UpdateComment(existingDomainComment, domainComment);
                 continue;
             }
             await YouTubeUow.AuthorService.AddAndSetAuthorIfNotSet(domainComment, commentData);

@@ -13,9 +13,9 @@ public class Author : BaseArchiveEntity
 
     public long? SubscriberCount { get; set; }
 
-    public List<ImageFile>? ProfileImages { get; set; }
-    public List<ImageFile>? Banners { get; set; }
-    public List<ImageFile>? Thumbnails { get; set; }
+    public ImageFileList? ProfileImages { get; set; }
+    public ImageFileList? Banners { get; set; }
+    public ImageFileList? Thumbnails { get; set; }
 
     public Guid? UserId { get; set; }
     public User? User { get; set; }

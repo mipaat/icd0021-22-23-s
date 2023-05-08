@@ -26,7 +26,7 @@ public class VideoHistory : AbstractIdDatabaseEntity
 
     public CaptionsDictionary? Captions { get; set; }
     public CaptionsDictionary? AutomaticCaptions { get; set; }
-    public List<ImageFile>? Thumbnails { get; set; }
+    public ImageFileList? Thumbnails { get; set; }
     public List<string>? Tags { get; set; }
 
     public bool? IsLivestreamRecording { get; set; }

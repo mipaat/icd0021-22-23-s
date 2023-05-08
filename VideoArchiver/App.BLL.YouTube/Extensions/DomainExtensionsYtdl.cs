@@ -4,9 +4,9 @@ using YoutubeDLSharp.Metadata;
 
 namespace App.BLL.YouTube.Extensions;
 
-public static class DomainExtensions
+public static class DomainExtensionsYtdl
 {
-    public static Domain.Video ToDomainVideo(this VideoData videoData)
+    public static Domain.Video ToDomainVideo(this VideoData videoData, ImageFileList? previousThumbnails = null)
     {
         var domainVideo = new Domain.Video
         {
@@ -25,7 +25,7 @@ public static class DomainExtensions
 
             Captions = videoData.Subtitles.ToDomainCaptions(),
             AutomaticCaptions = videoData.AutomaticCaptions.ToDomainCaptions(),
-            Thumbnails = videoData.Thumbnails.Select(t => t.ToDomainImageFile()).ToList(),
+            Thumbnails = previousThumbnails?.GetSnapShot(),
             Tags = videoData.Tags.ToList(),
 
             IsLivestreamRecording = videoData.WasLive ?? videoData.IsLive,
@@ -84,7 +84,7 @@ public static class DomainExtensions
             IsAvailable = true,
             InternalPrivacyStatus = EPrivacyStatus.Private,
 
-            ProfileImages = new List<ImageFile>
+            ProfileImages = new ImageFileList
             {
                 new()
                 {
@@ -96,6 +96,9 @@ public static class DomainExtensions
             LastFetchUnofficial = DateTime.UtcNow,
             LastSuccessfulFetchUnofficial = DateTime.UtcNow,
             AddedToArchiveAt = DateTime.UtcNow,
+
+            Monitor = false,
+            Download = false,
         };
 
         return domainAuthor;
@@ -192,35 +195,7 @@ public static class DomainExtensions
         };
     }
 
-    public static Domain.Playlist ToDomainPlaylist(this YoutubeExplode.Playlists.Playlist youTubePlaylist,
-        bool monitor = false, bool download = false)
-    {
-        var domainPlaylist = new Domain.Playlist
-        {
-            Platform = Platform.YouTube,
-            IdOnPlatform = youTubePlaylist.Id,
-
-            Title = new LangString(youTubePlaylist.Title, LangString.UnknownCulture),
-            Description = new LangString(youTubePlaylist.Description, LangString.UnknownCulture),
-
-            Thumbnails = youTubePlaylist.Thumbnails.Select(t => t.ToDomainImageFile()).ToList(),
-
-            IsAvailable = true,
-            InternalPrivacyStatus = EPrivacyStatus.Private,
-
-            LastFetchUnofficial = DateTime.UtcNow,
-            LastSuccessfulFetchUnofficial = DateTime.UtcNow,
-            AddedToArchiveAt = DateTime.UtcNow,
-
-            Monitor = monitor,
-            Download = download,
-        };
-
-        return domainPlaylist;
-    }
-
-    public static Domain.Playlist ToDomainPlaylist(this VideoData playlistData, bool monitor = false,
-        bool download = false)
+    public static Domain.Playlist ToDomainPlaylist(this VideoData playlistData, ImageFileList? previousThumbNails = null)
     {
         var domainPlaylist = new Domain.Playlist
         {
@@ -230,7 +205,9 @@ public static class DomainExtensions
             Title = new LangString(playlistData.Title),
             Description = new LangString(playlistData.Description),
 
-            Thumbnails = playlistData.Thumbnails.Select(t => t.ToDomainImageFile()).ToList(),
+            // Not adding thumbnails from unofficial fetch due to inconsistencies between thumbnail formats
+            // Only official API thumbnail URLs will be used
+            Thumbnails = previousThumbNails,
 
             PrivacyStatus = playlistData.Availability.ToDomainPrivacyStatus(),
             IsAvailable = true,
@@ -240,8 +217,8 @@ public static class DomainExtensions
             LastSuccessfulFetchUnofficial = DateTime.UtcNow,
             AddedToArchiveAt = DateTime.UtcNow,
 
-            Monitor = monitor,
-            Download = download,
+            Monitor = true,
+            Download = true,
         };
 
         return domainPlaylist;

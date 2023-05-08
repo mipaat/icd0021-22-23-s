@@ -15,8 +15,8 @@ public class PlaylistHistory : AbstractIdDatabaseEntity
     public LangString? Title { get; set; }
     public LangString? Description { get; set; }
 
-    public List<ImageFile>? Thumbnails { get; set; }
-    public List<ImageFile>? Tags { get; set; }
+    public ImageFileList? Thumbnails { get; set; }
+    public List<string>? Tags { get; set; }
 
     public DateTime? CreatedAt { get; set; }
     public DateTime? PublishedAt { get; set; }
