@@ -1,3 +1,4 @@
+using App.BLL.Base;
 using App.BLL.Services;
 using App.Contracts.DAL;
 using Microsoft.Extensions.Configuration;
@@ -5,15 +6,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace App.BLL;
 
-public class ServiceUow
+public class ServiceUow : BaseAppUowContainer
 {
-    public readonly IAppUnitOfWork Uow;
     public readonly IServiceProvider Services;
     public readonly IConfiguration Config;
 
-    public ServiceUow(IAppUnitOfWork uow, IServiceProvider services, IConfiguration config)
+    public ServiceUow(IAppUnitOfWork uow, IServiceProvider services, IConfiguration config) : base(uow)
     {
-        Uow = uow;
         Services = services;
         Config = config;
     }

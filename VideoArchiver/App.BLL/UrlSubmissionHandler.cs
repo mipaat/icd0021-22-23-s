@@ -1,12 +1,14 @@
 ﻿using System.Security.Claims;
 using System.Security.Principal;
+using App.BLL.Base;
 using App.BLL.Exceptions;
+using App.Contracts.DAL;
 using App.DTO;
 using Base.WebHelpers;
 
 namespace App.BLL;
 
-public class UrlSubmissionHandler
+public class UrlSubmissionHandler : BaseAppUowContainer
 {
     private readonly IEnumerable<IPlatformUrlSubmissionHandler> _platformUrlSubmissionHandlers;
 
@@ -17,7 +19,8 @@ public class UrlSubmissionHandler
         RoleNames.Admin
     };
 
-    public UrlSubmissionHandler(IEnumerable<IPlatformUrlSubmissionHandler> platformUrlSubmissionHandlers)
+    public UrlSubmissionHandler(IEnumerable<IPlatformUrlSubmissionHandler> platformUrlSubmissionHandlers,
+        IAppUnitOfWork uow) : base(uow)
     {
         _platformUrlSubmissionHandlers = platformUrlSubmissionHandlers;
     }

@@ -27,22 +27,22 @@ public class ImageService : BaseService<ImageService>
     public async Task UpdateProfileImages(Author author)
     {
         await UpdateImages(author.ProfileImages, ProfileImagesDirectory,
-            $"{author.Platform}_{author.IdOnPlatform}_{DateTime.UtcNow.Ticks}");
+            $"{author.Platform}_{author.IdOnPlatform}");
     }
 
     public async Task UpdateThumbnails(Video video)
     {
         await UpdateImages(video.Thumbnails, ThumbnailsDirectory,
-            $"{video.Platform}_{video.IdOnPlatform}_{DateTime.UtcNow.Ticks}");
+            $"{video.Platform}_{video.IdOnPlatform}");
     }
 
     public async Task UpdateThumbnails(Playlist playlist)
     {
         await UpdateImages(playlist.Thumbnails, ThumbnailsDirectory,
-            $"{playlist.Platform}_{playlist.IdOnPlatform}_{DateTime.UtcNow.Ticks}");
+            $"{playlist.Platform}_{playlist.IdOnPlatform}");
     }
 
-    private async Task UpdateImages(ImageFileList? images, string downloadDirectory, string fileName)
+    private async Task UpdateImages(ImageFileList? images, string downloadDirectory, string fileNamePrefix)
     {
         if (images == null || images.Count == 0) return;
         EnsureDirectoryExists(downloadDirectory);
@@ -82,7 +82,7 @@ public class ImageService : BaseService<ImageService>
             }
 
             if (!isChanged) continue;
-            var filePath = Path.Combine(downloadDirectory, fileName + ".jpg");
+            var filePath = Path.Combine(downloadDirectory, $"{fileNamePrefix}_{DateTime.UtcNow.Ticks}_{Guid.NewGuid().ToString().Replace("-", "")}.jpg");
             await using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             await fileStream.WriteAsync(imageBytes);
             image.LocalFilePath = filePath;

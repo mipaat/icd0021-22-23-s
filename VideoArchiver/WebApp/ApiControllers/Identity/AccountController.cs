@@ -14,8 +14,9 @@ using WebApp.Config;
 
 namespace WebApp.ApiControllers.Identity;
 
+[ApiVersion("1.0")]
 [ApiController]
-[Route("api/v1/identity/[controller]/[action]")]
+[Route("api/{version:apiVersion}/identity/[controller]/[action]")]
 public class AccountController : ControllerBase
 {
     private const int MaximumJwtExpirationTime = 10 * 60;

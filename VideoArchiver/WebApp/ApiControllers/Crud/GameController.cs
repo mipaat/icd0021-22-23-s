@@ -10,8 +10,9 @@ using Public.DTO.v1.Domain;
 
 namespace WebApp.ApiControllers.Crud;
 
+[ApiVersion("1.0")]
 [ApiController]
-[Route("api/v1/crud/[controller]/[action]")]
+[Route("api/{version:apiVersion}/crud/[controller]/[action]")]
 [Authorize(Roles = RoleNames.Admin, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class GamesController : ControllerBase
 {

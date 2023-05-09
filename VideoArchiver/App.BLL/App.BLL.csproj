@@ -10,6 +10,7 @@
       <ProjectReference Include="..\App.Contracts.BLL\App.Contracts.BLL.csproj" />
       <ProjectReference Include="..\App.Contracts.DAL\App.Contracts.DAL.csproj" />
       <ProjectReference Include="..\App.DTO\App.DTO.csproj" />
+      <ProjectReference Include="..\Base.BLL\Base.BLL.csproj" />
       <ProjectReference Include="..\Base.WebHelpers\Base.WebHelpers.csproj" />
       <ProjectReference Include="..\Utils\Utils.csproj" />
     </ItemGroup>

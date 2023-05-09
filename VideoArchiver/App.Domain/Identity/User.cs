@@ -6,6 +6,8 @@ namespace App.Domain.Identity;
 
 public class User : IdentityUser<Guid>, IIdDatabaseEntity
 {
+    public bool IsApproved { get; set; }
+
     public ICollection<Author>? Authors { get; set; }
     [InverseProperty(nameof(QueueItem.AddedBy))]
     public ICollection<QueueItem>? AddedQueueItems { get; set; }

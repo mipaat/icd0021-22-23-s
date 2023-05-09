@@ -1,6 +1,5 @@
-﻿using App.BLL.Services;
+﻿using App.BLL.Base;
 using App.BLL.YouTube.Services;
-using App.Contracts.DAL;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +9,7 @@ using YoutubeExplode;
 
 namespace App.BLL.YouTube;
 
-public class YouTubeUow : IDisposable
+public class YouTubeUow : BaseAppUowContainer
 {
     public readonly YouTubeContext Context;
 
@@ -30,13 +29,12 @@ public class YouTubeUow : IDisposable
 
     public readonly ServiceUow ServiceUow;
 
-    public YouTubeUow(ServiceUow serviceUow, YouTubeContext context)
+    public YouTubeUow(ServiceUow serviceUow, YouTubeContext context) : base(serviceUow.Uow)
     {
         ServiceUow = serviceUow;
         Context = context;
     }
 
-    public IAppUnitOfWork Uow => ServiceUow.Uow;
     private IConfiguration Config => ServiceUow.Config;
     private IServiceProvider Services => ServiceUow.Services;
 
@@ -61,8 +59,15 @@ public class YouTubeUow : IDisposable
     private ApiService? _apiService;
     public ApiService ApiService => _apiService ??= Services.GetRequiredService<ApiService>();
 
-    public void Dispose()
+    public override void Dispose()
     {
         YouTubeApiService.Dispose();
+        base.Dispose();
+    }
+
+    public override async ValueTask DisposeAsync()
+    {
+        YouTubeApiService.Dispose();
+        await base.DisposeAsync();
     }
 }

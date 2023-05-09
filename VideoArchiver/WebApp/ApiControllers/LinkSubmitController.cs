@@ -7,8 +7,9 @@ using Public.DTO.v1;
 
 namespace WebApp.ApiControllers;
 
+[ApiVersion("1.0")]
 [ApiController]
-[Route("api/v1/[controller]/[action]")]
+[Route("api/{version:apiVersion}/[controller]/[action]")]
 [Authorize(Roles = UrlSubmissionHandler.AllowedToSubmitRoles,
     AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class LinkSubmitController : ControllerBase

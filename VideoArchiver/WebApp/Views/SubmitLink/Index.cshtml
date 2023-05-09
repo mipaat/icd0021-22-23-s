@@ -1,3 +1,6 @@
 ﻿@model Public.DTO.v1.LinkSubmission
 
-<partial name="_SubmitLinkPrompt"/>
+@if (User.Identity?.IsAuthenticated ?? false)
+{
+    <partial name="_SubmitLinkPrompt"/>
+}

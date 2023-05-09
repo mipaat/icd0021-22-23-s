@@ -1,7 +1,6 @@
 using App.Domain;
 using App.Domain.Identity;
 using App.DTO;
-using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,8 +32,8 @@ public static class AppDataInit
 
     public static async Task SeedIdentityAsync(UserManager<User> userManager, RoleManager<Role> roleManager)
     {
-        var adminUserData = new BasicUserData(Guid.Parse("61F32996-082F-4B41-B1F5-20071452EF41"), "admin@test.com",
-            "admin123");
+        var adminUserData = new BasicUserData(Guid.Parse("61F32996-082F-4B41-B1F5-20071452EF41"), "admin",
+            "admin123", true);
         var adminUser = await GetOrCreateUserAsync(userManager, adminUserData);
 
         await SeedRolesAsync(roleManager);
@@ -60,7 +59,7 @@ public static class AppDataInit
         }
 
         var demoUserData =
-            new BasicUserData(Guid.Parse("6514614B-F64E-409D-884C-768EB1DE19F7"), "demo@test.com", "demo123");
+            new BasicUserData(Guid.Parse("6514614B-F64E-409D-884C-768EB1DE19F7"), "demo", "demo123", true);
         await GetOrCreateUserAsync(userManager, demoUserData);
     }
 
@@ -72,9 +71,8 @@ public static class AppDataInit
             user = new User
             {
                 Id = userData.Id,
-                Email = userData.Email,
-                EmailConfirmed = true,
-                UserName = userData.Email,
+                UserName = userData.UserName,
+                IsApproved = userData.IsApproved,
             };
             var result = await userManager.CreateAsync(user, userData.Password);
             if (!result.Succeeded)
@@ -215,6 +213,6 @@ public static class AppDataInit
     }
 }
 
-internal record BasicUserData(Guid Id, string Email, string Password);
+internal record BasicUserData(Guid Id, string UserName, string Password, bool IsApproved);
 
 internal record BasicRoleData(Guid Id, string Name);

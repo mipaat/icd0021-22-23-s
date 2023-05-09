@@ -3,8 +3,13 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    
-    <partial name="_SubmitLinkPrompt"/>
+    <h1>Welcome!</h1>
+    @if (User.Identity is {IsAuthenticated: true })
+    {
+        <partial name="_SubmitLinkPrompt"/>
+    }
+    else
+    {
+        <p>Log in to submit a link to the archive</p>
+    }
 </div>

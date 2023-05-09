@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using App.BLL.Extensions;
+using App.BLL.Identity.Extensions;
 using App.BLL.YouTube;
 using App.BLL.YouTube.Extensions;
 using App.Contracts.DAL;
@@ -10,6 +11,7 @@ using DAL;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Utils;
 using WebApp.Config;
@@ -30,10 +32,7 @@ public class Program
                 .AddDefaultConcurrencyConflictResolvers(provider));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-        builder.Services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = false)
-            .AddEntityFrameworkStores<AbstractAppDbContext>()
-            .AddDefaultTokenProviders()
-            .AddDefaultUI();
+        builder.Services.AddCustomIdentity();
 
         var jwtSettings = builder.Configuration.GetRequiredSection(JwtSettings.SectionKey).Get<JwtSettings>();
 
@@ -74,12 +73,10 @@ public class Program
             typeof(Public.DTO.AutoMapperConfig)
         );
 
-        builder.Services.Configure<IdentityOptions>(options =>
+        builder.Services.AddApiVersioning(options =>
         {
-            options.Password.RequireDigit = false;
-            options.Password.RequireLowercase = false;
-            options.Password.RequireUppercase = false;
-            options.Password.RequireNonAlphanumeric = false;
+            options.ReportApiVersions = true;
+            options.DefaultApiVersion = new ApiVersion(1, 0);
         });
 
         var useHttpLogging = builder.Configuration.GetValue<bool>("Logging:HTTP:Enabled");
