@@ -286,7 +286,7 @@ public class AccountController : ControllerBase
             });
         }
 
-        var userName = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        var userName = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
         if (userName == null)
         {
             return BadRequest(new RestApiErrorResponse()
