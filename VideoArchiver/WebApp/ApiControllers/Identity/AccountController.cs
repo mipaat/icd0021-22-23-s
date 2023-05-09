@@ -15,6 +15,9 @@ using WebApp.Config;
 
 namespace WebApp.ApiControllers.Identity;
 
+/// <summary>
+/// API controller for user account management endpoints
+/// </summary>
 [ApiVersion("1.0")]
 [ApiController]
 [Route("api/v{version:apiVersion}/identity/[controller]/[action]")]
@@ -30,6 +33,16 @@ public class AccountController : ControllerBase
     private readonly Random _rnd = new();
     private readonly IAppUnitOfWork _uow;
 
+    /// <summary>
+    /// Construct a new AccountController
+    /// </summary>
+    /// <param name="signInManager">Object for handling user sign-in functionality</param>
+    /// <param name="userManager">Object for managing users</param>
+    /// <param name="configuration">Configuration object containing necessary settings for generating JWTs</param>
+    /// <param name="logger">Logger for this AccountController</param>
+    /// <param name="uow">Unit of Work object containing DAL repositories</param>
+    /// <param name="userService">Custom service for managing users</param>
+    /// <exception cref="ConfigurationErrorsException">Provided configuration doesn't contain expected JWT settings</exception>
     public AccountController(SignInManager<User> signInManager, UserManager<User> userManager,
         IConfiguration configuration, ILogger<AccountController> logger,
         IAppUnitOfWork uow, UserService userService)
@@ -43,8 +56,18 @@ public class AccountController : ControllerBase
         _userService = userService;
     }
 
+    /// <summary>
+    /// Register a new user
+    /// </summary>
+    /// <param name="registrationData">Required data for registering a new user.</param>
+    /// <param name="expiresInSeconds">The amount of seconds the created JWT should be valid for.
+    /// Cannot be larger than maximum expiration time (configured in settings).</param>
+    /// <returns>New JWT and refresh token (with expiration date) for the registered account, if registration doesn't require further approval.</returns>
+    /// <response code="200">The registration was successful.</response>
+    /// <response code="400">Invalid registration data. (User with provided username is already registered or something else went wrong).</response>
+    /// <response code="202">The registration was successful, but must be approved by an administrator before the account can be used.</response>
     [HttpPost]
-    public async Task<ActionResult<JwtResponse>> Register([FromBody] Register registrationData,
+    public async Task<ActionResult<JwtResponse?>> Register([FromBody] Register registrationData,
         [FromQuery] int? expiresInSeconds = null)
     {
         try
@@ -64,13 +87,14 @@ public class AccountController : ControllerBase
             return BadRequest(new RestApiErrorResponse
             {
                 Status = HttpStatusCode.BadRequest,
-                Error = $"User with email {registrationData.Username} is already registered"
+                Error = $"User with username {registrationData.Username} is already registered"
             });
         }
 
         // register user
         var refreshToken = new RefreshToken(expiresInDays: _jwtSettings.RefreshTokenExpiresInDays);
-        var (result, newUser) = await _userService.CreateUser(registrationData.Username, registrationData.Password, refreshToken);
+        var (result, newUser) =
+            await _userService.CreateUser(registrationData.Username, registrationData.Password, refreshToken);
         user = newUser;
 
         // // How to add claims:
@@ -93,11 +117,11 @@ public class AccountController : ControllerBase
         user = await _userManager.FindByNameAsync(user.UserName!);
         if (user == null)
         {
-            _logger.LogWarning("User with email {} is not found after registration", registrationData.Username);
+            _logger.LogWarning("User with username {} is not found after registration", registrationData.Username);
             return BadRequest(new RestApiErrorResponse
             {
                 Status = HttpStatusCode.BadRequest,
-                Error = $"User with email {registrationData.Username} is not found after registration"
+                Error = $"User with username {registrationData.Username} is not found after registration"
             });
         }
 
@@ -112,6 +136,16 @@ public class AccountController : ControllerBase
         return user.IsApproved ? Ok(res) : Accepted(res);
     }
 
+    /// <summary>
+    /// Log in as an existing user, using password authentication
+    /// </summary>
+    /// <param name="loginData">Required data for logging in</param>
+    /// <param name="expiresInSeconds">The amount of seconds the created JWT should be valid for.
+    /// Cannot be larger than maximum expiration time (configured in settings).</param>
+    /// <returns>New JWT and refresh token (with expiration date), if login was successful.</returns>
+    /// <response code="200">Login was successful.</response>
+    /// <response code="404">Username or password was invalid.</response>
+    /// <response code="401">Login isn't allowed, because the user account hasn't been approved yet.</response>
     [HttpPost]
     public async Task<ActionResult<JwtResponse>> LogIn([FromBody] Login loginData,
         [FromQuery] int? expiresInSeconds = null)
@@ -191,6 +225,16 @@ public class AccountController : ControllerBase
         return Ok(res);
     }
 
+    /// <summary>
+    /// Get a new JWT and refresh token, using existing JWT and refresh token.
+    /// </summary>
+    /// <param name="refreshTokenModel">Tokens to refresh</param>
+    /// <param name="expiresInSeconds">The amount of seconds the created JWT should be valid for.
+    /// Cannot be larger than maximum expiration time (configured in settings).</param>
+    /// <returns>Refreshed JWT and refresh token (with expiration date), if refreshing was successful.</returns>
+    /// <response code="200">Token refresh was successful.</response>
+    /// <response code="400">Provided token/tokens was/were invalid.</response>
+    /// <response code="404">JWT user not found or one matching refresh token not found.</response>
     [HttpPost]
     public async Task<ActionResult<JwtResponse>> RefreshToken(
         [FromBody] RefreshTokenModel refreshTokenModel,
@@ -242,24 +286,24 @@ public class AccountController : ControllerBase
             });
         }
 
-        var userEmail = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-        if (userEmail == null)
+        var userName = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        if (userName == null)
         {
             return BadRequest(new RestApiErrorResponse()
             {
                 Status = HttpStatusCode.BadRequest,
-                Error = "No email in JWT"
+                Error = "No username in JWT"
             });
         }
 
         // get user and tokens
-        var user = await _userManager.FindByEmailAsync(userEmail);
+        var user = await _userManager.FindByNameAsync(userName);
         if (user == null)
         {
             return NotFound(new RestApiErrorResponse()
             {
                 Status = HttpStatusCode.NotFound,
-                Error = $"User with email {userEmail} not found"
+                Error = $"User with username {userName} not found"
             });
         }
 
@@ -315,6 +359,14 @@ public class AccountController : ControllerBase
         return Ok(res);
     }
 
+    /// <summary>
+    /// Log out user by deleting provided refresh token.
+    /// User access will be refused when JWT expires.
+    /// </summary>
+    /// <returns>Amount of refresh tokens deleted.</returns>
+    /// <param name="logout">The refresh token to delete.</param>
+    /// <response code="200">Refresh token deleted successfully.</response>
+    /// <response code="404">Refresh token's user not found.</response>
     [Authorize]
     [HttpPost]
     public async Task<ActionResult> Logout(
