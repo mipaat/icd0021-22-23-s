@@ -12,7 +12,7 @@ namespace WebApp.ApiControllers.Crud;
 
 [ApiVersion("1.0")]
 [ApiController]
-[Route("api/{version:apiVersion}/crud/[controller]/[action]")]
+[Route("api/v{version:apiVersion}/crud/[controller]/[action]")]
 [Authorize(Roles = RoleNames.Admin, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class GamesController : ControllerBase
 {
@@ -27,6 +27,7 @@ public class GamesController : ControllerBase
 
     public IGameRepository Entities => _uow.Games;
 
+    [HttpGet]
     public async Task<ActionResult<ICollection<GameWithId>>> ListAll()
     {
         var entities = await Entities.GetAllAsync();
@@ -62,6 +63,7 @@ public class GamesController : ControllerBase
         return Ok();
     }
 
+    [HttpGet]
     public async Task<ActionResult<GameWithId>> GetById(Guid id)
     {
         var entity = await Entities.GetByIdAsync(id);

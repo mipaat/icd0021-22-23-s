@@ -1,4 +1,5 @@
-﻿namespace WebApp.Config;
+﻿#pragma warning disable 1591
+namespace WebApp.Config;
 
 public class DataInitializationSettings
 {

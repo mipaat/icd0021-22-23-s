@@ -1,0 +1,21 @@
+@page
+@model WebApp.Areas.Identity.Pages.Account.SelectAuthor
+
+@{
+    ViewData["Title"] = "Select author";
+}
+
+<div>
+    <h2>Choose an author to act as</h2>
+    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+    @foreach (var author in Model.Authors)
+    {
+        <form method="POST">
+            <input type="hidden" class="d-none" asp-for="Input.AuthorId" value="@author.Id"/>
+            @Html.HiddenFor(m => m.ReturnUrl)
+            <button type="submit" class="p-3 rounded-2 border-2 border-dark">
+                @author.DisplayName (@author.UserName)
+            </button>
+        </form>
+    }
+</div>

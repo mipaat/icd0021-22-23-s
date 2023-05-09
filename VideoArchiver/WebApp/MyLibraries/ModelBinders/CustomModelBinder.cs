@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿#pragma warning disable 1591
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace WebApp.MyLibraries.ModelBinders;
 

@@ -1,4 +1,5 @@
-﻿using App.BLL;
+﻿#pragma warning disable 1591
+using App.BLL;
 using App.Contracts.DAL;
 using Microsoft.AspNetCore.Mvc;
 using Public.DTO.v1;

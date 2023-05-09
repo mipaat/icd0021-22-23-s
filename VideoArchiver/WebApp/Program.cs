@@ -1,3 +1,4 @@
+#pragma warning disable 1591
 using System.Globalization;
 using System.Text;
 using App.BLL.Extensions;
@@ -7,12 +8,15 @@ using App.BLL.YouTube.Extensions;
 using App.Contracts.DAL;
 using App.Domain.Enums;
 using App.Domain.Identity;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using DAL;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using Utils;
 using WebApp.Config;
 using WebApp.MyLibraries.ModelBinders;
@@ -73,11 +77,21 @@ public class Program
             typeof(Public.DTO.AutoMapperConfig)
         );
 
-        builder.Services.AddApiVersioning(options =>
+        var apiVersioningBuilder = builder.Services.AddApiVersioning((Asp.Versioning.ApiVersioningOptions options) =>
         {
             options.ReportApiVersions = true;
             options.DefaultApiVersion = new ApiVersion(1, 0);
         });
+
+        apiVersioningBuilder.AddApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'VVV";
+            options.SubstituteApiVersionInUrl = true;
+        });
+
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+        builder.Services.AddSwaggerGen();
 
         var useHttpLogging = builder.Configuration.GetValue<bool>("Logging:HTTP:Enabled");
         if (useHttpLogging)
@@ -139,6 +153,18 @@ public class Program
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
         app.MapRazorPages();
+
+        app.UseSwagger();
+        app.UseSwaggerUI(options =>
+        {
+            var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+            foreach (var description in provider.ApiVersionDescriptions)
+            {
+                options.SwaggerEndpoint(
+                    $"/swagger/{description.GroupName}/swagger.json",
+                    description.GroupName);
+            }
+        });
 
         app.Run();
     }

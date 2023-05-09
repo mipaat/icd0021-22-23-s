@@ -1,3 +1,4 @@
+#pragma warning disable 1591
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
@@ -108,7 +109,7 @@ namespace WebApp.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    return RedirectToPage("./SelectAuthor", new { ReturnUrl = returnUrl });
                 }
                 if (result.RequiresTwoFactor)
                 {

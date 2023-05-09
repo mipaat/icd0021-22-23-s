@@ -1,3 +1,4 @@
+#pragma warning disable 1591
 using App.Domain.Enums;
 
 namespace WebApp.MyLibraries.ModelBinders;
