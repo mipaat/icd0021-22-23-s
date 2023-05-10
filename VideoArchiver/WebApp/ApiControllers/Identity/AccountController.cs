@@ -125,6 +125,10 @@ public class AccountController : ControllerBase
             });
         }
 
+        if (!user.IsApproved)
+        {
+            return Accepted();
+        }
         var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
         var jwt = GenerateJwt(claimsPrincipal, expiresInSeconds.Value);
         var res = new JwtResponse
@@ -133,7 +137,7 @@ public class AccountController : ControllerBase
             RefreshToken = refreshToken.RefreshToken,
             RefreshTokenExpiresAt = refreshToken.ExpiresAt,
         };
-        return user.IsApproved ? Ok(res) : Accepted(res);
+        return Ok(res);
     }
 
     /// <summary>
