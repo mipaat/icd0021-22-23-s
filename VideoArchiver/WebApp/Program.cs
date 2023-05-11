@@ -1,6 +1,7 @@
 #pragma warning disable 1591
 using System.Globalization;
 using System.Text;
+using System.Text.Json.Serialization;
 using App.BLL.Extensions;
 using App.BLL.Identity.Extensions;
 using App.BLL.YouTube;
@@ -60,7 +61,8 @@ public class Program
             .AddMvcOptions(options =>
             {
                 options.ModelBinderProviders.Insert(0, new CustomModelBinderProvider<Platform>());
-            });
+            })
+            .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         const string corsAllowAllName = "CorsAllowAll";
         builder.Services.AddCors(options =>

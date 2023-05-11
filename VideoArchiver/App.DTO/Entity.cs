@@ -1,4 +1,5 @@
 using App.Domain;
+using App.Domain.Enums;
 
 namespace App.DTO;
 
@@ -7,6 +8,10 @@ public class Entity
     public readonly Video? Video;
     public readonly Author? Author;
     public readonly Playlist? Playlist;
+
+    public Platform Platform =>
+        Video?.Platform ?? Author?.Platform ??
+        Playlist?.Platform ?? throw new ApplicationException("At least one entity must be not null!");
 
     private Entity(Video video)
     {

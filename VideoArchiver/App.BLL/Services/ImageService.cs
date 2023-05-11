@@ -47,12 +47,13 @@ public class ImageService : BaseService<ImageService>
         if (images == null || images.Count == 0) return;
         EnsureDirectoryExists(downloadDirectory);
         using var httpClient = new HttpClient();
+        var imagesToRemove = new ImageFileList();
         foreach (var image in images)
         {
             var response = await httpClient.GetAsync(image.Url);
             if (!response.IsSuccessStatusCode)
             {
-                images.Remove(image);
+                imagesToRemove.Add(image);
                 continue;
             }
 
@@ -86,6 +87,11 @@ public class ImageService : BaseService<ImageService>
             await using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             await fileStream.WriteAsync(imageBytes);
             image.LocalFilePath = filePath;
+        }
+
+        foreach (var image in imagesToRemove)
+        {
+            images.Remove(image);
         }
     }
 }

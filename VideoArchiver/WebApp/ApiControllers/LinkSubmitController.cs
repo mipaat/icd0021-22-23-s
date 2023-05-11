@@ -1,9 +1,12 @@
+using System.Net;
 using App.BLL;
+using App.BLL.Exceptions;
 using App.Contracts.DAL;
+using App.DTO;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Public.DTO.v1;
+using Public.DTO.Mappers;
 
 namespace WebApp.ApiControllers;
 
@@ -35,10 +38,27 @@ public class LinkSubmitController : ControllerBase
     /// Submit the provided link to the archive.
     /// </summary>
     /// <param name="link"></param>
+    /// <returns>List containing information about added entities.
+    /// These may be newly added entities, or previously added entities that match the submission.</returns>
+    /// <response code="200">The submission was processed successfully.</response>
+    /// <response code="400">The submitted URL didn't match any supported URL patterns.</response>
     [HttpPost]
-    public async Task Submit([FromBody] LinkSubmission link)
+    public async Task<ActionResult<List<Public.DTO.v1.SubmissionResult>>> Submit([FromBody] Public.DTO.v1.LinkSubmission link)
     {
-        await _urlSubmissionHandler.SubmitGenericUrlAsync(link.Link, User);
+        UrlSubmissionResults bllSubmissionResults;
+        try
+        {
+            bllSubmissionResults = await _urlSubmissionHandler.SubmitGenericUrlAsync(link.Link, User);
+        }
+        catch (UnrecognizedUrlException e)
+        {
+            return BadRequest(new Public.DTO.v1.RestApiErrorResponse
+            {
+                Status = HttpStatusCode.BadRequest,
+                Error = e.Message,
+            });
+        }
         await _uow.SaveChangesAsync();
+        return Ok(SubmissionResultMapper.Map(bllSubmissionResults));
     }
 }
