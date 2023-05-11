@@ -179,7 +179,11 @@ public class AccountController : ControllerBase
 
         if (!user.IsApproved)
         {
-            return Unauthorized();
+            return Unauthorized(new RestApiErrorResponse
+            {
+                Status = HttpStatusCode.Unauthorized,
+                Error = "User account not approved"
+            });
         }
 
         // verify username and password
