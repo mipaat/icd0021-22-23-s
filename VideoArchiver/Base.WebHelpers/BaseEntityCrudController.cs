@@ -86,6 +86,7 @@ public abstract class BaseEntityCrudController<TAppUnitOfWork, TDomainEntity, TE
             entity.Id = NewKey();
             Entities.Add(entity);
             await Uow.SaveChangesAsync();
+            // ReSharper disable once Mvc.ActionNotResolved
             return RedirectToAction(nameof(Index));
         }
 
@@ -140,6 +141,7 @@ public abstract class BaseEntityCrudController<TAppUnitOfWork, TDomainEntity, TE
                 throw;
             }
 
+            // ReSharper disable once Mvc.ActionNotResolved
             return RedirectToAction(nameof(Index));
         }
 
@@ -172,6 +174,7 @@ public abstract class BaseEntityCrudController<TAppUnitOfWork, TDomainEntity, TE
         await Entities.RemoveAsync(id);
         await Uow.SaveChangesAsync();
 
+        // ReSharper disable once Mvc.ActionNotResolved
         return RedirectToAction(nameof(Index));
     }
 }
