@@ -1,4 +1,4 @@
-using App.DTO;
+using App.BLL.DTO.Entities;
 
 namespace App.BLL.Exceptions;
 

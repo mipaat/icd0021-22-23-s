@@ -1,23 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class PlaylistCategoryRepository : BaseEntityRepository<PlaylistCategory, AbstractAppDbContext>,
+public class PlaylistCategoryRepository : BaseAppEntityRepository<App.Domain.PlaylistCategory, PlaylistCategory>,
     IPlaylistCategoryRepository
 {
-    public PlaylistCategoryRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public PlaylistCategoryRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<PlaylistCategory> DefaultIncludes(DbSet<PlaylistCategory> entities)
-    {
-        entities
-            .Include(p => p.Category)
-            .Include(p => p.Playlist);
-        return entities;
     }
 }

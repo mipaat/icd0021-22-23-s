@@ -1,20 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class VideoHistoryRepository : BaseEntityRepository<VideoHistory, AbstractAppDbContext>, IVideoHistoryRepository
+public class VideoHistoryRepository : BaseAppEntityRepository<App.Domain.VideoHistory, VideoHistory>,
+    IVideoHistoryRepository
 {
-    public VideoHistoryRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public VideoHistoryRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<VideoHistory> DefaultIncludes(DbSet<VideoHistory> entities)
-    {
-        entities.Include(v => v.Video);
-        return entities;
     }
 }

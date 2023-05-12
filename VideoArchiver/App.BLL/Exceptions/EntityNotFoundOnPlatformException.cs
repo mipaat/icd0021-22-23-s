@@ -1,4 +1,4 @@
-using App.Domain.Enums;
+using App.DAL.DTO.Enums;
 using Utils;
 
 namespace App.BLL.Exceptions;

@@ -1,22 +1,12 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class CategoryRepository : BaseEntityRepository<Category, AbstractAppDbContext>, ICategoryRepository
+public class CategoryRepository : BaseAppEntityRepository<App.Domain.Category, Category>, ICategoryRepository
 {
-    public CategoryRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public CategoryRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<Category> DefaultIncludes(DbSet<Category> entities)
-    {
-        entities
-            .Include(c => c.Creator)
-            .Include(c => c.ParentCategory);
-        return entities;
     }
 }

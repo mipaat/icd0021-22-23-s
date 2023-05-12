@@ -1,23 +1,14 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class VideoUploadNotificationRepository : BaseEntityRepository<VideoUploadNotification, AbstractAppDbContext>,
+public class VideoUploadNotificationRepository :
+    BaseAppEntityRepository<App.Domain.VideoUploadNotification, VideoUploadNotification>,
     IVideoUploadNotificationRepository
 {
-    public VideoUploadNotificationRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public VideoUploadNotificationRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<VideoUploadNotification> DefaultIncludes(DbSet<VideoUploadNotification> entities)
-    {
-        entities
-            .Include(v => v.Receiver)
-            .Include(v => v.Video);
-        return entities;
     }
 }

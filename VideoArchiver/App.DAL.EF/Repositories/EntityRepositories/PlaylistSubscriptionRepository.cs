@@ -1,23 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class PlaylistSubscriptionRepository : BaseEntityRepository<PlaylistSubscription, AbstractAppDbContext>,
+public class PlaylistSubscriptionRepository : BaseAppEntityRepository<App.Domain.PlaylistSubscription, PlaylistSubscription>,
     IPlaylistSubscriptionRepository
 {
-    public PlaylistSubscriptionRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public PlaylistSubscriptionRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<PlaylistSubscription> DefaultIncludes(DbSet<PlaylistSubscription> entities)
-    {
-        entities
-            .Include(p => p.Playlist)
-            .Include(p => p.Subscriber);
-        return entities;
     }
 }

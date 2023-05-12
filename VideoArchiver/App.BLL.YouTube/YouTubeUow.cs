@@ -1,5 +1,7 @@
 ﻿using App.BLL.Base;
+using App.BLL.DTO.Mappers;
 using App.BLL.YouTube.Services;
+using AutoMapper;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +11,7 @@ using YoutubeExplode;
 
 namespace App.BLL.YouTube;
 
-public class YouTubeUow : BaseAppUowContainer
+public class YouTubeUow : BaseAppUowContainer, IDisposable
 {
     public readonly YouTubeContext Context;
 
@@ -29,10 +31,17 @@ public class YouTubeUow : BaseAppUowContainer
 
     public readonly ServiceUow ServiceUow;
 
-    public YouTubeUow(ServiceUow serviceUow, YouTubeContext context) : base(serviceUow.Uow)
+    private readonly IMapper _mapper;
+
+    public YouTubeUow(ServiceUow serviceUow, YouTubeContext context, IMapper mapper) : base(serviceUow.Uow)
     {
         ServiceUow = serviceUow;
         Context = context;
+        _mapper = mapper;
+        VideoMapper = new VideoMapper(mapper);
+        AuthorMapper = new AuthorMapper(mapper);
+        PlaylistMapper = new PlaylistMapper(mapper);
+        QueueItemMapper = new QueueItemMapper(mapper);
     }
 
     private IConfiguration Config => ServiceUow.Config;
@@ -40,9 +49,6 @@ public class YouTubeUow : BaseAppUowContainer
 
     private YoutubeDL? _youtubeDl;
     public YoutubeDL YoutubeDl => _youtubeDl ??= new YoutubeDL();
-
-    private SubmitService? _submitService;
-    public SubmitService SubmitService => _submitService ??= Services.GetRequiredService<SubmitService>();
 
     private AuthorService? _authorService;
     public AuthorService AuthorService => _authorService ??= Services.GetRequiredService<AuthorService>();
@@ -59,15 +65,13 @@ public class YouTubeUow : BaseAppUowContainer
     private ApiService? _apiService;
     public ApiService ApiService => _apiService ??= Services.GetRequiredService<ApiService>();
 
-    public override void Dispose()
-    {
-        YouTubeApiService.Dispose();
-        base.Dispose();
-    }
+    public readonly VideoMapper VideoMapper;
+    public readonly AuthorMapper AuthorMapper;
+    public readonly PlaylistMapper PlaylistMapper;
+    public readonly QueueItemMapper QueueItemMapper;
 
-    public override async ValueTask DisposeAsync()
+    public void Dispose()
     {
         YouTubeApiService.Dispose();
-        await base.DisposeAsync();
     }
 }

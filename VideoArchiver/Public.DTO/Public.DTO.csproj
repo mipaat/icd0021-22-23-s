@@ -8,7 +8,7 @@
     
     <ItemGroup>
         <ProjectReference Include="..\App.Domain\App.Domain.csproj" />
-        <ProjectReference Include="..\App.DTO\App.DTO.csproj" />
+        <ProjectReference Include="..\App.BLL.DTO\App.BLL.DTO.csproj" />
         <ProjectReference Include="..\Base.DAL\Base.DAL.csproj" />
     </ItemGroup>
     

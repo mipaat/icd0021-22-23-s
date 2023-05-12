@@ -1,30 +1,29 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using App.Domain.Enums;
-using DAL.Base;
-using Domain;
+using App.DAL.DTO.Entities;
+using App.DAL.DTO.Enums;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class PlaylistRepository : BaseEntityRepository<Playlist, AbstractAppDbContext>, IPlaylistRepository
+public class PlaylistRepository : BaseAppEntityRepository<App.Domain.Playlist, Playlist>, IPlaylistRepository
 {
-    public PlaylistRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public PlaylistRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
 
     public async Task<Playlist?> GetByIdOnPlatformAsync(string idOnPlatform, Platform platform)
     {
-        return await Entities
+        return Mapper.Map(await Entities
             .Include(pl => pl.PlaylistAuthors!)
             .ThenInclude(pa => pa.Author)
             .Where(pl => pl.IdOnPlatform == idOnPlatform && pl.Platform == platform)
-            .SingleOrDefaultAsync();
+            .SingleOrDefaultAsync());
     }
 
     public async Task<ICollection<Playlist>> GetAllNotOfficiallyFetched(Platform platform, int? limit = null)
     {
-        IQueryable<Playlist> query = Entities
+        IQueryable<App.Domain.Playlist> query = Entities
             .Where(v => v.Platform == platform && v.IsAvailable && v.LastSuccessfulFetchOfficial == null)
             .OrderBy(v => v.AddedToArchiveAt);
         if (limit != null)
@@ -32,12 +31,13 @@ public class PlaylistRepository : BaseEntityRepository<Playlist, AbstractAppDbCo
             query = query.Take(limit.Value);
         }
 
-        return await query.ToListAsync();
+        return (await query.ToListAsync()).Select(e => Mapper.Map(e)!).ToList();
     }
 
-    public async Task<ICollection<Playlist>> GetAllBeforeOfficialApiFetch(Platform platform, DateTime cutoff, int? limit = null)
+    public async Task<ICollection<Playlist>> GetAllBeforeOfficialApiFetch(Platform platform, DateTime cutoff,
+        int? limit = null)
     {
-        IQueryable<Playlist> query = Entities
+        IQueryable<App.Domain.Playlist> query = Entities
             .Where(v => v.Platform == platform && v.IsAvailable &&
                         v.LastFetchOfficial != null && v.LastFetchOfficial < cutoff)
             .OrderBy(v => v.LastFetchOfficial);
@@ -46,6 +46,6 @@ public class PlaylistRepository : BaseEntityRepository<Playlist, AbstractAppDbCo
             query = query.Take(limit.Value);
         }
 
-        return await query.ToListAsync();
+        return (await query.ToListAsync()).Select(e => Mapper.Map(e)!).ToList();
     }
 }

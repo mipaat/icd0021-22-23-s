@@ -1,16 +1,17 @@
 using App.BLL.Exceptions;
 using App.BLL.YouTube.Base;
-using App.BLL.YouTube.Extensions;
-using App.Domain;
-using App.Domain.Enums;
-using App.DTO;
+using App.BLL.DTO;
+using App.BLL.DTO.Entities;
+using App.BLL.DTO.Enums;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 
 namespace App.BLL.YouTube.Services;
 
 public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubmissionHandler
 {
-    public SubmitService(ServiceUow serviceUow, ILogger<SubmitService> logger, YouTubeUow youTubeUow) : base(serviceUow, logger, youTubeUow)
+    public SubmitService(ServiceUow serviceUow, ILogger<SubmitService> logger, YouTubeUow youTubeUow, IMapper mapper) :
+        base(serviceUow, logger, youTubeUow, mapper)
     {
     }
 
@@ -50,7 +51,7 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubm
                     }
                     else
                     {
-                        result.Add(previouslyArchivedPlaylist);
+                        result.Add(PlaylistMapper.Map(previouslyArchivedPlaylist)!);
                     }
                 }
             }
@@ -73,8 +74,8 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubm
         var previouslyArchivedVideo = await Uow.Videos.GetByIdOnPlatformAsync(id, Platform.YouTube);
         if (previouslyArchivedVideo != null)
         {
-            Uow.QueueItems.Add(new QueueItem(submitterId, autoSubmit, previouslyArchivedVideo));
-            UrlSubmissionResult result = previouslyArchivedVideo;
+            Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(submitterId, autoSubmit, previouslyArchivedVideo));
+            UrlSubmissionResult result = VideoMapper.Map(previouslyArchivedVideo)!;
             result.AlreadyAdded = true;
             return result;
         }
@@ -83,13 +84,14 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubm
 
         if (!autoSubmit)
         {
-            return Uow.QueueItems.Add(new QueueItem(id, submitterId, autoSubmit, Platform.YouTube));
+            return QueueItemMapper.Map(
+                Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(id, submitterId, autoSubmit, Platform.YouTube)))!;
         }
 
         var video = await YouTubeUow.VideoService.AddVideo(videoData);
-        Uow.QueueItems.Add(new QueueItem(submitterId, autoSubmit, video));
+        Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(submitterId, autoSubmit, video));
 
-        return video;
+        return VideoMapper.Map(video)!;
     }
 
     private async Task<UrlSubmissionResult> SubmitPlaylist(string id, Guid submitterId, bool autoSubmit)
@@ -97,8 +99,8 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubm
         var previouslyArchivedPlaylist = await Uow.Playlists.GetByIdOnPlatformAsync(id, Platform.YouTube);
         if (previouslyArchivedPlaylist != null)
         {
-            Uow.QueueItems.Add(new QueueItem(submitterId, autoSubmit, previouslyArchivedPlaylist));
-            UrlSubmissionResult result = previouslyArchivedPlaylist;
+            Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(submitterId, autoSubmit, previouslyArchivedPlaylist));
+            UrlSubmissionResult result = PlaylistMapper.Map(previouslyArchivedPlaylist)!;
             result.AlreadyAdded = true;
             return result;
         }
@@ -107,12 +109,13 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubm
 
         if (!autoSubmit)
         {
-            return Uow.QueueItems.Add(new QueueItem(id, submitterId, autoSubmit, Platform.YouTube));
+            return QueueItemMapper.Map(
+                Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(id, submitterId, autoSubmit, Platform.YouTube)))!;
         }
 
         var playlist = await YouTubeUow.PlaylistService.AddPlaylist(playlistData);
-        Uow.QueueItems.Add(new QueueItem(submitterId, autoSubmit, playlist));
+        Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(submitterId, autoSubmit, playlist));
 
-        return playlist;
+        return PlaylistMapper.Map(playlist)!;
     }
 }

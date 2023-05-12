@@ -1,24 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class PlaylistRatingRepository : BaseEntityRepository<PlaylistRating, AbstractAppDbContext>,
+public class PlaylistRatingRepository : BaseAppEntityRepository<App.Domain.PlaylistRating, PlaylistRating>,
     IPlaylistRatingRepository
 {
-    public PlaylistRatingRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public PlaylistRatingRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<PlaylistRating> DefaultIncludes(DbSet<PlaylistRating> entities)
-    {
-        entities
-            .Include(p => p.Author)
-            .Include(p => p.Category)
-            .Include(p => p.Playlist);
-        return entities;
     }
 }

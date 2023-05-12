@@ -2,8 +2,9 @@ using App.BLL.Exceptions;
 using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
 using App.BLL.YouTube.Utils;
-using App.Domain;
-using App.Domain.Enums;
+using App.DAL.DTO.Entities;
+using App.DAL.DTO.Enums;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
 
@@ -11,8 +12,8 @@ namespace App.BLL.YouTube.Services;
 
 public class VideoService : BaseYouTubeService<VideoService>
 {
-    public VideoService(ServiceUow serviceUow, ILogger<VideoService> logger, YouTubeUow youTubeUow) : base(serviceUow,
-        logger, youTubeUow)
+    public VideoService(ServiceUow serviceUow, ILogger<VideoService> logger, YouTubeUow youTubeUow, IMapper mapper) : base(serviceUow,
+        logger, youTubeUow, mapper)
     {
     }
 
@@ -68,7 +69,7 @@ public class VideoService : BaseYouTubeService<VideoService>
         }
 
         video.LastSuccessfulFetchUnofficial = video.LastFetchUnofficial;
-        var domainVideo = videoData.ToDomainVideo(video.Thumbnails);
+        var domainVideo = videoData.ToDalVideo(video.Thumbnails);
         domainVideo.Thumbnails ??= ThumbnailUtils.GetAllPotentialThumbnails(domainVideo.IdOnPlatform);
         await ServiceUow.ImageService.UpdateThumbnails(domainVideo);
         await ServiceUow.EntityUpdateService.UpdateVideo(video, domainVideo);
@@ -124,7 +125,7 @@ public class VideoService : BaseYouTubeService<VideoService>
             var fetchedVideo = fetchedVideos.Items.SingleOrDefault(v => v.Id == video.IdOnPlatform);
             if (fetchedVideo == null) continue;
             video.LastSuccessfulFetchOfficial = video.LastFetchOfficial;
-            var domainVideo = fetchedVideo.ToDomainVideo(video.Thumbnails);
+            var domainVideo = fetchedVideo.ToDalVideo(video.Thumbnails);
             domainVideo.Thumbnails ??= ThumbnailUtils.GetAllPotentialThumbnails(domainVideo.IdOnPlatform);
             await ServiceUow.ImageService.UpdateThumbnails(domainVideo);
             await ServiceUow.EntityUpdateService.UpdateVideo(video, domainVideo);
@@ -135,7 +136,7 @@ public class VideoService : BaseYouTubeService<VideoService>
 
     public async Task<Video> AddVideo(VideoData videoData)
     {
-        var video = videoData.ToDomainVideo();
+        var video = videoData.ToDalVideo();
         await YouTubeUow.AuthorService.AddAndSetAuthorIfNotSet(video, videoData);
 
         /*

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.Json.Serialization;
 using App.BLL.Extensions;
+using App.BLL.Identity.Config;
 using App.BLL.Identity.Extensions;
 using App.BLL.YouTube;
 using App.BLL.YouTube.Extensions;
@@ -11,6 +12,7 @@ using App.Domain.Enums;
 using App.Domain.Identity;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using AutoMapper;
 using DAL;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
@@ -33,7 +35,7 @@ public class Program
         // Add services to the container.
         AppDbContextFactory.RegisterDbContext(builder.Services, builder.Configuration);
         builder.Services.AddScoped<IAppUnitOfWork>(provider =>
-            new AppUnitOfWork(provider.GetRequiredService<AbstractAppDbContext>())
+            new AppUnitOfWork(provider.GetRequiredService<AbstractAppDbContext>(), provider.GetRequiredService<IMapper>())
                 .AddDefaultConcurrencyConflictResolvers(provider));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -76,10 +78,12 @@ public class Program
         });
 
         builder.Services.AddAutoMapper(
+            typeof(App.BLL.DTO.AutoMapperConfig),
+            typeof(App.DAL.DTO.AutoMapperConfig),
             typeof(Public.DTO.AutoMapperConfig)
         );
 
-        var apiVersioningBuilder = builder.Services.AddApiVersioning((Asp.Versioning.ApiVersioningOptions options) =>
+        var apiVersioningBuilder = builder.Services.AddApiVersioning(options =>
         {
             options.ReportApiVersions = true;
             options.DefaultApiVersion = new ApiVersion(1, 0);
@@ -150,7 +154,6 @@ public class Program
 
         app.UseAuthorization();
 
-        app.MapAreaControllerRoute(name: "crud", areaName: "Crud", pattern: "Crud/{controller}/{action=Index}/{id?}");
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");

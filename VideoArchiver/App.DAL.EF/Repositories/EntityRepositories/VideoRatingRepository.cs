@@ -1,23 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class VideoRatingRepository : BaseEntityRepository<VideoRating, AbstractAppDbContext>, IVideoRatingRepository
+public class VideoRatingRepository : BaseAppEntityRepository<App.Domain.VideoRating, VideoRating>,
+    IVideoRatingRepository
 {
-    public VideoRatingRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public VideoRatingRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<VideoRating> DefaultIncludes(DbSet<VideoRating> entities)
-    {
-        entities
-            .Include(v => v.Author)
-            .Include(v => v.Category)
-            .Include(v => v.Video);
-        return entities;
     }
 }

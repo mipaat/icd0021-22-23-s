@@ -1,23 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class VideoCategoryRepository : BaseEntityRepository<VideoCategory, AbstractAppDbContext>,
+public class VideoCategoryRepository : BaseAppEntityRepository<App.Domain.VideoCategory, VideoCategory>,
     IVideoCategoryRepository
 {
-    public VideoCategoryRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public VideoCategoryRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<VideoCategory> DefaultIncludes(DbSet<VideoCategory> entities)
-    {
-        entities
-            .Include(v => v.Category)
-            .Include(v => v.Video);
-        return entities;
     }
 }

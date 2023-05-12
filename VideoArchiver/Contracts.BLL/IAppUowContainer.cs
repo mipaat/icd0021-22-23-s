@@ -1,6 +1,6 @@
 namespace Contracts.BLL;
 
-public interface IAppUowContainer : IDisposable, IAsyncDisposable
+public interface IAppUowContainer
 {
     public Task<int> SaveChangesAsync();
 }

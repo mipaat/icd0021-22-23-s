@@ -1,24 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class StatusChangeEventRepository : BaseEntityRepository<StatusChangeEvent, AbstractAppDbContext>,
+public class StatusChangeEventRepository : BaseAppEntityRepository<App.Domain.StatusChangeEvent, StatusChangeEvent>,
     IStatusChangeEventRepository
 {
-    public StatusChangeEventRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public StatusChangeEventRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<StatusChangeEvent> DefaultIncludes(DbSet<StatusChangeEvent> entities)
-    {
-        entities
-            .Include(s => s.Author)
-            .Include(s => s.Playlist)
-            .Include(s => s.Video);
-        return entities;
     }
 }

@@ -1,11 +1,13 @@
-using App.Contracts.DAL;
-using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.DTO;
+using System.Net;
+using App.BLL.DTO;
+using App.BLL.Services;
 using AutoMapper;
+using Base.BLL.Exceptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Public.DTO.Mappers;
+using Public.DTO.v1;
 using Public.DTO.v1.Domain;
 
 namespace WebApp.ApiControllers.Crud;
@@ -20,21 +22,19 @@ namespace WebApp.ApiControllers.Crud;
 [Authorize(Roles = RoleNames.Admin, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class GamesController : ControllerBase
 {
-    private readonly IAppUnitOfWork _uow;
+    private readonly BasicGameCrudService _gameService;
     private readonly GameMapper _gameMapper;
 
     /// <summary>
     /// Create a new GamesController instance.
     /// </summary>
-    /// <param name="uow">Unit of Work object containing DAL repositories.</param>
     /// <param name="mapper">Mapper for converting between public DTOs and internal DTOs.</param>
-    public GamesController(IAppUnitOfWork uow, IMapper mapper)
+    /// <param name="gameService">Basic BLL service for performing CRUD operations on Game entities.</param>
+    public GamesController(IMapper mapper, BasicGameCrudService gameService)
     {
-        _uow = uow;
+        _gameService = gameService;
         _gameMapper = new GameMapper(mapper);
     }
-
-    private IGameRepository Entities => _uow.Games;
 
     /// <summary>
     /// Get a list of all games in the database.
@@ -43,7 +43,7 @@ public class GamesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<ICollection<GameWithId>>> ListAll()
     {
-        var entities = await Entities.GetAllAsync();
+        var entities = await _gameService.GetAllAsync();
         return entities.Select(e => _gameMapper.Map(e)!).ToList();
     }
 
@@ -56,11 +56,20 @@ public class GamesController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var entity = await Entities.GetByIdAsync(id);
-        if (entity == null) return NotFound();
-        Entities.Remove(entity);
+        try
+        {
+            await _gameService.DeleteAsync(id);
+        }
+        catch (EntityNotFoundException)
+        {
+            return NotFound(new RestApiErrorResponse
+            {
+                Status = HttpStatusCode.NotFound,
+                Error = $"Game with ID {id} not found",
+            });
+        }
 
-        await _uow.SaveChangesAsync();
+        await _gameService.SaveChangesAsync();
         return Ok();
     }
 
@@ -73,10 +82,20 @@ public class GamesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Update([FromBody] GameWithId entity)
     {
-        if (!await Entities.ExistsAsync(entity.Id)) return NotFound();
+        try
+        {
+            await _gameService.UpdateAsync(_gameMapper.Map(entity)!);
+        }
+        catch (EntityNotFoundException)
+        {
+            return NotFound(new RestApiErrorResponse
+            {
+                Status = HttpStatusCode.NotFound,
+                Error = $"Game with ID {entity.Id} not found",
+            });
+        }
 
-        Entities.Update(_gameMapper.Map(entity)!);
-        await _uow.SaveChangesAsync();
+        await _gameService.SaveChangesAsync();
         return Ok();
     }
 
@@ -88,8 +107,8 @@ public class GamesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] GameWithoutId entity)
     {
-        Entities.Add(_gameMapper.MapWithoutId(entity));
-        await _uow.SaveChangesAsync();
+        _gameService.Create(_gameMapper.MapWithoutId(entity));
+        await _gameService.SaveChangesAsync();
         return Ok();
     }
 
@@ -103,7 +122,7 @@ public class GamesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<GameWithId>> GetById(Guid id)
     {
-        var entity = await Entities.GetByIdAsync(id);
+        var entity = await _gameService.GetByIdAsync(id);
         if (entity == null) return NotFound();
         return _gameMapper.Map(entity)!;
     }

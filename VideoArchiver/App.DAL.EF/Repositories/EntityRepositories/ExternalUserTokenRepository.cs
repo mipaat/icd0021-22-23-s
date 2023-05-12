@@ -1,23 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class ExternalUserTokenRepository : BaseEntityRepository<ExternalUserToken, AbstractAppDbContext>,
+public class ExternalUserTokenRepository : BaseAppEntityRepository<App.Domain.ExternalUserToken, ExternalUserToken>,
     IExternalUserTokenRepository
 {
-    public ExternalUserTokenRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public ExternalUserTokenRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<ExternalUserToken> DefaultIncludes(DbSet<ExternalUserToken> entities)
-    {
-        entities
-            .Include(e => e.Author)
-            .Include(e => e.User);
-        return entities;
     }
 }

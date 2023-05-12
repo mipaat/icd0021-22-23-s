@@ -1,9 +1,8 @@
 using App.Domain;
 using Contracts.DAL;
-using Domain;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface IAuthorSubscriptionRepository : IBaseEntityRepository<AuthorSubscription>
+public interface IAuthorSubscriptionRepository : IBaseEntityRepository<AuthorSubscription, App.DAL.DTO.Entities.AuthorSubscription>
 {
 }

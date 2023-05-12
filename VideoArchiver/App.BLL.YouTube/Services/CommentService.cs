@@ -2,18 +2,21 @@ using App.BLL.Exceptions;
 using App.BLL.Services;
 using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
-using App.Domain;
-using App.Domain.Enums;
+using App.DAL.DTO.Enums;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
+using Video = App.DAL.DTO.Entities.Video;
 
 namespace App.BLL.YouTube.Services;
 
 public class CommentService : BaseYouTubeService<CommentService>
 {
     private readonly EntityUpdateService _entityUpdateService;
-    
-    public CommentService(ServiceUow serviceUow, ILogger<CommentService> logger, YouTubeUow youTubeUow, EntityUpdateService entityUpdateService) : base(serviceUow, logger, youTubeUow)
+
+    public CommentService(ServiceUow serviceUow, ILogger<CommentService> logger, YouTubeUow youTubeUow,
+        EntityUpdateService entityUpdateService, IMapper mapper) :
+        base(serviceUow, logger, youTubeUow, mapper)
     {
         _entityUpdateService = entityUpdateService;
     }
@@ -49,8 +52,8 @@ public class CommentService : BaseYouTubeService<CommentService>
     private async Task UpdateComments(Video video, CommentData[] comments)
     {
         // TODO: What to do if video has 20000 comments? Memory issues?
-        video.Comments ??= new List<Comment>();
-        var commentsWithoutParent = new List<(Comment Comment, string Parent)>();
+        video.Comments ??= new List<DAL.DTO.Entities.Comment>();
+        var commentsWithoutParent = new List<(DAL.DTO.Entities.Comment Comment, string Parent)>();
         foreach (var comment in video.Comments)
         {
             if (comments.All(c => c.ID != comment.IdOnPlatform))
@@ -58,15 +61,17 @@ public class CommentService : BaseYouTubeService<CommentService>
                 comment.DeletedAt = DateTime.UtcNow;
             }
         }
+
         foreach (var commentData in comments)
         {
-            var domainComment = commentData.ToDomainComment();
+            var domainComment = commentData.ToDalComment();
             var existingDomainComment = video.Comments.SingleOrDefault(c => c.IdOnPlatform == commentData.ID);
             if (existingDomainComment != null)
             {
                 await _entityUpdateService.UpdateComment(existingDomainComment, domainComment);
                 continue;
             }
+
             await YouTubeUow.AuthorService.AddAndSetAuthorIfNotSet(domainComment, commentData);
             domainComment.Video = video;
             if (commentData.Parent != "root")
@@ -81,6 +86,7 @@ public class CommentService : BaseYouTubeService<CommentService>
                     domainComment.ReplyTarget = addedParentComment;
                 }
             }
+
             video.Comments.Add(domainComment);
 
             Uow.Comments.Add(domainComment);

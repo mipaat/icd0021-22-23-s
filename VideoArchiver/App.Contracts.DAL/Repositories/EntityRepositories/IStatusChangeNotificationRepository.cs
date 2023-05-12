@@ -1,9 +1,8 @@
 using App.Domain;
 using Contracts.DAL;
-using Domain;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface IStatusChangeNotificationRepository : IBaseEntityRepository<StatusChangeNotification>
+public interface IStatusChangeNotificationRepository : IBaseEntityRepository<StatusChangeNotification, App.DAL.DTO.Entities.StatusChangeNotification>
 {
 }

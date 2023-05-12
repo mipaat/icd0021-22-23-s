@@ -1,9 +1,8 @@
 using App.Domain;
 using Contracts.DAL;
-using Domain;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface IPlaylistVideoPositionHistoryRepository : IBaseEntityRepository<PlaylistVideoPositionHistory>
+public interface IPlaylistVideoPositionHistoryRepository : IBaseEntityRepository<PlaylistVideoPositionHistory, App.DAL.DTO.Entities.PlaylistVideoPositionHistory>
 {
 }

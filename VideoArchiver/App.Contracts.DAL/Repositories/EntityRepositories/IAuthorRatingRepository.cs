@@ -1,9 +1,8 @@
 using App.Domain;
 using Contracts.DAL;
-using Domain;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface IAuthorRatingRepository : IBaseEntityRepository<AuthorRating>
+public interface IAuthorRatingRepository : IBaseEntityRepository<AuthorRating, App.DAL.DTO.Entities.AuthorRating>
 {
 }

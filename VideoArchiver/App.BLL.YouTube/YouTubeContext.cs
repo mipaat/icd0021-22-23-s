@@ -1,5 +1,5 @@
 using App.Contracts.DAL;
-using App.Domain;
+using App.DAL.DTO.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace App.BLL.YouTube;

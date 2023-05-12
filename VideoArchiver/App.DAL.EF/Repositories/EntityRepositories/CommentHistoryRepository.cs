@@ -1,19 +1,12 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class CommentHistoryRepository : BaseEntityRepository<CommentHistory, AbstractAppDbContext>, ICommentHistoryRepository
+public class CommentHistoryRepository : BaseAppEntityRepository<App.Domain.CommentHistory, CommentHistory>, ICommentHistoryRepository
 {
-    public CommentHistoryRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public CommentHistoryRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<CommentHistory> DefaultIncludes(DbSet<CommentHistory> entities)
-    {
-        entities.Include(ch => ch.Comment);
-        return entities;
     }
 }

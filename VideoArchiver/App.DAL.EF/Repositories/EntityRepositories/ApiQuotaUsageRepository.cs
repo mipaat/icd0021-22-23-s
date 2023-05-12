@@ -1,21 +1,22 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class ApiQuotaUsageRepository : BaseEntityRepository<ApiQuotaUsage, AbstractAppDbContext>, IApiQuotaUsageRepository
+public class ApiQuotaUsageRepository : BaseAppEntityRepository<App.Domain.ApiQuotaUsage, ApiQuotaUsage>,
+    IApiQuotaUsageRepository
 {
-    public ApiQuotaUsageRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public ApiQuotaUsageRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
 
     public async Task<ApiQuotaUsage?> GetLatestByIdentifier(string identifier)
     {
-        return await Entities
+        return Mapper.Map(await Entities
             .Where(a => a.Identifier == identifier)
             .OrderByDescending(a => a.UsageDate)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync());
     }
 }

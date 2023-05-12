@@ -3,7 +3,8 @@ using System.Security.Principal;
 using App.BLL.Base;
 using App.BLL.Exceptions;
 using App.Contracts.DAL;
-using App.DTO;
+using App.BLL.DTO;
+using App.BLL.DTO.Entities;
 using Base.WebHelpers;
 
 namespace App.BLL;

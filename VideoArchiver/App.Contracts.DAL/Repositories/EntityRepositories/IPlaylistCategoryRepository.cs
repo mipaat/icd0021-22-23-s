@@ -1,9 +1,8 @@
 using App.Domain;
 using Contracts.DAL;
-using Domain;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface IPlaylistCategoryRepository : IBaseEntityRepository<PlaylistCategory>
+public interface IPlaylistCategoryRepository : IBaseEntityRepository<PlaylistCategory, App.DAL.DTO.Entities.PlaylistCategory>
 {
 }

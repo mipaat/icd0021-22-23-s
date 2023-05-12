@@ -1,12 +1,13 @@
 using App.BLL.Base;
-using App.Domain;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 
 namespace App.BLL.Services;
 
 public class StatusChangeService : BaseService<StatusChangeService>
 {
-    public StatusChangeService(ServiceUow serviceUow, ILogger<StatusChangeService> logger) : base(serviceUow, logger)
+    public StatusChangeService(ServiceUow serviceUow, ILogger<StatusChangeService> logger, IMapper mapper) : base(serviceUow, logger, mapper)
     {
     }
 

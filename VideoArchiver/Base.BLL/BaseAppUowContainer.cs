@@ -12,16 +12,6 @@ public abstract class BaseAppUowContainer<TAppUow> : IAppUowContainer where TApp
         Uow = uow;
     }
 
-    public virtual void Dispose()
-    {
-        Uow.Dispose();
-    }
-
-    public virtual async ValueTask DisposeAsync()
-    {
-        await Uow.DisposeAsync();
-    }
-
     public virtual async Task<int> SaveChangesAsync()
     {
         return await Uow.SaveChangesAsync();

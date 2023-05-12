@@ -1,13 +1,12 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class GameRepository : BaseEntityRepository<Game, AbstractAppDbContext>, IGameRepository
+public class GameRepository : BaseAppEntityRepository<App.Domain.Game, Game>, IGameRepository
 {
-    public GameRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public GameRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
 }

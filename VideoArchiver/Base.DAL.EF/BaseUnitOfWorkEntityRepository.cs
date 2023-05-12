@@ -1,35 +1,38 @@
-﻿using Contracts.DAL;
+﻿using AutoMapper;
+using Contracts.DAL;
 using Domain.Base;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL.Base;
+namespace Base.DAL.EF;
 
 public class
-    BaseUnitOfWorkEntityRepository<TEntity, TDbContext, TUnitOfWork> :
-        BaseUnitOfWorkEntityRepository<TEntity, Guid, TDbContext, TUnitOfWork>
+    BaseUnitOfWorkEntityRepository<TDomainEntity, TEntity, TDbContext, TUnitOfWork> :
+        BaseUnitOfWorkEntityRepository<TDomainEntity, TEntity, Guid, TDbContext, TUnitOfWork>
     where TEntity : class, IIdDatabaseEntity<Guid>
     where TDbContext : DbContext
     where TUnitOfWork : IBaseUnitOfWork
+    where TDomainEntity : class, IIdDatabaseEntity<Guid>
 {
-    public BaseUnitOfWorkEntityRepository(TDbContext dbContext, TUnitOfWork repositoryContext) :
-        base(dbContext, repositoryContext)
+    public BaseUnitOfWorkEntityRepository(TDbContext dbContext, TUnitOfWork repositoryContext, IMapper mapper) :
+        base(dbContext, repositoryContext, mapper)
     {
     }
 }
 
 public class
-    BaseUnitOfWorkEntityRepository<TEntity, TKey, TDbContext, TUnitOfWork> :
-        BaseEntityRepository<TEntity, TKey, TDbContext>,
-        IBaseUnitOfWorkEntityRepository<TEntity, TKey, TUnitOfWork>
+    BaseUnitOfWorkEntityRepository<TDomainEntity, TEntity, TKey, TDbContext, TUnitOfWork> :
+        BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext>,
+        IBaseUnitOfWorkEntityRepository<TDomainEntity, TEntity, TKey, TUnitOfWork>
     where TEntity : class, IIdDatabaseEntity<TKey>
     where TKey : struct, IEquatable<TKey>
     where TDbContext : DbContext
     where TUnitOfWork : IBaseUnitOfWork
+    where TDomainEntity : class, IIdDatabaseEntity<TKey>
 {
     public TUnitOfWork Uow { get; }
 
-    public BaseUnitOfWorkEntityRepository(TDbContext dbContext, TUnitOfWork repositoryContext) :
-        base(dbContext)
+    public BaseUnitOfWorkEntityRepository(TDbContext dbContext, TUnitOfWork repositoryContext, IMapper mapper) :
+        base(dbContext, mapper)
     {
         Uow = repositoryContext;
     }

@@ -1,5 +1,5 @@
-using App.Domain.Enums;
-using App.Domain.NotMapped;
+using App.DAL.DTO.Enums;
+using App.DAL.DTO.NotMapped;
 
 namespace App.BLL.YouTube.Utils;
 

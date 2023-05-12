@@ -1,14 +1,15 @@
 using System.Security.Cryptography;
 using App.BLL.Base;
-using App.Domain;
-using App.Domain.NotMapped;
+using App.DAL.DTO.Entities;
+using App.DAL.DTO.NotMapped;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 
 namespace App.BLL.Services;
 
 public class ImageService : BaseService<ImageService>
 {
-    public ImageService(ServiceUow serviceUow, ILogger<ImageService> logger) : base(serviceUow, logger)
+    public ImageService(ServiceUow serviceUow, ILogger<ImageService> logger, IMapper mapper) : base(serviceUow, logger, mapper)
     {
     }
 

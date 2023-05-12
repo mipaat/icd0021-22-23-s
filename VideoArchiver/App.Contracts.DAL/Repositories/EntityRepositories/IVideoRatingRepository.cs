@@ -1,9 +1,8 @@
 using App.Domain;
 using Contracts.DAL;
-using Domain;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface IVideoRatingRepository : IBaseEntityRepository<VideoRating>
+public interface IVideoRatingRepository : IBaseEntityRepository<VideoRating, App.DAL.DTO.Entities.VideoRating>
 {
 }

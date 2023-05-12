@@ -1,16 +1,16 @@
-using App.Domain;
-using App.Domain.Enums;
+using App.DAL.DTO.Entities;
 using Contracts.DAL;
-using Domain;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface IVideoAuthorRepository : IBaseEntityRepository<VideoAuthor>
+public interface IVideoAuthorRepository : IBaseEntityRepository<App.Domain.VideoAuthor, VideoAuthor>
 {
-    public Task SetVideoAuthor(Video video, Author author, EAuthorRole authorRole = EAuthorRole.Publisher);
+    public Task SetVideoAuthor(Video video, Author author,
+        App.DAL.DTO.Enums.EAuthorRole authorRole = App.DAL.DTO.Enums.EAuthorRole.Publisher);
 
     public Task<ICollection<VideoAuthor>> GetAllByVideoAndAuthor(Video video, Author author,
-        EAuthorRole? authorRole = null);
+        App.DAL.DTO.Enums.EAuthorRole? authorRole = null);
+
     public Task<ICollection<VideoAuthor>> GetAllByVideoAndAuthor(Guid videoId, Guid authorId,
-        EAuthorRole? authorRole = null);
+        App.DAL.DTO.Enums.EAuthorRole? authorRole = null);
 }

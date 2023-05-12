@@ -1,8 +1,8 @@
 using App.BLL.Extensions;
 using App.Contracts.DAL;
-using App.Domain;
-using App.Domain.Base;
-using App.Domain.NotMapped;
+using App.DAL.DTO.Base;
+using App.DAL.DTO.Entities;
+using App.DAL.DTO.NotMapped;
 
 namespace App.BLL.Services;
 

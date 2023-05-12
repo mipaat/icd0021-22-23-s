@@ -1,24 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class CommentReplyNotificationRepository : BaseEntityRepository<CommentReplyNotification, AbstractAppDbContext>,
+public class CommentReplyNotificationRepository : BaseAppEntityRepository<App.Domain.CommentReplyNotification, CommentReplyNotification>,
     ICommentReplyNotificationRepository
 {
-    public CommentReplyNotificationRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public CommentReplyNotificationRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<CommentReplyNotification> DefaultIncludes(DbSet<CommentReplyNotification> entities)
-    {
-        entities
-            .Include(c => c.Comment)
-            .Include(c => c.Receiver)
-            .Include(c => c.Reply);
-        return entities;
     }
 }

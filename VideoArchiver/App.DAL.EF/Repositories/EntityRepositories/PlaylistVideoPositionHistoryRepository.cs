@@ -1,21 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
 public class PlaylistVideoPositionHistoryRepository :
-    BaseEntityRepository<PlaylistVideoPositionHistory, AbstractAppDbContext>, IPlaylistVideoPositionHistoryRepository
+    BaseAppEntityRepository<App.Domain.PlaylistVideoPositionHistory, PlaylistVideoPositionHistory>, IPlaylistVideoPositionHistoryRepository
 {
-    public PlaylistVideoPositionHistoryRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public PlaylistVideoPositionHistoryRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<PlaylistVideoPositionHistory> DefaultIncludes(DbSet<PlaylistVideoPositionHistory> entities)
-    {
-        entities.Include(p => p.PlaylistVideo);
-        return entities;
     }
 }

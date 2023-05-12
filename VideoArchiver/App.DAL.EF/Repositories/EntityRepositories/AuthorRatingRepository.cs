@@ -1,23 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class AuthorRatingRepository : BaseEntityRepository<AuthorRating, AbstractAppDbContext>, IAuthorRatingRepository
+public class AuthorRatingRepository : BaseAppEntityRepository<App.Domain.AuthorRating, AuthorRating>,
+    IAuthorRatingRepository
 {
-    public AuthorRatingRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public AuthorRatingRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<AuthorRating> DefaultIncludes(DbSet<AuthorRating> entities)
-    {
-        entities
-            .Include(ar => ar.Category)
-            .Include(ar => ar.Rated)
-            .Include(ar => ar.Rater);
-        return entities;
     }
 }

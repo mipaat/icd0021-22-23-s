@@ -1,23 +1,14 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class StatusChangeNotificationRepository : BaseEntityRepository<StatusChangeNotification, AbstractAppDbContext>,
+public class StatusChangeNotificationRepository :
+    BaseAppEntityRepository<App.Domain.StatusChangeNotification, StatusChangeNotification>,
     IStatusChangeNotificationRepository
 {
-    public StatusChangeNotificationRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public StatusChangeNotificationRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<StatusChangeNotification> DefaultIncludes(DbSet<StatusChangeNotification> entities)
-    {
-        entities
-            .Include(s => s.Receiver)
-            .Include(s => s.StatusChangeEvent);
-        return entities;
     }
 }

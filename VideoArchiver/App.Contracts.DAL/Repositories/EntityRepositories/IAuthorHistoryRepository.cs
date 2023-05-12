@@ -1,9 +1,8 @@
 using App.Domain;
 using Contracts.DAL;
-using Domain;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface IAuthorHistoryRepository : IBaseEntityRepository<AuthorHistory>
+public interface IAuthorHistoryRepository : IBaseEntityRepository<AuthorHistory, App.DAL.DTO.Entities.AuthorHistory>
 {
 }

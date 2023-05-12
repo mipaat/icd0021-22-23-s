@@ -1,6 +1,6 @@
 using App.BLL.YouTube.BackgroundServices;
 using App.BLL.YouTube.Services;
-using App.DTO;
+using App.BLL.DTO;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace App.BLL.YouTube.Extensions;

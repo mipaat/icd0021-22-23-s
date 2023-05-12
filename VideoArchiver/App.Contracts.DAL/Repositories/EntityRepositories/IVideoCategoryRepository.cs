@@ -1,9 +1,8 @@
 using App.Domain;
 using Contracts.DAL;
-using Domain;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface IVideoCategoryRepository : IBaseEntityRepository<VideoCategory>
+public interface IVideoCategoryRepository : IBaseEntityRepository<VideoCategory, App.DAL.DTO.Entities.VideoCategory>
 {
 }

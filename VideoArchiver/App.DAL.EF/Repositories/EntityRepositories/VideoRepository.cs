@@ -1,24 +1,22 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using App.Domain.Enums;
-using DAL.Base;
+using App.DAL.DTO.Entities;
+using App.DAL.DTO.Enums;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class VideoRepository : BaseEntityRepository<Video, AbstractAppDbContext>, IVideoRepository
+public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>, IVideoRepository
 {
-    public VideoRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public VideoRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
 
     public async Task<Video?> GetByIdOnPlatformAsync(string idOnPlatform, Platform platform)
     {
-        return await Entities
-            // .Include(v => v.VideoAuthors!)
-            // .ThenInclude(va => va.Author)
+        return Mapper.Map(await Entities
             .Where(v => v.IdOnPlatform == idOnPlatform && v.Platform == platform)
-            .SingleOrDefaultAsync();
+            .SingleOrDefaultAsync());
     }
 
     public async Task<ICollection<string>> GetAllIdsOnPlatformWithUnarchivedComments(Platform platform)
@@ -32,15 +30,15 @@ public class VideoRepository : BaseEntityRepository<Video, AbstractAppDbContext>
 
     public async Task<Video?> GetByIdOnPlatformWithCommentsAsync(string idOnPlatform, Platform platform)
     {
-        return await Entities
+        return Mapper.Map(await Entities
             .Where(v => v.Platform == platform && v.IdOnPlatform == idOnPlatform)
             .Include(v => v.Comments)
-            .SingleOrDefaultAsync();
+            .SingleOrDefaultAsync());
     }
 
     public async Task<ICollection<Video>> GetAllNotOfficiallyFetched(Platform platform, int? limit = null)
     {
-        IQueryable<Video> query = Entities
+        IQueryable<App.Domain.Video> query = Entities
             .Where(v => v.Platform == platform && v.IsAvailable && v.LastSuccessfulFetchOfficial == null)
             .OrderBy(v => v.AddedToArchiveAt);
         if (limit != null)
@@ -48,12 +46,13 @@ public class VideoRepository : BaseEntityRepository<Video, AbstractAppDbContext>
             query = query.Take(limit.Value);
         }
 
-        return await query.ToListAsync();
+        return (await query.ToListAsync()).Select(e => Mapper.Map(e)!).ToList();
     }
 
-    public async Task<ICollection<Video>> GetAllBeforeOfficialApiFetch(Platform platform, DateTime cutoff, int? limit = null)
+    public async Task<ICollection<Video>> GetAllBeforeOfficialApiFetch(Platform platform, DateTime cutoff,
+        int? limit = null)
     {
-        IQueryable<Video> query = Entities
+        IQueryable<App.Domain.Video> query = Entities
             .Where(v => v.Platform == platform && v.IsAvailable &&
                         v.LastFetchOfficial != null && v.LastFetchOfficial < cutoff)
             .OrderBy(v => v.LastFetchOfficial);
@@ -62,6 +61,6 @@ public class VideoRepository : BaseEntityRepository<Video, AbstractAppDbContext>
             query = query.Take(limit.Value);
         }
 
-        return await query.ToListAsync();
+        return (await query.ToListAsync()).Select(e => Mapper.Map(e)!).ToList();
     }
 }

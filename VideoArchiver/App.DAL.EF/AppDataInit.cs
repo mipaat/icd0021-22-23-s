@@ -1,6 +1,6 @@
 using App.Domain;
 using App.Domain.Identity;
-using App.DTO;
+using App.BLL.DTO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

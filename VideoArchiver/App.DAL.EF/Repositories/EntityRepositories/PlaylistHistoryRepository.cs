@@ -1,20 +1,12 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class PlaylistHistoryRepository : BaseEntityRepository<PlaylistHistory, AbstractAppDbContext>, IPlaylistHistoryRepository
+public class PlaylistHistoryRepository : BaseAppEntityRepository<App.Domain.PlaylistHistory, PlaylistHistory>, IPlaylistHistoryRepository
 {
-    public PlaylistHistoryRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public PlaylistHistoryRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<PlaylistHistory> DefaultIncludes(DbSet<PlaylistHistory> entities)
-    {
-        entities.Include(ph => ph.Playlist);
-        return entities;
     }
 }

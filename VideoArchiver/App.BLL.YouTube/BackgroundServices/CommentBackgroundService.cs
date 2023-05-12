@@ -2,7 +2,7 @@ using App.BLL.Exceptions;
 using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
 using App.Contracts.DAL;
-using App.Domain.Enums;
+using App.DAL.DTO.Enums;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Utils;

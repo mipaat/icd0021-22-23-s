@@ -1,5 +1,5 @@
-using App.Domain;
-using App.Domain.Enums;
+using App.DAL.DTO.Entities;
+using App.DAL.DTO.Enums;
 
 namespace App.BLL.Exceptions;
 

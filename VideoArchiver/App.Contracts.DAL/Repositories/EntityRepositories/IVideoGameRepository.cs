@@ -1,9 +1,8 @@
 using App.Domain;
 using Contracts.DAL;
-using Domain;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface IVideoGameRepository : IBaseEntityRepository<VideoGame>
+public interface IVideoGameRepository : IBaseEntityRepository<VideoGame, App.DAL.DTO.Entities.VideoGame>
 {
 }

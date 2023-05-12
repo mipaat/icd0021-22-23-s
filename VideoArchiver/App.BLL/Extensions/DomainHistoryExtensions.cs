@@ -1,4 +1,4 @@
-using App.Domain;
+using App.DAL.DTO.Entities;
 
 namespace App.BLL.Extensions;
 

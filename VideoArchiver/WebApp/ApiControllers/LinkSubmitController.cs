@@ -1,8 +1,8 @@
 using System.Net;
 using App.BLL;
 using App.BLL.Exceptions;
-using App.Contracts.DAL;
-using App.DTO;
+using App.BLL.DTO;
+using App.BLL.DTO.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,17 +21,14 @@ namespace WebApp.ApiControllers;
 public class LinkSubmitController : ControllerBase
 {
     private readonly UrlSubmissionHandler _urlSubmissionHandler;
-    private readonly IAppUnitOfWork _uow;
 
     /// <summary>
     /// Construct a new LinkSubmitController.
     /// </summary>
-    /// <param name="uow">Unit of Work object containing DAL repositories.</param>
     /// <param name="urlSubmissionHandler">BLL object for handling link submissions.</param>
-    public LinkSubmitController(IAppUnitOfWork uow, UrlSubmissionHandler urlSubmissionHandler)
+    public LinkSubmitController(UrlSubmissionHandler urlSubmissionHandler)
     {
         _urlSubmissionHandler = urlSubmissionHandler;
-        _uow = uow;
     }
 
     /// <summary>
@@ -58,7 +55,8 @@ public class LinkSubmitController : ControllerBase
                 Error = e.Message,
             });
         }
-        await _uow.SaveChangesAsync();
+
+        await _urlSubmissionHandler.SaveChangesAsync();
         return Ok(SubmissionResultMapper.Map(bllSubmissionResults));
     }
 }

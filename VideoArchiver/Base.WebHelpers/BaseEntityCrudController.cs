@@ -5,9 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Base.WebHelpers;
 
-public abstract class BaseEntityCrudController<TAppUnitOfWork, TEntity> : BaseEntityCrudController<TAppUnitOfWork, TEntity, Guid>
+public abstract class
+    BaseEntityCrudController<TAppUnitOfWork, TDomainEntity, TEntity> : BaseEntityCrudController<TAppUnitOfWork,
+        TDomainEntity, TEntity, Guid>
     where TAppUnitOfWork : IBaseUnitOfWork
     where TEntity : class, IIdDatabaseEntity<Guid>
+    where TDomainEntity : class, IIdDatabaseEntity<Guid>
 {
     protected BaseEntityCrudController(TAppUnitOfWork uow) : base(uow)
     {
@@ -19,9 +22,11 @@ public abstract class BaseEntityCrudController<TAppUnitOfWork, TEntity> : BaseEn
     }
 }
 
-public abstract class BaseEntityCrudController<TAppUnitOfWork, TEntity, TKey> : Controller where TAppUnitOfWork : IBaseUnitOfWork
+public abstract class BaseEntityCrudController<TAppUnitOfWork, TDomainEntity, TEntity, TKey> : Controller
+    where TAppUnitOfWork : IBaseUnitOfWork
     where TEntity : class, IIdDatabaseEntity<TKey>
     where TKey : struct, IEquatable<TKey>
+    where TDomainEntity : class, IIdDatabaseEntity<TKey>
 {
     protected readonly TAppUnitOfWork Uow;
 
@@ -30,7 +35,7 @@ public abstract class BaseEntityCrudController<TAppUnitOfWork, TEntity, TKey> : 
         Uow = uow;
     }
 
-    protected abstract IBaseEntityRepository<TEntity, TKey> Entities { get; }
+    protected abstract IBaseEntityRepository<TDomainEntity, TEntity, TKey> Entities { get; }
 
     protected abstract TKey NewKey();
 

@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
             options.Password.RequireNonAlphanumeric = false;
         });
         serviceCollection.AddScoped<UserService>();
+        serviceCollection.AddScoped<TokenService>();
         return serviceCollection;
     }
 }

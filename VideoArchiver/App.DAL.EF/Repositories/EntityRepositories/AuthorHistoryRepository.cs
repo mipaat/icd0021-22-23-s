@@ -1,20 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class AuthorHistoryRepository : BaseEntityRepository<AuthorHistory, AbstractAppDbContext>, IAuthorHistoryRepository
+public class AuthorHistoryRepository : BaseAppEntityRepository<App.Domain.AuthorHistory, AuthorHistory>,
+    IAuthorHistoryRepository
 {
-    public AuthorHistoryRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public AuthorHistoryRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<AuthorHistory> DefaultIncludes(DbSet<AuthorHistory> entities)
-    {
-        entities.Include(ah => ah.Author);
-        return entities;
     }
 }

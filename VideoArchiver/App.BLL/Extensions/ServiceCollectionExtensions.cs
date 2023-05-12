@@ -13,5 +13,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<StatusChangeService>();
         services.AddScoped<ImageService>();
         services.AddScoped<ServiceUow>();
+
+        services.AddScoped<BasicGameCrudService>();
     }
 }

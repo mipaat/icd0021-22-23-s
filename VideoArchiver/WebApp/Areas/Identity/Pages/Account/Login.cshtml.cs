@@ -104,7 +104,7 @@ namespace WebApp.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _userService.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe,
+                var result = await _userService.SignInAsync(Input.UserName, Input.Password, Input.RememberMe,
                     lockoutOnFailure: false);
                 if (result.Succeeded)
                 {

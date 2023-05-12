@@ -1,7 +1,8 @@
 ﻿using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
-using App.Domain;
-using App.Domain.Enums;
+using App.DAL.DTO.Entities;
+using App.DAL.DTO.Enums;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
 
@@ -11,8 +12,8 @@ public class AuthorService : BaseYouTubeService<AuthorService>
 {
     private readonly Dictionary<string, Author> _cachedAuthors = new();
 
-    public AuthorService(ServiceUow serviceUow, ILogger<AuthorService> logger, YouTubeUow youTubeUow) : base(serviceUow,
-        logger, youTubeUow)
+    public AuthorService(ServiceUow serviceUow, ILogger<AuthorService> logger, YouTubeUow youTubeUow, IMapper mapper) : base(serviceUow,
+        logger, youTubeUow, mapper)
     {
     }
 
@@ -36,12 +37,12 @@ public class AuthorService : BaseYouTubeService<AuthorService>
 
     private async Task<Author> AddOrGetAuthor(VideoData videoData)
     {
-        return await AddOrGetAuthor(videoData.ChannelID, () => videoData.ToDomainAuthor());
+        return await AddOrGetAuthor(videoData.ChannelID, () => videoData.ToDalAuthor());
     }
 
     private async Task<Author> AddOrGetAuthor(CommentData commentData)
     {
-        return await AddOrGetAuthor(commentData.AuthorID, commentData.ToDomainAuthor);
+        return await AddOrGetAuthor(commentData.AuthorID, commentData.ToDalAuthor);
     }
 
     private async Task<Author> AddOrGetAuthor(string id, Func<Author> newAuthorFunc)

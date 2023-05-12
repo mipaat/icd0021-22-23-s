@@ -1,20 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class AuthorPubSubRepository : BaseEntityRepository<AuthorPubSub, AbstractAppDbContext>, IAuthorPubSubRepository
+public class AuthorPubSubRepository : BaseAppEntityRepository<App.Domain.AuthorPubSub, AuthorPubSub>,
+    IAuthorPubSubRepository
 {
-    public AuthorPubSubRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public AuthorPubSubRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<AuthorPubSub> DefaultIncludes(DbSet<AuthorPubSub> entities)
-    {
-        entities.Include(aps => aps.Author);
-        return entities;
     }
 }

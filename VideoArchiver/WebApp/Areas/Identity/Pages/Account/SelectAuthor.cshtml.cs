@@ -1,7 +1,7 @@
 #pragma warning disable 1591
 using System.ComponentModel.DataAnnotations;
+using App.BLL.DTO.Entities;
 using App.BLL.Identity.Services;
-using App.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 

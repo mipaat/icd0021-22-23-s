@@ -1,24 +1,12 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class CommentRepository : BaseEntityRepository<Comment, AbstractAppDbContext>, ICommentRepository
+public class CommentRepository : BaseAppEntityRepository<App.Domain.Comment, Comment>, ICommentRepository
 {
-    public CommentRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public CommentRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<Comment> DefaultIncludes(DbSet<Comment> entities)
-    {
-        entities
-            .Include(c => c.Author)
-            .Include(c => c.ConversationRoot)
-            .Include(c => c.ReplyTarget)
-            .Include(c => c.Video);
-        return entities;
     }
 }

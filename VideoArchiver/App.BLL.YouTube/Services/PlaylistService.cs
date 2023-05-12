@@ -1,8 +1,9 @@
 ﻿using App.BLL.Exceptions;
 using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
-using App.Domain;
-using App.Domain.Enums;
+using App.DAL.DTO.Entities;
+using App.DAL.DTO.Enums;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
 
@@ -10,8 +11,8 @@ namespace App.BLL.YouTube.Services;
 
 public class PlaylistService : BaseYouTubeService<PlaylistService>
 {
-    public PlaylistService(ServiceUow serviceUow, ILogger<PlaylistService> logger, YouTubeUow youTubeUow) : base(
-        serviceUow, logger, youTubeUow)
+    public PlaylistService(ServiceUow serviceUow, ILogger<PlaylistService> logger, YouTubeUow youTubeUow, IMapper mapper) : base(
+        serviceUow, logger, youTubeUow, mapper)
     {
     }
 
@@ -53,7 +54,7 @@ public class PlaylistService : BaseYouTubeService<PlaylistService>
 
     public async Task<Playlist> AddPlaylist(VideoData playlistData)
     {
-        var playlist = playlistData.ToDomainPlaylist();
+        var playlist = playlistData.ToDalPlaylist();
         await YouTubeUow.AuthorService.AddAndSetAuthorIfNotSet(playlist, playlistData);
         await ServiceUow.ImageService.UpdateThumbnails(playlist);
 
@@ -121,7 +122,7 @@ public class PlaylistService : BaseYouTubeService<PlaylistService>
             var fetchedPlaylist = fetchedPlaylists.Items.SingleOrDefault(p => p.Id == playlist.IdOnPlatform);
             if (fetchedPlaylist == null) continue;
             playlist.LastSuccessfulFetchOfficial = playlist.LastFetchOfficial;
-            var domainPlaylist = fetchedPlaylist.ToDomainPlaylist(playlist.Thumbnails);
+            var domainPlaylist = fetchedPlaylist.ToDalPlaylist(playlist.Thumbnails);
             await ServiceUow.ImageService.UpdateThumbnails(domainPlaylist);
             await ServiceUow.EntityUpdateService.UpdatePlaylist(playlist, domainPlaylist);
         }

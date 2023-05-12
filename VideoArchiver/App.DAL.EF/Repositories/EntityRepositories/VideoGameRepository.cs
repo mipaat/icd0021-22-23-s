@@ -1,22 +1,12 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class VideoGameRepository : BaseEntityRepository<VideoGame, AbstractAppDbContext>, IVideoGameRepository
+public class VideoGameRepository : BaseAppEntityRepository<App.Domain.VideoGame, VideoGame>, IVideoGameRepository
 {
-    public VideoGameRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public VideoGameRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<VideoGame> DefaultIncludes(DbSet<VideoGame> entities)
-    {
-        entities
-            .Include(v => v.Game)
-            .Include(v => v.Video);
-        return entities;
     }
 }

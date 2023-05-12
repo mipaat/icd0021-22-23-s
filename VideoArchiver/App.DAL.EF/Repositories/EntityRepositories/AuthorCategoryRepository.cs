@@ -1,23 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class AuthorCategoryRepository : BaseEntityRepository<AuthorCategory, AbstractAppDbContext>,
+public class AuthorCategoryRepository : BaseAppEntityRepository<App.Domain.AuthorCategory, AuthorCategory>,
     IAuthorCategoryRepository
 {
-    public AuthorCategoryRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public AuthorCategoryRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<AuthorCategory> DefaultIncludes(DbSet<AuthorCategory> entities)
-    {
-        entities
-            .Include(ac => ac.Author)
-            .Include(ac => ac.Category);
-        return entities;
     }
 }

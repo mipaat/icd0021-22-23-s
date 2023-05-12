@@ -1,23 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
-using App.Domain;
-using DAL.Base;
-using Domain;
-using Microsoft.EntityFrameworkCore;
+using App.DAL.DTO.Entities;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
-public class AuthorSubscriptionRepository : BaseEntityRepository<AuthorSubscription, AbstractAppDbContext>,
+public class AuthorSubscriptionRepository : BaseAppEntityRepository<App.Domain.AuthorSubscription, AuthorSubscription>,
     IAuthorSubscriptionRepository
 {
-    public AuthorSubscriptionRepository(AbstractAppDbContext dbContext) : base(dbContext)
+    public AuthorSubscriptionRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    protected override DbSet<AuthorSubscription> DefaultIncludes(DbSet<AuthorSubscription> entities)
-    {
-        entities
-            .Include(e => e.Subscriber)
-            .Include(e => e.SubscriptionTarget);
-        return entities;
     }
 }
