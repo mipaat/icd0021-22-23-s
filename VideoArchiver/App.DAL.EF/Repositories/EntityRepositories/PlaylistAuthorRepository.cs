@@ -1,7 +1,7 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
 using App.DAL.DTO.Enums;
-using AutoMapper;
+using Contracts.DAL;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories.EntityRepositories;
@@ -9,7 +9,7 @@ namespace DAL.Repositories.EntityRepositories;
 public class PlaylistAuthorRepository : BaseAppEntityRepository<App.Domain.PlaylistAuthor, PlaylistAuthor>,
     IPlaylistAuthorRepository
 {
-    public PlaylistAuthorRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
+    public PlaylistAuthorRepository(AbstractAppDbContext dbContext, ITrackingAutoMapperWrapper mapper) : base(dbContext, mapper)
     {
     }
 

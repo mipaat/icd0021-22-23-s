@@ -23,6 +23,7 @@ public static class ServiceCollectionExtensions
         });
         serviceCollection.AddScoped<UserService>();
         serviceCollection.AddScoped<TokenService>();
+        serviceCollection.AddScoped<IdentityUow>();
         return serviceCollection;
     }
 }

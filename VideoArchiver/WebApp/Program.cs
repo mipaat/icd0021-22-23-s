@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Text;
 using System.Text.Json.Serialization;
+using App.BLL.DTO;
 using App.BLL.Extensions;
 using App.BLL.Identity.Config;
 using App.BLL.Identity.Extensions;
@@ -12,7 +13,7 @@ using App.Domain.Enums;
 using App.Domain.Identity;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
-using AutoMapper;
+using Contracts.DAL;
 using DAL;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
@@ -34,8 +35,9 @@ public class Program
 
         // Add services to the container.
         AppDbContextFactory.RegisterDbContext(builder.Services, builder.Configuration);
+        builder.Services.AddScoped<ITrackingAutoMapperWrapper, Base.DAL.EF.BaseTrackingAutoMapperWrapper<AbstractAppDbContext>>();
         builder.Services.AddScoped<IAppUnitOfWork>(provider =>
-            new AppUnitOfWork(provider.GetRequiredService<AbstractAppDbContext>(), provider.GetRequiredService<IMapper>())
+            new AppUnitOfWork(provider.GetRequiredService<AbstractAppDbContext>(), provider.GetRequiredService<ITrackingAutoMapperWrapper>())
                 .AddDefaultConcurrencyConflictResolvers(provider));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -78,10 +80,11 @@ public class Program
         });
 
         builder.Services.AddAutoMapper(
-            typeof(App.BLL.DTO.AutoMapperConfig),
+            typeof(AutoMapperConfig),
             typeof(App.DAL.DTO.AutoMapperConfig),
             typeof(Public.DTO.AutoMapperConfig)
         );
+        builder.Services.AddBllMappers();
 
         var apiVersioningBuilder = builder.Services.AddApiVersioning(options =>
         {

@@ -9,14 +9,14 @@ namespace App.BLL;
 public class EntityConcurrencyResolver
 {
     private readonly EntityUpdateService _entityUpdateService;
-    private readonly BaseDictionaryTrackingMapper<Video, App.DAL.DTO.Entities.Video> _videoMapper;
-    private readonly BaseDictionaryTrackingMapper<Comment, App.DAL.DTO.Entities.Comment> _commentMapper;
+    private readonly BaseMapper<Video, App.DAL.DTO.Entities.Video> _videoMapper;
+    private readonly BaseMapper<Comment, App.DAL.DTO.Entities.Comment> _commentMapper;
 
     public EntityConcurrencyResolver(EntityUpdateService entityUpdateService, IMapper mapper)
     {
         _entityUpdateService = entityUpdateService;
-        _videoMapper = new BaseDictionaryTrackingMapper<Video, App.DAL.DTO.Entities.Video>(mapper);
-        _commentMapper = new BaseDictionaryTrackingMapper<Comment, DAL.DTO.Entities.Comment>(mapper);
+        _videoMapper = new BaseMapper<Video, App.DAL.DTO.Entities.Video>(mapper);
+        _commentMapper = new BaseMapper<Comment, DAL.DTO.Entities.Comment>(mapper);
     }
 
     public async Task<Video> ResolveVideoConcurrency(Video currentVideo, Video? dbVideo, Exception sourceException)

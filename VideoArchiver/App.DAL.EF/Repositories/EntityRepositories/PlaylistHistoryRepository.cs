@@ -1,12 +1,12 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
-using AutoMapper;
+using Contracts.DAL;
 
 namespace DAL.Repositories.EntityRepositories;
 
 public class PlaylistHistoryRepository : BaseAppEntityRepository<App.Domain.PlaylistHistory, PlaylistHistory>, IPlaylistHistoryRepository
 {
-    public PlaylistHistoryRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
+    public PlaylistHistoryRepository(AbstractAppDbContext dbContext, ITrackingAutoMapperWrapper mapper) : base(dbContext, mapper)
     {
     }
 }

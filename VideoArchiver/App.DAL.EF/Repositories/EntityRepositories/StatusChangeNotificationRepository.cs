@@ -1,6 +1,6 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
-using AutoMapper;
+using Contracts.DAL;
 
 namespace DAL.Repositories.EntityRepositories;
 
@@ -8,7 +8,7 @@ public class StatusChangeNotificationRepository :
     BaseAppEntityRepository<App.Domain.StatusChangeNotification, StatusChangeNotification>,
     IStatusChangeNotificationRepository
 {
-    public StatusChangeNotificationRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
+    public StatusChangeNotificationRepository(AbstractAppDbContext dbContext, ITrackingAutoMapperWrapper mapper) : base(dbContext, mapper)
     {
     }
 }

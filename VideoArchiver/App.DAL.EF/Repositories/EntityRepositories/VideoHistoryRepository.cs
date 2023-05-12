@@ -1,13 +1,13 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
-using AutoMapper;
+using Contracts.DAL;
 
 namespace DAL.Repositories.EntityRepositories;
 
 public class VideoHistoryRepository : BaseAppEntityRepository<App.Domain.VideoHistory, VideoHistory>,
     IVideoHistoryRepository
 {
-    public VideoHistoryRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
+    public VideoHistoryRepository(AbstractAppDbContext dbContext, ITrackingAutoMapperWrapper mapper) : base(dbContext, mapper)
     {
     }
 }

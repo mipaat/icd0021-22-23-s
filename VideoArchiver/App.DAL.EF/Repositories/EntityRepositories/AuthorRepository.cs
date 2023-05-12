@@ -1,13 +1,13 @@
 ﻿using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
-using AutoMapper;
+using Contracts.DAL;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories.EntityRepositories;
 
 public class AuthorRepository : BaseAppEntityRepository<App.Domain.Author, Author>, IAuthorRepository
 {
-    public AuthorRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
+    public AuthorRepository(AbstractAppDbContext dbContext, ITrackingAutoMapperWrapper mapper) : base(dbContext, mapper)
     {
     }
 

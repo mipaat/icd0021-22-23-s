@@ -1,9 +1,7 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using App.DAL.DTO.Enums;
 
 namespace App.DAL.DTO.NotMapped;
 
-[NotMapped]
 public class Caption
 {
     public Platform Platform { get; set; } = default!;

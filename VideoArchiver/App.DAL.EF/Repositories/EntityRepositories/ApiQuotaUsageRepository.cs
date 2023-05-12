@@ -1,6 +1,6 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
-using AutoMapper;
+using Contracts.DAL;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories.EntityRepositories;
@@ -8,7 +8,7 @@ namespace DAL.Repositories.EntityRepositories;
 public class ApiQuotaUsageRepository : BaseAppEntityRepository<App.Domain.ApiQuotaUsage, ApiQuotaUsage>,
     IApiQuotaUsageRepository
 {
-    public ApiQuotaUsageRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
+    public ApiQuotaUsageRepository(AbstractAppDbContext dbContext, ITrackingAutoMapperWrapper mapper) : base(dbContext, mapper)
     {
     }
 

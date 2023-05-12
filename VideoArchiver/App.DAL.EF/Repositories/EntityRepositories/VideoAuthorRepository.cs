@@ -1,7 +1,7 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
 using App.DAL.DTO.Enums;
-using AutoMapper;
+using Contracts.DAL;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories.EntityRepositories;
@@ -9,7 +9,7 @@ namespace DAL.Repositories.EntityRepositories;
 public class VideoAuthorRepository : BaseAppEntityRepository<App.Domain.VideoAuthor, VideoAuthor>,
     IVideoAuthorRepository
 {
-    public VideoAuthorRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
+    public VideoAuthorRepository(AbstractAppDbContext dbContext, ITrackingAutoMapperWrapper mapper) : base(dbContext, mapper)
     {
     }
 

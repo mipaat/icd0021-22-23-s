@@ -1,25 +1,25 @@
 using System.Linq.Expressions;
-using AutoMapper;
 using Contracts.DAL;
 using Domain.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace Base.DAL.EF;
 
-public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext> :
+public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext, TAutoMapperWrapper> :
     IBaseEntityRepository<TDomainEntity, TEntity, TKey>
     where TDomainEntity : class, IIdDatabaseEntity<TKey>
     where TKey : struct, IEquatable<TKey>
     where TDbContext : DbContext
     where TEntity : class, IIdDatabaseEntity<TKey>
+    where TAutoMapperWrapper : ITrackingAutoMapperWrapper
 {
     public TDbContext DbContext { get; }
     public readonly IMapper<TDomainEntity, TEntity> Mapper;
 
-    public BaseEntityRepository(TDbContext dbContext, IMapper mapper)
+    public BaseEntityRepository(TDbContext dbContext, TAutoMapperWrapper mapper)
     {
         DbContext = dbContext;
-        Mapper = new BaseDbSetTrackingMapper<TDomainEntity, TEntity, TKey>(mapper, Entities);
+        Mapper = new BaseTrackingMapper<TDomainEntity, TEntity, TKey>(mapper);
     }
 
     protected DbSet<TDomainEntity> Entities =>
@@ -95,14 +95,15 @@ public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext> :
     }
 }
 
-public class BaseEntityRepository<TDomainEntity, TEntity, TDbContext> :
-    BaseEntityRepository<TDomainEntity, TEntity, Guid, TDbContext>,
+public class BaseEntityRepository<TDomainEntity, TEntity, TDbContext, TAutoMapperWrapper> :
+    BaseEntityRepository<TDomainEntity, TEntity, Guid, TDbContext, TAutoMapperWrapper>,
     IBaseEntityRepository<TDomainEntity, TEntity>
     where TEntity : class, IIdDatabaseEntity<Guid>
     where TDbContext : DbContext
     where TDomainEntity : class, IIdDatabaseEntity<Guid>
+    where TAutoMapperWrapper : ITrackingAutoMapperWrapper
 {
-    public BaseEntityRepository(TDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
+    public BaseEntityRepository(TDbContext dbContext, TAutoMapperWrapper mapper) : base(dbContext, mapper)
     {
     }
 }
