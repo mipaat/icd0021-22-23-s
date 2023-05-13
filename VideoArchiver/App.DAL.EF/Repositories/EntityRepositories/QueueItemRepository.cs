@@ -2,7 +2,7 @@ using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
 using AutoMapper;
 
-namespace DAL.Repositories.EntityRepositories;
+namespace App.DAL.EF.Repositories.EntityRepositories;
 
 public class QueueItemRepository : BaseAppEntityRepository<App.Domain.QueueItem, QueueItem>, IQueueItemRepository
 {

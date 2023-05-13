@@ -1,12 +1,12 @@
 ﻿using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.Contracts.DAL.Repositories.EntityRepositories.Identity;
+using App.DAL.EF.Repositories.EntityRepositories;
+using App.DAL.EF.Repositories.EntityRepositories.Identity;
 using AutoMapper;
 using Base.DAL.EF;
-using DAL.Repositories.EntityRepositories;
-using DAL.Repositories.EntityRepositories.Identity;
 
-namespace DAL;
+namespace App.DAL.EF;
 
 public class AppUnitOfWork : BaseUnitOfWork<AbstractAppDbContext>, IAppUnitOfWork
 {

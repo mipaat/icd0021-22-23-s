@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DAL;
+namespace App.DAL.EF;
 
 public class AppDbContextFactory : IDesignTimeDbContextFactory<AbstractAppDbContext>
 {

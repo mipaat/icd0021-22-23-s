@@ -1,7 +1,7 @@
 using App.Contracts.DAL.Repositories.EntityRepositories.Identity;
 using AutoMapper;
 
-namespace DAL.Repositories.EntityRepositories.Identity;
+namespace App.DAL.EF.Repositories.EntityRepositories.Identity;
 
 public class UserRepository : BaseAppEntityRepository<App.Domain.Identity.User, App.Domain.Identity.User>, IUserRepository
 {

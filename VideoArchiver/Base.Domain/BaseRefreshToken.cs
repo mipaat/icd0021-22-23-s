@@ -2,7 +2,7 @@
 
 namespace Domain.Base;
 
-public class BaseRefreshToken : BaseRefreshToken<Guid>
+public class BaseRefreshToken : BaseRefreshToken<Guid>, IIdDatabaseEntity
 {
     public BaseRefreshToken(TimeSpan expiresIn) : base(expiresIn)
     {

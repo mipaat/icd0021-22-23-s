@@ -1,6 +1,7 @@
 using Base.BLL.Exceptions;
 using Contracts.BLL;
 using Contracts.DAL;
+using Contracts.Mapping;
 using Domain.Base;
 
 namespace Base.BLL;

@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace App.DAL.DTO.NotMapped;
 
-[NotMapped]
 public class VideoFile
 {
     public string? Key { get; set; }

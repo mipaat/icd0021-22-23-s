@@ -1,4 +1,5 @@
 using App.BLL.Identity.Services;
+using App.DAL.EF;
 using App.Domain.Identity;
 using DAL;
 using Microsoft.AspNetCore.Identity;

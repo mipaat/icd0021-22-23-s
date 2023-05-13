@@ -9,13 +9,13 @@ using App.BLL.Identity.Extensions;
 using App.BLL.YouTube;
 using App.BLL.YouTube.Extensions;
 using App.Contracts.DAL;
+using App.DAL.EF;
 using App.Domain.Enums;
 using App.Domain.Identity;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using AutoMapper;
-using Contracts.DAL;
-using DAL;
+using Base.Mapping;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -25,6 +25,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Utils;
 using WebApp.Config;
 using WebApp.MyLibraries.ModelBinders;
+using AutoMapperConfig = App.DAL.DTO.AutoMapperConfig;
 
 namespace WebApp;
 
@@ -37,7 +38,8 @@ public class Program
         // Add services to the container.
         AppDbContextFactory.RegisterDbContext(builder.Services, builder.Configuration);
         builder.Services.AddScoped<IAppUnitOfWork>(provider =>
-            new AppUnitOfWork(provider.GetRequiredService<AbstractAppDbContext>(), provider.GetRequiredService<IMapper>())
+            new AppUnitOfWork(provider.GetRequiredService<AbstractAppDbContext>(),
+                    provider.GetRequiredService<IMapper>())
                 .AddDefaultConcurrencyConflictResolvers(provider));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -81,7 +83,7 @@ public class Program
 
         builder.Services.AddAutoMapper(
             typeof(AutoMapperConfig),
-            typeof(App.DAL.DTO.AutoMapperConfig),
+            typeof(App.BLL.DTO.AutoMapperConfig),
             typeof(Public.DTO.AutoMapperConfig)
         );
         builder.Services.AddBllMappers();

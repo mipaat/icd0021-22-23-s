@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace App.DAL.DTO.NotMapped;
 
-[NotMapped]
 public class LangString : Dictionary<string, string>
 {
     private const string DefaultCulture = "en";

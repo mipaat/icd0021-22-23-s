@@ -4,7 +4,7 @@ using App.Domain.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace DAL;
+namespace App.DAL.EF;
 
 public static class ConfigurationBuilderExtensions
 {

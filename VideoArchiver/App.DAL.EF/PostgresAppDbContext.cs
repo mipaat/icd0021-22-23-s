@@ -4,7 +4,7 @@ using App.Domain.NotMapped;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace DAL;
+namespace App.DAL.EF;
 
 public class PostgresAppDbContext : AbstractAppDbContext
 {

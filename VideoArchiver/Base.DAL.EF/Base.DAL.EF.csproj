@@ -10,11 +10,18 @@
     <ItemGroup>
       <ProjectReference Include="..\Base.DAL\Base.DAL.csproj" />
       <ProjectReference Include="..\Base.Domain\Base.Domain.csproj" />
+      <ProjectReference Include="..\Base.Mapping\Base.Mapping.csproj" />
       <ProjectReference Include="..\Contracts.DAL\Contracts.DAL.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
+        <HintPath>..\..\..\..\..\..\usr\share\dotnet\shared\Microsoft.AspNetCore.App\7.0.5\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

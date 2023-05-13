@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#nullable disable
+
 using App.Domain.NotMapped;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-#nullable disable
-
-namespace DAL.Migrations.Postgres
+namespace App.DAL.EF.Migrations.Postgres
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

@@ -1,7 +1,7 @@
 using App.BLL.Services;
 using App.Domain;
 using AutoMapper;
-using Base.DAL;
+using Base.Mapping;
 using Contracts.DAL;
 
 namespace App.BLL;

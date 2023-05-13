@@ -1,6 +1,8 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Base.Mapping;
 using Contracts.DAL;
+using Contracts.Mapping;
 using Domain.Base;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +21,7 @@ public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext> :
     public BaseEntityRepository(TDbContext dbContext, IMapper mapper)
     {
         DbContext = dbContext;
-        Mapper = new BaseTrackingMapper<TDomainEntity, TEntity, TKey>(mapper);
+        Mapper = new BaseMapper<TDomainEntity, TEntity>(mapper);
     }
 
     protected DbSet<TDomainEntity> Entities =>
@@ -62,7 +64,7 @@ public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext> :
 
     public void Remove(TEntity entity)
     {
-        Remove(Mapper.Map(entity)!);
+        Remove(GetTrackedDomainEntity(entity) ?? Mapper.Map(entity)!);
     }
 
     private void Remove(TDomainEntity entity)
@@ -78,7 +80,7 @@ public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext> :
 
     public void Update(TEntity entity)
     {
-        var trackedEntity = Entities.Local.FirstOrDefault(e => e.Id.Equals(entity.Id));
+        var trackedEntity = GetTrackedDomainEntity(entity);
         if (trackedEntity != null)
         {
             Mapper.Map(entity, trackedEntity);
@@ -93,6 +95,11 @@ public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext> :
     {
         return await Entities.AnyAsync(e => e.Id.Equals(id));
     }
+
+    private TDomainEntity? GetTrackedDomainEntity(TEntity entity) =>
+        Entities.Local.FirstOrDefault(e => e.Id.Equals(entity.Id));
+    
+    
 }
 
 public class BaseEntityRepository<TDomainEntity, TEntity, TDbContext> :

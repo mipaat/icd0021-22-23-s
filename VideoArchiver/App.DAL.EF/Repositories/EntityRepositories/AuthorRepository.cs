@@ -3,7 +3,7 @@ using App.DAL.DTO.Entities;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL.Repositories.EntityRepositories;
+namespace App.DAL.EF.Repositories.EntityRepositories;
 
 public class AuthorRepository : BaseAppEntityRepository<App.Domain.Author, Author>, IAuthorRepository
 {

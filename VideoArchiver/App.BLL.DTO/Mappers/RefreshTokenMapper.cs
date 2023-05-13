@@ -1,5 +1,5 @@
 using AutoMapper;
-using Base.DAL;
+using Base.Mapping;
 
 namespace App.BLL.DTO.Mappers;
 

@@ -1,10 +1,10 @@
+using App.BLL.DTO;
 using App.Domain;
 using App.Domain.Identity;
-using App.BLL.DTO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL;
+namespace App.DAL.EF;
 
 public static class AppDataInit
 {

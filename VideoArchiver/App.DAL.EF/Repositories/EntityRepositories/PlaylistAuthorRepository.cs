@@ -4,7 +4,7 @@ using App.DAL.DTO.Enums;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAL.Repositories.EntityRepositories;
+namespace App.DAL.EF.Repositories.EntityRepositories;
 
 public class PlaylistAuthorRepository : BaseAppEntityRepository<App.Domain.PlaylistAuthor, PlaylistAuthor>,
     IPlaylistAuthorRepository

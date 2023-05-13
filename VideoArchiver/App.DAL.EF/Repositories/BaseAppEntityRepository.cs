@@ -2,7 +2,7 @@ using AutoMapper;
 using Base.DAL.EF;
 using Domain.Base;
 
-namespace DAL.Repositories;
+namespace App.DAL.EF.Repositories;
 
 public class BaseAppEntityRepository<TDomainEntity, TEntity> :
     BaseEntityRepository<TDomainEntity, TEntity, AbstractAppDbContext>

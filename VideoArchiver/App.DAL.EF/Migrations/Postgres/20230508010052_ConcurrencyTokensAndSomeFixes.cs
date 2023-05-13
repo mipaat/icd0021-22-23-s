@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#nullable disable
+
 using App.Domain.NotMapped;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
-namespace DAL.Migrations.Postgres
+namespace App.DAL.EF.Migrations.Postgres
 {
     /// <inheritdoc />
     public partial class ConcurrencyTokensAndSomeFixes : Migration

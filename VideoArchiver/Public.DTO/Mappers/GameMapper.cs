@@ -1,7 +1,7 @@
 #pragma warning disable 1591
 using App.BLL.DTO.Entities;
 using AutoMapper;
-using Base.DAL;
+using Base.Mapping;
 
 namespace Public.DTO.Mappers;
 

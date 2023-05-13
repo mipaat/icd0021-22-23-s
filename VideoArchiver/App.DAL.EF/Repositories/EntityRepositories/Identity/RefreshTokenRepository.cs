@@ -3,7 +3,7 @@ using App.Contracts.DAL.Repositories.EntityRepositories.Identity;
 using App.DAL.DTO.Entities.Identity;
 using AutoMapper;
 
-namespace DAL.Repositories.EntityRepositories.Identity;
+namespace App.DAL.EF.Repositories.EntityRepositories.Identity;
 
 public class RefreshTokenRepository : BaseAppEntityRepository<App.Domain.Identity.RefreshToken, RefreshToken>,
     IRefreshTokenRepository

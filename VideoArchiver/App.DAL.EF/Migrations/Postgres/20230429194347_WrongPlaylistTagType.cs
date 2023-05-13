@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using App.Domain.NotMapped;
+﻿#nullable disable
+
 using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
-namespace DAL.Migrations.Postgres
+namespace App.DAL.EF.Migrations.Postgres
 {
     /// <inheritdoc />
     public partial class WrongPlaylistTagType : Migration
