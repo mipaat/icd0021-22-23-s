@@ -1,14 +1,14 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
 using App.DAL.DTO.Enums;
-using Contracts.DAL;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories.EntityRepositories;
 
 public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>, IVideoRepository
 {
-    public VideoRepository(AbstractAppDbContext dbContext, ITrackingAutoMapperWrapper mapper) : base(dbContext, mapper)
+    public VideoRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
 

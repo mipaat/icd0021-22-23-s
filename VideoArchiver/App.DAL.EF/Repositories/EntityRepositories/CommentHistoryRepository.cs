@@ -1,12 +1,12 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
-using Contracts.DAL;
+using AutoMapper;
 
 namespace DAL.Repositories.EntityRepositories;
 
 public class CommentHistoryRepository : BaseAppEntityRepository<App.Domain.CommentHistory, CommentHistory>, ICommentHistoryRepository
 {
-    public CommentHistoryRepository(AbstractAppDbContext dbContext, ITrackingAutoMapperWrapper mapper) : base(dbContext, mapper)
+    public CommentHistoryRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
 }

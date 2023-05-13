@@ -1,3 +1,4 @@
+using AutoMapper;
 using Contracts.DAL;
 
 namespace Base.DAL;
@@ -5,7 +6,7 @@ namespace Base.DAL;
 public class BaseTrackingMapperUnidirectional<TSource, TDestination> :
     BaseTrackingMapperUnidirectional<TSource, TDestination, Guid> where TSource : class where TDestination : class
 {
-    public BaseTrackingMapperUnidirectional(ITrackingAutoMapperWrapper mapper) : base(mapper)
+    public BaseTrackingMapperUnidirectional(IMapper mapper) : base(mapper)
     {
     }
 }
@@ -16,15 +17,16 @@ public class BaseTrackingMapperUnidirectional<TSource, TDestination, TKey> :
     where TSource : class
     where TDestination : class
 {
-    protected readonly ITrackingAutoMapperWrapper Mapper;
+    protected readonly IMapper Mapper;
 
-    public BaseTrackingMapperUnidirectional(ITrackingAutoMapperWrapper mapper)
+    public BaseTrackingMapperUnidirectional(IMapper mapper)
     {
         Mapper = mapper;
     }
 
     public TDestination? Map(TSource? entity)
     {
+        if (entity == null) return null;
         return Mapper.Map<TSource, TDestination>(entity);
     }
 
@@ -39,7 +41,7 @@ public class BaseTrackingMapper<TSource, TDestination> :
     where TSource : class
     where TDestination : class
 {
-    public BaseTrackingMapper(ITrackingAutoMapperWrapper mapper) : base(mapper)
+    public BaseTrackingMapper(IMapper mapper) : base(mapper)
     {
     }
 }
@@ -50,12 +52,13 @@ public class BaseTrackingMapper<TSource, TDestination, TKey> :
     where TDestination : class
     where TKey : struct, IEquatable<TKey>
 {
-    public BaseTrackingMapper(ITrackingAutoMapperWrapper mapper) : base(mapper)
+    public BaseTrackingMapper(IMapper mapper) : base(mapper)
     {
     }
 
     public TSource? Map(TDestination? entity)
     {
+        if (entity == null) return null;
         return Mapper.Map<TDestination, TSource>(entity);
     }
 

@@ -1,14 +1,14 @@
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
 using App.DAL.DTO.Enums;
-using Contracts.DAL;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories.EntityRepositories;
 
 public class PlaylistRepository : BaseAppEntityRepository<App.Domain.Playlist, Playlist>, IPlaylistRepository
 {
-    public PlaylistRepository(AbstractAppDbContext dbContext, ITrackingAutoMapperWrapper mapper) : base(dbContext, mapper)
+    public PlaylistRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
 

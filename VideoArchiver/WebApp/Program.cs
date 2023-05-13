@@ -13,6 +13,7 @@ using App.Domain.Enums;
 using App.Domain.Identity;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using AutoMapper;
 using Contracts.DAL;
 using DAL;
 using Microsoft.AspNetCore.HttpLogging;
@@ -35,9 +36,8 @@ public class Program
 
         // Add services to the container.
         AppDbContextFactory.RegisterDbContext(builder.Services, builder.Configuration);
-        builder.Services.AddScoped<ITrackingAutoMapperWrapper, Base.DAL.EF.BaseTrackingAutoMapperWrapper<AbstractAppDbContext>>();
         builder.Services.AddScoped<IAppUnitOfWork>(provider =>
-            new AppUnitOfWork(provider.GetRequiredService<AbstractAppDbContext>(), provider.GetRequiredService<ITrackingAutoMapperWrapper>())
+            new AppUnitOfWork(provider.GetRequiredService<AbstractAppDbContext>(), provider.GetRequiredService<IMapper>())
                 .AddDefaultConcurrencyConflictResolvers(provider));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

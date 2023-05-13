@@ -1,22 +1,22 @@
 using System.Linq.Expressions;
+using AutoMapper;
 using Contracts.DAL;
 using Domain.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace Base.DAL.EF;
 
-public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext, TAutoMapperWrapper> :
+public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext> :
     IBaseEntityRepository<TDomainEntity, TEntity, TKey>
     where TDomainEntity : class, IIdDatabaseEntity<TKey>
     where TKey : struct, IEquatable<TKey>
     where TDbContext : DbContext
     where TEntity : class, IIdDatabaseEntity<TKey>
-    where TAutoMapperWrapper : ITrackingAutoMapperWrapper
 {
     public TDbContext DbContext { get; }
     public readonly IMapper<TDomainEntity, TEntity> Mapper;
 
-    public BaseEntityRepository(TDbContext dbContext, TAutoMapperWrapper mapper)
+    public BaseEntityRepository(TDbContext dbContext, IMapper mapper)
     {
         DbContext = dbContext;
         Mapper = new BaseTrackingMapper<TDomainEntity, TEntity, TKey>(mapper);
@@ -95,15 +95,14 @@ public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext, TAut
     }
 }
 
-public class BaseEntityRepository<TDomainEntity, TEntity, TDbContext, TAutoMapperWrapper> :
-    BaseEntityRepository<TDomainEntity, TEntity, Guid, TDbContext, TAutoMapperWrapper>,
+public class BaseEntityRepository<TDomainEntity, TEntity, TDbContext> :
+    BaseEntityRepository<TDomainEntity, TEntity, Guid, TDbContext>,
     IBaseEntityRepository<TDomainEntity, TEntity>
     where TEntity : class, IIdDatabaseEntity<Guid>
     where TDbContext : DbContext
     where TDomainEntity : class, IIdDatabaseEntity<Guid>
-    where TAutoMapperWrapper : ITrackingAutoMapperWrapper
 {
-    public BaseEntityRepository(TDbContext dbContext, TAutoMapperWrapper mapper) : base(dbContext, mapper)
+    public BaseEntityRepository(TDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
 }

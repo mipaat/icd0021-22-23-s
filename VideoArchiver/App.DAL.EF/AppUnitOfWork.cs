@@ -1,8 +1,8 @@
 ﻿using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.Contracts.DAL.Repositories.EntityRepositories.Identity;
+using AutoMapper;
 using Base.DAL.EF;
-using Contracts.DAL;
 using DAL.Repositories.EntityRepositories;
 using DAL.Repositories.EntityRepositories.Identity;
 
@@ -10,9 +10,9 @@ namespace DAL;
 
 public class AppUnitOfWork : BaseUnitOfWork<AbstractAppDbContext>, IAppUnitOfWork
 {
-    private readonly ITrackingAutoMapperWrapper _mapper;
+    private readonly IMapper _mapper;
 
-    public AppUnitOfWork(AbstractAppDbContext dbContext, ITrackingAutoMapperWrapper mapper) : base(dbContext)
+    public AppUnitOfWork(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext)
     {
         _mapper = mapper;
     }
