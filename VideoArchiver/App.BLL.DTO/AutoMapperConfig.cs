@@ -11,6 +11,7 @@ public class AutoMapperConfig : Profile
             .AddPlaylistMap()
             .AddVideoMap()
             .AddQueueItemMap()
-            .AddRefreshTokenMap();
+            .AddRefreshTokenMap()
+            .AddGameMap();
     }
 }

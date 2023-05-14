@@ -1,14 +1,16 @@
+using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
 using App.DAL.DTO.Enums;
+using App.DAL.DTO.Mappers;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DAL.EF.Repositories.EntityRepositories;
 
-public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>, IVideoRepository
+public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video, VideoMapper>, IVideoRepository
 {
-    public VideoRepository(AbstractAppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
+    public VideoRepository(AbstractAppDbContext dbContext, IMapper mapper, IAppUnitOfWork uow) : base(dbContext, new VideoMapper(mapper), uow)
     {
     }
 
@@ -28,9 +30,9 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
             .ToListAsync();
     }
 
-    public async Task<Video?> GetByIdOnPlatformWithCommentsAsync(string idOnPlatform, Platform platform)
+    public async Task<VideoWithComments?> GetByIdOnPlatformWithCommentsAsync(string idOnPlatform, Platform platform)
     {
-        return Mapper.Map(await Entities
+        return Mapper.MapWithComments(await Entities
             .Where(v => v.Platform == platform && v.IdOnPlatform == idOnPlatform)
             .Include(v => v.Comments)
             .SingleOrDefaultAsync());

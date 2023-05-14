@@ -40,20 +40,22 @@ public class StatusChangeEvent : AbstractIdDatabaseEntity
         DateTime? occurredAt = null) :
         this(video as BaseArchiveEntityNonMonitored, newPrivacyStatus, newAvailability, occurredAt)
     {
-        Video = video;
+        VideoId = video.Id;
     }
 
     public StatusChangeEvent(Playlist playlist, EPrivacyStatus? newPrivacyStatus, bool? newAvailability,
         DateTime? occurredAt = null) :
         this(playlist as BaseArchiveEntityNonMonitored, newPrivacyStatus, newAvailability, occurredAt)
     {
-        Playlist = playlist;
+        PlaylistId = playlist.Id;
     }
 
     public StatusChangeEvent(Author author, EPrivacyStatus? newPrivacyStatus, bool? newAvailability,
         DateTime? occurredAt = null) :
         this(author as BaseArchiveEntityNonMonitored, newPrivacyStatus, newAvailability, occurredAt)
     {
-        Author = author;
+        AuthorId = author.Id;
     }
+
+    public bool IsChanged => PreviousPrivacyStatus != NewPrivacyStatus || PreviousAvailability != NewAvailability;
 }

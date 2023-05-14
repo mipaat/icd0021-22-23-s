@@ -26,9 +26,4 @@ public class Comment : BaseArchiveEntityNonMonitored
 
     public TimeSpan? CreatedAtVideoTimecode { get; set; }
     public DateTime? DeletedAt { get; set; }
-
-    [InverseProperty(nameof(ReplyTarget))]
-    public ICollection<Comment>? DirectReplies { get; set; }
-    [InverseProperty(nameof(ConversationRoot))]
-    public ICollection<Comment>? ConversationReplies { get; set; }
 }

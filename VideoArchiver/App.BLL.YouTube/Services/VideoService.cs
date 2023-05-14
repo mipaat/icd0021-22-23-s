@@ -129,6 +129,7 @@ public class VideoService : BaseYouTubeService<VideoService>
             domainVideo.Thumbnails ??= ThumbnailUtils.GetAllPotentialThumbnails(domainVideo.IdOnPlatform);
             await ServiceUow.ImageService.UpdateThumbnails(domainVideo);
             await ServiceUow.EntityUpdateService.UpdateVideo(video, domainVideo);
+            Uow.Videos.Update(video);
         }
 
         return videos.Count == 50;

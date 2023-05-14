@@ -37,6 +37,7 @@ public class EntityUpdateService
         comment.DeletedAt ??= newCommentData.DeletedAt;
 
         await UpdateBaseEntity(comment, newCommentData);
+        Uow?.Comments.Update(comment);
 
         if (changed)
         {
@@ -88,6 +89,7 @@ public class EntityUpdateService
         video.LastCommentsFetch = newVideoData.LastCommentsFetch ?? video.LastCommentsFetch;
 
         await UpdateBaseEntity(video, newVideoData);
+        Uow?.Videos.Update(video);
 
         if (changed)
         {
@@ -114,6 +116,7 @@ public class EntityUpdateService
         playlist.LastVideosFetch = newPlaylistData.LastVideosFetch ?? playlist.LastVideosFetch;
 
         await UpdateBaseEntity(playlist, newPlaylistData);
+        Uow?.Playlists.Update(playlist);
 
         if (changed)
         {

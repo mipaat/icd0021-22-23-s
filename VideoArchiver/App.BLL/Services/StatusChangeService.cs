@@ -13,7 +13,10 @@ public class StatusChangeService : BaseService<StatusChangeService>
 
     public Task Push(StatusChangeEvent statusChangeEvent)
     {
-        Uow.StatusChangeEvents.Add(statusChangeEvent);
+        if (statusChangeEvent.IsChanged)
+        {
+            Uow.StatusChangeEvents.Add(statusChangeEvent);
+        }
         // TODO: Notifications
         // TODO: Non-polling based notifications?
 

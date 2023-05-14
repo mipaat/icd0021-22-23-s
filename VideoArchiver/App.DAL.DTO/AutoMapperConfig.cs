@@ -56,5 +56,8 @@ public class AutoMapperConfig : Profile
         CreateMap<App.DAL.DTO.Entities.VideoHistory, App.Domain.VideoHistory>().ReverseMap();
         CreateMap<App.DAL.DTO.Entities.VideoRating, App.Domain.VideoRating>().ReverseMap();
         CreateMap<App.DAL.DTO.Entities.VideoUploadNotification, App.Domain.VideoUploadNotification>().ReverseMap();
+
+        CreateMap<App.Domain.Video, App.DAL.DTO.Entities.VideoWithComments>().ReverseMap()
+            .ForMember(v => v.Comments, opts => opts.Ignore());
     }
 }

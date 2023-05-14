@@ -8,7 +8,7 @@ public static class DomainHistoryExtensions
     {
         return new VideoHistory
         {
-            Video = video,
+            VideoId = video.Id,
 
             IdOnPlatform = video.IdOnPlatform,
 
@@ -50,10 +50,10 @@ public static class DomainHistoryExtensions
     {
         return new CommentHistory
         {
-            Comment = comment,
-            
+            CommentId = comment.Id,
+
             IdOnPlatform = comment.IdOnPlatform,
-            
+
             Content = comment.Content,
             LikeCount = comment.LikeCount,
             DislikeCount = comment.DislikeCount,
@@ -68,7 +68,7 @@ public static class DomainHistoryExtensions
     {
         return new PlaylistHistory
         {
-            Playlist = playlist,
+            PlaylistId = playlist.Id,
 
             IdOnPlatform = playlist.IdOnPlatform,
 

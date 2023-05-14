@@ -2,11 +2,11 @@ using App.BLL.Exceptions;
 using App.BLL.Services;
 using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
+using App.DAL.DTO.Entities;
 using App.DAL.DTO.Enums;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
-using Video = App.DAL.DTO.Entities.Video;
 
 namespace App.BLL.YouTube.Services;
 
@@ -21,18 +21,12 @@ public class CommentService : BaseYouTubeService<CommentService>
         _entityUpdateService = entityUpdateService;
     }
 
-    public async Task UpdateComments(Video video, CancellationToken ct)
-    {
-        var videoData = await YouTubeUow.VideoService.FetchVideoDataYtdl(video.IdOnPlatform, true, ct);
-        await UpdateComments(video, videoData.Comments);
-    }
-
     public async Task UpdateComments(string videoId, CancellationToken ct)
     {
         var videoData = await YouTubeUow.VideoService.FetchVideoDataYtdl(videoId, true, ct);
         var commentsFetched = DateTime.UtcNow;
 
-        Video? video = null;
+        VideoWithComments? video = null;
         for (var i = 0; i < 3 && video == null; i++)
         {
             video = await Uow.Videos.GetByIdOnPlatformWithCommentsAsync(videoId, Platform.YouTube);
@@ -49,47 +43,47 @@ public class CommentService : BaseYouTubeService<CommentService>
         await UpdateComments(video, videoData.Comments);
     }
 
-    private async Task UpdateComments(Video video, CommentData[] comments)
+    private async Task UpdateComments(VideoWithComments video, CommentData[] commentDatas)
     {
         // TODO: What to do if video has 20000 comments? Memory issues?
-        video.Comments ??= new List<DAL.DTO.Entities.Comment>();
-        var commentsWithoutParent = new List<(DAL.DTO.Entities.Comment Comment, string Parent)>();
+        var commentsWithoutParent = new List<(Comment Comment, string Parent)>();
         foreach (var comment in video.Comments)
         {
-            if (comments.All(c => c.ID != comment.IdOnPlatform))
+            if (commentDatas.All(c => c.ID != comment.IdOnPlatform))
             {
                 comment.DeletedAt = DateTime.UtcNow;
             }
         }
 
-        foreach (var commentData in comments)
+        foreach (var commentData in commentDatas)
         {
-            var domainComment = commentData.ToDalComment();
+            var comment = commentData.ToDalComment();
             var existingDomainComment = video.Comments.SingleOrDefault(c => c.IdOnPlatform == commentData.ID);
             if (existingDomainComment != null)
             {
-                await _entityUpdateService.UpdateComment(existingDomainComment, domainComment);
+                await _entityUpdateService.UpdateComment(existingDomainComment, comment);
                 continue;
             }
 
-            await YouTubeUow.AuthorService.AddAndSetAuthorIfNotSet(domainComment, commentData);
-            domainComment.Video = video;
+            await YouTubeUow.AuthorService.AddAndSetAuthorIfNotSet(comment, commentData);
+            comment.Video = video;
+            comment.VideoId = video.Id;
             if (commentData.Parent != "root")
             {
                 var addedParentComment = video.Comments.SingleOrDefault(c => c.IdOnPlatform == commentData.Parent);
                 if (addedParentComment == null)
                 {
-                    commentsWithoutParent.Add((domainComment, commentData.Parent));
+                    commentsWithoutParent.Add((comment, commentData.Parent));
                 }
                 else
                 {
-                    domainComment.ReplyTarget = addedParentComment;
+                    comment.ReplyTarget = addedParentComment;
                 }
             }
 
-            video.Comments.Add(domainComment);
+            video.Comments.Add(comment);
 
-            Uow.Comments.Add(domainComment);
+            Uow.Comments.Add(comment);
         }
 
         foreach (var commentWithoutParent in commentsWithoutParent)

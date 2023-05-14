@@ -16,13 +16,4 @@ public class Playlist : BaseArchiveEntity
     public DateTime? PublishedAt { get; set; }
 
     public DateTime? LastVideosFetch { get; set; }
-
-    public ICollection<PlaylistVideo>? PlaylistVideos { get; set; }
-    public ICollection<PlaylistAuthor>? PlaylistAuthors { get; set; }
-    public ICollection<PlaylistSubscription>? PlaylistSubscriptions { get; set; }
-    public ICollection<PlaylistRating>? PlaylistRatings { get; set; }
-    public ICollection<PlaylistCategory>? PlaylistCategories { get; set; }
-    public ICollection<PlaylistHistory>? PlaylistHistories { get; set; }
-    public ICollection<StatusChangeEvent>? StatusChangeEvents { get; set; }
-    public ICollection<QueueItem>? QueueItems { get; set; }
 }

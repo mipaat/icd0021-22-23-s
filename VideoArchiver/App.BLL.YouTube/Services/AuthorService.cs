@@ -23,10 +23,11 @@ public class AuthorService : BaseYouTubeService<AuthorService>
         await Uow.VideoAuthors.SetVideoAuthor(domainVideo, domainAuthor);
     }
 
-    public async Task AddAndSetAuthorIfNotSet(Comment domainComment, CommentData commentData)
+    public async Task AddAndSetAuthorIfNotSet(Comment comment, CommentData commentData)
     {
-        var domainAuthor = await AddOrGetAuthor(commentData);
-        domainComment.Author = domainAuthor;
+        var author = await AddOrGetAuthor(commentData);
+        comment.Author = author;
+        comment.AuthorId = author.Id;
     }
 
     public async Task AddAndSetAuthorIfNotSet(Playlist domainPlaylist, VideoData playlistData)

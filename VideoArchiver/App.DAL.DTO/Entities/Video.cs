@@ -35,12 +35,4 @@ public class Video : BaseArchiveEntity
     public List<VideoFile>? LocalVideoFiles { get; set; }
     
     public DateTime? LastCommentsFetch { get; set; }
-
-    public ICollection<VideoGame>? VideoGames { set; get; }
-    public ICollection<VideoAuthor>? VideoAuthors { get; set; }
-    public ICollection<Comment>? Comments { get; set; }
-    public ICollection<VideoRating>? VideoRatings { get; set; }
-    public ICollection<VideoCategory>? VideoCategories { get; set; }
-    public ICollection<StatusChangeEvent>? StatusChangeEvents { get; set; }
-    public ICollection<VideoHistory>? VideoHistories { get; set; }
 }
