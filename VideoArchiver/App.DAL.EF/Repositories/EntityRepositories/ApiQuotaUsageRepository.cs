@@ -17,7 +17,7 @@ public class ApiQuotaUsageRepository : BaseAppEntityRepository<App.Domain.ApiQuo
     {
         return Mapper.Map(await Entities
             .Where(a => a.Identifier == identifier)
-            .OrderByDescending(a => a.UsageDate)
+            .OrderByDescending(a => a.UpdatedAt)
             .FirstOrDefaultAsync());
     }
 }

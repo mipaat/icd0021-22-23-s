@@ -15,15 +15,15 @@ public class YouTubeContext
         using var scope = services.CreateScope();
         var uow = scope.ServiceProvider.GetRequiredService<IAppUnitOfWork>();
         var apiQuotaUsage = uow.ApiQuotaUsages.GetLatestByIdentifier(ApiUsageIdentifier).Result;
-        if (apiQuotaUsage != null && apiQuotaUsage.UsageDate == CurrentDateInPst())
+        if (apiQuotaUsage != null && IsTodayPst(apiQuotaUsage.UpdatedAt))
         {
             _apiUsageAmount = apiQuotaUsage.UsageAmount;
-            _apiUsageDate = CurrentDateInPst();
+            _apiUsageUpdatedAt = DateTime.UtcNow;
         }
         else
         {
             _apiUsageAmount = 0;
-            _apiUsageDate = CurrentDateInPst();
+            _apiUsageUpdatedAt = DateTime.UtcNow;
         }
     }
 
@@ -31,18 +31,19 @@ public class YouTubeContext
     public void QueueNewComments(string videoId) => Task.Run(() => NewCommentsQueued?.Invoke(null, videoId));
 
     private readonly SemaphoreSlim _apiUsageSemaphore = new(1);
-    private DateTime _apiUsageDate;
+    private DateTime _apiUsageUpdatedAt;
     private int _apiUsageAmount;
+
     public int ApiUsage
     {
         get
         {
             _apiUsageSemaphore.Wait();
 
-            if (_apiUsageDate < CurrentDateInPst())
+            if (IsBeforeTodayPst(_apiUsageUpdatedAt))
             {
                 _apiUsageAmount = 0;
-                _apiUsageDate = CurrentDateInPst();
+                _apiUsageUpdatedAt = DateTime.UtcNow;
             }
 
             var apiUsage = _apiUsageAmount;
@@ -60,7 +61,7 @@ public class YouTubeContext
             using var scope = _services.CreateScope();
             var uow = scope.ServiceProvider.GetRequiredService<IAppUnitOfWork>();
             var apiQuotaUsage = await uow.ApiQuotaUsages.GetLatestByIdentifier(ApiUsageIdentifier);
-            if (apiQuotaUsage != null && apiQuotaUsage.UsageDate < CurrentDateInPst())
+            if (apiQuotaUsage != null && IsBeforeTodayPst(apiQuotaUsage.UpdatedAt))
             {
                 apiQuotaUsage = null;
             }
@@ -70,12 +71,13 @@ public class YouTubeContext
                 apiQuotaUsage = new ApiQuotaUsage
                 {
                     Identifier = ApiUsageIdentifier,
-                    UsageDate = CurrentDateInPst(),
+                    UpdatedAt = DateTime.UtcNow,
                 };
                 uow.ApiQuotaUsages.Add(apiQuotaUsage);
             }
 
             apiQuotaUsage.UsageAmount = Interlocked.Add(ref _apiUsageAmount, increment);
+            uow.ApiQuotaUsages.Update(apiQuotaUsage);
             await uow.SaveChangesAsync();
         }
         finally
@@ -84,12 +86,16 @@ public class YouTubeContext
         }
     }
 
-    private static DateTime CurrentDateInPst()
-    {
-        var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
-        var dateTimeInPst = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneInfo);
-        return dateTimeInPst.Date;
-    }
+    private static TimeZoneInfo Pst => TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+
+    private static DateTime CurrentTimePst => ToPst(DateTime.UtcNow);
+
+    private static DateTime ToPst(DateTime dateTime) =>
+        TimeZoneInfo.ConvertTimeFromUtc(dateTime.ToUniversalTime(), Pst);
+
+    private static bool IsTodayPst(DateTime dateTime) => ToPst(dateTime).Date == CurrentTimePst.Date;
+
+    private static bool IsBeforeTodayPst(DateTime dateTime) => ToPst(dateTime).Date < CurrentTimePst.Date;
 
     public readonly object VideoUpdateLock = new();
     public bool VideoUpdateOngoing;
