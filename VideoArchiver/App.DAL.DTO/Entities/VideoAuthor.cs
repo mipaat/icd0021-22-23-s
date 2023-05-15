@@ -1,4 +1,4 @@
-using App.DAL.DTO.Enums;
+using App.Common.Enums;
 using Domain.Base;
 
 namespace App.DAL.DTO.Entities;

@@ -1,30 +1,13 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using App.Domain.Enums;
+using App.Common.Enums;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace App.Domain.Converters;
 
-public class PlatformConverter : ValueConverter<Platform, string>
+public class PlatformConverter : ValueConverter<EPlatform, string>
 {
     public PlatformConverter() : base(
-        p => p,
-        s => s)
+        p => p.ToString(),
+        s => Enum.Parse<EPlatform>(s))
     {
-    }
-}
-
-public class PlatformJsonConverter : JsonConverter<Platform>
-{
-    public override Platform? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        var jsonString = reader.GetString();
-        if (jsonString == null) return null;
-        return jsonString;
-    }
-
-    public override void Write(Utf8JsonWriter writer, Platform value, JsonSerializerOptions options)
-    {
-        writer.WriteStringValue(value);
     }
 }

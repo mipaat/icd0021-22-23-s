@@ -1,5 +1,5 @@
-using App.Domain.Enums;
-using App.Domain.NotMapped;
+using App.Common;
+using App.Common.Enums;
 using Domain.Base;
 
 namespace App.Domain;
@@ -14,7 +14,7 @@ public class Category : AbstractIdDatabaseEntity
     public bool IsAssignable { get; set; }
     public Category? ParentCategory { get; set; }
     public Guid? ParentCategoryId { get; set; }
-    public Platform? Platform { get; set; }
+    public EPlatform? Platform { get; set; }
 
     public Author? Creator { get; set; }
     public Guid? CreatorId { get; set; }

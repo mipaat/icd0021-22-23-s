@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using App.Common;
 using App.Domain.Base;
 using App.Domain.Identity;
-using App.Domain.NotMapped;
 
 namespace App.Domain;
 

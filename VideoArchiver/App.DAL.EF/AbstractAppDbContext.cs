@@ -1,7 +1,7 @@
+using App.Common.Enums;
 using App.Domain;
 using App.Domain.Comparers;
 using App.Domain.Converters;
-using App.Domain.Enums;
 using App.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -97,7 +97,7 @@ public class AbstractAppDbContext : IdentityDbContext<User, Role, Guid, Identity
         base.ConfigureConventions(configurationBuilder);
 
         configurationBuilder
-            .Properties<Platform>()
+            .Properties<EPlatform>()
             .HaveConversion<PlatformConverter>()
             .HaveMaxLength(64);
         configurationBuilder

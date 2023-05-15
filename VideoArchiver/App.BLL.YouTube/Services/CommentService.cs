@@ -3,7 +3,7 @@ using App.BLL.Services;
 using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
 using App.DAL.DTO.Entities;
-using App.DAL.DTO.Enums;
+using App.Common.Enums;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
@@ -29,13 +29,13 @@ public class CommentService : BaseYouTubeService<CommentService>
         VideoWithComments? video = null;
         for (var i = 0; i < 3 && video == null; i++)
         {
-            video = await Uow.Videos.GetByIdOnPlatformWithCommentsAsync(videoId, Platform.YouTube);
+            video = await Uow.Videos.GetByIdOnPlatformWithCommentsAsync(videoId, EPlatform.YouTube);
             if (video == null) ct.WaitHandle.WaitOne(10000);
         }
 
         if (video == null)
         {
-            throw new VideoNotFoundInArchiveException(videoId, Platform.YouTube);
+            throw new VideoNotFoundInArchiveException(videoId, EPlatform.YouTube);
         }
 
         video.LastCommentsFetch = commentsFetched;

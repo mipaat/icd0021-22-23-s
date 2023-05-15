@@ -10,12 +10,10 @@ using App.BLL.YouTube;
 using App.BLL.YouTube.Extensions;
 using App.Contracts.DAL;
 using App.DAL.EF;
-using App.Domain.Enums;
 using App.Domain.Identity;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using AutoMapper;
-using Base.Mapping;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -24,7 +22,6 @@ using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Utils;
 using WebApp.Config;
-using WebApp.MyLibraries.ModelBinders;
 using AutoMapperConfig = App.DAL.DTO.AutoMapperConfig;
 
 namespace WebApp;
@@ -64,10 +61,6 @@ public class Program
             });
 
         builder.Services.AddControllersWithViews()
-            .AddMvcOptions(options =>
-            {
-                options.ModelBinderProviders.Insert(0, new CustomModelBinderProvider<Platform>());
-            })
             .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         const string corsAllowAllName = "CorsAllowAll";

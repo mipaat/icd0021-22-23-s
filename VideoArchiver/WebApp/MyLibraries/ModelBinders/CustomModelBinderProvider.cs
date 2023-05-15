@@ -9,7 +9,6 @@ public class CustomModelBinderProvider<T> : IModelBinderProvider
 
     private static List<ICustomModelBinder> ModelBinders => new()
     {
-        new PlatformModelBinder()
     };
 
     public IModelBinder? GetBinder(ModelBinderProviderContext context)

@@ -1,5 +1,5 @@
-using App.DAL.DTO.Enums;
-using App.DAL.DTO.NotMapped;
+using App.Common.Enums;
+using App.Common;
 
 namespace App.BLL.YouTube.Utils;
 
@@ -31,7 +31,7 @@ public static class ThumbnailUtils
         new()
         {
             Url = $"https://i.ytimg.com/vi/{videoId}/{quality.ShortName}{tag}.jpg",
-            Platform = Platform.YouTube,
+            Platform = EPlatform.YouTube,
             Width = quality.Width,
             Height = quality.Height,
             Key = tag,

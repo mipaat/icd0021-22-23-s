@@ -3,6 +3,6 @@ using Contracts.DAL;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface IPlaylistCategoryRepository : IBaseEntityRepository<PlaylistCategory, App.DAL.DTO.Entities.PlaylistCategory>
+public interface IPlaylistCategoryRepository : IBaseEntityRepository<PlaylistCategory, App.DAL.DTO.Entities.Playlists.PlaylistCategory>
 {
 }

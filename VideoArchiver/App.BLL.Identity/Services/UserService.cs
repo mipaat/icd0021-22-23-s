@@ -3,6 +3,7 @@ using App.BLL.DTO.Entities;
 using App.BLL.DTO.Entities.Identity;
 using App.BLL.DTO.Exceptions.Identity;
 using App.BLL.DTO.Mappers;
+using App.Common.Enums;
 using App.Contracts.DAL;
 using AutoMapper;
 using Base.WebHelpers;
@@ -149,7 +150,7 @@ public class UserService : IAppUowContainer
         var id = Guid.NewGuid();
         var author = new App.DAL.DTO.Entities.Author
         {
-            Platform = DAL.DTO.Enums.Platform.This,
+            Platform = EPlatform.This,
             Id = id,
             IdOnPlatform = id.ToString(),
             DisplayName = user.Identity?.Name,

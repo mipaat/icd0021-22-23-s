@@ -1,4 +1,4 @@
-using App.Domain.Enums;
+using App.Common.Enums;
 using Domain.Base;
 
 namespace App.Domain;

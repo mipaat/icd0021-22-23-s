@@ -3,7 +3,7 @@ using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
 using App.BLL.YouTube.Utils;
 using App.DAL.DTO.Entities;
-using App.DAL.DTO.Enums;
+using App.Common.Enums;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
@@ -24,14 +24,14 @@ public class VideoService : BaseYouTubeService<VideoService>
         {
             ct.ThrowIfCancellationRequested();
 
-            var failedVideo = await Uow.Videos.GetByIdOnPlatformAsync(id, Platform.YouTube);
+            var failedVideo = await Uow.Videos.GetByIdOnPlatformAsync(id, EPlatform.YouTube);
             if (failedVideo != null)
             {
                 await YouTubeUow.ServiceUow.StatusChangeService.Push(
                     new StatusChangeEvent(failedVideo, null, false));
             }
 
-            throw new VideoNotFoundOnPlatformException(id, Platform.YouTube);
+            throw new VideoNotFoundOnPlatformException(id, EPlatform.YouTube);
         }
 
         return videoResult.Data;
@@ -39,7 +39,7 @@ public class VideoService : BaseYouTubeService<VideoService>
 
     public async Task<Video> AddOrGetVideo(string id)
     {
-        var video = await Uow.Videos.GetByIdOnPlatformAsync(id, Platform.YouTube);
+        var video = await Uow.Videos.GetByIdOnPlatformAsync(id, EPlatform.YouTube);
         if (video != null)
         {
             return video;
@@ -83,7 +83,7 @@ public class VideoService : BaseYouTubeService<VideoService>
             Context.VideoUpdateOngoing = true;
         }
 
-        var videos = await Uow.Videos.GetAllNotOfficiallyFetched(Platform.YouTube);
+        var videos = await Uow.Videos.GetAllNotOfficiallyFetched(EPlatform.YouTube);
         var result = await UpdateAddedVideosOfficial(videos);
         
         lock (Context.VideoUpdateLock)
@@ -103,7 +103,7 @@ public class VideoService : BaseYouTubeService<VideoService>
         }
 
         var videos =
-            await Uow.Videos.GetAllBeforeOfficialApiFetch(Platform.YouTube,
+            await Uow.Videos.GetAllBeforeOfficialApiFetch(EPlatform.YouTube,
                 DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)), 50);
         var result = await UpdateAddedVideosOfficial(videos);
 

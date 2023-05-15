@@ -3,6 +3,6 @@ using Contracts.DAL;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface IPlaylistSubscriptionRepository : IBaseEntityRepository<PlaylistSubscription, App.DAL.DTO.Entities.PlaylistSubscription>
+public interface IPlaylistSubscriptionRepository : IBaseEntityRepository<PlaylistSubscription, App.DAL.DTO.Entities.Playlists.PlaylistSubscription>
 {
 }

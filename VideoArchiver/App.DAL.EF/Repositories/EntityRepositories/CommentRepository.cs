@@ -13,15 +13,11 @@ public class CommentRepository : BaseAppEntityRepository<App.Domain.Comment, Com
     {
     }
 
-    protected override Func<TQueryable, TQueryable>? IncludeDefaultsFunc<TQueryable>()
+    protected override TQueryable IncludeDefaults<TQueryable>(TQueryable queryable)
     {
-        return q =>
-        {
-            q
-                .Include(e => e.ReplyTarget)
-                .Include(e => e.ConversationRoot);
-            return q;
-        };
+        queryable.Include(e => e.ReplyTarget)
+            .Include(e => e.ConversationRoot);
+        return queryable;
     }
 
     protected override Domain.Comment AfterMap(Comment entity, Domain.Comment mapped)

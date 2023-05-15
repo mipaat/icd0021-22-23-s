@@ -2,7 +2,8 @@ using App.BLL.Extensions;
 using App.Contracts.DAL;
 using App.DAL.DTO.Base;
 using App.DAL.DTO.Entities;
-using App.DAL.DTO.NotMapped;
+using App.DAL.DTO.Entities.Playlists;
+using App.Common;
 
 namespace App.BLL.Services;
 

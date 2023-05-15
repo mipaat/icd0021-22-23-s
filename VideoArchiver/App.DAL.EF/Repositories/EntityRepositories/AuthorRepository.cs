@@ -1,7 +1,9 @@
-﻿using App.Contracts.DAL;
+﻿using App.Common.Enums;
+using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DAL.EF.Repositories.EntityRepositories;
@@ -12,13 +14,14 @@ public class AuthorRepository : BaseAppEntityRepository<App.Domain.Author, Autho
     {
     }
 
-    public async Task<Author?> GetByIdOnPlatformAsync(string idOnPlatform, App.DAL.DTO.Enums.Platform platform)
+    public async Task<Author?> GetByIdOnPlatformAsync(string idOnPlatform, EPlatform platform)
     {
-        return Mapper.Map(await Entities
+        return AttachIfNotAttached(await Entities
             .Where(a => a.IdOnPlatform == idOnPlatform && a.Platform == platform)
+            .ProjectTo<Author?>(Mapper.ConfigurationProvider)
             .SingleOrDefaultAsync());
     }
-    
+
     public async Task<ICollection<Author>> GetAllUserSubAuthors(Guid userId)
     {
         return await GetAllAsync(a => a.UserId == userId);

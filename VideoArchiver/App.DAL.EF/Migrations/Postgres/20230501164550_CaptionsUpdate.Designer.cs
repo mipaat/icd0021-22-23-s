@@ -2,7 +2,7 @@
 
 #nullable disable
 
-using App.Domain.NotMapped;
+using App.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;

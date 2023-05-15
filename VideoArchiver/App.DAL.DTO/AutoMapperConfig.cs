@@ -1,3 +1,6 @@
+using App.DAL.DTO.Entities;
+using App.DAL.DTO.Entities.Identity;
+using App.DAL.DTO.Entities.Playlists;
 using AutoMapper;
 
 namespace App.DAL.DTO;
@@ -6,58 +9,57 @@ public class AutoMapperConfig : Profile
 {
     public AutoMapperConfig()
     {
-        CreateMap<App.DAL.DTO.NotMapped.Caption, App.Domain.NotMapped.Caption>().ReverseMap();
-        // CreateMap<NotMapped.CaptionsDictionary, App.Domain.NotMapped.CaptionsDictionary>().ReverseMap();
-        CreateMap<App.DAL.DTO.NotMapped.ImageFile, App.Domain.NotMapped.ImageFile>().ReverseMap();
-        // CreateMap<NotMapped.ImageFileList, App.Domain.NotMapped.ImageFileList>().ReverseMap();
-        // CreateMap<NotMapped.LangString, App.Domain.NotMapped.LangString>().ReverseMap();
-        CreateMap<NotMapped.VideoFile, App.Domain.NotMapped.VideoFile>().ReverseMap();
+        CreateMap<User, Domain.Identity.User>().ReverseMap();
+        CreateMap<Domain.Identity.User, Domain.Identity.User>().ReverseMap();
+        CreateMap<RefreshToken, Domain.Identity.RefreshToken>().ReverseMap();
 
-        CreateMap<App.DAL.DTO.Enums.EAuthorRole, App.Domain.Enums.EAuthorRole>().ReverseMap();
-        CreateMap<App.DAL.DTO.Enums.EPrivacyStatus, App.Domain.Enums.EPrivacyStatus>().ReverseMap();
-        CreateMap<App.DAL.DTO.Enums.Platform, App.Domain.Enums.Platform>()
-            .ConstructUsing(p => p.Name)
-            .ReverseMap()
-            .ConstructUsing(p => p.Name);
-
-        CreateMap<App.DAL.DTO.Entities.Identity.User, App.Domain.Identity.User>().ReverseMap();
-        CreateMap<App.Domain.Identity.User, App.Domain.Identity.User>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.Identity.RefreshToken, App.Domain.Identity.RefreshToken>().ReverseMap();
-
-        CreateMap<App.DAL.DTO.Entities.ApiQuotaUsage, App.Domain.ApiQuotaUsage>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.Author, App.Domain.Author>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.AuthorCategory, App.Domain.AuthorCategory>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.AuthorHistory, App.Domain.AuthorHistory>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.AuthorPubSub, App.Domain.AuthorPubSub>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.AuthorRating, App.Domain.AuthorRating>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.AuthorSubscription, App.Domain.AuthorSubscription>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.Category, App.Domain.Category>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.Comment, App.Domain.Comment>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.CommentHistory, App.Domain.CommentHistory>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.CommentReplyNotification, App.Domain.CommentReplyNotification>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.ExternalUserToken, App.Domain.ExternalUserToken>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.Game, App.Domain.Game>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.Playlist, App.Domain.Playlist>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.PlaylistAuthor, App.Domain.PlaylistAuthor>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.PlaylistCategory, App.Domain.PlaylistCategory>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.PlaylistHistory, App.Domain.PlaylistHistory>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.PlaylistRating, App.Domain.PlaylistRating>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.PlaylistSubscription, App.Domain.PlaylistSubscription>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.PlaylistVideo, App.Domain.PlaylistVideo>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.PlaylistVideoPositionHistory, App.Domain.PlaylistVideoPositionHistory>()
+        CreateMap<ApiQuotaUsage, Domain.ApiQuotaUsage>().ReverseMap();
+        CreateMap<Author, Domain.Author>().ReverseMap();
+        CreateMap<AuthorCategory, Domain.AuthorCategory>().ReverseMap();
+        CreateMap<AuthorHistory, Domain.AuthorHistory>().ReverseMap();
+        CreateMap<AuthorPubSub, Domain.AuthorPubSub>().ReverseMap();
+        CreateMap<AuthorRating, Domain.AuthorRating>().ReverseMap();
+        CreateMap<AuthorSubscription, Domain.AuthorSubscription>().ReverseMap();
+        CreateMap<Category, Domain.Category>().ReverseMap();
+        CreateMap<Comment, Domain.Comment>().ReverseMap();
+        CreateMap<CommentHistory, Domain.CommentHistory>().ReverseMap();
+        CreateMap<CommentReplyNotification, Domain.CommentReplyNotification>().ReverseMap();
+        CreateMap<ExternalUserToken, Domain.ExternalUserToken>().ReverseMap();
+        CreateMap<Game, Domain.Game>().ReverseMap()
+            .ForMember(g => g.VideoGames,
+                o => o.MapFrom(s => s.VideoGames));
+        CreateMap<PlaylistAuthor, Domain.PlaylistAuthor>().ReverseMap();
+        CreateMap<PlaylistCategory, Domain.PlaylistCategory>().ReverseMap();
+        CreateMap<PlaylistHistory, Domain.PlaylistHistory>().ReverseMap();
+        CreateMap<PlaylistRating, Domain.PlaylistRating>().ReverseMap();
+        CreateMap<PlaylistSubscription, Domain.PlaylistSubscription>().ReverseMap();
+        CreateMap<PlaylistVideoPositionHistory, Domain.PlaylistVideoPositionHistory>()
+            .ForMember(e => e.PlaylistVideoId,
+                expression => expression
+                    .MapFrom(s => s.PlaylistVideo.Id))
             .ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.QueueItem, App.Domain.QueueItem>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.StatusChangeEvent, App.Domain.StatusChangeEvent>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.StatusChangeNotification, App.Domain.StatusChangeNotification>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.Video, App.Domain.Video>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.VideoAuthor, App.Domain.VideoAuthor>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.VideoCategory, App.Domain.VideoCategory>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.VideoGame, App.Domain.VideoGame>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.VideoHistory, App.Domain.VideoHistory>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.VideoRating, App.Domain.VideoRating>().ReverseMap();
-        CreateMap<App.DAL.DTO.Entities.VideoUploadNotification, App.Domain.VideoUploadNotification>().ReverseMap();
+        CreateMap<QueueItem, Domain.QueueItem>().ReverseMap();
+        CreateMap<StatusChangeEvent, Domain.StatusChangeEvent>().ReverseMap();
+        CreateMap<StatusChangeNotification, Domain.StatusChangeNotification>().ReverseMap();
+        CreateMap<VideoAuthor, Domain.VideoAuthor>().ReverseMap();
+        CreateMap<VideoCategory, Domain.VideoCategory>().ReverseMap();
+        CreateMap<VideoGame, Domain.VideoGame>().ReverseMap();
+        CreateMap<VideoHistory, Domain.VideoHistory>().ReverseMap();
+        CreateMap<VideoRating, Domain.VideoRating>().ReverseMap();
+        CreateMap<VideoUploadNotification, Domain.VideoUploadNotification>().ReverseMap();
 
-        CreateMap<App.Domain.Video, App.DAL.DTO.Entities.VideoWithComments>().ReverseMap()
-            .ForMember(v => v.Comments, opts => opts.Ignore());
+        CreateMap<Playlist, App.Domain.Playlist>().ReverseMap();
+        CreateMap<App.Domain.Playlist, PlaylistWithBasicVideoData>().ReverseMap();
+
+        CreateMap<PlaylistVideo, Domain.PlaylistVideo>().ReverseMap();
+        CreateMap<App.Domain.PlaylistVideo, BasicPlaylistVideo>().ReverseMap();
+
+        CreateMap<Video, App.Domain.Video>().ReverseMap();
+        CreateMap<VideoWithComments, App.Domain.Video>().ForMember(v => v.Comments, opts => opts.Ignore());
+        CreateMap<App.Domain.Video, VideoWithComments>()
+            .ForMember(v => v.Comments,
+                o => o.MapFrom(v => v.Comments));
+
+        CreateMap<App.Domain.Video, BasicVideoData>();
     }
 }

@@ -2,7 +2,8 @@
 using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
 using App.DAL.DTO.Entities;
-using App.DAL.DTO.Enums;
+using App.DAL.DTO.Entities.Playlists;
+using App.Common.Enums;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
@@ -23,14 +24,14 @@ public class PlaylistService : BaseYouTubeService<PlaylistService>
         {
             ct.ThrowIfCancellationRequested();
 
-            var failedPlaylist = await Uow.Playlists.GetByIdOnPlatformAsync(id, Platform.YouTube);
+            var failedPlaylist = await Uow.Playlists.GetByIdOnPlatformAsync(id, EPlatform.YouTube);
             if (failedPlaylist != null)
             {
                 await YouTubeUow.ServiceUow.StatusChangeService.Push(new StatusChangeEvent(failedPlaylist, null,
                     false));
             }
 
-            throw new PlaylistNotFoundOnPlatformException(id, Platform.YouTube);
+            throw new PlaylistNotFoundOnPlatformException(id, EPlatform.YouTube);
         }
 
         return playlistResult.Data;
@@ -38,7 +39,7 @@ public class PlaylistService : BaseYouTubeService<PlaylistService>
 
     public async Task<Playlist> AddOrGetPlaylist(string id)
     {
-        var playlist = await Uow.Playlists.GetByIdOnPlatformAsync(id, Platform.YouTube);
+        var playlist = await Uow.Playlists.GetByIdOnPlatformAsync(id, EPlatform.YouTube);
         if (playlist != null)
         {
             return playlist;
@@ -64,14 +65,69 @@ public class PlaylistService : BaseYouTubeService<PlaylistService>
         return playlist;
     }
 
-    // TODO: Update playlist items!!!
+    public async Task<int> UpdateAddedPlaylistsContentsUnofficial(int limit)
+    {
+        var playlists = await Uow.Playlists.GetAllWithContentsUpdatedBefore(EPlatform.YouTube,
+            DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)), limit);
+        foreach (var playlist in playlists)
+        {
+            await UpdateAddedPlaylistContentsUnofficial(playlist);
+        }
 
-    // public async Task UpdateAddedPlaylistUnofficial(Playlist playlist)
-    // {
-    //     // TODO: write this and use
-    // }
+        return playlists.Count;
+    }
 
-    public async Task<bool> UpdateAddedNeverFetchedPlaylistsOfficial()
+    private async Task UpdateAddedPlaylistContentsUnofficial(PlaylistWithBasicVideoData playlist)
+    {
+        var fetched = await FetchPlaylistDataYtdl(playlist.IdOnPlatform);
+        var position = 0;
+        foreach (var entry in fetched.Entries)
+        {
+            var existingPlaylistVideo = playlist.PlaylistVideos.SingleOrDefault(e => e.Video.IdOnPlatform == entry.ID);
+            if (existingPlaylistVideo != null)
+            {
+                if (position != existingPlaylistVideo.Position)
+                {
+                    Uow.PlaylistVideoPositionHistories.Add(new PlaylistVideoPositionHistory
+                    {
+                        PlaylistVideo = existingPlaylistVideo,
+                        Position = existingPlaylistVideo.Position,
+                        ValidUntil = DateTime.UtcNow,
+                    });
+                    existingPlaylistVideo.Position = position;
+                }
+            }
+            else
+            {
+                var video = await YouTubeUow.VideoService.AddOrGetVideo(entry.ID);
+                playlist.PlaylistVideos.Add(new BasicPlaylistVideo
+                {
+                    AddedAt = DateTime.UtcNow,
+                    Position = position,
+                    Video = new BasicVideoData
+                    {
+                        Id = video.Id,
+                        IdOnPlatform = video.IdOnPlatform,
+                        Platform = video.Platform,
+                    }
+                });
+            }
+
+            position++;
+        }
+
+        foreach (var playlistVideo in playlist.PlaylistVideos)
+        {
+            if (fetched.Entries.All(e => e.ID != playlistVideo.Video.IdOnPlatform))
+            {
+                playlistVideo.RemovedAt = DateTime.UtcNow;
+            }
+        }
+
+        Uow.Playlists.UpdateContents(playlist);
+    }
+
+    public async Task<bool> UpdateAddedNeverFetchedPlaylistsDataOfficial()
     {
         lock (Context.PlaylistUpdateLock)
         {
@@ -79,8 +135,8 @@ public class PlaylistService : BaseYouTubeService<PlaylistService>
             Context.PlaylistUpdateOngoing = true;
         }
 
-        var playlists = await Uow.Playlists.GetAllNotOfficiallyFetched(Platform.YouTube);
-        var result = await UpdateAddedPlaylistsOfficial(playlists);
+        var playlists = await Uow.Playlists.GetAllNotOfficiallyFetched(EPlatform.YouTube);
+        var result = await UpdateAddedPlaylistsDataOfficial(playlists);
 
         lock (Context.PlaylistUpdateLock)
         {
@@ -90,7 +146,7 @@ public class PlaylistService : BaseYouTubeService<PlaylistService>
         return result;
     }
 
-    public async Task<bool> UpdateAddedPlaylistsOfficial()
+    public async Task<bool> UpdateAddedPlaylistsDataOfficial()
     {
         lock (Context.PlaylistUpdateLock)
         {
@@ -99,9 +155,9 @@ public class PlaylistService : BaseYouTubeService<PlaylistService>
         }
 
         var playlists =
-            await Uow.Playlists.GetAllBeforeOfficialApiFetch(Platform.YouTube,
+            await Uow.Playlists.GetAllBeforeOfficialApiFetch(EPlatform.YouTube,
                 DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)), 50);
-        var result = await UpdateAddedPlaylistsOfficial(playlists);
+        var result = await UpdateAddedPlaylistsDataOfficial(playlists);
 
         lock (Context.PlaylistUpdateLock)
         {
@@ -111,7 +167,7 @@ public class PlaylistService : BaseYouTubeService<PlaylistService>
         return result;
     }
 
-    private async Task<bool> UpdateAddedPlaylistsOfficial(ICollection<Playlist> playlists)
+    private async Task<bool> UpdateAddedPlaylistsDataOfficial(ICollection<Playlist> playlists)
     {
         if (playlists.Count == 0) return false;
         var fetchedPlaylists =

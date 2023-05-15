@@ -1,5 +1,5 @@
 using System.Text;
-using App.DAL.DTO.Enums;
+using App.Common.Enums;
 using Utils;
 
 namespace App.BLL.Exceptions;
@@ -8,7 +8,7 @@ public class EntityNotFoundInArchiveException : Exception
 {
     public readonly Guid? Id;
     public readonly string? IdOnPlatform;
-    public readonly Platform? Platform;
+    public readonly EPlatform? Platform;
     public readonly Type EntityType;
 
     public EntityNotFoundInArchiveException(Guid id, Type entityType) : base(GetMessage(id: id, entityType: entityType))
@@ -17,7 +17,7 @@ public class EntityNotFoundInArchiveException : Exception
         EntityType = entityType;
     }
 
-    public EntityNotFoundInArchiveException(string idOnPlatform, Platform platform, Type entityType) :
+    public EntityNotFoundInArchiveException(string idOnPlatform, EPlatform platform, Type entityType) :
         base(GetMessage(idOnPlatform: idOnPlatform, platform: platform, entityType: entityType))
     {
         IdOnPlatform = idOnPlatform;
@@ -25,7 +25,7 @@ public class EntityNotFoundInArchiveException : Exception
         EntityType = entityType;
     }
 
-    public EntityNotFoundInArchiveException(Guid id, string idOnPlatform, Platform platform, Type entityType) :
+    public EntityNotFoundInArchiveException(Guid id, string idOnPlatform, EPlatform platform, Type entityType) :
         base(GetMessage(id: id, idOnPlatform: idOnPlatform, platform: platform, entityType: entityType))
     {
         Id = id;
@@ -35,7 +35,7 @@ public class EntityNotFoundInArchiveException : Exception
     }
 
     private static string GetMessage(Type entityType, Guid? id = null, string? idOnPlatform = null,
-        Platform? platform = null)
+        EPlatform? platform = null)
     {
         var builder = new StringBuilder(entityType.ToString().ToCapitalized());
         var identifiers = new List<string>();

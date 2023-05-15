@@ -1,9 +1,10 @@
 using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
-using App.DAL.DTO.Enums;
+using App.DAL.DTO.Entities.Playlists;
+using App.Common.Enums;
 using AutoMapper;
-using Base.DAL.EF;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DAL.EF.Repositories.EntityRepositories;
@@ -16,15 +17,11 @@ public class PlaylistAuthorRepository : BaseAppEntityRepository<App.Domain.Playl
     {
     }
 
-    protected override Func<TQueryable, TQueryable> IncludeDefaultsFunc<TQueryable>()
+    protected override TQueryable IncludeDefaults<TQueryable>(TQueryable queryable)
     {
-        return q =>
-        {
-            q
-                .Include(e => e.Author)
-                .Include(e => e.Playlist);
-            return q;
-        };
+        queryable.Include(e => e.Author)
+            .Include(e => e.Playlist);
+        return queryable;
     }
 
     protected override Domain.PlaylistAuthor AfterMap(PlaylistAuthor entity, Domain.PlaylistAuthor mapped)
@@ -86,12 +83,11 @@ public class PlaylistAuthorRepository : BaseAppEntityRepository<App.Domain.Playl
         EAuthorRole? authorRole = null)
     {
         var query = Entities.Where(pa => pa.PlaylistId == playlistId && pa.AuthorId == authorId);
-        var domainAuthorRole = authorRole?.ToDomainAuthorRole();
         if (authorRole != null)
         {
-            query = query.Where(pa => pa.Role == domainAuthorRole);
+            query = query.Where(pa => pa.Role == authorRole);
         }
 
-        return (await query.ToListAsync()).Select(pa => Mapper.Map(pa)!).ToList();
+        return await query.ProjectTo<PlaylistAuthor>(Mapper.ConfigurationProvider).ToListAsync();
     }
 }

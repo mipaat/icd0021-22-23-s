@@ -12,8 +12,13 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\App.Common\App.Common.csproj" />
       <ProjectReference Include="..\Base.Domain\Base.Domain.csproj" />
       <ProjectReference Include="..\Utils\Utils.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="NotMapped\" />
     </ItemGroup>
 
 </Project>

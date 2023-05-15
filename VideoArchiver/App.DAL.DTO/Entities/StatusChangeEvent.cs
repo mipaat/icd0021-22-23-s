@@ -1,5 +1,6 @@
 using App.DAL.DTO.Base;
-using App.DAL.DTO.Enums;
+using App.DAL.DTO.Entities.Playlists;
+using App.Common.Enums;
 using Domain.Base;
 
 namespace App.DAL.DTO.Entities;

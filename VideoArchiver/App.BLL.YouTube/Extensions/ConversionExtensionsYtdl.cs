@@ -1,6 +1,7 @@
 using App.DAL.DTO.Entities;
-using App.DAL.DTO.Enums;
-using App.DAL.DTO.NotMapped;
+using App.DAL.DTO.Entities.Playlists;
+using App.Common.Enums;
+using App.Common;
 using YoutubeDLSharp.Metadata;
 
 namespace App.BLL.YouTube.Extensions;
@@ -11,7 +12,7 @@ public static class ConversionExtensionsYtdl
     {
         var domainVideo = new Video
         {
-            Platform = Platform.YouTube,
+            Platform = EPlatform.YouTube,
             IdOnPlatform = videoData.ID,
 
             Title = new LangString(videoData.Title, LangString.UnknownCulture),
@@ -51,7 +52,7 @@ public static class ConversionExtensionsYtdl
     {
         var domainAuthor = new Author
         {
-            Platform = Platform.YouTube,
+            Platform = EPlatform.YouTube,
             IdOnPlatform = videoData.ChannelID,
 
             UserName = Url.IsAuthorHandleUrl(videoData.ChannelUrl, out var handle) ? handle : null,
@@ -77,7 +78,7 @@ public static class ConversionExtensionsYtdl
     {
         var domainAuthor = new Author
         {
-            Platform = Platform.YouTube,
+            Platform = EPlatform.YouTube,
             IdOnPlatform = commentData.AuthorID,
 
             DisplayName = commentData.Author,
@@ -89,7 +90,7 @@ public static class ConversionExtensionsYtdl
             {
                 new()
                 {
-                    Platform = Platform.YouTube,
+                    Platform = EPlatform.YouTube,
                     Url = commentData.AuthorThumbnail,
                 }
             },
@@ -109,7 +110,7 @@ public static class ConversionExtensionsYtdl
     {
         return new Comment
         {
-            Platform = Platform.YouTube,
+            Platform = EPlatform.YouTube,
             IdOnPlatform = commentData.ID,
 
             Content = commentData.Text,
@@ -164,7 +165,7 @@ public static class ConversionExtensionsYtdl
     {
         var domainCaption = new Caption
         {
-            Platform = Platform.YouTube,
+            Platform = EPlatform.YouTube,
             Ext = youTubeDlCaption.Ext,
             Url = youTubeDlCaption.Url,
             Name = youTubeDlCaption.Name,
@@ -188,7 +189,7 @@ public static class ConversionExtensionsYtdl
     {
         return new ImageFile
         {
-            Platform = Platform.YouTube,
+            Platform = EPlatform.YouTube,
             IdOnPlatform = thumbnailData.ID,
             Url = thumbnailData.Url,
             Width = thumbnailData.Width,
@@ -200,7 +201,7 @@ public static class ConversionExtensionsYtdl
     {
         var domainPlaylist = new Playlist
         {
-            Platform = Platform.YouTube,
+            Platform = EPlatform.YouTube,
             IdOnPlatform = playlistData.ID,
 
             Title = new LangString(playlistData.Title),

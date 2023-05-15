@@ -12,16 +12,27 @@ public class BaseUnitOfWork<TDbContext> : IBaseUnitOfWork where TDbContext : DbC
         DbContext = dbContext;
     }
 
+    private void ClearSaveChangesSubscribers()
+    {
+        SavedChanges = null;
+    }
+
+    private void BaseDispose()
+    {
+        GC.SuppressFinalize(this);
+        ClearSaveChangesSubscribers();
+    }
+    
     public void Dispose()
     {
         DbContext.Dispose();
-        GC.SuppressFinalize(this);
+        BaseDispose();
     }
 
     public async ValueTask DisposeAsync()
     {
         await DbContext.DisposeAsync();
-        GC.SuppressFinalize(this);
+        BaseDispose();
     }
 
     public async Task<int> SaveChangesAsync()
@@ -35,18 +46,14 @@ public class BaseUnitOfWork<TDbContext> : IBaseUnitOfWork where TDbContext : DbC
             {
                 var result = await DbContext.SaveChangesAsync();
                 SavedChanges?.Invoke(null, EventArgs.Empty);
-                if (SavedChanges != null)
-                {
-                    foreach (var subscriber in SavedChanges.GetInvocationList())
-                    {
-                        SavedChanges -= subscriber as EventHandler;
-                    }
-                }
+                ClearSaveChangesSubscribers();
 
                 return result;
             }
-            catch (DbUpdateConcurrencyException e)
+            catch (DbUpdateException e)
             {
+                if (!(e is DbUpdateConcurrencyException ||
+                      (e.InnerException != null && e.InnerException.Message.Contains("duplicate key")))) throw;
                 // TODO: What to do if entity has been deleted in database? (Apparently detection would have to be provider dependent)
                 // TODO: Constraint violations? Are those covered by DbUpdateConcurrencyException or only DbUpdateException?
                 if (tryCounter > 5)

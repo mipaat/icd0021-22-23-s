@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using App.BLL.DTO.Entities.Identity;
-using App.BLL.DTO.Enums;
+using App.Common.Enums;
 using Domain.Base;
 
 namespace App.BLL.DTO.Entities;
@@ -8,7 +8,7 @@ namespace App.BLL.DTO.Entities;
 public class QueueItem : AbstractIdDatabaseEntity
 {
     [MaxLength(4096)] public string? Url { get; set; }
-    public Platform? Platform { get; set; }
+    public EPlatform? Platform { get; set; }
     [MaxLength(64)] public string? IdOnPlatform { get; set; }
 
     public bool Monitor { get; set; } = true;
@@ -39,7 +39,7 @@ public class QueueItem : AbstractIdDatabaseEntity
     {
     }
 
-    public QueueItem(string id, Guid submitterId, bool autoSubmit, Platform platform)
+    public QueueItem(string id, Guid submitterId, bool autoSubmit, EPlatform platform)
     {
         Platform = platform;
         IdOnPlatform = id;

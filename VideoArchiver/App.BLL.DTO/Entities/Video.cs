@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using App.DAL.DTO.Base;
 using App.DAL.DTO.Entities;
-using App.DAL.DTO.NotMapped;
+using App.Common;
 
 namespace App.BLL.DTO.Entities;
 

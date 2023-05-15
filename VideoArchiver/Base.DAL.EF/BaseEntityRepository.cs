@@ -1,26 +1,26 @@
 using System.Linq.Expressions;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Contracts.DAL;
-using Contracts.Mapping;
 using Domain.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace Base.DAL.EF;
 
-public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext, TMapper, TUow> :
+public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext, TUow> :
     IBaseEntityRepository<TDomainEntity, TEntity, TKey>
     where TDomainEntity : class, IIdDatabaseEntity<TKey>
     where TKey : struct, IEquatable<TKey>
     where TDbContext : DbContext
     where TEntity : class, IIdDatabaseEntity<TKey>
-    where TMapper : IMapper<TDomainEntity, TEntity>
     where TUow : IBaseUnitOfWork
 {
     public TDbContext DbContext { get; }
-    public readonly TMapper Mapper;
+    public readonly IMapper Mapper;
 
     public TUow Uow { get; }
 
-    public BaseEntityRepository(TDbContext dbContext, TMapper mapper, TUow uow)
+    public BaseEntityRepository(TDbContext dbContext, IMapper mapper, TUow uow)
     {
         DbContext = dbContext;
         Mapper = mapper;
@@ -41,22 +41,17 @@ public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext, TMap
         return mapped;
     }
 
-    protected virtual Func<TQueryable, TQueryable>? IncludeDefaultsFunc<TQueryable>()
-        where TQueryable : IQueryable<TDomainEntity> => null;
-
-    protected TQueryable IncludeDefaults<TQueryable>(TQueryable queryable)
+    protected virtual TQueryable IncludeDefaults<TQueryable>(TQueryable queryable)
         where TQueryable : IQueryable<TDomainEntity>
     {
-        var includeFunc = IncludeDefaultsFunc<TQueryable>();
-        if (includeFunc == null) return queryable;
-        return includeFunc(queryable);
+        return queryable;
     }
 
     protected IQueryable<TDomainEntity> EntitiesWithDefaults => IncludeDefaults(Entities);
 
     public TDomainEntity Map(TEntity entity)
     {
-        return AfterMap(entity, Mapper.Map(entity)!);
+        return AfterMap(entity, Mapper.Map<TEntity, TDomainEntity>(entity)!);
     }
 
     public TDomainEntity Map(TEntity entity, TDomainEntity domainEntity)
@@ -66,10 +61,8 @@ public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext, TMap
 
     public async Task<TEntity?> GetByIdAsync(TKey id)
     {
-        var includeDefaultsFunc = IncludeDefaultsFunc<DbSet<TDomainEntity>>();
-        return Mapper.Map(includeDefaultsFunc != null
-            ? await includeDefaultsFunc(Entities).FirstOrDefaultAsync(e => e.Id.Equals(id))
-            : await Entities.FindAsync(id));
+        return AttachIfNotAttached(await EntitiesWithDefaults.ProjectTo<TEntity>(Mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(e => e.Id.Equals(id)));
     }
 
     protected IQueryable<TDomainEntity> GetAll(params Expression<Func<TDomainEntity, bool>>[] filters)
@@ -87,35 +80,43 @@ public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext, TMap
     public async Task<ICollection<TEntity>> GetAllAsync(params Expression<Func<TDomainEntity, bool>>[] filters)
     {
         var result = IncludeDefaults(GetAll(filters));
-        return (await result.ToListAsync()).Select(e => Mapper.Map(e)!).ToList();
+        return AttachIfNotAttached<ICollection<TEntity>, TEntity>(
+            await Mapper.ProjectTo<TEntity>(result).ToListAsync());
     }
 
-    public TEntity Add(TEntity entity)
+    protected TAddEntity AddBase<TAddEntity>(TAddEntity entity,
+        Func<TAddEntity, TDomainEntity, TDomainEntity> mapTo, Func<TAddEntity, TDomainEntity> map)
+        where TAddEntity : IIdDatabaseEntity<TKey>
     {
-        var trackedEntity = GetTrackedEntity(entity);
+        var trackedEntity = GetTrackedEntity(entity.Id);
         if (trackedEntity != null)
         {
             if (DbContext.ChangeTracker.AutoDetectChangesEnabled)
             {
-                Map(entity, trackedEntity);
+                mapTo(entity, trackedEntity);
             }
             else
             {
-                Entities.Update(Map(entity, trackedEntity));
+                Entities.Update(mapTo(entity, trackedEntity));
             }
         }
         else
         {
-            Entities.Add(Map(entity));
+            Entities.Add(map(entity));
         }
 
         return entity;
     }
 
+    public TEntity Add(TEntity entity)
+    {
+        return AddBase(entity, Map, Map);
+    }
+
     public void Remove(TEntity entity)
     {
         Remove(GetTrackedEntity(entity) ??
-               Mapper.Map(entity)!); // TODO: Should this throw if entity is not tracked?
+               Mapper.Map<TEntity, TDomainEntity>(entity)!); // TODO: Should this throw if entity is not tracked?
     }
 
     private void Remove(TDomainEntity entity)
@@ -129,24 +130,31 @@ public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext, TMap
                throw new ApplicationException($"Failed to delete entity with ID {id} - entity not found!"));
     }
 
-    public virtual void Update(TEntity entity)
+    protected void UpdateBase<TUpdateEntity>(TUpdateEntity entity,
+        Func<TUpdateEntity, TDomainEntity, TDomainEntity> mapTo, Func<TUpdateEntity, TDomainEntity> map)
+        where TUpdateEntity : IIdDatabaseEntity<TKey>
     {
-        var trackedEntity = GetTrackedEntity(entity);
+        var trackedEntity = GetTrackedEntity(entity.Id);
         if (trackedEntity != null)
         {
             if (DbContext.ChangeTracker.AutoDetectChangesEnabled)
             {
-                Map(entity, trackedEntity);
+                mapTo(entity, trackedEntity);
             }
             else
             {
-                Entities.Update(Map(entity, trackedEntity));
+                Entities.Update(mapTo(entity, trackedEntity));
             }
         }
         else
         {
-            Entities.Update(Map(entity));
+            Entities.Update(map(entity));
         }
+    }
+
+    public virtual void Update(TEntity entity)
+    {
+        UpdateBase(entity, Map, Map);
     }
 
     public async Task<bool> ExistsAsync(TKey id)
@@ -158,18 +166,32 @@ public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext, TMap
         GetTrackedEntity(entity.Id);
 
     public TDomainEntity? GetTrackedEntity(TKey id) => DbContext.GetTrackedEntity<TDomainEntity, TKey>(id);
+
+    protected TCustomEntityCollection AttachIfNotAttached<TCustomEntityCollection, TCustomEntity>(
+        TCustomEntityCollection entities)
+        where TCustomEntityCollection : ICollection<TCustomEntity>
+        where TCustomEntity : class, IIdDatabaseEntity<TKey>
+    {
+        return entities.AttachIfNotAttached<TCustomEntityCollection, TCustomEntity, TDomainEntity, TKey>(Mapper,
+            DbContext);
+    }
+
+    protected TCustomEntity? AttachIfNotAttached<TCustomEntity>(TCustomEntity? entity)
+        where TCustomEntity : class, IIdDatabaseEntity<TKey>
+    {
+        return entity.AttachIfNotAttached<TCustomEntity, TDomainEntity, TKey>(Mapper, DbContext);
+    }
 }
 
-public class BaseEntityRepository<TDomainEntity, TEntity, TDbContext, TMapper, TUow> :
-    BaseEntityRepository<TDomainEntity, TEntity, Guid, TDbContext, TMapper, TUow>,
+public class BaseEntityRepository<TDomainEntity, TEntity, TDbContext, TUow> :
+    BaseEntityRepository<TDomainEntity, TEntity, Guid, TDbContext, TUow>,
     IBaseEntityRepository<TDomainEntity, TEntity>
     where TEntity : class, IIdDatabaseEntity<Guid>
     where TDbContext : DbContext
     where TDomainEntity : class, IIdDatabaseEntity<Guid>
-    where TMapper : IMapper<TDomainEntity, TEntity>
     where TUow : IBaseUnitOfWork
 {
-    public BaseEntityRepository(TDbContext dbContext, TMapper mapper, TUow uow) : base(dbContext, mapper, uow)
+    public BaseEntityRepository(TDbContext dbContext, IMapper mapper, TUow uow) : base(dbContext, mapper, uow)
     {
     }
 }

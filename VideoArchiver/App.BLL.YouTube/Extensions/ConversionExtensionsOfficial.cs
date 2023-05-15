@@ -1,7 +1,7 @@
 using System.Xml;
 using App.BLL.YouTube.Utils;
-using App.DAL.DTO.Enums;
-using App.DAL.DTO.NotMapped;
+using App.Common.Enums;
+using App.Common;
 using Google.Apis.YouTube.v3.Data;
 
 namespace App.BLL.YouTube.Extensions;
@@ -26,7 +26,7 @@ public static class ConversionExtensionsOfficial
 
         return new App.DAL.DTO.Entities.Video
         {
-            Platform = Platform.YouTube,
+            Platform = EPlatform.YouTube,
             IdOnPlatform = video.Id,
 
             Title = title,
@@ -77,7 +77,7 @@ public static class ConversionExtensionsOfficial
         };
     }
 
-    public static App.DAL.DTO.Entities.Playlist ToDalPlaylist(this Playlist playlist,
+    public static DAL.DTO.Entities.Playlists.Playlist ToDalPlaylist(this Playlist playlist,
         ImageFileList? previousThumbnails = null)
     {
         var title = new LangString(playlist.Snippet.Title,
@@ -93,9 +93,9 @@ public static class ConversionExtensionsOfficial
             }
         }
 
-        return new App.DAL.DTO.Entities.Playlist
+        return new DAL.DTO.Entities.Playlists.Playlist
         {
-            Platform = Platform.YouTube,
+            Platform = EPlatform.YouTube,
             IdOnPlatform = playlist.Id,
 
             Title = title,
@@ -127,7 +127,7 @@ public static class ConversionExtensionsOfficial
     {
         return new ImageFile
         {
-            Platform = Platform.YouTube,
+            Platform = EPlatform.YouTube,
 
             Quality = quality,
             Url = thumbnail.Url,

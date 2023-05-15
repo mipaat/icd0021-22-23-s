@@ -13,6 +13,15 @@ public class RefreshTokenRepository : BaseAppEntityRepository<App.Domain.Identit
     {
     }
 
+    protected override Domain.Identity.RefreshToken AfterMap(RefreshToken entity, Domain.Identity.RefreshToken mapped)
+    {
+        if (entity.User != null)
+        {
+            mapped.User = Uow.Users.GetTrackedEntity(entity.User.Id);
+        }
+        return mapped;
+    }
+
     public async Task<ICollection<RefreshToken>> GetAllByUserIdAsync(Guid userId,
         params Expression<Func<App.Domain.Identity.RefreshToken, bool>>[] filters)
     {

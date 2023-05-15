@@ -1,4 +1,4 @@
-using Platform = App.BLL.DTO.Enums.Platform;
+using App.Common.Enums;
 
 namespace App.BLL.DTO.Entities;
 
@@ -8,7 +8,7 @@ public class Entity
     public readonly Author? Author;
     public readonly Playlist? Playlist;
 
-    public Platform Platform =>
+    public EPlatform Platform =>
         Video?.Platform ?? Author?.Platform ??
         Playlist?.Platform ?? throw new ApplicationException("At least one entity must be not null!");
 

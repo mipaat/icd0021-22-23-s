@@ -1,11 +1,11 @@
-using App.DAL.DTO.Enums;
+using App.Common.Enums;
 using Domain.Base;
 
 namespace App.DAL.DTO.Entities;
 
 public class AuthorSubscription : AbstractIdDatabaseEntity
 {
-    public Platform Platform { get; set; } = default!;
+    public EPlatform Platform { get; set; } = default!;
     public Author? Subscriber { get; set; }
     public Guid SubscriberId { get; set; }
     public Author? SubscriptionTarget { get; set; }

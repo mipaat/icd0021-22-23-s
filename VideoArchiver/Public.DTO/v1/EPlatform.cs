@@ -6,6 +6,10 @@ namespace Public.DTO.v1;
 public enum EPlatform
 {
     /// <summary>
+    /// This archive.
+    /// </summary>
+    This,
+    /// <summary>
     /// The YouTube online video platform.
     /// </summary>
     YouTube

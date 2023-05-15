@@ -1,6 +1,6 @@
-﻿using App.Domain.Comparers;
+﻿using App.Common;
+using App.Domain.Comparers;
 using App.Domain.Converters;
-using App.Domain.NotMapped;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

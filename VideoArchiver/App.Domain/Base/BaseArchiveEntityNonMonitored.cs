@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using App.Domain.Enums;
+using App.Common.Enums;
 using Domain.Base;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +8,7 @@ namespace App.Domain.Base;
 [Index(nameof(Platform), nameof(IdOnPlatform), IsUnique = true)]
 public abstract class BaseArchiveEntityNonMonitored : AbstractIdDatabaseEntity
 {
-    public Platform Platform { get; set; } = default!;
+    public EPlatform Platform { get; set; } = default!;
     [MaxLength(64)] public string IdOnPlatform { get; set; } = default!;
 
     public DateTime? CreatedAt { get; set; }

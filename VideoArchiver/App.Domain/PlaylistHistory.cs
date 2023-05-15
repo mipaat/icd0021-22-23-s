@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using App.Domain.Enums;
-using App.Domain.NotMapped;
+using App.Common;
+using App.Common.Enums;
 using Domain.Base;
 
 namespace App.Domain;

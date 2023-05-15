@@ -1,4 +1,5 @@
 using App.BLL.DTO.Entities;
+using App.Common.Enums;
 
 #pragma warning disable 1591
 namespace Public.DTO.Mappers;
@@ -40,10 +41,13 @@ public static class SubmissionResultMapper
         return null;
     }
 
-    private static v1.EPlatform GetPlatform(this App.BLL.DTO.Enums.Platform domainPlatform)
+    private static v1.EPlatform GetPlatform(this EPlatform platform)
     {
-        return domainPlatform == App.Domain.Enums.Platform.YouTube
-            ? v1.EPlatform.YouTube
-            : throw new ArgumentException($"Invalid domain platform for {typeof(v1.SubmissionResult)}");
+        return platform switch
+        {
+            EPlatform.This => v1.EPlatform.This,
+            EPlatform.YouTube => v1.EPlatform.YouTube,
+            _ => throw new ArgumentException($"Invalid domain platform for {typeof(v1.SubmissionResult)}: {platform}"),
+        };
     }
 }

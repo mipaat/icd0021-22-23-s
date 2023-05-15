@@ -1,5 +1,5 @@
+using App.Common;
 using App.Domain.Base;
-using App.Domain.NotMapped;
 
 namespace App.Domain;
 

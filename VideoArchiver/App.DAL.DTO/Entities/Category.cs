@@ -1,5 +1,6 @@
-using App.DAL.DTO.Enums;
-using App.DAL.DTO.NotMapped;
+using App.DAL.DTO.Entities.Playlists;
+using App.Common.Enums;
+using App.Common;
 using Domain.Base;
 
 namespace App.DAL.DTO.Entities;
@@ -14,7 +15,7 @@ public class Category : AbstractIdDatabaseEntity
     public bool IsAssignable { get; set; }
     public Category? ParentCategory { get; set; }
     public Guid? ParentCategoryId { get; set; }
-    public Platform? Platform { get; set; }
+    public EPlatform? Platform { get; set; }
 
     public Author? Creator { get; set; }
     public Guid? CreatorId { get; set; }

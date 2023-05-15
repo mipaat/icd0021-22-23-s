@@ -2,7 +2,6 @@ using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
 using AutoMapper;
-using Base.DAL.EF;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DAL.EF.Repositories.EntityRepositories;
@@ -14,16 +13,13 @@ public class QueueItemRepository : BaseAppEntityRepository<App.Domain.QueueItem,
     {
     }
 
-    protected override Func<TQueryable, TQueryable> IncludeDefaultsFunc<TQueryable>()
+    protected override TQueryable IncludeDefaults<TQueryable>(TQueryable queryable)
     {
-        return q =>
-        {
-            q
-                .Include(e => e.Video)
-                .Include(e => e.Playlist)
-                .Include(e => e.Author);
-            return q;
-        };
+        queryable
+            .Include(e => e.Video)
+            .Include(e => e.Playlist)
+            .Include(e => e.Author);
+        return queryable;
     }
 
     protected override Domain.QueueItem AfterMap(QueueItem entity, Domain.QueueItem mapped)

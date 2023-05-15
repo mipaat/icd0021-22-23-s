@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using App.Domain.NotMapped;
+using App.Common;
 using Domain.Base;
 
 namespace App.Domain;

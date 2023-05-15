@@ -1,6 +1,6 @@
 ﻿#nullable disable
 
-using App.Domain.NotMapped;
+using App.Common;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace App.DAL.EF.Migrations.Postgres

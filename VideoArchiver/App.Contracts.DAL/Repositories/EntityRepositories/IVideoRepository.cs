@@ -1,13 +1,21 @@
-using App.Domain;
+using App.Common.Enums;
+using App.DAL.DTO.Entities;
 using Contracts.DAL;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface IVideoRepository : IBaseEntityRepository<Video, App.DAL.DTO.Entities.Video>
+public interface IVideoRepository : IBaseEntityRepository<App.Domain.Video, Video>
 {
-    public Task<App.DAL.DTO.Entities.Video?> GetByIdOnPlatformAsync(string idOnPlatform, App.DAL.DTO.Enums.Platform platform);
-    public Task<ICollection<string>> GetAllIdsOnPlatformWithUnarchivedComments(App.DAL.DTO.Enums.Platform platform);
-    public Task<App.DAL.DTO.Entities.VideoWithComments?> GetByIdOnPlatformWithCommentsAsync(string idOnPlatform, App.DAL.DTO.Enums.Platform platform);
-    public Task<ICollection<App.DAL.DTO.Entities.Video>> GetAllNotOfficiallyFetched(App.DAL.DTO.Enums.Platform platform, int? limit = null);
-    public Task<ICollection<App.DAL.DTO.Entities.Video>> GetAllBeforeOfficialApiFetch(App.DAL.DTO.Enums.Platform platform, DateTime cutoff, int? limit = null);
+    public Task<Video?> GetByIdOnPlatformAsync(string idOnPlatform, EPlatform platform);
+    public Task<ICollection<string>> GetAllIdsOnPlatformWithUnarchivedComments(EPlatform platform);
+
+    public Task<VideoWithComments?> GetByIdOnPlatformWithCommentsAsync(string idOnPlatform,
+        EPlatform platform);
+
+    public Task<ICollection<Video>> GetAllNotOfficiallyFetched(EPlatform platform, int? limit = null);
+
+    public Task<ICollection<Video>> GetAllBeforeOfficialApiFetch(EPlatform platform, DateTime cutoff,
+        int? limit = null);
+
+    public App.Domain.Video Map(BasicVideoData video, App.Domain.Video mapped);
 }

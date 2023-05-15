@@ -2,7 +2,7 @@ using App.BLL.Exceptions;
 using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
 using App.Contracts.DAL;
-using App.DAL.DTO.Enums;
+using App.Common.Enums;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Utils;
@@ -27,7 +27,7 @@ public class CommentBackgroundService : BaseYouTubeBackgroundService<CommentBack
         using (var scope = Services.CreateScope())
         {
             videoIds = await scope.ServiceProvider.GetRequiredService<IAppUnitOfWork>().Videos
-                .GetAllIdsOnPlatformWithUnarchivedComments(Platform.YouTube);
+                .GetAllIdsOnPlatformWithUnarchivedComments(EPlatform.YouTube);
         }
 
         foreach (var videoId in videoIds)
@@ -75,7 +75,7 @@ public class CommentBackgroundService : BaseYouTubeBackgroundService<CommentBack
     private async Task OnNewItemEnqueued(string videoId, CancellationToken ct)
     {
         Logger.LogInformation("Started updating comments for video {IdOnPlatform} on platform {Platform}",
-            videoId, Platform.YouTube);
+            videoId, EPlatform.YouTube);
 
         using var scope = Services.CreateScope();
         var youTubeUow = scope.GetYouTubeUow();
@@ -88,12 +88,12 @@ public class CommentBackgroundService : BaseYouTubeBackgroundService<CommentBack
         catch (VideoNotFoundOnPlatformException e)
         {
             Logger.LogError(exception: e, "Video {IdOnPlatform} not found on platform {Platform}",
-                videoId, Platform.YouTube);
+                videoId, EPlatform.YouTube);
         }
         catch (OperationCanceledException)
         {
             Logger.LogWarning("Cancelled updating comments for video {IdOnPlatform} on platform {Platform}",
-                videoId, Platform.YouTube);
+                videoId, EPlatform.YouTube);
         }
 
         await uow.SaveChangesAsync();

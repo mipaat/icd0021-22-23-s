@@ -1,4 +1,4 @@
-using App.Domain.NotMapped;
+using App.Common;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace App.Domain.Comparers;

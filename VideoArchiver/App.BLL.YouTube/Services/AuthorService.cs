@@ -1,7 +1,8 @@
 ﻿using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
 using App.DAL.DTO.Entities;
-using App.DAL.DTO.Enums;
+using App.DAL.DTO.Entities.Playlists;
+using App.Common.Enums;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
@@ -48,16 +49,17 @@ public class AuthorService : BaseYouTubeService<AuthorService>
 
     private async Task<Author> AddOrGetAuthor(string id, Func<Author> newAuthorFunc)
     {
+        if (id == "UCQ8FGmJWvddOBx7hCJxvfzA")
+        {
+            Logger.LogInformation("GOOFY AHH");
+        }
         var author = await GetDbOrCachedAuthor(id);
         if (author == null)
         {
             author = newAuthorFunc();
             Uow.Authors.Add(author);
             await ServiceUow.ImageService.UpdateProfileImages(author);
-            if (!_cachedAuthors.ContainsKey(id))
-            {
-                _cachedAuthors[id] = author;
-            }
+            _cachedAuthors.TryAdd(id, author);
         }
 
         return author;
@@ -68,10 +70,10 @@ public class AuthorService : BaseYouTubeService<AuthorService>
         var author = _cachedAuthors.GetValueOrDefault(id);
         if (author == null)
         {
-            author = await Uow.Authors.GetByIdOnPlatformAsync(id, Platform.YouTube);
-            if (author != null && !_cachedAuthors.ContainsKey(id))
+            author = await Uow.Authors.GetByIdOnPlatformAsync(id, EPlatform.YouTube);
+            if (author != null)
             {
-                _cachedAuthors[id] = author;
+                _cachedAuthors.TryAdd(id, author);
             }
         }
 

@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using App.Domain.Enums;
+using App.Common.Enums;
 using Domain.Base;
 
 namespace App.Domain;
@@ -12,7 +12,7 @@ public class VideoGame : AbstractIdDatabaseEntity
     public Guid? GameId { get; set; }
 
     [MaxLength(16)] public string? IgdbId { get; set; }
-    public Platform? Platform { get; set; } = default!;
+    public EPlatform? Platform { get; set; } = default!;
     [MaxLength(64)] public string? IdOnPlatform { get; set; } = default!;
 
     [MaxLength(512)] public string? Name { get; set; }

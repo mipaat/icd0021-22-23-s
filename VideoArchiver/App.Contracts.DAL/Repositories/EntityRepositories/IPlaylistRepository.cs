@@ -1,11 +1,17 @@
-using App.Domain;
+using App.DAL.DTO.Entities.Playlists;
+using App.Common.Enums;
 using Contracts.DAL;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface IPlaylistRepository : IBaseEntityRepository<Playlist, App.DAL.DTO.Entities.Playlist>
+public interface IPlaylistRepository : IBaseEntityRepository<App.Domain.Playlist, Playlist>
 {
-    public Task<App.DAL.DTO.Entities.Playlist?> GetByIdOnPlatformAsync(string idOnPlatform, App.DAL.DTO.Enums.Platform platform);
-    public Task<ICollection<App.DAL.DTO.Entities.Playlist>> GetAllNotOfficiallyFetched(App.DAL.DTO.Enums.Platform platform, int? limit = null);
-    public Task<ICollection<App.DAL.DTO.Entities.Playlist>> GetAllBeforeOfficialApiFetch(App.DAL.DTO.Enums.Platform platform, DateTime cutoff, int? limit = null);
+    public Task<Playlist?> GetByIdOnPlatformAsync(string idOnPlatform, EPlatform platform);
+    public Task<ICollection<Playlist>> GetAllNotOfficiallyFetched(EPlatform platform, int? limit = null);
+    public Task<ICollection<Playlist>> GetAllBeforeOfficialApiFetch(EPlatform platform, DateTime cutoff, int? limit = null);
+
+    public Task<ICollection<PlaylistWithBasicVideoData>> GetAllWithContentsUpdatedBefore(EPlatform platform,
+        DateTime cutoff, int? limit = null);
+
+    public void UpdateContents(PlaylistWithBasicVideoData playlist);
 }

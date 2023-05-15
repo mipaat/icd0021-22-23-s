@@ -1,4 +1,5 @@
 using App.DAL.DTO.Entities;
+using App.DAL.DTO.Entities.Playlists;
 
 namespace App.BLL.Extensions;
 

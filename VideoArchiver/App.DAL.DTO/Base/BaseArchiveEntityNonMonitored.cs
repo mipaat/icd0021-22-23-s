@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using App.DAL.DTO.Enums;
+using App.Common.Enums;
 using Domain.Base;
 
 namespace App.DAL.DTO.Base;
 
 public abstract class BaseArchiveEntityNonMonitored : AbstractIdDatabaseEntity
 {
-    public Platform Platform { get; set; } = default!;
+    public EPlatform Platform { get; set; } = default!;
     [MaxLength(64)] public string IdOnPlatform { get; set; } = default!;
 
     public DateTime? CreatedAt { get; set; }

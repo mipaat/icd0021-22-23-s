@@ -1,6 +1,6 @@
 using App.DAL.DTO.Base;
 using App.DAL.DTO.Entities.Identity;
-using App.DAL.DTO.NotMapped;
+using App.Common;
 
 namespace App.DAL.DTO.Entities;
 

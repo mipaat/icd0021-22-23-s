@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using App.DAL.DTO.NotMapped;
+using App.Common;
 using Domain.Base;
 
 namespace App.DAL.DTO.Entities;

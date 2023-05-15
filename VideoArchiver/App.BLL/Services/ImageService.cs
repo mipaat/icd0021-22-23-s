@@ -1,7 +1,8 @@
 using System.Security.Cryptography;
 using App.BLL.Base;
 using App.DAL.DTO.Entities;
-using App.DAL.DTO.NotMapped;
+using App.DAL.DTO.Entities.Playlists;
+using App.Common;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 

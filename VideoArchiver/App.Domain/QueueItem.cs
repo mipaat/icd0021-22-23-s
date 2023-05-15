@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using App.Domain.Enums;
+using App.Common.Enums;
 using App.Domain.Identity;
 using Domain.Base;
 
@@ -8,7 +8,7 @@ namespace App.Domain;
 public class QueueItem : AbstractIdDatabaseEntity
 {
     [MaxLength(4096)] public string? Url { get; set; }
-    public Platform? Platform { get; set; }
+    public EPlatform? Platform { get; set; }
     [MaxLength(64)] public string? IdOnPlatform { get; set; }
 
     public bool Monitor { get; set; } = true;
@@ -39,7 +39,7 @@ public class QueueItem : AbstractIdDatabaseEntity
     {
     }
 
-    public QueueItem(string id, Guid submitterId, bool autoSubmit, Platform platform)
+    public QueueItem(string id, Guid submitterId, bool autoSubmit, EPlatform platform)
     {
         Platform = platform;
         IdOnPlatform = id;

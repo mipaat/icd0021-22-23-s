@@ -1,9 +1,9 @@
 using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
-using App.DAL.DTO.Enums;
+using App.Common.Enums;
 using AutoMapper;
-using Base.DAL.EF;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DAL.EF.Repositories.EntityRepositories;
@@ -11,19 +11,17 @@ namespace App.DAL.EF.Repositories.EntityRepositories;
 public class VideoAuthorRepository : BaseAppEntityRepository<App.Domain.VideoAuthor, VideoAuthor>,
     IVideoAuthorRepository
 {
-    public VideoAuthorRepository(AbstractAppDbContext dbContext, IMapper mapper, IAppUnitOfWork uow) : base(dbContext, mapper, uow)
+    public VideoAuthorRepository(AbstractAppDbContext dbContext, IMapper mapper, IAppUnitOfWork uow) : base(dbContext,
+        mapper, uow)
     {
     }
 
-    protected override Func<TQueryable, TQueryable> IncludeDefaultsFunc<TQueryable>()
+    protected override TQueryable IncludeDefaults<TQueryable>(TQueryable queryable)
     {
-        return q =>
-        {
-            q
-                .Include(e => e.Author)
-                .Include(e => e.Video);
-            return q;
-        };
+        queryable
+            .Include(e => e.Author)
+            .Include(e => e.Video);
+        return queryable;
     }
 
     protected override Domain.VideoAuthor AfterMap(VideoAuthor entity, Domain.VideoAuthor mapped)
@@ -76,12 +74,11 @@ public class VideoAuthorRepository : BaseAppEntityRepository<App.Domain.VideoAut
         EAuthorRole? authorRole = null)
     {
         var query = Entities.Where(va => va.VideoId == videoId && va.AuthorId == authorId);
-        var domainAuthorRole = authorRole?.ToDomainAuthorRole();
         if (authorRole != null)
         {
-            query = query.Where(va => va.Role == domainAuthorRole);
+            query = query.Where(va => va.Role == authorRole);
         }
 
-        return (await query.ToListAsync()).Select(e => Mapper.Map(e)!).ToList();
+        return await query.ProjectTo<VideoAuthor>(Mapper.ConfigurationProvider).ToListAsync();
     }
 }

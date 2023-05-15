@@ -2,7 +2,7 @@ using App.BLL.Exceptions;
 using App.BLL.YouTube.Base;
 using App.BLL.DTO;
 using App.BLL.DTO.Entities;
-using App.BLL.DTO.Enums;
+using App.Common.Enums;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 
@@ -44,7 +44,7 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubm
                 else
                 {
                     var previouslyArchivedPlaylist =
-                        await Uow.Playlists.GetByIdOnPlatformAsync(playlistId!, Platform.YouTube);
+                        await Uow.Playlists.GetByIdOnPlatformAsync(playlistId!, EPlatform.YouTube);
                     if (previouslyArchivedPlaylist == null)
                     {
                         result.ContainsNonArchivedPlaylist = true;
@@ -71,7 +71,7 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubm
 
     private async Task<UrlSubmissionResult> SubmitVideo(string id, Guid submitterId, bool autoSubmit)
     {
-        var previouslyArchivedVideo = await Uow.Videos.GetByIdOnPlatformAsync(id, Platform.YouTube);
+        var previouslyArchivedVideo = await Uow.Videos.GetByIdOnPlatformAsync(id, EPlatform.YouTube);
         if (previouslyArchivedVideo != null)
         {
             Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(submitterId, autoSubmit, previouslyArchivedVideo));
@@ -85,7 +85,7 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubm
         if (!autoSubmit)
         {
             return QueueItemMapper.Map(
-                Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(id, submitterId, autoSubmit, Platform.YouTube)))!;
+                Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(id, submitterId, autoSubmit, EPlatform.YouTube)))!;
         }
 
         var video = await YouTubeUow.VideoService.AddVideo(videoData);
@@ -96,7 +96,7 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubm
 
     private async Task<UrlSubmissionResult> SubmitPlaylist(string id, Guid submitterId, bool autoSubmit)
     {
-        var previouslyArchivedPlaylist = await Uow.Playlists.GetByIdOnPlatformAsync(id, Platform.YouTube);
+        var previouslyArchivedPlaylist = await Uow.Playlists.GetByIdOnPlatformAsync(id, EPlatform.YouTube);
         if (previouslyArchivedPlaylist != null)
         {
             Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(submitterId, autoSubmit, previouslyArchivedPlaylist));
@@ -110,7 +110,7 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubm
         if (!autoSubmit)
         {
             return QueueItemMapper.Map(
-                Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(id, submitterId, autoSubmit, Platform.YouTube)))!;
+                Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(id, submitterId, autoSubmit, EPlatform.YouTube)))!;
         }
 
         var playlist = await YouTubeUow.PlaylistService.AddPlaylist(playlistData);
