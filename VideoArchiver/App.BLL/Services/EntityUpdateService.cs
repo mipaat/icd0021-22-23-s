@@ -28,6 +28,9 @@ public class EntityUpdateService
 
         comment.Content = UpdateValueIgnoreNull(comment.Content, newCommentData.Content, ref changed);
 
+        comment.LikeCount = StatisticsUpdater.UpdateStatistic(comment.LikeCount, newCommentData.LikeCount, comment,
+            newCommentData,
+            ref changed);
         comment.LikeCount = UpdateValueIgnoreNull(comment.LikeCount, newCommentData.LikeCount, ref changed);
         comment.DislikeCount = UpdateValueIgnoreNull(comment.DislikeCount, newCommentData.DislikeCount, ref changed);
         comment.ReplyCount = UpdateValueIgnoreNull(comment.ReplyCount, newCommentData.ReplyCount, ref changed);
@@ -58,12 +61,26 @@ public class EntityUpdateService
         video.Description =
             UpdateLangString(video.Description, newVideoData.Description, ref changed, video.DefaultLanguage);
 
-        video.Duration = UpdateValueIgnoreNull(video.Duration, newVideoData.Duration, ref changed);
+        if (video.Duration != null && newVideoData.Duration != null)
+        {
+            UpdateChanged(ref changed, newVideoData.Duration > video.Duration.Value.Add(TimeSpan.FromSeconds(5)) ||
+                                       newVideoData.Duration < video.Duration.Value.Subtract(TimeSpan.FromSeconds(5)));
+        }
 
-        video.ViewCount = UpdateValueIgnoreNull(video.ViewCount, newVideoData.ViewCount, ref changed);
-        video.LikeCount = UpdateValueIgnoreNull(video.LikeCount, newVideoData.LikeCount, ref changed);
-        video.DislikeCount = UpdateValueIgnoreNull(video.DislikeCount, newVideoData.DislikeCount, ref changed);
-        video.CommentCount = UpdateValueIgnoreNull(video.CommentCount, newVideoData.CommentCount, ref changed);
+        video.Duration = newVideoData.Duration ?? video.Duration;
+
+        video.ViewCount =
+            StatisticsUpdater.UpdateStatistic(video.ViewCount, newVideoData.ViewCount, video, newVideoData,
+                ref changed);
+        video.LikeCount =
+            StatisticsUpdater.UpdateStatistic(video.LikeCount, newVideoData.LikeCount, video, newVideoData,
+                ref changed);
+        video.DislikeCount =
+            StatisticsUpdater.UpdateStatistic(video.DislikeCount, newVideoData.DislikeCount, video, newVideoData,
+                ref changed);
+        video.CommentCount =
+            StatisticsUpdater.UpdateStatistic(video.CommentCount, newVideoData.CommentCount, video, newVideoData,
+                ref changed);
 
         // TODO: Custom logic
         video.Captions = UpdateValueIgnoreNull(video.Captions, newVideoData.Captions, ref changed);
@@ -233,3 +250,50 @@ public class EntityUpdateService
 }
 
 internal delegate T CustomUpdateFunc<T>(T oldValue, T newValue, ref bool changed);
+
+internal class StatisticsUpdater
+{
+    private static bool IsChangeNotMild(long oldValue, long newValue) =>
+        (newValue > oldValue * 1.2 || newValue < oldValue / 1.2) &&
+        (newValue > oldValue + 20 || newValue < oldValue - 20);
+
+    private static bool IsChangeNotTooFrequent(BaseArchiveEntityNonMonitored oldEntity,
+        BaseArchiveEntityNonMonitored newEntity) =>
+        oldEntity.LastSuccessfulFetchUnofficial <
+        (newEntity.LastSuccessfulFetchUnofficial ?? DateTime.UtcNow)
+        .Subtract(TimeSpan.FromDays(30));
+
+    private static bool IsChangeSignificant(long oldValue, long newValue) =>
+        newValue > oldValue * 2 || newValue < oldValue / 2 ||
+        newValue > oldValue + 100000 || newValue < oldValue - 20000;
+
+    public static long? UpdateStatistic(long? oldValue, long? newValue, BaseArchiveEntityNonMonitored oldEntity,
+        BaseArchiveEntityNonMonitored newEntity, ref bool changed)
+    {
+        if (newValue == null) return oldValue;
+        if (oldValue == null) return newValue;
+        changed = changed ||
+                  (IsChangeNotTooFrequent(oldEntity, newEntity) && IsChangeNotMild(oldValue.Value, newValue.Value)) ||
+                  IsChangeSignificant(oldValue.Value, newValue.Value);
+        return newValue;
+    }
+
+    private static bool IsChangeNotMild(int oldValue, int newValue) =>
+        (newValue > oldValue * 1.2 || newValue < oldValue / 1.2) &&
+        (newValue > oldValue + 20 || newValue < oldValue - 20);
+
+    private static bool IsChangeSignificant(int oldValue, int newValue) =>
+        newValue > oldValue * 2 || newValue < oldValue / 2 ||
+        newValue > oldValue + 100000 || newValue < oldValue - 20000;
+
+    public static int? UpdateStatistic(int? oldValue, int? newValue, BaseArchiveEntityNonMonitored oldEntity,
+        BaseArchiveEntityNonMonitored newEntity, ref bool changed)
+    {
+        if (newValue == null) return oldValue;
+        if (oldValue == null) return newValue;
+        changed = changed ||
+                  (IsChangeNotTooFrequent(oldEntity, newEntity) && IsChangeNotMild(oldValue.Value, newValue.Value)) ||
+                  IsChangeSignificant(oldValue.Value, newValue.Value);
+        return newValue;
+    }
+}
