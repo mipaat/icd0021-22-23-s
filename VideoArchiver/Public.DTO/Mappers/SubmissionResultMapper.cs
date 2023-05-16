@@ -1,5 +1,6 @@
 using App.BLL.DTO.Entities;
-using App.Common.Enums;
+using App.BLL.DTO.Enums;
+using EPlatform = App.Common.Enums.EPlatform;
 
 #pragma warning disable 1591
 namespace Public.DTO.Mappers;
@@ -10,18 +11,11 @@ public static class SubmissionResultMapper
     {
         var submissionResult = new v1.SubmissionResult
         {
+            Id = bllSubmissionResult.Id,
             Type = bllSubmissionResult.GetEntityType(),
-            Platform = bllSubmissionResult.Entity?.Platform.GetPlatform() ??
-                       bllSubmissionResult.QueueItem?.Platform?.GetPlatform() ??
-                       throw new ArgumentException(
-                           $"Invalid {typeof(UrlSubmissionResult)} - failed to parse platform!"),
-            Id = bllSubmissionResult.Entity?.Author?.Id ??
-                 bllSubmissionResult.Entity?.Video?.Id ??
-                 bllSubmissionResult.Entity?.Playlist?.Id ??
-                 bllSubmissionResult.QueueItem?.Id ??
-                 throw new ArgumentException(
-                     $"Invalid {typeof(UrlSubmissionResult)} - failed to parse ID!"),
-            IsQueueItem = bllSubmissionResult.QueueItem != null,
+            Platform = bllSubmissionResult.Platform?.GetPlatform() ?? throw new ArgumentException(
+                $"Invalid {typeof(UrlSubmissionResult)} - failed to parse platform!"),
+            IsQueueItem = bllSubmissionResult.Type == EUrlSubmissionResultType.QueueItem,
             AlreadyAdded = bllSubmissionResult.AlreadyAdded,
         };
 
@@ -35,10 +29,13 @@ public static class SubmissionResultMapper
 
     private static v1.EEntityType? GetEntityType(this UrlSubmissionResult bllSubmissionResult)
     {
-        if (bllSubmissionResult.Entity?.Author != null) return v1.EEntityType.Author;
-        if (bllSubmissionResult.Entity?.Video != null) return v1.EEntityType.Video;
-        if (bllSubmissionResult.Entity?.Playlist != null) return v1.EEntityType.Playlist;
-        return null;
+        return bllSubmissionResult.Type switch
+        {
+            EUrlSubmissionResultType.Author => v1.EEntityType.Author,
+            EUrlSubmissionResultType.Video => v1.EEntityType.Video,
+            EUrlSubmissionResultType.Playlist => v1.EEntityType.Playlist,
+            _ => null,
+        };
     }
 
     private static v1.EPlatform GetPlatform(this EPlatform platform)

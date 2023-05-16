@@ -14,7 +14,7 @@ public class SubmissionResult
     /// The platform of the added or queued entity.
     /// </summary>
     /// <example>YouTube</example>
-    public EPlatform Platform { get; set; }
+    public EPlatform? Platform { get; set; }
     /// <summary>
     /// The unique ID of the added entity or queue item (in the archive, not on its source platform).
     /// </summary>

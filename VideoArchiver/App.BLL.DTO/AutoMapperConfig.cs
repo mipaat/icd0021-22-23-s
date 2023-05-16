@@ -1,3 +1,4 @@
+using App.BLL.DTO.Entities;
 using App.BLL.DTO.Mappers;
 using AutoMapper;
 
@@ -8,10 +9,9 @@ public class AutoMapperConfig : Profile
     public AutoMapperConfig()
     {
         this.AddAuthorMap()
-            .AddPlaylistMap()
             .AddVideoMap()
-            .AddQueueItemMap()
             .AddRefreshTokenMap()
             .AddGameMap();
+        CreateMap<DAL.DTO.Entities.Comment, Comment>();
     }
 }

@@ -1,5 +1,4 @@
 ﻿using App.BLL.Base;
-using App.BLL.DTO.Mappers;
 using AutoMapper;
 using Google.Apis.YouTube.v3;
 using Microsoft.Extensions.Logging;
@@ -22,10 +21,7 @@ public abstract class BaseYouTubeService<TYouTubeService> : BaseService<TYouTube
 
     protected YouTubeContext Context => YouTubeUow.Context;
 
-    public VideoMapper VideoMapper => YouTubeUow.VideoMapper;
-    public AuthorMapper AuthorMapper => YouTubeUow.AuthorMapper;
-    public PlaylistMapper PlaylistMapper => YouTubeUow.PlaylistMapper;
-    public QueueItemMapper QueueItemMapper => YouTubeUow.QueueItemMapper;
+    protected IMapper Mapper => YouTubeUow.Mapper;
 
     protected BaseYouTubeService(ServiceUow serviceUow, ILogger<TYouTubeService> logger, YouTubeUow youTubeUow,
         IMapper mapper) :

@@ -1,20 +1,30 @@
+using App.BLL.DTO.Entities;
 using AutoMapper;
-using Base.Mapping;
 
 namespace App.BLL.DTO.Mappers;
 
-public class VideoMapper : BaseMapperUnidirectional<App.DAL.DTO.Entities.Video, Entities.Video>
+public class VideoMapper
 {
-    public VideoMapper(IMapper mapper) : base(mapper)
+    private readonly IMapper _mapper;
+
+    public VideoMapper(IMapper mapper)
     {
+        _mapper = mapper;
+    }
+
+    public VideoWithAuthorAndComments Map(DAL.DTO.Entities.VideoWithBasicAuthorsAndComments video)
+    {
+        return _mapper.Map<VideoWithAuthorAndComments>(video);
     }
 }
 
-public static class VideoMapperExtensions
+public static class AutoMapperConfigExtensions
 {
     public static AutoMapperConfig AddVideoMap(this AutoMapperConfig config)
     {
-        config.CreateMap<App.DAL.DTO.Entities.Video, Entities.Video>();
+        config.CreateMap<DAL.DTO.Entities.VideoWithBasicAuthorsAndComments, VideoWithAuthorAndComments>()
+            .ForMember(v => v.Author, o =>
+                o.MapFrom(v => v.Authors.First()));
         return config;
     }
 }

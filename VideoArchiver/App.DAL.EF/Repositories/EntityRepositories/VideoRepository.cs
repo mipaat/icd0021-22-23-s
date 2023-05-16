@@ -41,6 +41,20 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
             .ToListAsync();
     }
 
+    public async Task<VideoWithBasicAuthors> GetByIdWithBasicAuthorsAsync(Guid id)
+    {
+        return AttachIfNotAttached(await Entities
+            .ProjectTo<VideoWithBasicAuthors>(Mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(v => v.Id == id))!;
+    }
+
+    public async Task<VideoWithBasicAuthorsAndComments> GetByIdWithBasicAuthorsAndCommentsAsync(Guid id)
+    {
+        return AttachIfNotAttached(await Entities
+            .ProjectTo<VideoWithBasicAuthorsAndComments>(Mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(v => v.Id == id))!;
+    }
+
     public async Task<VideoWithComments?> GetByIdOnPlatformWithCommentsAsync(string idOnPlatform, EPlatform platform)
     {
         return AttachIfNotAttached(await Entities

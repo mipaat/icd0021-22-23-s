@@ -1,5 +1,4 @@
 ﻿using App.BLL.Base;
-using App.BLL.DTO.Mappers;
 using App.BLL.YouTube.Services;
 using App.Common;
 using App.Common.Enums;
@@ -33,17 +32,13 @@ public class YouTubeUow : BaseAppUowContainer, IDisposable
 
     public readonly ServiceUow ServiceUow;
 
-    private readonly IMapper _mapper;
+    public readonly IMapper Mapper;
 
     public YouTubeUow(ServiceUow serviceUow, YouTubeContext context, IMapper mapper) : base(serviceUow.Uow)
     {
         ServiceUow = serviceUow;
         Context = context;
-        _mapper = mapper;
-        VideoMapper = new VideoMapper(mapper);
-        AuthorMapper = new AuthorMapper(mapper);
-        PlaylistMapper = new PlaylistMapper(mapper);
-        QueueItemMapper = new QueueItemMapper(mapper);
+        Mapper = mapper;
     }
 
     private IConfiguration Config => ServiceUow.Config;
@@ -73,11 +68,6 @@ public class YouTubeUow : BaseAppUowContainer, IDisposable
 
     private ApiService? _apiService;
     public ApiService ApiService => _apiService ??= Services.GetRequiredService<ApiService>();
-
-    public readonly VideoMapper VideoMapper;
-    public readonly AuthorMapper AuthorMapper;
-    public readonly PlaylistMapper PlaylistMapper;
-    public readonly QueueItemMapper QueueItemMapper;
 
     public void Dispose()
     {

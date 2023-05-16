@@ -4,6 +4,7 @@ using App.BLL.Base;
 using App.BLL.Exceptions;
 using App.Contracts.DAL;
 using App.BLL.DTO;
+using App.BLL.DTO.Contracts;
 using App.BLL.DTO.Entities;
 using Base.WebHelpers;
 

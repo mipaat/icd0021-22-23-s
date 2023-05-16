@@ -1,6 +1,6 @@
 using App.BLL.DTO.Entities;
 
-namespace App.BLL.DTO;
+namespace App.BLL.DTO.Contracts;
 
 public interface IPlatformUrlSubmissionHandler
 {

@@ -1,25 +1,48 @@
+using App.BLL.DTO.Enums;
+using App.Common.Enums;
+
 namespace App.BLL.DTO.Entities;
 
 public class UrlSubmissionResult
 {
-    public readonly QueueItem? QueueItem;
-    public readonly Entity? Entity;
+    public readonly EUrlSubmissionResultType Type;
+    public readonly Guid Id;
+    public readonly EPlatform? Platform;
+    public readonly string? IdOnPlatform;
+    public readonly bool AlreadyAdded;
 
-    public bool AlreadyAdded = false;
-
-    private UrlSubmissionResult(QueueItem queueItem)
+    public UrlSubmissionResult(Guid id, EUrlSubmissionResultType type, EPlatform? platform, string? idOnPlatform = null,
+        bool alreadyAdded = false)
     {
-        QueueItem = queueItem;
+        Id = id;
+        Type = type;
+        Platform = platform;
+        IdOnPlatform = idOnPlatform;
+        AlreadyAdded = alreadyAdded;
     }
 
-    private UrlSubmissionResult(Entity entity)
+    public UrlSubmissionResult(App.DAL.DTO.Entities.QueueItem queueItem, bool alreadyAdded = false) :
+        this(queueItem.Id, EUrlSubmissionResultType.QueueItem, queueItem.Platform, queueItem.IdOnPlatform, alreadyAdded)
     {
-        Entity = entity;
     }
 
-    public static implicit operator UrlSubmissionResult(QueueItem queueItem) => new(queueItem);
-    public static implicit operator UrlSubmissionResult(Entity entity) => new(entity);
-    public static implicit operator UrlSubmissionResult(Video entity) => new(entity);
-    public static implicit operator UrlSubmissionResult(Author entity) => new(entity);
-    public static implicit operator UrlSubmissionResult(Playlist entity) => new(entity);
+    public UrlSubmissionResult(App.DAL.DTO.Base.BaseArchiveEntityNonMonitored entity, bool alreadyAdded = false) :
+        this(entity.Id, entity.UrlSubmissionResultType(), entity.Platform, entity.IdOnPlatform, alreadyAdded)
+    {
+    }
+}
+
+internal static class UrlSubmissionResultTypeExtensions
+{
+    public static EUrlSubmissionResultType UrlSubmissionResultType(
+        this App.DAL.DTO.Base.BaseArchiveEntityNonMonitored entity)
+    {
+        return entity switch
+        {
+            DAL.DTO.Entities.Video => EUrlSubmissionResultType.Video,
+            DAL.DTO.Entities.Playlists.Playlist => EUrlSubmissionResultType.Playlist,
+            DAL.DTO.Entities.Author => EUrlSubmissionResultType.Author,
+            _ => throw new ArgumentException($"Entity is not a valid {typeof(EUrlSubmissionResultType)}"),
+        };
+    }
 }

@@ -1,6 +1,6 @@
 using App.BLL.Exceptions;
 using App.BLL.YouTube.Base;
-using App.BLL.DTO;
+using App.BLL.DTO.Contracts;
 using App.BLL.DTO.Entities;
 using App.Common.Enums;
 using AutoMapper;
@@ -51,7 +51,7 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubm
                     }
                     else
                     {
-                        result.Add(PlaylistMapper.Map(previouslyArchivedPlaylist)!);
+                        result.Add(new UrlSubmissionResult(previouslyArchivedPlaylist, true));
                     }
                 }
             }
@@ -75,23 +75,22 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubm
         if (previouslyArchivedVideo != null)
         {
             Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(submitterId, autoSubmit, previouslyArchivedVideo));
-            UrlSubmissionResult result = VideoMapper.Map(previouslyArchivedVideo)!;
-            result.AlreadyAdded = true;
-            return result;
+            return new UrlSubmissionResult(previouslyArchivedVideo, true);
         }
 
         var videoData = await YouTubeUow.VideoService.FetchVideoDataYtdl(id, false);
 
         if (!autoSubmit)
         {
-            return QueueItemMapper.Map(
-                Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(id, submitterId, autoSubmit, EPlatform.YouTube)))!;
+            var queueItem =
+                Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(id, submitterId, autoSubmit, EPlatform.YouTube));
+            return new UrlSubmissionResult(queueItem);
         }
 
         var video = await YouTubeUow.VideoService.AddVideo(videoData);
         Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(submitterId, autoSubmit, video));
 
-        return VideoMapper.Map(video)!;
+        return new UrlSubmissionResult(video);
     }
 
     private async Task<UrlSubmissionResult> SubmitPlaylist(string id, Guid submitterId, bool autoSubmit)
@@ -100,22 +99,21 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubm
         if (previouslyArchivedPlaylist != null)
         {
             Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(submitterId, autoSubmit, previouslyArchivedPlaylist));
-            UrlSubmissionResult result = PlaylistMapper.Map(previouslyArchivedPlaylist)!;
-            result.AlreadyAdded = true;
-            return result;
+            return new UrlSubmissionResult(previouslyArchivedPlaylist, true);
         }
 
         var playlistData = await YouTubeUow.PlaylistService.FetchPlaylistDataYtdl(id);
 
         if (!autoSubmit)
         {
-            return QueueItemMapper.Map(
-                Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(id, submitterId, autoSubmit, EPlatform.YouTube)))!;
+            var queueItem =
+                Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(id, submitterId, autoSubmit, EPlatform.YouTube));
+            return new UrlSubmissionResult(queueItem);
         }
 
         var playlist = await YouTubeUow.PlaylistService.AddPlaylist(playlistData);
         Uow.QueueItems.Add(new App.DAL.DTO.Entities.QueueItem(submitterId, autoSubmit, playlist));
 
-        return PlaylistMapper.Map(playlist)!;
+        return new UrlSubmissionResult(playlist);
     }
 }

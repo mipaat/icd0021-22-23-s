@@ -14,12 +14,15 @@ public class AutoMapperConfig : Profile
         CreateMap<RefreshToken, Domain.Identity.RefreshToken>().ReverseMap();
 
         CreateMap<ApiQuotaUsage, Domain.ApiQuotaUsage>().ReverseMap();
+        
         CreateMap<Author, Domain.Author>().ReverseMap();
+        CreateMap<Domain.Author, AuthorBasic>().ReverseMap();
         CreateMap<AuthorCategory, Domain.AuthorCategory>().ReverseMap();
         CreateMap<AuthorHistory, Domain.AuthorHistory>().ReverseMap();
         CreateMap<AuthorPubSub, Domain.AuthorPubSub>().ReverseMap();
         CreateMap<AuthorRating, Domain.AuthorRating>().ReverseMap();
         CreateMap<AuthorSubscription, Domain.AuthorSubscription>().ReverseMap();
+
         CreateMap<Category, Domain.Category>().ReverseMap();
         CreateMap<Comment, Domain.Comment>().ReverseMap();
         CreateMap<CommentHistory, Domain.CommentHistory>().ReverseMap();
@@ -59,7 +62,8 @@ public class AutoMapperConfig : Profile
         CreateMap<App.Domain.Video, VideoWithComments>()
             .ForMember(v => v.Comments,
                 o => o.MapFrom(v => v.Comments));
-
+        CreateMap<App.Domain.Video, VideoWithBasicAuthors>().ReverseMap();
+        CreateMap<App.Domain.Video, VideoWithBasicAuthorsAndComments>();
         CreateMap<App.Domain.Video, BasicVideoData>();
     }
 }
