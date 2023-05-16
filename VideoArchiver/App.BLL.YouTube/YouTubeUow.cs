@@ -1,6 +1,8 @@
 ﻿using App.BLL.Base;
 using App.BLL.DTO.Mappers;
 using App.BLL.YouTube.Services;
+using App.Common;
+using App.Common.Enums;
 using AutoMapper;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
@@ -48,7 +50,14 @@ public class YouTubeUow : BaseAppUowContainer, IDisposable
     private IServiceProvider Services => ServiceUow.Services;
 
     private YoutubeDL? _youtubeDl;
-    public YoutubeDL YoutubeDl => _youtubeDl ??= new YoutubeDL();
+
+    public YoutubeDL YoutubeDl =>
+        _youtubeDl ??= new YoutubeDL
+        {
+            OutputFolder = AppPaths.GetVideosDirectory(EPlatform.YouTube),
+            RestrictFilenames = true,
+            OverwriteFiles = false,
+        };
 
     private AuthorService? _authorService;
     public AuthorService AuthorService => _authorService ??= Services.GetRequiredService<AuthorService>();

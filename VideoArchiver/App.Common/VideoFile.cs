@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.Common;
 
 [NotMapped]
+[Owned]
 public class VideoFile
 {
     public string? Key { get; set; }

@@ -10,44 +10,33 @@ namespace App.BLL.Services;
 
 public class ImageService : BaseService<ImageService>
 {
-    public ImageService(ServiceUow serviceUow, ILogger<ImageService> logger, IMapper mapper) : base(serviceUow, logger, mapper)
+    public ImageService(ServiceUow serviceUow, ILogger<ImageService> logger, IMapper mapper) : base(serviceUow, logger,
+        mapper)
     {
-    }
-
-    private const string DownloadsDirectory = "downloads";
-    private static readonly string ThumbnailsDirectory = Path.Combine(DownloadsDirectory, "thumbnails");
-    private static readonly string ProfileImagesDirectory = Path.Combine(DownloadsDirectory, "profile_images");
-
-    private void EnsureDirectoryExists(string directory)
-    {
-        if (!Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
     }
 
     public async Task UpdateProfileImages(Author author)
     {
-        await UpdateImages(author.ProfileImages, ProfileImagesDirectory,
-            $"{author.Platform}_{author.IdOnPlatform}");
+        await UpdateImages(author.ProfileImages, AppPaths.GetProfileImagesDirectory(author.Platform),
+            author.IdOnPlatform);
     }
 
     public async Task UpdateThumbnails(Video video)
     {
-        await UpdateImages(video.Thumbnails, ThumbnailsDirectory,
-            $"{video.Platform}_{video.IdOnPlatform}");
+        await UpdateImages(video.Thumbnails, AppPaths.GetThumbnailsDirectory(video.Platform),
+            video.IdOnPlatform);
     }
 
     public async Task UpdateThumbnails(Playlist playlist)
     {
-        await UpdateImages(playlist.Thumbnails, ThumbnailsDirectory,
-            $"{playlist.Platform}_{playlist.IdOnPlatform}");
+        await UpdateImages(playlist.Thumbnails, AppPaths.GetThumbnailsDirectory(playlist.Platform),
+            playlist.IdOnPlatform);
     }
 
     private async Task UpdateImages(ImageFileList? images, string downloadDirectory, string fileNamePrefix)
     {
         if (images == null || images.Count == 0) return;
-        EnsureDirectoryExists(downloadDirectory);
+        Utils.Utils.EnsureDirectoryExists(downloadDirectory);
         using var httpClient = new HttpClient();
         var imagesToRemove = new ImageFileList();
         foreach (var image in images)
@@ -85,7 +74,8 @@ public class ImageService : BaseService<ImageService>
             }
 
             if (!isChanged) continue;
-            var filePath = Path.Combine(downloadDirectory, $"{fileNamePrefix}_{DateTime.UtcNow.Ticks}_{Guid.NewGuid().ToString().Replace("-", "")}.jpg");
+            var filePath = Path.Combine(downloadDirectory,
+                $"{fileNamePrefix}_{DateTime.UtcNow.Ticks}_{Guid.NewGuid().ToString().Replace("-", "")}.jpg");
             await using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             await fileStream.WriteAsync(imageBytes);
             image.LocalFilePath = filePath;

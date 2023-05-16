@@ -24,5 +24,6 @@ public static class ServiceCollectionExtensions
         services.AddHostedService<CommentBackgroundService>();
         services.AddHostedService<OfficialApiTimedBackgroundService>();
         services.AddHostedService<PlaylistTimedBackgroundService>();
+        services.AddHostedService<VideoDownloadBackgroundService>();
     }
 }

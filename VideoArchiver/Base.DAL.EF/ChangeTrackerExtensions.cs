@@ -121,6 +121,10 @@ public static class ChangeTrackerExtensions
                         {
                             dbContext.AttachIfNotAttachedRecursive(relatedIdEntity, trackedEntities);
                         }
+                        else
+                        {
+                            dbContext.Attach(relatedEntity);
+                        }
                     }
                 }
             }
@@ -130,6 +134,10 @@ public static class ChangeTrackerExtensions
                 if (relatedEntity is IIdDatabaseEntity<TKey> relatedIdEntity)
                 {
                     dbContext.AttachIfNotAttachedRecursive(relatedIdEntity, trackedEntities);
+                }
+                else if (relatedEntity != null)
+                {
+                    dbContext.Attach(relatedEntity);
                 }
             }
         }

@@ -2,6 +2,7 @@ using App.BLL.Exceptions;
 using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
 using App.BLL.YouTube.Utils;
+using App.Common;
 using App.DAL.DTO.Entities;
 using App.Common.Enums;
 using AutoMapper;
@@ -12,8 +13,9 @@ namespace App.BLL.YouTube.Services;
 
 public class VideoService : BaseYouTubeService<VideoService>
 {
-    public VideoService(ServiceUow serviceUow, ILogger<VideoService> logger, YouTubeUow youTubeUow, IMapper mapper) : base(serviceUow,
-        logger, youTubeUow, mapper)
+    public VideoService(ServiceUow serviceUow, ILogger<VideoService> logger, YouTubeUow youTubeUow, IMapper mapper) :
+        base(serviceUow,
+            logger, youTubeUow, mapper)
     {
     }
 
@@ -85,7 +87,7 @@ public class VideoService : BaseYouTubeService<VideoService>
 
         var videos = await Uow.Videos.GetAllNotOfficiallyFetched(EPlatform.YouTube);
         var result = await UpdateAddedVideosOfficial(videos);
-        
+
         lock (Context.VideoUpdateLock)
         {
             Context.VideoUpdateOngoing = false;
@@ -147,6 +149,7 @@ public class VideoService : BaseYouTubeService<VideoService>
          * TODO: Investigate if this causes potential scope/GC issues?
          */
         Uow.SavedChanges += (_, _) => Context.QueueNewComments(videoData.ID);
+        Uow.SavedChanges += (_, _) => Context.QueueNewVideoDownload(videoData.ID);
 
         video.Thumbnails = ThumbnailUtils.GetAllPotentialThumbnails(video.IdOnPlatform);
         await ServiceUow.ImageService.UpdateThumbnails(video);
@@ -155,5 +158,32 @@ public class VideoService : BaseYouTubeService<VideoService>
         Uow.Videos.Add(video);
 
         return video;
+    }
+
+    public async Task DownloadVideo(string id, CancellationToken ct = default)
+    {
+        Logger.LogInformation("Started downloading video {IdOnPlatform} on platform {Platform}",
+            id, EPlatform.YouTube);
+        var result = await YoutubeDl.RunVideoDownload(Url.ToVideoUrl(id), ct: ct);
+        if (result.Success)
+        {
+            var video = await YouTubeUow.VideoService.AddOrGetVideo(id);
+            video.LocalVideoFiles = new List<VideoFile>
+            {
+                new()
+                {
+                    FilePath = global::Utils.Utils.MakeRelativeFilePath(result.Data),
+                }
+            };
+            Uow.Videos.Update(video);
+            Logger.LogInformation("Successfully downloaded video {IdOnPlatform} on platform {Platform}",
+                id, EPlatform.YouTube);
+        }
+        else
+        {
+            Logger.LogError("Failed to download {Platform} video with ID {Id}.\nErrors: [{Errors}]", EPlatform.YouTube,
+                id, result.ErrorOutput.Length > 0 ? string.Join("\n", result.ErrorOutput) : "Unknown errors");
+            // TODO: Should download failure be tracked?
+        }
     }
 }

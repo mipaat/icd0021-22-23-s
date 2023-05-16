@@ -12,11 +12,11 @@ public static class ConfigurationBuilderExtensions
     public const string Text = "TEXT";
 
     public static ModelConfigurationBuilder HaveJsonConversion<TValue>(
-        this ModelConfigurationBuilder configurationBuilder)
+        this ModelConfigurationBuilder configurationBuilder) where TValue : new()
     {
         configurationBuilder
             .Properties<TValue>()
-            .HaveConversion<JsonValueConverter<TValue>>();
+            .HaveConversion<JsonValueConverter<TValue>, JsonSerializableValueComparer<TValue>>();
         return configurationBuilder;
     }
 
@@ -39,7 +39,7 @@ public static class ConfigurationBuilderExtensions
     }
 
     public static ModelConfigurationBuilder HaveJsonBConversions<TValue>(
-        this ModelConfigurationBuilder configurationBuilder)
+        this ModelConfigurationBuilder configurationBuilder) where TValue : new()
     {
         return configurationBuilder
             .HaveJsonConversion<TValue>()
@@ -81,7 +81,7 @@ public static class ConfigurationBuilderExtensions
     }
 
     public static ModelConfigurationBuilder HaveTextJsonConversions<TValue>(
-        this ModelConfigurationBuilder configurationBuilder)
+        this ModelConfigurationBuilder configurationBuilder) where TValue : new()
     {
         return configurationBuilder
             .HaveJsonConversion<TValue>()

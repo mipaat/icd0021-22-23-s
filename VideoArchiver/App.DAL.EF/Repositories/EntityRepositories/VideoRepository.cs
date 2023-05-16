@@ -32,6 +32,15 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
             .ToListAsync();
     }
 
+    public async Task<ICollection<string>> GetAllIdsOnPlatformNotDownloaded(EPlatform platform)
+    {
+        return await Entities
+            .Where(v => v.Platform == platform && v.IsAvailable && (v.LocalVideoFiles == null || v.LocalVideoFiles.Count == 0)) // NB! Postgres specific probably!
+            .OrderBy(v => v.AddedToArchiveAt)
+            .Select(v => v.IdOnPlatform)
+            .ToListAsync();
+    }
+
     public async Task<VideoWithComments?> GetByIdOnPlatformWithCommentsAsync(string idOnPlatform, EPlatform platform)
     {
         return AttachIfNotAttached(await Entities

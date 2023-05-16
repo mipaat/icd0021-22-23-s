@@ -18,4 +18,5 @@ public interface IVideoRepository : IBaseEntityRepository<App.Domain.Video, Vide
         int? limit = null);
 
     public App.Domain.Video Map(BasicVideoData video, App.Domain.Video mapped);
+    public Task<ICollection<string>> GetAllIdsOnPlatformNotDownloaded(EPlatform platform);
 }

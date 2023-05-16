@@ -30,6 +30,11 @@ public class YouTubeContext
     public event EventHandler<string>? NewCommentsQueued;
     public void QueueNewComments(string videoId) => Task.Run(() => NewCommentsQueued?.Invoke(null, videoId));
 
+    public event EventHandler<string>? NewVideoQueuedForDownload;
+
+    public void QueueNewVideoDownload(string videoId) =>
+        Task.Run(() => NewVideoQueuedForDownload?.Invoke(null, videoId));
+
     private readonly SemaphoreSlim _apiUsageSemaphore = new(1);
     private DateTime _apiUsageUpdatedAt;
     private int _apiUsageAmount;
