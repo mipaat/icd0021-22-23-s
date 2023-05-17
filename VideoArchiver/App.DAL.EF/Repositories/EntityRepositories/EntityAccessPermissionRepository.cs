@@ -57,4 +57,19 @@ public class EntityAccessPermissionRepository :
         return await DbContext.Videos.AnyAsync(
             v => v.Id == videoId && v.InternalPrivacyStatus != EPrivacyStatus.Private);
     }
+
+    public async Task<bool> VideoPermissionExistsAsync(Guid userId, Guid videoId)
+    {
+        return await Entities.AnyAsync(e => e.UserId == userId && e.VideoId == videoId);
+    }
+
+    public async Task<bool> PlaylistPermissionExistsAsync(Guid userId, Guid playlistId)
+    {
+        return await Entities.AnyAsync(e => e.UserId == userId && e.PlaylistId == playlistId);
+    }
+
+    public async Task<bool> AuthorPermissionExistsAsync(Guid userId, Guid authorId)
+    {
+        return await Entities.AnyAsync(e => e.UserId == userId && e.AuthorId == authorId);
+    }
 }

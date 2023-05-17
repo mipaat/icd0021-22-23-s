@@ -8,9 +8,9 @@ namespace App.DAL.DTO.Entities;
 
 public class QueueItem : AbstractIdDatabaseEntity
 {
-    [MaxLength(4096)] public string? Url { get; set; }
-    public EPlatform? Platform { get; set; }
-    [MaxLength(64)] public string? IdOnPlatform { get; set; }
+    public EPlatform Platform { get; set; }
+    [MaxLength(64)] public string IdOnPlatform { get; set; } = default!;
+    public EEntityType EntityType { get; set; }
 
     public bool Monitor { get; set; } = true;
     public bool Download { get; set; } = true;
@@ -40,10 +40,11 @@ public class QueueItem : AbstractIdDatabaseEntity
     {
     }
 
-    public QueueItem(string id, Guid submitterId, bool autoSubmit, EPlatform platform)
+    public QueueItem(string idOnPlatform, EPlatform platform, EEntityType entityType, Guid submitterId, bool autoSubmit)
     {
         Platform = platform;
-        IdOnPlatform = id;
+        IdOnPlatform = idOnPlatform;
+        EntityType = entityType;
 
         AddedById = submitterId;
         AddedAt = DateTime.UtcNow;
@@ -52,8 +53,8 @@ public class QueueItem : AbstractIdDatabaseEntity
         ApprovedAt = autoSubmit ? DateTime.UtcNow : null;
     }
 
-    public QueueItem(Guid submitterId, bool autoSubmit, Video video) :
-        this(video.IdOnPlatform, submitterId, autoSubmit, video.Platform)
+    public QueueItem(Video video, Guid submitterId, bool autoSubmit) :
+        this(video.IdOnPlatform, video.Platform, EEntityType.Video, submitterId, autoSubmit)
     {
         Video = video;
         VideoId = video.Id;
@@ -61,20 +62,20 @@ public class QueueItem : AbstractIdDatabaseEntity
         CompletedAt = DateTime.UtcNow;
     }
 
-    public QueueItem(Guid submitterId, bool autoSubmit, Author author) :
-        this(author.IdOnPlatform, submitterId, autoSubmit, author.Platform)
+    public QueueItem(Playlist playlist, Guid submitterId, bool autoSubmit) :
+        this(playlist.IdOnPlatform, playlist.Platform, EEntityType.Playlist, submitterId, autoSubmit)
     {
-        Author = author;
-        AuthorId = author.Id;
+        Playlist = playlist;
+        PlaylistId = playlist.Id;
 
         CompletedAt = DateTime.UtcNow;
     }
 
-    public QueueItem(Guid submitterId, bool autoSubmit, Playlist playlist) :
-        this(playlist.IdOnPlatform, submitterId, autoSubmit, playlist.Platform)
+    public QueueItem(Author author, Guid submitterId, bool autoSubmit) :
+        this(author.IdOnPlatform, author.Platform, EEntityType.Author, submitterId, autoSubmit)
     {
-        Playlist = playlist;
-        PlaylistId = playlist.Id;
+        Author = author;
+        AuthorId = author.Id;
 
         CompletedAt = DateTime.UtcNow;
     }

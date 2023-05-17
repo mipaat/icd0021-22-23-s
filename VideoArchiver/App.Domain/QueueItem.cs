@@ -7,9 +7,9 @@ namespace App.Domain;
 
 public class QueueItem : AbstractIdDatabaseEntity
 {
-    [MaxLength(4096)] public string? Url { get; set; }
-    public EPlatform? Platform { get; set; }
-    [MaxLength(64)] public string? IdOnPlatform { get; set; }
+    public EPlatform Platform { get; set; }
+    [MaxLength(64)] public string IdOnPlatform { get; set; } = default!;
+    public EEntityType EntityType { get; set; }
 
     public bool Monitor { get; set; } = true;
     public bool Download { get; set; } = true;

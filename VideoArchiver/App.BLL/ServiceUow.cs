@@ -29,4 +29,12 @@ public class ServiceUow : BaseAppUowContainer
 
     private ImageService? _imageService;
     public ImageService ImageService => _imageService ??= Services.GetRequiredService<ImageService>();
+
+    private AuthorizationService? _authorizationService;
+
+    public AuthorizationService AuthorizationService =>
+        _authorizationService ??= Services.GetRequiredService<AuthorizationService>();
+
+    private QueueItemService? _queueItemService;
+    public QueueItemService QueueItemService => _queueItemService ??= Services.GetRequiredService<QueueItemService>();
 }

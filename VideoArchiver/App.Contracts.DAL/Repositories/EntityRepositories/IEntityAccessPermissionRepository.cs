@@ -7,4 +7,7 @@ public interface IEntityAccessPermissionRepository : IBaseEntityRepository<Domai
 {
     public Task<bool> AllowedToAccessVideoAsync(Guid userId, Guid videoId);
     public Task<bool> AllowedToAccessVideoAnonymouslyAsync(Guid videoId);
+    public Task<bool> VideoPermissionExistsAsync(Guid userId, Guid videoId);
+    public Task<bool> PlaylistPermissionExistsAsync(Guid userId, Guid playlistId);
+    public Task<bool> AuthorPermissionExistsAsync(Guid userId, Guid authorId);
 }

@@ -17,5 +17,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ServiceUow>();
 
         services.AddScoped<BasicGameCrudService>();
+        services.AddScoped<QueueItemService>();
     }
 }
