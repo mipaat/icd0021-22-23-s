@@ -20,15 +20,15 @@ namespace WebApp.ApiControllers;
     AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class LinkSubmitController : ControllerBase
 {
-    private readonly SubmitService _submitService;
+    private readonly ServiceUow _serviceUow;
 
     /// <summary>
     /// Construct a new LinkSubmitController.
     /// </summary>
-    /// <param name="submitService">BLL object for handling link submissions.</param>
-    public LinkSubmitController(SubmitService submitService)
+    /// <param name="serviceUow">Unit of work object providing access to general BLL services.</param>
+    public LinkSubmitController(ServiceUow serviceUow)
     {
-        _submitService = submitService;
+        _serviceUow = serviceUow;
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public class LinkSubmitController : ControllerBase
         UrlSubmissionResults bllSubmissionResults;
         try
         {
-            bllSubmissionResults = await _submitService.SubmitGenericUrlAsync(link.Link, User);
+            bllSubmissionResults = await _serviceUow.SubmitService.SubmitGenericUrlAsync(link.Link, User);
         }
         catch (UnrecognizedUrlException e)
         {
@@ -56,7 +56,7 @@ public class LinkSubmitController : ControllerBase
             });
         }
 
-        await _submitService.SaveChangesAsync();
+        await _serviceUow.SaveChangesAsync();
         return Ok(SubmissionResultMapper.Map(bllSubmissionResults));
     }
 }

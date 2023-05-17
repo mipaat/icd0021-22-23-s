@@ -27,9 +27,8 @@ public class AuthorizationService
         return await _uow.EntityAccessPermissions.AllowedToAccessVideoAsync(userId.Value, videoId);
     }
 
-    public async Task AuthorizeVideoIfNotAuthorized(Guid userId, Guid videoId)
+    private void AuthorizeVideo(Guid userId, Guid videoId)
     {
-        if (await _uow.EntityAccessPermissions.VideoPermissionExistsAsync(userId, videoId)) return;
         _uow.EntityAccessPermissions.Add(new EntityAccessPermission
         {
             UserId = userId,
@@ -37,9 +36,14 @@ public class AuthorizationService
         });
     }
 
-    public async Task AuthorizePlaylistIfNotAuthorized(Guid userId, Guid playlistId)
+    public async Task AuthorizeVideoIfNotAuthorized(Guid userId, Guid videoId)
     {
-        if (await _uow.EntityAccessPermissions.PlaylistPermissionExistsAsync(userId, playlistId)) return;
+        if (await _uow.EntityAccessPermissions.VideoPermissionExistsAsync(userId, videoId)) return;
+        AuthorizeVideo(userId, videoId);
+    }
+
+    private void AuthorizePlaylist(Guid userId, Guid playlistId)
+    {
         _uow.EntityAccessPermissions.Add(new EntityAccessPermission
         {
             UserId = userId,
@@ -47,13 +51,24 @@ public class AuthorizationService
         });
     }
 
-    public async Task AuthorizeAuthorIfNotAuthorized(Guid userId, Guid authorId)
+    public async Task AuthorizePlaylistIfNotAuthorized(Guid userId, Guid playlistId)
     {
-        if (await _uow.EntityAccessPermissions.AuthorPermissionExistsAsync(userId, authorId)) return;
+        if (await _uow.EntityAccessPermissions.PlaylistPermissionExistsAsync(userId, playlistId)) return;
+        AuthorizePlaylist(userId, playlistId);
+    }
+
+    private void AuthorizeAuthor(Guid userId, Guid authorId)
+    {
         _uow.EntityAccessPermissions.Add(new EntityAccessPermission
         {
             UserId = userId,
             AuthorId = authorId,
         });
+    }
+
+    public async Task AuthorizeAuthorIfNotAuthorized(Guid userId, Guid authorId)
+    {
+        if (await _uow.EntityAccessPermissions.AuthorPermissionExistsAsync(userId, authorId)) return;
+        AuthorizeAuthor(userId, authorId);
     }
 }
