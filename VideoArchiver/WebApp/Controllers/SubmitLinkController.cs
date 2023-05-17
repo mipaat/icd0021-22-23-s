@@ -1,5 +1,6 @@
 ﻿#pragma warning disable 1591
 using App.BLL;
+using App.BLL.Services;
 using Microsoft.AspNetCore.Mvc;
 using Public.DTO.v1;
 
@@ -7,11 +8,11 @@ namespace WebApp.Controllers;
 
 public class SubmitLinkController : Controller
 {
-    private readonly UrlSubmissionHandler _urlSubmissionHandler;
+    private readonly SubmitService _submitService;
 
-    public SubmitLinkController(UrlSubmissionHandler urlSubmissionHandler)
+    public SubmitLinkController(SubmitService submitService)
     {
-        _urlSubmissionHandler = urlSubmissionHandler;
+        _submitService = submitService;
     }
 
     public IActionResult Index()
@@ -22,8 +23,8 @@ public class SubmitLinkController : Controller
     [HttpPost]
     public async Task<IActionResult> Submit([Bind($"{nameof(LinkSubmission.Link)}")] LinkSubmission linkSubmission)
     {
-        await _urlSubmissionHandler.SubmitGenericUrlAsync(linkSubmission.Link, User);
-        await _urlSubmissionHandler.SaveChangesAsync();
+        await _submitService.SubmitGenericUrlAsync(linkSubmission.Link, User);
+        await _submitService.SaveChangesAsync();
         return RedirectToAction(nameof(Result));
     }
 

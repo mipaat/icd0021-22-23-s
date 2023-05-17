@@ -18,7 +18,7 @@ public class VideoMapper
     }
 }
 
-public static class AutoMapperConfigExtensions
+public static partial class AutoMapperConfigExtensions
 {
     public static AutoMapperConfig AddVideoMap(this AutoMapperConfig config)
     {

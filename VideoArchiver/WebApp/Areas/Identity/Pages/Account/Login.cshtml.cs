@@ -5,7 +5,6 @@
 
 using System.ComponentModel.DataAnnotations;
 using App.BLL.Identity.Services;
-using App.Domain.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +14,11 @@ namespace WebApp.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<User> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly UserService _userService;
 
-        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger, UserService userService)
+        public LoginModel(ILogger<LoginModel> logger, UserService userService)
         {
-            _signInManager = signInManager;
             _logger = logger;
             _userService = userService;
         }
@@ -89,7 +86,7 @@ namespace WebApp.Areas.Identity.Pages.Account
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            ExternalLogins = await _userService.GetExternalAuthenticationSchemesAsync();
 
             ReturnUrl = returnUrl;
         }
@@ -98,7 +95,7 @@ namespace WebApp.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
 
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            ExternalLogins = await _userService.GetExternalAuthenticationSchemesAsync();
 
             if (ModelState.IsValid)
             {

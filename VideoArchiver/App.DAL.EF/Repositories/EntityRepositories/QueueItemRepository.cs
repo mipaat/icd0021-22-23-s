@@ -18,7 +18,9 @@ public class QueueItemRepository : BaseAppEntityRepository<App.Domain.QueueItem,
         queryable
             .Include(e => e.Video)
             .Include(e => e.Playlist)
-            .Include(e => e.Author);
+            .Include(e => e.Author)
+            .Include(e => e.AddedBy)
+            .Include(e => e.ApprovedBy);
         return queryable;
     }
 
@@ -52,5 +54,17 @@ public class QueueItemRepository : BaseAppEntityRepository<App.Domain.QueueItem,
         }
 
         return mapped;
+    }
+
+    public async Task<ICollection<QueueItem>> GetAllAwaitingApprovalAsync()
+    {
+        return await GetAllAsync(q => q.ApprovedAt == null);
+    }
+
+    public async Task<ICollection<Guid>> GetAllApprovedNotCompletedAsync()
+    {
+        return await Entities.Where(q => q.ApprovedAt != null && q.CompletedAt == null)
+            .Select(q => q.Id)
+            .ToListAsync();
     }
 }

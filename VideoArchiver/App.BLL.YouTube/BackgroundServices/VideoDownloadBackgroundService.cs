@@ -41,7 +41,7 @@ public class VideoDownloadBackgroundService : BaseYouTubeBackgroundService<Video
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
         _onNewItemEnqueued = (_, videoId) => OnNewItemEnqueued(videoId, ct).Wait(ct);
-        Context.NewVideoQueuedForDownload += _onNewItemEnqueued;
+        YouTubeContext.NewVideoQueuedForDownload += _onNewItemEnqueued;
 
         await InitialAddUnfinishedCommentsAsync(ct);
 
@@ -57,7 +57,7 @@ public class VideoDownloadBackgroundService : BaseYouTubeBackgroundService<Video
     private void Unsubscribe()
     {
         if (_onNewItemEnqueued == null) return;
-        Context.NewCommentsQueued -= _onNewItemEnqueued;
+        YouTubeContext.NewCommentsQueued -= _onNewItemEnqueued;
         _onNewItemEnqueued = null;
     }
 

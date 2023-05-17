@@ -19,7 +19,7 @@ public class QueueItem : AbstractIdDatabaseEntity
     [MaxLength(512)] public string? WebhookSecret { get; set; }
     public string? WebhookData { get; set; }
 
-    public User? AddedBy { get; set; }
+    public User AddedBy { get; set; } = default!;
     public Guid AddedById { get; set; }
     public DateTime AddedAt { get; set; }
 

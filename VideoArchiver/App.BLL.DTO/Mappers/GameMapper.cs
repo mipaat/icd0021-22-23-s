@@ -10,7 +10,7 @@ public class GameMapper : BaseMapper<App.DAL.DTO.Entities.Game, Entities.Game>
     }
 }
 
-public static class GameMapperExtensions
+public static partial class AutoMapperConfigExtensions
 {
     public static AutoMapperConfig AddGameMap(this AutoMapperConfig config)
     {

@@ -8,6 +8,7 @@ using App.Contracts.DAL;
 using AutoMapper;
 using Base.WebHelpers;
 using Contracts.BLL;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,7 @@ public class UserService : IAppUowContainer
     private readonly IConfiguration _configuration;
     private readonly IdentityUow _identityUow;
     private readonly AuthorMapper _authorMapper;
+    private readonly UserMapper _userMapper;
     private readonly Random _rnd = new();
 
     public UserService(IConfiguration configuration, IdentityUow identityUow, IMapper mapper)
@@ -26,6 +28,7 @@ public class UserService : IAppUowContainer
         _configuration = configuration;
         _identityUow = identityUow;
         _authorMapper = new AuthorMapper(mapper);
+        _userMapper = new UserMapper(mapper);
     }
 
     private IAppUnitOfWork Uow => _identityUow.Uow;
@@ -35,17 +38,33 @@ public class UserService : IAppUowContainer
 
     private bool AutoApproveRegistration => _configuration.GetValue<bool>("AutoApproveRegistration");
 
-    public async Task<(IdentityResult identityResult, App.Domain.Identity.User user)> CreateUser(string username,
+    public async Task<(IdentityResult identityResult, User user)> CreateUser(string username,
         string password)
     {
-        var user = new App.Domain.Identity.User
+        var user = new User
         {
             UserName = username,
             IsApproved = AutoApproveRegistration,
         };
 
-        var result = await SignInManager.UserManager.CreateAsync(user, password);
+        var result = await SignInManager.UserManager.CreateAsync(Uow.Users.Map(_userMapper.Map(user)!), password);
         return (result, user);
+    }
+
+    public async Task SignInAsync(User user, bool isPersistent)
+    {
+        var dalUser = _userMapper.Map(user)!;
+        var domainUser = Uow.Users.GetTrackedEntity(user.Id);
+        if (domainUser != null)
+        {
+            domainUser = Uow.Users.Map(dalUser, domainUser);
+        }
+        else
+        {
+            domainUser = Uow.Users.Map(dalUser);
+        }
+
+        await SignInManager.SignInAsync(domainUser, isPersistent: isPersistent);
     }
 
     public async Task<SignInResult> SignInAsync(string username, string password, bool isPersistent,
@@ -195,6 +214,9 @@ public class UserService : IAppUowContainer
             RefreshToken = refreshToken,
         };
     }
+
+    public async Task<IList<AuthenticationScheme>> GetExternalAuthenticationSchemesAsync() =>
+        (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
     public async Task<int> SaveChangesAsync()
     {

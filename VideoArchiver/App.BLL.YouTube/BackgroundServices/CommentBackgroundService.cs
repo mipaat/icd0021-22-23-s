@@ -40,7 +40,7 @@ public class CommentBackgroundService : BaseYouTubeBackgroundService<CommentBack
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
         _onNewItemEnqueued = (_, videoId) => OnNewItemEnqueued(videoId, ct).Wait(ct);
-        Context.NewCommentsQueued += _onNewItemEnqueued;
+        YouTubeContext.NewCommentsQueued += _onNewItemEnqueued;
 
         await InitialAddUnfinishedCommentsAsync(ct);
 
@@ -56,7 +56,7 @@ public class CommentBackgroundService : BaseYouTubeBackgroundService<CommentBack
     private void Unsubscribe()
     {
         if (_onNewItemEnqueued == null) return;
-        Context.NewCommentsQueued -= _onNewItemEnqueued;
+        YouTubeContext.NewCommentsQueued -= _onNewItemEnqueued;
         _onNewItemEnqueued = null;
     }
 

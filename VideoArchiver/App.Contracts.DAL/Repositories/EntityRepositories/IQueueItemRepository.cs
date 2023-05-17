@@ -1,8 +1,10 @@
-using App.Domain;
+using App.DAL.DTO.Entities;
 using Contracts.DAL;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface IQueueItemRepository : IBaseEntityRepository<QueueItem, App.DAL.DTO.Entities.QueueItem>
+public interface IQueueItemRepository : IBaseEntityRepository<App.Domain.QueueItem, QueueItem>
 {
+    public Task<ICollection<QueueItem>> GetAllAwaitingApprovalAsync();
+    public Task<ICollection<Guid>> GetAllApprovedNotCompletedAsync();
 }

@@ -16,7 +16,7 @@ public class AuthorMapper : BaseMapperUnidirectional<App.DAL.DTO.Entities.Author
     }
 }
 
-public static class AuthorMapperExtensions
+public static partial class AutoMapperConfigExtensions
 {
     public static AutoMapperConfig AddAuthorMap(this AutoMapperConfig config)
     {

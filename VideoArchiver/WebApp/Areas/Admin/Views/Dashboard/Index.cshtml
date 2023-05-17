@@ -1,0 +1,17 @@
+@model WebApp.Areas.Admin.ViewModels.DashboardViewModel
+
+@{
+    ViewBag.Title = "Admin dashboard";
+}
+
+<h2 class="text-center mb-4">Admin dashboard</h2>
+
+<div class="container">
+    <div class="d-flex gap-3 gap-lg-5 justify-content-around flex-wrap">
+        <div class="dashboard-section">
+            <h2>Queue items awaiting approval</h2>
+            <partial name="_QueueItemsApprovalPartial"/>
+        </div>
+    </div>
+</div>
+<partial name="_DateTimeScriptsPartial"/>

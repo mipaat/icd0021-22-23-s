@@ -1,3 +1,4 @@
+using App.BLL.BackgroundServices;
 using App.BLL.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -7,16 +8,20 @@ public static class ServiceCollectionExtensions
 {
     public static void AddGeneralBll(this IServiceCollection services)
     {
-        services.AddScoped<UrlSubmissionHandler>();
+        services.AddSingleton<ServiceContext>();
+
+        services.AddScoped<ServiceUow>();
+
+        services.AddScoped<SubmitService>();
         services.AddScoped<VideoPresentationHandler>();
         services.AddScoped<EntityUpdateService>();
         services.AddScoped<EntityConcurrencyResolver>();
         services.AddScoped<StatusChangeService>();
         services.AddScoped<ImageService>();
         services.AddScoped<AuthorizationService>();
-        services.AddScoped<ServiceUow>();
-
-        services.AddScoped<BasicGameCrudService>();
         services.AddScoped<QueueItemService>();
+        services.AddScoped<BasicGameCrudService>();
+
+        services.AddHostedService<QueueItemBackgroundService>();
     }
 }

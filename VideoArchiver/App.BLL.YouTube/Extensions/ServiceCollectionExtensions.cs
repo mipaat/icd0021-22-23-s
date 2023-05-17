@@ -12,7 +12,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<YouTubeContext>();
 
         services.AddScoped<YouTubeUow>();
-        services.AddScoped<IPlatformUrlSubmissionHandler, SubmitService>();
+        services.AddScoped<IPlatformSubmissionHandler, SubmitService>();
 
         services.AddScoped<SubmitService>();
         services.AddScoped<AuthorService>();

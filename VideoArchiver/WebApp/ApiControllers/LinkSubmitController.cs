@@ -2,6 +2,7 @@ using System.Net;
 using App.BLL;
 using App.BLL.Exceptions;
 using App.BLL.DTO.Entities;
+using App.BLL.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,19 +16,19 @@ namespace WebApp.ApiControllers;
 [ApiVersion("1.0")]
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]/[action]")]
-[Authorize(Roles = UrlSubmissionHandler.AllowedToSubmitRoles,
+[Authorize(Roles = SubmitService.AllowedToSubmitRoles,
     AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class LinkSubmitController : ControllerBase
 {
-    private readonly UrlSubmissionHandler _urlSubmissionHandler;
+    private readonly SubmitService _submitService;
 
     /// <summary>
     /// Construct a new LinkSubmitController.
     /// </summary>
-    /// <param name="urlSubmissionHandler">BLL object for handling link submissions.</param>
-    public LinkSubmitController(UrlSubmissionHandler urlSubmissionHandler)
+    /// <param name="submitService">BLL object for handling link submissions.</param>
+    public LinkSubmitController(SubmitService submitService)
     {
-        _urlSubmissionHandler = urlSubmissionHandler;
+        _submitService = submitService;
     }
 
     /// <summary>
@@ -44,7 +45,7 @@ public class LinkSubmitController : ControllerBase
         UrlSubmissionResults bllSubmissionResults;
         try
         {
-            bllSubmissionResults = await _urlSubmissionHandler.SubmitGenericUrlAsync(link.Link, User);
+            bllSubmissionResults = await _submitService.SubmitGenericUrlAsync(link.Link, User);
         }
         catch (UnrecognizedUrlException e)
         {
@@ -55,7 +56,7 @@ public class LinkSubmitController : ControllerBase
             });
         }
 
-        await _urlSubmissionHandler.SaveChangesAsync();
+        await _submitService.SaveChangesAsync();
         return Ok(SubmissionResultMapper.Map(bllSubmissionResults));
     }
 }

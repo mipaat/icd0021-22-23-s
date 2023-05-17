@@ -20,3 +20,15 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.dashboard-section {
+  border-radius: 0.35rem;
+  border: 2px solid #9ed7f2;
+  padding: 1rem;
+}
+
+.dashboard-item {
+  border-radius: 0.35rem;
+  padding: 1rem;
+  background-color: #d9f6ff;
+}

@@ -1,0 +1,21 @@
+@using Base.WebHelpers
+@model WebApp.Areas.Admin.ViewModels.IQueueItemsApprovalViewModel
+
+@foreach (var queueItem in Model.QueueItems)
+{
+    <div class="dashboard-item">
+        @queueItem.EntityType on platform @queueItem.Platform
+        Id on platform: @queueItem.IdOnPlatform
+        Added at: @DateTimeHelpers.SpanFor(queueItem.AddedAt)
+        Added by: @queueItem.AddedBy.UserName
+        ID: @queueItem.Id
+        <form method="post" asp-action="DeleteQueueItem">
+            @Html.HiddenValueFor(m => m.Id, queueItem.Id)
+            <input type="submit" class="btn btn-danger" value="Delete"/>
+        </form>
+        <form method="post" asp-action="ApproveQueueItem">
+            @Html.HiddenValueFor(m => m.Id, queueItem.Id)
+            <input type="submit" class="btn btn-danger" value="Approve"/>
+        </form>
+    </div>
+}

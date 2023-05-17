@@ -17,6 +17,9 @@ public class ServiceUow : BaseAppUowContainer
         Config = config;
     }
 
+    private ServiceContext? _serviceContext;
+    public ServiceContext ServiceContext => _serviceContext ??= Services.GetRequiredService<ServiceContext>();
+
     private StatusChangeService? _statusChangeService;
 
     public StatusChangeService StatusChangeService =>
@@ -37,4 +40,7 @@ public class ServiceUow : BaseAppUowContainer
 
     private QueueItemService? _queueItemService;
     public QueueItemService QueueItemService => _queueItemService ??= Services.GetRequiredService<QueueItemService>();
+
+    private SubmitService? _submitService;
+    public SubmitService SubmitService => _submitService ??= Services.GetRequiredService<SubmitService>();
 }

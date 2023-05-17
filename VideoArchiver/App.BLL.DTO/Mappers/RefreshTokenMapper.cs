@@ -10,7 +10,7 @@ public class RefreshTokenMapper : BaseMapper<App.DAL.DTO.Entities.Identity.Refre
     }
 }
 
-public static class RefreshTokenMapperExtensions
+public static partial class AutoMapperConfigExtensions
 {
     public static AutoMapperConfig AddRefreshTokenMap(this AutoMapperConfig config)
     {

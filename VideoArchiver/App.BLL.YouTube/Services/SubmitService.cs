@@ -3,12 +3,15 @@ using App.BLL.YouTube.Base;
 using App.BLL.DTO.Contracts;
 using App.BLL.DTO.Entities;
 using App.Common.Enums;
+using App.DAL.DTO.Entities.Playlists;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
+using Author = App.DAL.DTO.Entities.Author;
+using Video = App.DAL.DTO.Entities.Video;
 
 namespace App.BLL.YouTube.Services;
 
-public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubmissionHandler
+public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformSubmissionHandler
 {
     public SubmitService(ServiceUow serviceUow, ILogger<SubmitService> logger, YouTubeUow youTubeUow, IMapper mapper) :
         base(serviceUow, logger, youTubeUow, mapper)
@@ -67,6 +70,27 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformUrlSubm
         if (result.Count == 0) throw new UnrecognizedUrlException(url);
 
         return result;
+    }
+
+    public bool CanHandle(EPlatform platform, EEntityType entityType)
+    {
+        return platform == EPlatform.YouTube &&
+               entityType is EEntityType.Video or EEntityType.Playlist; // TODO: Add author support
+    }
+
+    public async Task<Video> SubmitVideo(string idOnPlatform)
+    {
+        return await YouTubeUow.VideoService.AddOrGetVideo(idOnPlatform);
+    }
+
+    public async Task<Playlist> SubmitPlaylist(string idOnPlatform)
+    {
+        return await YouTubeUow.PlaylistService.AddOrGetPlaylist(idOnPlatform);
+    }
+
+    public Task<Author> SubmitAuthor(string idOnPlatform)
+    {
+        throw new NotImplementedException(); // TODO: Add author support
     }
 
     private async Task<UrlSubmissionResult> SubmitVideo(string id, Guid submitterId, bool autoSubmit)

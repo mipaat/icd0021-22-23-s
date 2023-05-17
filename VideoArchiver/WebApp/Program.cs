@@ -8,20 +8,15 @@ using App.BLL.Identity.Config;
 using App.BLL.Identity.Extensions;
 using App.BLL.YouTube;
 using App.BLL.YouTube.Extensions;
-using App.Common;
 using App.Contracts.DAL;
 using App.DAL.EF;
 using App.Domain.Identity;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -158,6 +153,7 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.MapAreaControllerRoute(name: "admin", areaName: "Admin", pattern: "Admin/{controller}/{action=Index}/{id?}");
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");

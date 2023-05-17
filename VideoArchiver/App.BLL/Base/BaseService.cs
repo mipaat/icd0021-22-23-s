@@ -16,4 +16,5 @@ public abstract class BaseService<TService>
     }
 
     protected IAppUnitOfWork Uow => ServiceUow.Uow;
+    protected ServiceContext ServiceContext => ServiceUow.ServiceContext;
 }
