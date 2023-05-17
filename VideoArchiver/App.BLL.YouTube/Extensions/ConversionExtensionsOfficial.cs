@@ -35,14 +35,16 @@ public static class ConversionExtensionsOfficial
             DefaultLanguage = video.Snippet.DefaultLanguage,
             DefaultAudioLanguage = video.Snippet.DefaultAudioLanguage,
 
-            Duration = XmlConvert.ToTimeSpan(video.ContentDetails.Duration),
+            Duration = video.ContentDetails.Duration != null
+                ? XmlConvert.ToTimeSpan(video.ContentDetails.Duration)
+                : null,
 
-            ViewCount = Convert.ToInt32(video.Statistics.ViewCount),
-            LikeCount = Convert.ToInt32(video.Statistics.LikeCount),
-            DislikeCount = Convert.ToInt32(video.Statistics.DislikeCount),
-            CommentCount = Convert.ToInt32(video.Statistics.CommentCount),
+            ViewCount = ToInt32(video.Statistics.ViewCount),
+            LikeCount = ToInt32(video.Statistics.LikeCount),
+            DislikeCount = ToInt32(video.Statistics.DislikeCount),
+            CommentCount = ToInt32(video.Statistics.CommentCount),
 
-            Tags = video.Snippet.Tags.ToList(),
+            Tags = video.Snippet.Tags?.ToList(),
             Thumbnails = previousThumbnails?.GetSnapShot(),
 
             IsLivestreamRecording = video.LiveStreamingDetails != null,
@@ -132,8 +134,8 @@ public static class ConversionExtensionsOfficial
             Quality = quality,
             Url = thumbnail.Url,
             Etag = thumbnail.ETag,
-            Width = Convert.ToInt32(thumbnail.Width),
-            Height = Convert.ToInt32(thumbnail.Height),
+            Width = ToInt32(thumbnail.Width),
+            Height = ToInt32(thumbnail.Height),
         };
     }
 
@@ -156,5 +158,11 @@ public static class ConversionExtensionsOfficial
         }
 
         return newImageFiles;
+    }
+
+    private static int? ToInt32(object? value)
+    {
+        if (value == null) return null;
+        return Convert.ToInt32(value);
     }
 }
