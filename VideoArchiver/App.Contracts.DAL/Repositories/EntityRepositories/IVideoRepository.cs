@@ -1,3 +1,4 @@
+using App.Common;
 using App.Common.Enums;
 using App.DAL.DTO.Entities;
 using Contracts.DAL;
@@ -22,4 +23,5 @@ public interface IVideoRepository : IBaseEntityRepository<App.Domain.Video, Vide
 
     public Task<VideoWithBasicAuthors> GetByIdWithBasicAuthorsAsync(Guid id);
     public Task<VideoWithBasicAuthorsAndComments> GetByIdWithBasicAuthorsAndCommentsAsync(Guid id);
+    public Task<ICollection<VideoFile>?> GetVideoFilesAsync(Guid videoId);
 }

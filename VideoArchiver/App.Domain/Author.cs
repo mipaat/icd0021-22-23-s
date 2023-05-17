@@ -42,4 +42,5 @@ public class Author : BaseArchiveEntity
     public ICollection<AuthorPubSub>? AuthorPubSubs { get; set; }
     public ICollection<ExternalUserToken>? ExternalUserTokens { get; set; }
     public ICollection<QueueItem>? QueueItems { get; set; }
+    public ICollection<EntityAccessPermission>? EntityAccessPermissions { get; set; }
 }

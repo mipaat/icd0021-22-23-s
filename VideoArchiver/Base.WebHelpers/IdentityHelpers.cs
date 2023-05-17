@@ -13,6 +13,12 @@ public static class IdentityHelpers
             user.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
     }
 
+    public static Guid? GetUserIdIfExists(this ClaimsPrincipal? user)
+    {
+        var stringId = user?.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        return stringId == null ? null : Guid.Parse(stringId);
+    }
+
     public static string GenerateJwt(IEnumerable<Claim> claims, string key,
         string issuer, string audience,
         int expiresInSeconds)

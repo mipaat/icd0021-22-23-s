@@ -13,6 +13,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<EntityConcurrencyResolver>();
         services.AddScoped<StatusChangeService>();
         services.AddScoped<ImageService>();
+        services.AddScoped<AuthorizationService>();
         services.AddScoped<ServiceUow>();
 
         services.AddScoped<BasicGameCrudService>();

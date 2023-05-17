@@ -1,3 +1,4 @@
+using App.Common;
 using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
@@ -35,7 +36,8 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
     public async Task<ICollection<string>> GetAllIdsOnPlatformNotDownloaded(EPlatform platform)
     {
         return await Entities
-            .Where(v => v.Platform == platform && v.IsAvailable && (v.LocalVideoFiles == null || v.LocalVideoFiles.Count == 0)) // NB! Postgres specific probably!
+            .Where(v => v.Platform == platform && v.IsAvailable &&
+                        (v.LocalVideoFiles == null || v.LocalVideoFiles.Count == 0)) // NB! Postgres specific probably!
             .OrderBy(v => v.AddedToArchiveAt)
             .Select(v => v.IdOnPlatform)
             .ToListAsync();
@@ -53,6 +55,11 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
         return AttachIfNotAttached(await Entities
             .ProjectTo<VideoWithBasicAuthorsAndComments>(Mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(v => v.Id == id))!;
+    }
+
+    public async Task<ICollection<VideoFile>?> GetVideoFilesAsync(Guid videoId)
+    {
+        return await Entities.Where(v => v.Id == videoId).Select(v => v.LocalVideoFiles).FirstOrDefaultAsync();
     }
 
     public async Task<VideoWithComments?> GetByIdOnPlatformWithCommentsAsync(string idOnPlatform, EPlatform platform)

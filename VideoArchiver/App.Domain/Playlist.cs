@@ -25,4 +25,5 @@ public class Playlist : BaseArchiveEntity
     public ICollection<PlaylistHistory>? PlaylistHistories { get; set; }
     public ICollection<StatusChangeEvent>? StatusChangeEvents { get; set; }
     public ICollection<QueueItem>? QueueItems { get; set; }
+    public ICollection<EntityAccessPermission>? EntityAccessPermissions { get; set; }
 }

@@ -71,6 +71,7 @@ public class AbstractAppDbContext : IdentityDbContext<User, Role, Guid, Identity
     public DbSet<CommentHistory> CommentHistories { get; set; } = default!;
 
     public DbSet<ApiQuotaUsage> ApiQuotaUsages { get; set; } = default!;
+    public DbSet<EntityAccessPermission> EntityAccessPermissions { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

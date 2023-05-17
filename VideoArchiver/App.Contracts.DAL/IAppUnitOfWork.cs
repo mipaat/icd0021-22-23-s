@@ -41,4 +41,5 @@ public interface IAppUnitOfWork : IBaseUnitOfWork
     public IUserRepository Users { get; }
     
     public IApiQuotaUsageRepository ApiQuotaUsages { get; }
+    public IEntityAccessPermissionRepository EntityAccessPermissions { get; }
 }

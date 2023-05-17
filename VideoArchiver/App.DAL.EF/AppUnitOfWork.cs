@@ -148,6 +148,10 @@ public class AppUnitOfWork : BaseUnitOfWork<AbstractAppDbContext>, IAppUnitOfWor
     public IApiQuotaUsageRepository ApiQuotaUsages =>
         _apiQuotaUsages ??= new ApiQuotaUsageRepository(DbContext, _mapper, this);
 
+    private IEntityAccessPermissionRepository? _entityAccessPermissions;
+    public IEntityAccessPermissionRepository EntityAccessPermissions => _entityAccessPermissions ??=
+        new EntityAccessPermissionRepository(DbContext, _mapper, this);
+
     // Identity
     private IRefreshTokenRepository? _refreshTokens;
     public IRefreshTokenRepository RefreshTokens => _refreshTokens ??= new RefreshTokenRepository(DbContext, _mapper, this);

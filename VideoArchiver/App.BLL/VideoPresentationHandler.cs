@@ -2,6 +2,7 @@ using App.BLL.DTO.Contracts;
 using App.BLL.DTO.Entities;
 using App.BLL.DTO.Mappers;
 using App.BLL.Exceptions;
+using App.Common;
 using App.Contracts.DAL;
 using AutoMapper;
 
@@ -37,5 +38,10 @@ public class VideoPresentationHandler
         }
 
         return video;
+    }
+
+    public async Task<VideoFile?> GetVideoFileAsync(Guid id)
+    {
+        return (await _uow.Videos.GetVideoFilesAsync(id))?.FirstOrDefault();
     }
 }

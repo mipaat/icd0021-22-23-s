@@ -43,4 +43,5 @@ public class Video : BaseArchiveEntity
     public ICollection<VideoCategory>? VideoCategories { get; set; }
     public ICollection<StatusChangeEvent>? StatusChangeEvents { get; set; }
     public ICollection<VideoHistory>? VideoHistories { get; set; }
+    public ICollection<EntityAccessPermission>? EntityAccessPermissions { get; set; }
 }
