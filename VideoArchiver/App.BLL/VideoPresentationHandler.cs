@@ -3,6 +3,7 @@ using App.BLL.DTO.Entities;
 using App.BLL.DTO.Mappers;
 using App.BLL.Exceptions;
 using App.Common;
+using App.Common.Enums;
 using App.Contracts.DAL;
 using AutoMapper;
 
@@ -43,5 +44,10 @@ public class VideoPresentationHandler
     public async Task<VideoFile?> GetVideoFileAsync(Guid id)
     {
         return (await _uow.Videos.GetVideoFilesAsync(id))?.FirstOrDefault();
+    }
+
+    public async Task<ICollection<VideoWithAuthor>> SearchVideosAsync(EPlatform? platformQuery, string? nameQuery, string? authorQuery)
+    {
+        return (await _uow.Videos.SearchVideosAsync(platformQuery, nameQuery, authorQuery)).Select(v => _videoMapper.Map(v)).ToList();
     }
 }

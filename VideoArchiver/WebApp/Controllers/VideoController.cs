@@ -1,6 +1,7 @@
 #pragma warning disable 1591
 using App.BLL;
 using App.BLL.Services;
+using App.Common.Enums;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.ViewModels;
 
@@ -17,9 +18,15 @@ public class VideoController : Controller
         _authorizationService = authorizationService;
     }
 
-    public async Task<IActionResult> Search()
+    public async Task<IActionResult> Search(EPlatform? platformQuery, string? nameQuery, string? authorQuery)
     {
-        return View();
+        return View(new VideoSearchViewModel
+        {
+            PlatformQuery = platformQuery,
+            NameQuery = nameQuery,
+            AuthorQuery = authorQuery,
+            Videos = await _videoPresentationHandler.SearchVideosAsync(platformQuery, nameQuery, authorQuery),
+        });
     }
 
     // GET

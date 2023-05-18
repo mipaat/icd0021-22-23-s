@@ -16,6 +16,11 @@ public class VideoMapper
     {
         return _mapper.Map<VideoWithAuthorAndComments>(video);
     }
+
+    public VideoWithAuthor Map(DAL.DTO.Entities.VideoWithBasicAuthors video)
+    {
+        return _mapper.Map<VideoWithAuthor>(video);
+    }
 }
 
 public static partial class AutoMapperConfigExtensions
@@ -23,6 +28,9 @@ public static partial class AutoMapperConfigExtensions
     public static AutoMapperConfig AddVideoMap(this AutoMapperConfig config)
     {
         config.CreateMap<DAL.DTO.Entities.VideoWithBasicAuthorsAndComments, VideoWithAuthorAndComments>()
+            .ForMember(v => v.Author, o =>
+                o.MapFrom(v => v.Authors.First()));
+        config.CreateMap<DAL.DTO.Entities.VideoWithBasicAuthors, VideoWithAuthor>()
             .ForMember(v => v.Author, o =>
                 o.MapFrom(v => v.Authors.First()));
         return config;

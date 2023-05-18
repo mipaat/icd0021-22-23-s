@@ -62,6 +62,35 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
         return await Entities.Where(v => v.Id == videoId).Select(v => v.LocalVideoFiles).FirstOrDefaultAsync();
     }
 
+    public async Task<ICollection<VideoWithBasicAuthors>> SearchVideosAsync(EPlatform? platform, string? name, string? author)
+    {
+        IQueryable<App.Domain.Video> query;
+        if (name != null)
+        {
+            query = Entities.FromSql(
+                $"SELECT * FROM \"Videos\" c WHERE jsonb_path_exists(c.\"Title\", ('$.* ? (@ like_regex \"(?i)' || {name} || '\")')::jsonpath)");
+        } else
+        {
+            query = Entities;
+        }
+
+        query.Include(e => e.VideoAuthors!)
+            .ThenInclude(e => e.Author);
+        
+        if (platform != null)
+        {
+            query = query.Where(e => e.Platform == platform);
+        }
+
+        if (author != null)
+        {
+            query = query.Where(e => e.VideoAuthors!.Select(a => a.Author!.UserName + a.Author!.DisplayName).Contains(author));
+        }
+
+        return await query.ProjectTo<VideoWithBasicAuthors>(Mapper.ConfigurationProvider)
+            .ToListAsync();
+    }
+
     public async Task<VideoWithComments?> GetByIdOnPlatformWithCommentsAsync(string idOnPlatform, EPlatform platform)
     {
         return AttachIfNotAttached(await Entities
