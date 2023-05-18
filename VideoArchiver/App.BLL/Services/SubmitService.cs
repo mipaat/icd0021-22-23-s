@@ -5,6 +5,7 @@ using App.BLL.DTO;
 using App.BLL.DTO.Contracts;
 using App.BLL.DTO.Entities;
 using App.BLL.Exceptions;
+using App.Common;
 using App.Common.Enums;
 using App.DAL.DTO.Entities;
 using AutoMapper;

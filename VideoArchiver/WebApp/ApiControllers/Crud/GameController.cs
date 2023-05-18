@@ -1,6 +1,7 @@
 using System.Net;
 using App.BLL.DTO;
 using App.BLL.Services;
+using App.Common;
 using AutoMapper;
 using Base.BLL.Exceptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

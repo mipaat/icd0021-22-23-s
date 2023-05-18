@@ -2,26 +2,24 @@
 using System.Globalization;
 using System.Text;
 using System.Text.Json.Serialization;
+using App.BLL;
 using App.BLL.DTO;
 using App.BLL.Extensions;
+using App.BLL.Identity;
 using App.BLL.Identity.Config;
 using App.BLL.Identity.Extensions;
 using App.BLL.YouTube;
 using App.BLL.YouTube.Extensions;
 using App.Contracts.DAL;
 using App.DAL.EF;
-using App.Domain.Identity;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using AutoMapper;
 using Microsoft.AspNetCore.HttpLogging;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using Utils;
-using WebApp.Config;
 using AutoMapperConfig = App.DAL.DTO.AutoMapperConfig;
 
 namespace WebApp;
@@ -41,6 +39,9 @@ public class Program
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddCustomIdentity();
+
+        builder.Services.AddScoped<IdentityAppDataInit>();
+        builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
         var jwtSettings = builder.Configuration.GetRequiredSection(JwtSettings.SectionKey).Get<JwtSettings>();
 
@@ -176,57 +177,23 @@ public class Program
 
     private static void SetupAppData(IApplicationBuilder app, IConfiguration configuration)
     {
-        using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
-        using var context = serviceScope.ServiceProvider.GetService<AbstractAppDbContext>().RaiseIfNull();
+        using var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
 
-        var logger = serviceScope.ServiceProvider.GetService<ILogger<IApplicationBuilder>>().RaiseIfNull();
+        var uow = scope.ServiceProvider.GetRequiredService<IAppUnitOfWork>();
+        
+        var dbInitializer = scope.ServiceProvider.GetService<IDbInitializer>();
+        dbInitializer?.RunDbInit(configuration.GetDbInitSettings());
 
-        if (context.Database.ProviderName!.Contains("InMemory"))
+        var identityAppDataInit = scope.ServiceProvider.GetRequiredService<IdentityAppDataInit>();
+        identityAppDataInit.RunInitAsync().Wait();
+
+        if (configuration.GetValue<bool>("InitializeAppData"))
         {
-            logger.LogInformation("In memory DB provider detected, skipping data setup");
-            return;
+            var appDataInitializer = scope.ServiceProvider.GetRequiredService<AppDataInit>();
+            appDataInitializer.SeedAppData().Wait();
         }
 
-        var dataInitSettings = configuration.GetRequiredSection(DataInitializationSettings.SectionKey)
-            .Get<DataInitializationSettings>();
-        if (dataInitSettings != null)
-        {
-            if (dataInitSettings.DropDatabase)
-            {
-                logger.LogWarning("Drop database");
-                AppDataInit.DropDatabase(context);
-            }
-
-            if (dataInitSettings.MigrateDatabase)
-            {
-                logger.LogInformation("Migrate database");
-                AppDataInit.MigrateDatabase(context);
-            }
-
-            using var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>().RaiseIfNull();
-            using var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<Role>>().RaiseIfNull();
-
-            if (dataInitSettings.SeedIdentity)
-            {
-                logger.LogInformation("Seed identity data");
-                AppDataInit.SeedIdentityAsync(userManager, roleManager).Wait();
-            }
-
-            if (dataInitSettings.SeedAppData)
-            {
-                logger.LogInformation("Seed application data");
-                AppDataInit.SeedAppData(context);
-            }
-
-            if (dataInitSettings.SeedDemoIdentity)
-            {
-                logger.LogInformation("Seed demo identity data");
-                AppDataInit.SeedDemoIdentityAsync(userManager, roleManager,
-                    dataInitSettings.SeedIdentity).Wait();
-            }
-
-            context.SaveChanges();
-        }
+        uow.SaveChangesAsync().Wait();
     }
 
     // May be used for creating DB context at design time (migrations etc)

@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Security.Principal;
 using App.BLL.DTO;
+using App.Common;
 using App.Contracts.DAL;
 using App.DAL.DTO.Entities;
 using Base.WebHelpers;
