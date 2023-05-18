@@ -46,7 +46,7 @@ public class IdentityAppDataInit
     {
         if (_identitySeeded) return;
         await SeedRolesAsync();
-        var superAdminUserData = new BasicUserData("root", _config.SuperAdminPassword ?? "root", true,
+        var superAdminUserData = new BasicUserData("root", _config.SuperAdminPassword ?? "root123", true,
             RoleNames.SuperAdmin, RoleNames.Admin);
         var adminUserData = new BasicUserData("admin", _config.AdminPassword ?? "admin123", true, RoleNames.Admin);
         await GetOrCreateUserAsync(superAdminUserData);

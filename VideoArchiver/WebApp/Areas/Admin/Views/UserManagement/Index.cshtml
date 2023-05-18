@@ -1,4 +1,3 @@
-@using App.BLL.DTO
 @using App.Common
 @model WebApp.Areas.Admin.ViewModels.UserManagementViewModel
 
@@ -29,25 +28,6 @@
                 <input type="submit" class="btn btn-success" value="Approve registration"/>
             </form>
         }
-        @if (user.Roles.Any(r => r.Name == RoleNames.Helper))
-        {
-            <form asp-action="RemoveRole">
-                @Html.Hidden("userId", user.Id)
-                @Html.HiddenFor(m => m.NameQuery)
-                @Html.HiddenFor(m => m.IncludeOnlyNotApproved)
-                @Html.Hidden("roleName", RoleNames.Helper)
-                <input type="submit" class="btn btn-danger" value="Remove helper"/>
-            </form>
-        }
-        else
-        {
-            <form asp-action="AddRole">
-                @Html.Hidden("userId", user.Id)
-                @Html.HiddenFor(m => m.NameQuery)
-                @Html.HiddenFor(m => m.IncludeOnlyNotApproved)
-                @Html.Hidden("roleName", RoleNames.Helper)
-                <input type="submit" class="btn btn-outline-danger" value="Add helper"/>
-            </form>
-        }
+        <a asp-action="ManageRoles" asp-route-userId="@user.Id" class="btn btn-outline-primary">Manage roles</a>
     </div>
 }

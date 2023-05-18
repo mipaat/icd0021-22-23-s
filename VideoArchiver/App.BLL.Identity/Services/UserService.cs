@@ -220,12 +220,17 @@ public class UserService : IAppUowContainer
     public async Task<IList<AuthenticationScheme>> GetExternalAuthenticationSchemesAsync() =>
         (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+    public async Task<UserWithRoles?> GetUserWithRoles(Guid id)
+    {
+        return _userMapper.Map(await Uow.Users.GetByIdWithRolesAsync(id));
+    }
+
     public async Task<ICollection<UserWithRoles>> GetUsersWithRoles(bool includeOnlyRequiringApproval = false,
         string? nameQuery = null)
     {
         if (nameQuery != null && nameQuery.Trim().Length == 0) nameQuery = null;
         return (await Uow.Users.GetAllWithRoles(includeOnlyRequiringApproval, nameQuery))
-            .Select(u => _userMapper.Map(u)).ToList();
+            .Select(u => _userMapper.Map(u)!).ToList();
     }
 
     public async Task ApproveRegistration(Guid userId)

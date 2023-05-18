@@ -1,5 +1,4 @@
 using App.BLL;
-using App.BLL.DTO;
 using App.Common;
 using Base.WebHelpers;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +8,7 @@ using WebApp.Areas.Admin.ViewModels;
 namespace WebApp.Areas.Admin.Controllers;
 
 [Area("Admin")]
-[Authorize(Roles = RoleNames.Admin)]
+[Authorize(Roles = RoleNames.AdminOrSuperAdmin)]
 public class QueueItemsApprovalController : Controller
 {
     private readonly ServiceUow ServiceUow;

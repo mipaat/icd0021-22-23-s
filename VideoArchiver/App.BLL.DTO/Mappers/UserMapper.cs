@@ -10,9 +10,9 @@ public class UserMapper : BaseMapper<App.DAL.DTO.Entities.Identity.User, User>
     {
     }
 
-    public UserWithRoles Map(App.DAL.DTO.Entities.Identity.UserWithRoles user)
+    public UserWithRoles? Map(App.DAL.DTO.Entities.Identity.UserWithRoles? user)
     {
-        return Mapper.Map<UserWithRoles>(user);
+        return user == null ? null : Mapper.Map<UserWithRoles>(user);
     }
 }
 

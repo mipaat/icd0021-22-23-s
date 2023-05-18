@@ -42,6 +42,7 @@ public class Program
 
         builder.Services.AddScoped<IdentityAppDataInit>();
         builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+        builder.Services.AddScoped<AppDataInit>();
 
         var jwtSettings = builder.Configuration.GetRequiredSection(JwtSettings.SectionKey).Get<JwtSettings>();
 

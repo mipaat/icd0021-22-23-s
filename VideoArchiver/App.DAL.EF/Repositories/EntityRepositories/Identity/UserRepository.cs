@@ -36,6 +36,16 @@ public class UserRepository : BaseAppEntityRepository<App.Domain.Identity.User, 
         return await query.ProjectTo<UserWithRoles>(Mapper.ConfigurationProvider).ToListAsync();
     }
 
+    public Task<UserWithRoles?> GetByIdWithRolesAsync(Guid id)
+    {
+        return Entities
+            .Include(e => e.UserRoles!)
+            .ThenInclude(e => e.Role)
+            .Where(e => e.Id == id)
+            .ProjectTo<UserWithRoles>(Mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
+    }
+
     public Task<bool> IsInRoleAsync(Guid userid, Guid roleId)
     {
         return DbContext.UserRoles.AnyAsync(e => e.UserId == userid && e.RoleId == roleId);

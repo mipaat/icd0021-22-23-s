@@ -2,6 +2,8 @@ namespace App.Common;
 
 public static class RoleNames
 {
+    public const string AdminOrSuperAdmin = $"{Admin},{SuperAdmin}";
+
     public const string SuperAdmin = "SuperAdmin";
     public const string Admin = "Admin";
     public const string Helper = "Helper";
