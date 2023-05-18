@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using App.Common;
 using App.Common.Enums;
 using Domain.Base;
@@ -14,7 +15,8 @@ public class Category : AbstractIdDatabaseEntity
     public bool IsAssignable { get; set; }
     public Category? ParentCategory { get; set; }
     public Guid? ParentCategoryId { get; set; }
-    public EPlatform? Platform { get; set; }
+    public EPlatform Platform { get; set; }
+    [MaxLength(128)] public string? IdOnPlatform { get; set; }
 
     public Author? Creator { get; set; }
     public Guid? CreatorId { get; set; }

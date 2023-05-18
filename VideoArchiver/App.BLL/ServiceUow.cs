@@ -43,4 +43,7 @@ public class ServiceUow : BaseAppUowContainer
 
     private SubmitService? _submitService;
     public SubmitService SubmitService => _submitService ??= Services.GetRequiredService<SubmitService>();
+
+    private CategoryService? _categoryService;
+    public CategoryService CategoryService => _categoryService ??= Services.GetRequiredService<CategoryService>();
 }

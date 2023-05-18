@@ -1,3 +1,4 @@
+using App.Common.Enums;
 using App.Contracts.DAL;
 using App.DAL.DTO.Entities;
 
@@ -22,6 +23,7 @@ public class AppDataInit
                 Name = "Gaming",
                 IsAssignable = true,
                 IsPublic = true,
+                Platform = EPlatform.This,
                 SupportsVideos = true,
                 SupportsAuthors = true,
                 SupportsPlaylists = true,
@@ -32,6 +34,7 @@ public class AppDataInit
                 Name = "Music",
                 IsAssignable = true,
                 IsPublic = true,
+                Platform = EPlatform.This,
                 SupportsVideos = true,
                 SupportsAuthors = true,
                 SupportsPlaylists = true,
@@ -42,6 +45,7 @@ public class AppDataInit
                 Name = "Sports",
                 IsAssignable = true,
                 IsPublic = true,
+                Platform = EPlatform.This,
                 SupportsVideos = true,
                 SupportsAuthors = true,
                 SupportsPlaylists = true,
@@ -52,6 +56,7 @@ public class AppDataInit
                 Name = "Vlog",
                 IsAssignable = true,
                 IsPublic = true,
+                Platform = EPlatform.This,
                 SupportsVideos = true,
                 SupportsAuthors = true,
                 SupportsPlaylists = true,
@@ -62,6 +67,7 @@ public class AppDataInit
                 Name = "Education",
                 IsAssignable = true,
                 IsPublic = true,
+                Platform = EPlatform.This,
                 SupportsVideos = true,
                 SupportsAuthors = true,
                 SupportsPlaylists = true,
@@ -72,6 +78,7 @@ public class AppDataInit
                 Name = "Comedy",
                 IsAssignable = true,
                 IsPublic = true,
+                Platform = EPlatform.This,
                 SupportsVideos = true,
                 SupportsAuthors = true,
                 SupportsPlaylists = true,
@@ -82,6 +89,7 @@ public class AppDataInit
                 Name = "Animation",
                 IsAssignable = true,
                 IsPublic = true,
+                Platform = EPlatform.This,
                 SupportsVideos = true,
                 SupportsAuthors = true,
                 SupportsPlaylists = true,
@@ -92,6 +100,7 @@ public class AppDataInit
                 Name = "Science",
                 IsAssignable = true,
                 IsPublic = true,
+                Platform = EPlatform.This,
                 SupportsVideos = true,
                 SupportsAuthors = true,
                 SupportsPlaylists = true,

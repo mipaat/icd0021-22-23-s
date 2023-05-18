@@ -82,6 +82,7 @@ public class YouTubeContext
             }
 
             apiQuotaUsage.UsageAmount = Interlocked.Add(ref _apiUsageAmount, increment);
+            apiQuotaUsage.UpdatedAt = DateTime.UtcNow;
             uow.ApiQuotaUsages.Update(apiQuotaUsage);
             await uow.SaveChangesAsync();
         }

@@ -17,6 +17,11 @@ public class VideoController : Controller
         _authorizationService = authorizationService;
     }
 
+    public async Task<IActionResult> Search()
+    {
+        return View();
+    }
+
     // GET
     public async Task<IActionResult> Watch(Guid id)
     {

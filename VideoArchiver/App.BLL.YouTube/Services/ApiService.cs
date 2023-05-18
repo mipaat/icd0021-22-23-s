@@ -1,4 +1,7 @@
+using App.BLL.Config;
 using App.BLL.YouTube.Base;
+using App.BLL.YouTube.DTO;
+using App.Common;
 using AutoMapper;
 using Google.Apis.YouTube.v3.Data;
 using Microsoft.Extensions.Logging;
@@ -35,5 +38,38 @@ public class ApiService : BaseYouTubeService<ApiService>
         request.Id = string.Join(",", playlistIds);
         await Context.IncrementApiUsage();
         return await request.ExecuteAsync();
+    }
+
+    private async Task<VideoCategoryListResponse> FetchVideoCategories(IEnumerable<string> categoryIds, string uiCulture = "en-US")
+    {
+        var request = YouTubeApiService.VideoCategories.List(part: "snippet");
+        request.Hl = uiCulture;
+        request.Id = string.Join(',', categoryIds);
+
+        return await request.ExecuteAsync(); // Looks like category requests don't support pagination???
+    }
+
+    public async Task<ICollection<BasicCategoryData>> FetchVideoCategories(IList<string> categoryIds)
+    {
+        var supportedUiCultures = ServiceUow.Config.GetSupportedUiCultures();
+
+        var result = categoryIds.Select(c => new BasicCategoryData
+        {
+            Name = new LangString(),
+            IdOnPlatform = c,
+        }).ToList();
+        await Context.IncrementApiUsage(supportedUiCultures.Count);
+        foreach (var uiCulture in supportedUiCultures)
+        {
+            var response = await FetchVideoCategories(categoryIds, uiCulture);
+            foreach (var fetchedCategory in response.Items)
+            {
+                var category = result.First(c => c.IdOnPlatform == fetchedCategory.Id);
+                category.Name[uiCulture] = fetchedCategory.Snippet.Title;
+                category.IsAssignable = fetchedCategory.Snippet.Assignable ?? false;
+            }
+        }
+
+        return result;
     }
 }

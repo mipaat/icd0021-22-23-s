@@ -38,7 +38,7 @@ public class
         var videosCanContinue = true;
         var playlistsCanContinue = true;
 
-        while (YouTubeContext.ApiUsage < 9990 &&
+        while (YouTubeContext.ApiUsage < 9900 &&
                (neverFetchedVideosCanContinue || videosCanContinue ||
                 neverFetchedPlaylistsCanContinue || playlistsCanContinue))
         {

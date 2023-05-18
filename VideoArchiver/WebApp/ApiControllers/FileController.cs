@@ -38,7 +38,7 @@ public class FileController : ControllerBase
     /// <response code="200">Video file fetched successfully.</response>
     /// <response code="403">Access to video forbidden (or video doesn't exist).</response>
     /// <response code="404">Video file not found (or video doesn't exist).</response>
-    [HttpGet("VideoFile/{videoId:guid}")]
+    [HttpGet("{videoId:guid}")]
     [AllowAnonymous]
     [Authorize(AuthenticationSchemes = AuthenticationSchemeDefaults.IdentityAndJwt)]
     public async Task<IResult> VideoFileAsync(Guid videoId)

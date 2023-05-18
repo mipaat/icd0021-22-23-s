@@ -20,6 +20,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ImageService>();
         services.AddScoped<AuthorizationService>();
         services.AddScoped<QueueItemService>();
+        services.AddScoped<CategoryService>();
         services.AddScoped<BasicGameCrudService>();
 
         services.AddHostedService<QueueItemBackgroundService>();

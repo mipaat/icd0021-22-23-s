@@ -6,8 +6,10 @@ using App.Common;
 using App.DAL.DTO.Entities;
 using App.Common.Enums;
 using AutoMapper;
+using Google.Apis.YouTube.v3.Data;
 using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
+using Video = App.DAL.DTO.Entities.Video;
 
 namespace App.BLL.YouTube.Services;
 
@@ -121,6 +123,8 @@ public class VideoService : BaseYouTubeService<VideoService>
     {
         if (videos.Count == 0) return false;
         var fetchedVideos = await YouTubeUow.ApiService.FetchVideos(videos.Select(v => v.IdOnPlatform).ToList());
+        var categories = await AddCategories(fetchedVideos);
+
         foreach (var video in videos)
         {
             video.LastFetchOfficial = DateTime.UtcNow;
@@ -128,6 +132,12 @@ public class VideoService : BaseYouTubeService<VideoService>
             if (fetchedVideo == null) continue;
             video.LastSuccessfulFetchOfficial = video.LastFetchOfficial;
             var domainVideo = fetchedVideo.ToDalVideo(video.Thumbnails);
+            if (fetchedVideo.Snippet.CategoryId != null)
+            {
+                // TODO: fewer queries?
+                await ServiceUow.CategoryService.AddToCategory(video,
+                    categories.First(c => c.IdOnPlatform == fetchedVideo.Snippet.CategoryId));
+            }
             domainVideo.Thumbnails ??= ThumbnailUtils.GetAllPotentialThumbnails(domainVideo.IdOnPlatform);
             await ServiceUow.ImageService.UpdateThumbnails(domainVideo);
             await ServiceUow.EntityUpdateService.UpdateVideo(video, domainVideo);
@@ -135,6 +145,29 @@ public class VideoService : BaseYouTubeService<VideoService>
         }
 
         return videos.Count == 50;
+    }
+
+    private async Task<ICollection<Category>> AddCategories(VideoListResponse videos)
+    {
+        var categoryIds = videos.Items.Select(v => v.Snippet.CategoryId).Where(c => c != null).ToHashSet();
+        var categories = await Uow.Categories.GetAllByPlatformAsync(EPlatform.YouTube, categoryIds);
+        var filteredCategoryIds = categoryIds.Where(c => categories.All(e => e.IdOnPlatform != c)).ToList();
+        var fetchedCategories = await YouTubeUow.ApiService.FetchVideoCategories(filteredCategoryIds);
+        foreach (var fetchedCategory in fetchedCategories)
+        {
+            var category = new Category
+            {
+                Name = fetchedCategory.Name,
+                Platform = EPlatform.YouTube,
+                IdOnPlatform = fetchedCategory.IdOnPlatform,
+                IsAssignable = fetchedCategory.IsAssignable,
+                IsPublic = true,
+            };
+            Uow.Categories.Add(category);
+            categories.Add(category);
+        }
+
+        return categories;
     }
 
     public async Task<Video> AddVideo(VideoData videoData)

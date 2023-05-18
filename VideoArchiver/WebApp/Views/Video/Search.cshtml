@@ -1,0 +1,20 @@
+@model WebApp.ViewModels.VideoSearchViewModel
+
+@{
+    ViewBag.Title = "title";
+}
+
+<form method="get">
+    <input asp-for="NameQuery"/>
+    <input asp-for="AuthorQuery"/>
+</form>
+
+<div>
+    @foreach (var video in Model.Videos)
+    {
+        <div>
+            @video.Title
+            <a asp-action="Watch" asp-route-id="@video.Id"></a>
+        </div>
+    }
+</div>
