@@ -21,6 +21,9 @@ public class IdentityUow : BaseAppUowContainer
     private UserManager<User>? _userManager;
     public UserManager<User> UserManager => _userManager ??= _services.GetRequiredService<UserManager<User>>();
 
+    private RoleManager<Role>? _roleManager;
+    public RoleManager<Role> RoleManager => _roleManager ??= _services.GetRequiredService<RoleManager<Role>>();
+
     private UserService? _userService;
     public UserService UserService => _userService ??= _services.GetRequiredService<UserService>();
 

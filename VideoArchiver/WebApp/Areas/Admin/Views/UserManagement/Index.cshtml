@@ -1,0 +1,52 @@
+@using App.BLL.DTO
+@model WebApp.Areas.Admin.ViewModels.UserManagementViewModel
+
+@{
+    ViewBag.Title = "Manage users";
+}
+
+<h2 class="text-center mb-3">Manage users</h2>
+
+<form method="get" asp-action="Index">
+    <label asp-for="NameQuery">Search by username</label>
+    <input asp-for="NameQuery" value="@Model.NameQuery"/>
+    <label asp-for="IncludeOnlyNotApproved">Include only non-approved users?</label>
+    <input asp-for="IncludeOnlyNotApproved" checked="@Model.IncludeOnlyNotApproved"/>
+    <input type="submit" class="btn btn-primary" value="Apply"/>
+</form>
+
+@foreach (var user in Model.Users)
+{
+    <div class="dashboard-item">
+        @user.UserName<br/>
+        @if (!user.IsApproved)
+        {
+            <form asp-action="ApproveRegistration">
+                @Html.Hidden("id", user.Id)
+                @Html.HiddenFor(m => m.NameQuery)
+                @Html.HiddenFor(m => m.IncludeOnlyNotApproved)
+                <input type="submit" class="btn btn-success" value="Approve registration"/>
+            </form>
+        }
+        @if (user.Roles.Any(r => r.Name == RoleNames.Helper))
+        {
+            <form asp-action="RemoveRole">
+                @Html.Hidden("userId", user.Id)
+                @Html.HiddenFor(m => m.NameQuery)
+                @Html.HiddenFor(m => m.IncludeOnlyNotApproved)
+                @Html.Hidden("roleName", RoleNames.Helper)
+                <input type="submit" class="btn btn-danger" value="Remove helper"/>
+            </form>
+        }
+        else
+        {
+            <form asp-action="AddRole">
+                @Html.Hidden("userId", user.Id)
+                @Html.HiddenFor(m => m.NameQuery)
+                @Html.HiddenFor(m => m.IncludeOnlyNotApproved)
+                @Html.Hidden("roleName", RoleNames.Helper)
+                <input type="submit" class="btn btn-outline-danger" value="Add helper"/>
+            </form>
+        }
+    </div>
+}

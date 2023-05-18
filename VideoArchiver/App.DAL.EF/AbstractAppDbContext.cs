@@ -77,6 +77,16 @@ public class AbstractAppDbContext : IdentityDbContext<User, Role, Guid, Identity
     {
         base.OnModelCreating(builder);
 
+        builder.Entity<UserRole>()
+            .HasOne(e => e.User)
+            .WithMany(e => e.UserRoles)
+            .HasForeignKey(e => e.UserId);
+
+        builder.Entity<UserRole>()
+            .HasOne(e => e.Role)
+            .WithMany(e => e.UserRoles)
+            .HasForeignKey(e => e.RoleId);
+        
         foreach (var foreignKey in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
             foreignKey.DeleteBehavior = DeleteBehavior.Restrict;

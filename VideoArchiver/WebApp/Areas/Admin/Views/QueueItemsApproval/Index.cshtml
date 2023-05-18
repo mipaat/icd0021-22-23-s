@@ -1,6 +1,12 @@
 @using Base.WebHelpers
-@model WebApp.Areas.Admin.ViewModels.IQueueItemsApprovalViewModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model WebApp.Areas.Admin.ViewModels.QueueItemsApprovalViewModel
 
+@{
+    ViewBag.Title = "Queue items approval";
+}
+
+<h2 class="text-center mb-3">Queue items awaiting approval</h2>
 @foreach (var queueItem in Model.QueueItems)
 {
     <div class="dashboard-item">
@@ -10,11 +16,12 @@
         Added by: @queueItem.AddedBy.UserName
         ID: @queueItem.Id
         <form method="post" asp-action="DeleteQueueItem">
-            @Html.HiddenValueFor(m => m.Id, queueItem.Id)
+            <input type="hidden" name="id" value="@queueItem.Id"/>
             <input type="submit" class="btn btn-danger" value="Delete"/>
         </form>
         <form method="post" asp-action="ApproveQueueItem">
-            @Html.HiddenValueFor(m => m.Id, queueItem.Id)
+            <input type="hidden" name="id" value="@queueItem.Id"/>
+            <input type="checkbox" name="grantAccess" checked="checked"/>
             <input type="submit" class="btn btn-danger" value="Approve"/>
         </form>
     </div>

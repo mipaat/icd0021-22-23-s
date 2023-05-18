@@ -6,7 +6,6 @@ using App.BLL.DTO.Contracts;
 using App.BLL.DTO.Entities;
 using App.BLL.Exceptions;
 using App.Common.Enums;
-using App.Contracts.DAL;
 using App.DAL.DTO.Entities;
 using AutoMapper;
 using Base.WebHelpers;
@@ -71,20 +70,24 @@ public class SubmitService : BaseService<SubmitService>
                 var video = await handler.SubmitVideo(queueItem.IdOnPlatform);
                 queueItem.Video = video;
                 queueItem.VideoId = video.Id;
-                await ServiceUow.AuthorizationService.AuthorizeVideoIfNotAuthorized(queueItem.AddedById, video.Id);
+                if (queueItem.GrantAccess)
+                    await ServiceUow.AuthorizationService.AuthorizeVideoIfNotAuthorized(queueItem.AddedById, video.Id);
                 break;
             case EEntityType.Playlist:
                 var playlist = await handler.SubmitPlaylist(queueItem.IdOnPlatform);
                 queueItem.Playlist = playlist;
                 queueItem.PlaylistId = playlist.Id;
-                await ServiceUow.AuthorizationService.AuthorizePlaylistIfNotAuthorized(queueItem.AddedById,
-                    playlist.Id);
+                if (queueItem.GrantAccess)
+                    await ServiceUow.AuthorizationService.AuthorizePlaylistIfNotAuthorized(queueItem.AddedById,
+                        playlist.Id);
                 break;
             case EEntityType.Author:
                 var author = await handler.SubmitAuthor(queueItem.IdOnPlatform);
                 queueItem.Author = author;
                 queueItem.AuthorId = author.Id;
-                await ServiceUow.AuthorizationService.AuthorizeAuthorIfNotAuthorized(queueItem.AddedById, author.Id);
+                if (queueItem.GrantAccess)
+                    await ServiceUow.AuthorizationService.AuthorizeAuthorIfNotAuthorized(queueItem.AddedById,
+                        author.Id);
                 break;
             default:
                 throw new ArgumentException(

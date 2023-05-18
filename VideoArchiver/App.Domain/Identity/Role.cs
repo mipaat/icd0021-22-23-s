@@ -5,4 +5,5 @@ namespace App.Domain.Identity;
 
 public class Role : IdentityRole<Guid>, IIdDatabaseEntity
 {
+    public ICollection<UserRole>? UserRoles { get; set; }
 }

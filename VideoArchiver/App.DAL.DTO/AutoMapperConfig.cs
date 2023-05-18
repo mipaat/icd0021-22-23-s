@@ -11,6 +11,11 @@ public class AutoMapperConfig : Profile
     {
         CreateMap<User, Domain.Identity.User>().ReverseMap();
         CreateMap<Domain.Identity.User, Domain.Identity.User>().ReverseMap();
+        CreateMap<Domain.Identity.Role, Role>();
+        CreateMap<Domain.Identity.User, UserWithRoles>()
+            .ForMember(u => u.Roles, o =>
+                o.MapFrom(u => u!.UserRoles!.Select(ur => ur.Role)))
+            .ReverseMap();
         CreateMap<RefreshToken, Domain.Identity.RefreshToken>().ReverseMap();
 
         CreateMap<ApiQuotaUsage, Domain.ApiQuotaUsage>().ReverseMap();

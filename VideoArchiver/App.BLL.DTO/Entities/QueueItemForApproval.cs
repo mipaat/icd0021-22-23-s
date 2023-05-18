@@ -19,4 +19,5 @@ public class QueueItemForApproval : AbstractIdDatabaseEntity
 
     public User? ApprovedBy { get; set; }
     public DateTime? ApprovedAt { get; set; }
+    public bool GrantAccess { get; set; }
 }

@@ -1,4 +1,6 @@
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -33,5 +35,44 @@ public static class InputHelpers
         var propertyName = htmlHelper.GetPropertyName(expression);
 
         return htmlHelper.Hidden(propertyName, value);
+    }
+    
+    public static PropertyInfo GetPropertyInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> expression)
+    {
+        if (expression.Body is not MemberExpression memberExpression)
+        {
+            throw new ArgumentException($"Expression {expression} doesn't refer to a property");
+        }
+
+        if (memberExpression.Member is not PropertyInfo propertyInfo)
+        {
+            throw new ArgumentException($"Expression {expression} doesn't refer to a property");
+        }
+
+        var type = typeof(TSource);
+        if (propertyInfo.ReflectedType != null && type != propertyInfo.ReflectedType &&
+            !type.IsSubclassOf(propertyInfo.ReflectedType))
+        {
+            throw new ArgumentException($"Expression {expression} refers to a property that is not from type {type}");
+        }
+
+        return propertyInfo;
+    }
+
+    public static IHtmlContent CheckBoxFor<TModel>(
+        this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, bool>> expression, bool value,
+        string @class = "")
+    {
+        var propertyName = GetPropertyName(htmlHelper, expression);
+
+        @class = SingleSpaces(@class);
+        var htmlAttributes = new { @class };
+
+        return htmlHelper.CheckBox(propertyName, value, htmlAttributes);
+    }
+
+    private static string SingleSpaces(string s)
+    {
+        return Regex.Replace(s, @" +", " ");
     }
 }

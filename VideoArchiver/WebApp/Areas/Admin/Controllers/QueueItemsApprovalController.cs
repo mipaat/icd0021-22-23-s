@@ -9,26 +9,26 @@ namespace WebApp.Areas.Admin.Controllers;
 
 [Area("Admin")]
 [Authorize(Roles = RoleNames.Admin)]
-public class DashboardController : Controller
+public class QueueItemsApprovalController : Controller
 {
     private readonly ServiceUow ServiceUow;
 
-    public DashboardController(ServiceUow serviceUow)
+    public QueueItemsApprovalController(ServiceUow serviceUow)
     {
         ServiceUow = serviceUow;
     }
 
     public async Task<ActionResult> Index()
     {
-        return View(new DashboardViewModel
+        return View(new QueueItemsApprovalViewModel
         {
             QueueItems = await ServiceUow.QueueItemService.GetAllAwaitingApprovalAsync(),
         });
     }
 
-    public async Task<IActionResult> ApproveQueueItem([FromForm] Guid id)
+    public async Task<IActionResult> ApproveQueueItem([FromForm] Guid id, [FromForm] bool grantAccess = true)
     {
-        await ServiceUow.QueueItemService.ApproveAsync(id, User.GetUserId());
+        await ServiceUow.QueueItemService.ApproveAsync(id, User.GetUserId(), grantAccess);
         await ServiceUow.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }

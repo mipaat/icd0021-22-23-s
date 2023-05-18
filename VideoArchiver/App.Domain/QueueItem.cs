@@ -25,6 +25,7 @@ public class QueueItem : AbstractIdDatabaseEntity
     public User? ApprovedBy { get; set; }
     public Guid? ApprovedById { get; set; }
     public DateTime? ApprovedAt { get; set; }
+    public bool GrantAccess { get; set; } = true;
 
     public DateTime? CompletedAt { get; set; }
 

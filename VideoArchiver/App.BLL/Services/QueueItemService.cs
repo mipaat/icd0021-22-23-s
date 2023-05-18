@@ -56,11 +56,12 @@ public class QueueItemService : BaseService<QueueItemService>
         await Uow.QueueItems.RemoveAsync(id);
     }
 
-    public async Task ApproveAsync(Guid id, Guid approvedById)
+    public async Task ApproveAsync(Guid id, Guid approvedById, bool grantAccess = true)
     {
         var queueItem = await Uow.QueueItems.GetByIdAsync(id) ?? throw new NotFoundException();
         queueItem.ApprovedById = approvedById;
         queueItem.ApprovedAt = DateTime.UtcNow;
+        queueItem.GrantAccess = grantAccess;
         Uow.QueueItems.Update(queueItem);
         Uow.SavedChanges += (_, _) => ServiceContext.QueueNewQueueItem(id);
     }

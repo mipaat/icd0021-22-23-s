@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using App.BLL.DTO.Entities;
 using App.BLL.DTO.Entities.Identity;
+using App.BLL.DTO.Exceptions;
 using App.BLL.DTO.Exceptions.Identity;
 using App.BLL.DTO.Mappers;
 using App.Common.Enums;
@@ -35,6 +36,7 @@ public class UserService : IAppUowContainer
 
     private SignInManager<App.Domain.Identity.User> SignInManager => _identityUow.SignInManager;
     private UserManager<App.Domain.Identity.User> UserManager => _identityUow.UserManager;
+    private RoleManager<App.Domain.Identity.Role> RoleManager => _identityUow.RoleManager;
 
     private bool AutoApproveRegistration => _configuration.GetValue<bool>("AutoApproveRegistration");
 
@@ -218,8 +220,37 @@ public class UserService : IAppUowContainer
     public async Task<IList<AuthenticationScheme>> GetExternalAuthenticationSchemesAsync() =>
         (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+    public async Task<ICollection<UserWithRoles>> GetUsersWithRoles(bool includeOnlyRequiringApproval = false,
+        string? nameQuery = null)
+    {
+        if (nameQuery != null && nameQuery.Trim().Length == 0) nameQuery = null;
+        return (await Uow.Users.GetAllWithRoles(includeOnlyRequiringApproval, nameQuery))
+            .Select(u => _userMapper.Map(u)).ToList();
+    }
+
+    public async Task ApproveRegistration(Guid userId)
+    {
+        var user = await Uow.Users.GetByIdAsync(userId) ?? throw new NotFoundException();
+        user.IsApproved = true;
+        Uow.Users.Update(user);
+    }
+
     public async Task<int> SaveChangesAsync()
     {
         return await _identityUow.SaveChangesAsync();
+    }
+
+    public async Task AddUserToRole(Guid userId, string roleName)
+    {
+        var role = await RoleManager.FindByNameAsync(roleName) ?? throw new NotFoundException();
+        if (await Uow.Users.IsInRoleAsync(userId, role.Id)) return;
+        Uow.Users.AddToRoles(userId, role.Id);
+    }
+
+    public async Task RemoveUserFromRole(Guid userId, string roleName)
+    {
+        var role = await RoleManager.FindByNameAsync(roleName) ?? throw new NotFoundException();
+        if (!await Uow.Users.IsInRoleAsync(userId, role.Id)) return;
+        await Uow.Users.RemoveFromRolesAsync(userId, role.Id);
     }
 }
