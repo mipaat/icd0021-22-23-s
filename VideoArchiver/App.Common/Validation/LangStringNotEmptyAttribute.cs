@@ -1,8 +1,7 @@
 #pragma warning disable 1591
 using System.ComponentModel.DataAnnotations;
-using App.Common;
 
-namespace WebApp.Validation;
+namespace App.Common.Validation;
 
 public class LangStringNotEmptyAttribute : ValidationAttribute
 {

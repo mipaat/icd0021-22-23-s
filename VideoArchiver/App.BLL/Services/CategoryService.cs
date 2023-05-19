@@ -1,6 +1,6 @@
 using App.BLL.Base;
+using App.BLL.DTO.Entities;
 using App.BLL.DTO.Mappers;
-using App.Common;
 using App.Common.Enums;
 using App.DAL.DTO.Entities;
 using AutoMapper;
@@ -31,19 +31,25 @@ public class CategoryService : BaseService<CategoryService>
         });
     }
 
-    public Guid CreateCategory(LangString name, bool isPublic, Guid authorId)
+    public Guid CreateCategory(CategoryDataWithCreatorId categoryData)
     {
-        var category = new DAL.DTO.Entities.CategoryWithCreator
-        {
-            CreatorId = authorId,
-            IsAssignable = true,
-            IsPublic = isPublic,
-            Platform = EPlatform.This,
-            Name = name,
-        };
+        var category = _categoryMapper.Map(categoryData);
+        category.Platform = EPlatform.This;
+        category.IsAssignable = true;
+        
         Uow.Categories.Add(category);
 
         return category.Id;
+    }
+
+    public async Task<CategoryWithCreator?> GetByIdAsync(Guid categoryId)
+    {
+        return _categoryMapper.Map(await Uow.Categories.GetByIdAsync(categoryId));
+    }
+
+    public void Update(Guid id, CategoryData data)
+    {
+        Uow.Categories.Update(_categoryMapper.Map(data, id));
     }
 
     public async Task<ICollection<CategoryWithCreator>> GetAllCategoriesAsync(Guid? userId)

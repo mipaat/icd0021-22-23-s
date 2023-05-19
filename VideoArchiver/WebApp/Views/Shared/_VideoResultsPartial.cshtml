@@ -1,0 +1,11 @@
+@model ICollection<App.BLL.DTO.Entities.VideoWithAuthor>
+
+<div>
+    @foreach (var video in Model)
+    {
+        <div>
+            @video.Title
+            <a asp-action="Watch" asp-route-id="@video.Id">Watch</a>
+        </div>
+    }
+</div>

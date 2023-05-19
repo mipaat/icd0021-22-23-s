@@ -43,7 +43,7 @@ public class CategoryController : Controller
 
         if (!User.IsAllowedToCreatePublicCategory())
         {
-            viewModel.IsPublic = false;
+            viewModel.Category.IsPublic = false;
         }
 
         var authorId = UserService.GetSelectedAuthorId(HttpContext.Request);
@@ -53,9 +53,73 @@ public class CategoryController : Controller
             return RedirectToPage(nameof(SelectAuthor));
         }
 
-        _categoryService.CreateCategory(viewModel.Name, viewModel.IsPublic, authorId.Value);
+        viewModel.Category.CreatorId = authorId;
+
+        _categoryService.CreateCategory(viewModel.Category);
         await _categoryService.ServiceUow.SaveChangesAsync();
 
-        throw new NotImplementedException();
+        if (viewModel.ReturnUrl != null) return Redirect(viewModel.ReturnUrl);
+        return RedirectToAction(nameof(Details));
+    }
+
+    public async Task<IActionResult> Edit(Guid id)
+    {
+        var category = await _categoryService.GetByIdAsync(id);
+        if (category == null) return NotFound();
+        if (category.Creator == null) return Forbid();
+        if (!await _userService.IsUserSubAuthor(category.Creator.Id, User)) return Forbid();
+        return View(new CategoryEditViewModel
+        {
+            Id = id,
+            SupportedUiCultures = _configuration.GetSupportedUiCultureNames(),
+        });
+    }
+
+    [HttpPost]
+    [ActionName("Edit")]
+    public async Task<IActionResult> EditPost(CategoryEditViewModel model)
+    {
+        
+        model.SupportedUiCultures = _configuration.GetSupportedUiCultureNames();
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var category = await _categoryService.GetByIdAsync(model.Id);
+        if (category == null) return NotFound();
+        if (category.Creator == null) return Forbid();
+        if (!await _userService.IsUserSubAuthor(category.Creator.Id, User)) return Forbid();
+        
+        if (!User.IsAllowedToCreatePublicCategory())
+        {
+            model.Category.IsPublic = false;
+        }
+
+        _categoryService.Update(model.Id, model.Category);
+        await _categoryService.ServiceUow.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Details));
+    }
+
+    public async Task<IActionResult> Details(Guid id)
+    {
+        var category = await _categoryService.GetByIdAsync(id);
+        if (category == null) return NotFound();
+        var userIsCreator = false;
+        if (category.Creator != null)
+        {
+            if (!category.IsPublic)
+            {
+                return Forbid();
+            }
+            userIsCreator = await _userService.IsUserSubAuthor(category.Creator.Id, User);
+        }
+        return View(new CategoryDetailsViewModel
+        {
+            Category = category,
+            SupportedUiCultures = _configuration.GetSupportedUiCultureNames(),
+            UserIsCreator = userIsCreator,
+        });
     }
 }

@@ -1,5 +1,6 @@
 #pragma warning disable 1591
 using App.BLL;
+using App.BLL.Identity.Services;
 using App.BLL.Services;
 using Base.WebHelpers;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,7 @@ public class VideoController : Controller
     public async Task<IActionResult> Search(VideoSearchViewModel model)
     {
         model.CategoryPickerViewModel ??= new CategoryPickerPartialViewModel();
+        model.CategoryPickerViewModel.ActiveAuthorId = UserService.GetSelectedAuthorId(HttpContext.Request);
         model.CategoryPickerViewModel.Prefix = nameof(VideoSearchViewModel.CategoryPickerViewModel);
         model.CategoryPickerViewModel.Categories =
             await _categoryService.GetAllCategoriesGroupedByPlatformAsync(User.GetUserIdIfExists());

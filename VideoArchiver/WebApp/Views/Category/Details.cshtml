@@ -1,0 +1,29 @@
+@using WebApp.ViewModels
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model CategoryDetailsViewModel
+
+@{
+    ViewBag.Title = "Category details";
+}
+
+<h2>Category details</h2>
+
+<div>
+    <label>
+        Platform: <span>@Model.Category.Platform</span>
+    </label>
+    <label asp-for="Category.IsPublic"></label>
+    <input asp-for="Category.IsPublic" disabled="disabled"/>
+    <div class="form-group">
+        <label asp-for="Category.Name">Name:</label>
+        @foreach (var culture in Model.SupportedUiCultures)
+        {
+            Model.Category.Name.TryGetValue(culture, out var cultureValue);
+            @await Html.PartialAsync("_LangStringFormSectionPartial", new LangStringFormSectionPartialViewModel("Category.Name", culture, cultureValue, true))
+        }
+    </div>
+    @if (Model.UserIsCreator)
+    {
+        <a asp-action="Edit">Edit</a>
+    }
+</div>

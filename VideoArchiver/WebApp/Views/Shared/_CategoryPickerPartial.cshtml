@@ -21,7 +21,16 @@
                         {
                             {
                                 index++;
-                                <label for="@Identifier(index)">@category.Name</label>
+                                <label for="@Identifier(index)">
+                                    @if (Model.ActiveAuthorId != null && category.Creator != null && Model.ActiveAuthorId == category.Creator?.Id)
+                                    {
+                                        <a asp-controller="Category" asp-action="Edit" asp-route-id="@category.Id">@category.Name</a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="Category" asp-action="Details" asp-route-id="@category.Id">@category.Name</a>
+                                    }
+                                </label>
                                 <input name="@Identifier(index)" type="checkbox" checked="@Model.SelectedCategoryIds.Values.Contains(category.Id)" value="@category.Id"/>
                             }
                         }

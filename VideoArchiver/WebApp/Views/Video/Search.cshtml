@@ -13,12 +13,4 @@
     <input type="submit" class="btn btn-primary" value="Search"/>
 </form>
 
-<div>
-    @foreach (var video in Model.Videos)
-    {
-        <div>
-            @video.Title
-            <a asp-action="Watch" asp-route-id="@video.Id"></a>
-        </div>
-    }
-</div>
+<partial name="_VideoResultsPartial" model="@Model.Videos"/>

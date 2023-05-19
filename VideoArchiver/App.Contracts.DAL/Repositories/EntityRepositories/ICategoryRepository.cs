@@ -4,7 +4,7 @@ using Contracts.DAL;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
-public interface ICategoryRepository : IBaseEntityRepository<App.Domain.Category, CategoryWithCreator>
+public interface ICategoryRepository : IBaseEntityRepository<Domain.Category, CategoryWithCreator>
 {
     public Task<ICollection<CategoryWithCreator>> GetAllByPlatformAsync(EPlatform platform, IEnumerable<string>? idsOnPlatform = null);
     public Task<CategoryWithCreator?> GetByNameAsync(EPlatform platform, string name);

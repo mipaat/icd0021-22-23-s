@@ -15,6 +15,20 @@ public class CategoryRepository : BaseAppEntityRepository<Domain.Category, Categ
     {
     }
 
+    protected override Domain.Category AfterMap(CategoryWithCreator entity, Domain.Category mapped)
+    {
+        if (entity.Creator != null)
+        {
+            var creator = Uow.Authors.GetTrackedEntity(entity.Creator.Id);
+            if (creator != null)
+            {
+                mapped.Creator = creator;
+            }
+        }
+
+        return mapped;
+    }
+
     public async Task<ICollection<CategoryWithCreator>> GetAllByPlatformAsync(EPlatform platform,
         IEnumerable<string>? idsOnPlatform = null)
     {
