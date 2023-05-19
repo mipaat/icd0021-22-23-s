@@ -12,7 +12,7 @@
     <div class="dashboard-item">
         @queueItem.EntityType on platform @queueItem.Platform
         Id on platform: @queueItem.IdOnPlatform
-        Added at: @DateTimeHelpers.SpanFor(queueItem.AddedAt)
+        Added at: @queueItem.AddedAt.ToSpan(Context)
         Added by: @queueItem.AddedBy.UserName
         ID: @queueItem.Id
         <form method="post" asp-action="DeleteQueueItem">

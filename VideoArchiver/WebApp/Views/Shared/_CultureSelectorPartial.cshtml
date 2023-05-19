@@ -1,0 +1,23 @@
+@using App.BLL.Config
+@using Base.WebHelpers
+@inject IConfiguration Configuration
+
+<div>
+    <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        @Context.CurrentUiCulture().Name
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end">
+        @foreach (var culture in Configuration.GetSupportedUiCultures())
+        {
+            <li>
+                <a class="dropdown-item nav-link @culture.GetActiveClass(Context)"
+                   asp-controller="SelectCulture"
+                   asp-action="SetCulture"
+                   asp-route-culture="@culture.Name"
+                   asp-route-returnUrl="@Context.GetFullPath()">
+                    @culture.NativeName
+                </a>
+            </li>
+        }
+    </ul>
+</div>

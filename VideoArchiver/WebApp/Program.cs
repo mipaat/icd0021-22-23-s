@@ -16,6 +16,7 @@ using App.DAL.EF;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using AutoMapper;
+using Base.WebHelpers;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
@@ -119,12 +120,14 @@ public class Program
         // App created
         var app = builder.Build();
 
+        var defaultCulture = new CultureInfo("en-US").UseConstantDateTime();
         var localizationOptions = new RequestLocalizationOptions
         {
-            DefaultRequestCulture = new RequestCulture("en-US"),
-            SupportedCultures = CultureInfo.GetCultures(CultureTypes.AllCultures),
-            SupportedUICultures = CultureInfo.GetCultures(CultureTypes.AllCultures),
+            DefaultRequestCulture = new RequestCulture(defaultCulture),
+            SupportedCultures = CultureInfo.GetCultures(CultureTypes.AllCultures).Select(c => c.UseConstantDateTime()).ToList(),
+            SupportedUICultures = app.Configuration.GetSupportedUiCultures(),
         };
+
         app.UseRequestLocalization(localizationOptions);
 
         if (useHttpLogging)

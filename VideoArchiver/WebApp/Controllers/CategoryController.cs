@@ -27,7 +27,7 @@ public class CategoryController : Controller
 
     public IActionResult Create(CategoryCreateViewModel viewModel)
     {
-        viewModel.SupportedUiCultures = _configuration.GetSupportedUiCultures();
+        viewModel.SupportedUiCultures = _configuration.GetSupportedUiCultureNames();
         return View(viewModel);
     }
 
@@ -37,7 +37,7 @@ public class CategoryController : Controller
     {
         if (!ModelState.IsValid)
         {
-            viewModel.SupportedUiCultures = _configuration.GetSupportedUiCultures();
+            viewModel.SupportedUiCultures = _configuration.GetSupportedUiCultureNames();
             return View(viewModel);
         }
 

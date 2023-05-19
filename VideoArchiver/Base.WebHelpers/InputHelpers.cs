@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
@@ -74,5 +74,15 @@ public static class InputHelpers
     private static string SingleSpaces(string s)
     {
         return Regex.Replace(s, @" +", " ");
+    }
+
+    public static string GetFullPath(this HttpRequest request)
+    {
+        return request.Path + request.QueryString;
+    }
+
+    public static string GetFullPath(this HttpContext context)
+    {
+        return context.Request.GetFullPath();
     }
 }
