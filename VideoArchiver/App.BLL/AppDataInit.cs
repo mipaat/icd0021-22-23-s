@@ -15,7 +15,7 @@ public class AppDataInit
 
     private async Task SeedAppDataCategoriesAsync()
     {
-        var defaultCategories = new List<Category>
+        var defaultCategories = new List<CategoryWithCreator>
         {
             new()
             {
@@ -24,9 +24,6 @@ public class AppDataInit
                 IsAssignable = true,
                 IsPublic = true,
                 Platform = EPlatform.This,
-                SupportsVideos = true,
-                SupportsAuthors = true,
-                SupportsPlaylists = true,
             },
             new()
             {
@@ -35,9 +32,6 @@ public class AppDataInit
                 IsAssignable = true,
                 IsPublic = true,
                 Platform = EPlatform.This,
-                SupportsVideos = true,
-                SupportsAuthors = true,
-                SupportsPlaylists = true,
             },
             new()
             {
@@ -46,9 +40,6 @@ public class AppDataInit
                 IsAssignable = true,
                 IsPublic = true,
                 Platform = EPlatform.This,
-                SupportsVideos = true,
-                SupportsAuthors = true,
-                SupportsPlaylists = true,
             },
             new()
             {
@@ -57,9 +48,6 @@ public class AppDataInit
                 IsAssignable = true,
                 IsPublic = true,
                 Platform = EPlatform.This,
-                SupportsVideos = true,
-                SupportsAuthors = true,
-                SupportsPlaylists = true,
             },
             new()
             {
@@ -68,9 +56,6 @@ public class AppDataInit
                 IsAssignable = true,
                 IsPublic = true,
                 Platform = EPlatform.This,
-                SupportsVideos = true,
-                SupportsAuthors = true,
-                SupportsPlaylists = true,
             },
             new()
             {
@@ -79,9 +64,6 @@ public class AppDataInit
                 IsAssignable = true,
                 IsPublic = true,
                 Platform = EPlatform.This,
-                SupportsVideos = true,
-                SupportsAuthors = true,
-                SupportsPlaylists = true,
             },
             new()
             {
@@ -90,9 +72,6 @@ public class AppDataInit
                 IsAssignable = true,
                 IsPublic = true,
                 Platform = EPlatform.This,
-                SupportsVideos = true,
-                SupportsAuthors = true,
-                SupportsPlaylists = true,
             },
             new()
             {
@@ -101,9 +80,6 @@ public class AppDataInit
                 IsAssignable = true,
                 IsPublic = true,
                 Platform = EPlatform.This,
-                SupportsVideos = true,
-                SupportsAuthors = true,
-                SupportsPlaylists = true,
             },
         };
 

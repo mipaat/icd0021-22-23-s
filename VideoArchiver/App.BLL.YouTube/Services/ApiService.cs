@@ -51,6 +51,7 @@ public class ApiService : BaseYouTubeService<ApiService>
 
     public async Task<ICollection<BasicCategoryData>> FetchVideoCategories(IList<string> categoryIds)
     {
+        if (categoryIds.Count == 0) return new List<BasicCategoryData>();
         var supportedUiCultures = ServiceUow.Config.GetSupportedUiCultures();
 
         var result = categoryIds.Select(c => new BasicCategoryData

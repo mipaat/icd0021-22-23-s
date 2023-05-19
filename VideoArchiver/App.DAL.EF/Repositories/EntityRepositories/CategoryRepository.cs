@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace App.DAL.EF.Repositories.EntityRepositories;
 
-public class CategoryRepository : BaseAppEntityRepository<App.Domain.Category, Category>, ICategoryRepository
+public class CategoryRepository : BaseAppEntityRepository<Domain.Category, CategoryWithCreator>, ICategoryRepository
 {
     public CategoryRepository(AbstractAppDbContext dbContext, IMapper mapper, IAppUnitOfWork uow) : base(dbContext, mapper, uow)
     {
     }
 
-    public async Task<ICollection<Category>> GetAllByPlatformAsync(EPlatform platform, IEnumerable<string>? idsOnPlatform = null)
+    public async Task<ICollection<CategoryWithCreator>> GetAllByPlatformAsync(EPlatform platform, IEnumerable<string>? idsOnPlatform = null)
     {
         var query = Entities.Where(e => e.Platform == platform);
         if (idsOnPlatform != null)
@@ -22,15 +22,16 @@ public class CategoryRepository : BaseAppEntityRepository<App.Domain.Category, C
             query = query.Where(e => idsOnPlatform.Contains(e.IdOnPlatform));
         }
 
-        return await query.ProjectTo<Category>(Mapper.ConfigurationProvider).ToListAsync();
+        return AttachIfNotAttached<ICollection<CategoryWithCreator>, CategoryWithCreator>(
+            await query.ProjectTo<CategoryWithCreator>(Mapper.ConfigurationProvider).ToListAsync());
     }
 
-    public async Task<Category?> GetByNameAsync(EPlatform platform, string name)
+    public async Task<CategoryWithCreator?> GetByNameAsync(EPlatform platform, string name)
     {
-        return await Entities.FromSql(
+        return AttachIfNotAttached(await Entities.FromSql(
                 $"SELECT * FROM \"Categories\" c WHERE jsonb_path_exists(c.\"Name\", ('$.* ? (@ like_regex \"(?i)' || {name} || '\")')::jsonpath)")
             .Where(e => e.Platform == platform)
-            .ProjectTo<Category>(Mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync();
+            .ProjectTo<CategoryWithCreator>(Mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync());
     }
 }

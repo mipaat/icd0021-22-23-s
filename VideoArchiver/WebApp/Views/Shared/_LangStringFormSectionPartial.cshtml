@@ -1,0 +1,11 @@
+@model WebApp.ViewModels.LangStringFormSectionPartialViewModel
+
+<div>
+    <label for="@Identifier">@Model.Culture:</label>
+    <input type="text" name="@Identifier" id="@Identifier" value="@Model.Value"/>
+</div>
+
+@functions
+{
+    string Identifier => $"{Model.ParamName}[{Model.Culture}]";
+}

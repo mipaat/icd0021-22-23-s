@@ -6,7 +6,7 @@ namespace App.BLL.Base;
 
 public abstract class BaseService<TService>
 {
-    protected readonly ServiceUow ServiceUow;
+    public readonly ServiceUow ServiceUow;
     protected readonly ILogger<TService> Logger;
 
     protected BaseService(ServiceUow serviceUow, ILogger<TService> logger, IMapper mapper)

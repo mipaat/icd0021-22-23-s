@@ -87,8 +87,8 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
             query = query.Where(e => e.VideoAuthors!.Select(a => a.Author!.UserName + a.Author!.DisplayName).Contains(author));
         }
 
-        return await query.ProjectTo<VideoWithBasicAuthors>(Mapper.ConfigurationProvider)
-            .ToListAsync();
+        return AttachIfNotAttached<ICollection<VideoWithBasicAuthors>, VideoWithBasicAuthors>(
+            await query.ProjectTo<VideoWithBasicAuthors>(Mapper.ConfigurationProvider).ToListAsync());
     }
 
     public async Task<VideoWithComments?> GetByIdOnPlatformWithCommentsAsync(string idOnPlatform, EPlatform platform)

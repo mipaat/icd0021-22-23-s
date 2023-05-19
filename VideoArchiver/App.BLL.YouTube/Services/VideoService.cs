@@ -147,7 +147,7 @@ public class VideoService : BaseYouTubeService<VideoService>
         return videos.Count == 50;
     }
 
-    private async Task<ICollection<Category>> AddCategories(VideoListResponse videos)
+    private async Task<ICollection<CategoryWithCreator>> AddCategories(VideoListResponse videos)
     {
         var categoryIds = videos.Items.Select(v => v.Snippet.CategoryId).Where(c => c != null).ToHashSet();
         var categories = await Uow.Categories.GetAllByPlatformAsync(EPlatform.YouTube, categoryIds);
@@ -155,7 +155,7 @@ public class VideoService : BaseYouTubeService<VideoService>
         var fetchedCategories = await YouTubeUow.ApiService.FetchVideoCategories(filteredCategoryIds);
         foreach (var fetchedCategory in fetchedCategories)
         {
-            var category = new Category
+            var category = new CategoryWithCreator
             {
                 Name = fetchedCategory.Name,
                 Platform = EPlatform.YouTube,

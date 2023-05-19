@@ -145,6 +145,12 @@ public class UserService : IAppUowContainer
         httpResponse.Cookies.Append(SelectedUserAuthorCookieKey, authorId.ToString());
     }
 
+    public static Guid? GetSelectedAuthorId(HttpRequest httpRequest)
+    {
+        httpRequest.Cookies.TryGetValue(SelectedUserAuthorCookieKey, out var id);
+        return id == null ? null : Guid.Parse(id);
+    }
+
     public async Task SignOutAsync()
     {
         await SignInManager.SignOutAsync();

@@ -19,7 +19,7 @@ public class AutoMapperConfig : Profile
         CreateMap<RefreshToken, Domain.Identity.RefreshToken>().ReverseMap();
 
         CreateMap<ApiQuotaUsage, Domain.ApiQuotaUsage>().ReverseMap();
-        
+
         CreateMap<Author, Domain.Author>().ReverseMap();
         CreateMap<Domain.Author, AuthorBasic>().ReverseMap();
         CreateMap<AuthorCategory, Domain.AuthorCategory>().ReverseMap();
@@ -28,7 +28,8 @@ public class AutoMapperConfig : Profile
         CreateMap<AuthorRating, Domain.AuthorRating>().ReverseMap();
         CreateMap<AuthorSubscription, Domain.AuthorSubscription>().ReverseMap();
 
-        CreateMap<Category, Domain.Category>().ReverseMap();
+        CreateMap<CategoryWithCreator, Domain.Category>()
+            .ReverseMap();
         CreateMap<Comment, Domain.Comment>().ReverseMap();
         CreateMap<CommentHistory, Domain.CommentHistory>().ReverseMap();
         CreateMap<CommentReplyNotification, Domain.CommentReplyNotification>().ReverseMap();

@@ -1,0 +1,33 @@
+@using WebApp.Authorization
+@using WebApp.ViewModels
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model WebApp.ViewModels.CategoryCreateViewModel
+
+@{
+    ViewBag.Title = "Create category";
+}
+
+<h2>Create new category</h2>
+
+<div>
+    <form asp-action="Create">
+        <label asp-for="IsPublic"></label>
+        <input asp-for="IsPublic" disabled="@(!User.IsAllowedToCreatePublicCategory())"/>
+        <div class="form-group">
+            <label>@nameof(Model.Name):</label>
+            @foreach (var culture in Model.SupportedUiCultures)
+            {
+                Model.Name.TryGetValue(culture, out var cultureValue);
+                @await Html.PartialAsync("_LangStringFormSectionPartial", new LangStringFormSectionPartialViewModel(nameof(Model.Name), culture, cultureValue))
+            }
+            <div>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Create"/>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}

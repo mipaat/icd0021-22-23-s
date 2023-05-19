@@ -9,12 +9,7 @@ public class Category : AbstractIdDatabaseEntity
 {
     public LangString Name { get; set; } = default!;
     public bool IsPublic { get; set; }
-    public bool SupportsAuthors { get; set; } = true;
-    public bool SupportsVideos { get; set; } = true;
-    public bool SupportsPlaylists { get; set; } = true;
     public bool IsAssignable { get; set; }
-    public Category? ParentCategory { get; set; }
-    public Guid? ParentCategoryId { get; set; }
     public EPlatform Platform { get; set; }
     [MaxLength(128)] public string? IdOnPlatform { get; set; }
 
@@ -28,6 +23,4 @@ public class Category : AbstractIdDatabaseEntity
     public ICollection<AuthorRating>? AuthorRatings { get; set; }
     public ICollection<VideoRating>? VideoRatings { get; set; }
     public ICollection<PlaylistRating>? PlaylistRatings { get; set; }
-
-    public ICollection<Category>? DirectChildCategories { get; set; } 
 }

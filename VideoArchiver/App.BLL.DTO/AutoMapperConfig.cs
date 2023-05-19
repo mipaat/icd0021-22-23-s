@@ -1,5 +1,4 @@
 using App.BLL.DTO.Entities;
-using App.BLL.DTO.Entities.Identity;
 using App.BLL.DTO.Mappers;
 using AutoMapper;
 
@@ -14,7 +13,8 @@ public class AutoMapperConfig : Profile
             .AddRefreshTokenMap()
             .AddGameMap()
             .AddUserMap()
-            .AddQueueItemMap();
+            .AddQueueItemMap()
+            .AddCategoryMap();
         CreateMap<DAL.DTO.Entities.Comment, Comment>();
     }
 }
