@@ -1,12 +1,16 @@
 @model WebApp.ViewModels.VideoSearchViewModel
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Search videos";
 }
 
 <form method="get">
+    <label asp-for="NameQuery">Search video name:</label>
     <input asp-for="NameQuery"/>
+    <label asp-for="AuthorQuery">Search author name:</label>
     <input asp-for="AuthorQuery"/>
+    <partial name="_CategoryPickerPartial" model="@Model.CategoryPickerViewModel" />
+    <input type="submit" class="btn btn-primary" value="Search"/>
 </form>
 
 <div>

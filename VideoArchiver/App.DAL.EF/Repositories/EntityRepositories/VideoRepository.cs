@@ -62,7 +62,7 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
         return await Entities.Where(v => v.Id == videoId).Select(v => v.LocalVideoFiles).FirstOrDefaultAsync();
     }
 
-    public async Task<ICollection<VideoWithBasicAuthors>> SearchVideosAsync(EPlatform? platform, string? name, string? author)
+    public async Task<ICollection<VideoWithBasicAuthors>> SearchVideosAsync(EPlatform? platform, string? name, string? author, ICollection<Guid> categoryIds)
     {
         IQueryable<App.Domain.Video> query;
         if (name != null)
@@ -85,6 +85,13 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
         if (author != null)
         {
             query = query.Where(e => e.VideoAuthors!.Select(a => a.Author!.UserName + a.Author!.DisplayName).Contains(author));
+        }
+
+        if (categoryIds.Count > 0)
+        {
+            query = query.Where(v =>
+                DbContext.VideoCategories
+                    .Count(vc => vc.VideoId == v.Id && categoryIds.Contains(vc.CategoryId)) == categoryIds.Count);
         }
 
         return AttachIfNotAttached<ICollection<VideoWithBasicAuthors>, VideoWithBasicAuthors>(

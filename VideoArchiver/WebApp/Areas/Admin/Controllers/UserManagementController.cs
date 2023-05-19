@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Areas.Admin.ViewModels;
 using WebApp.Authorization;
+#pragma warning disable CS1591
 
 namespace WebApp.Areas.Admin.Controllers;
 

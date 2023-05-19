@@ -46,8 +46,8 @@ public class VideoPresentationHandler
         return (await _uow.Videos.GetVideoFilesAsync(id))?.FirstOrDefault();
     }
 
-    public async Task<ICollection<VideoWithAuthor>> SearchVideosAsync(EPlatform? platformQuery, string? nameQuery, string? authorQuery)
+    public async Task<ICollection<VideoWithAuthor>> SearchVideosAsync(EPlatform? platformQuery, string? nameQuery, string? authorQuery, ICollection<Guid> categoryIds)
     {
-        return (await _uow.Videos.SearchVideosAsync(platformQuery, nameQuery, authorQuery)).Select(v => _videoMapper.Map(v)).ToList();
+        return (await _uow.Videos.SearchVideosAsync(platformQuery, nameQuery, authorQuery, categoryIds)).Select(v => _videoMapper.Map(v)).ToList();
     }
 }

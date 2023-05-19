@@ -1,7 +1,7 @@
 #pragma warning disable 1591
 using App.BLL;
 using App.BLL.Services;
-using App.Common.Enums;
+using Base.WebHelpers;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.ViewModels;
 
@@ -11,22 +11,26 @@ public class VideoController : Controller
 {
     private readonly VideoPresentationHandler _videoPresentationHandler;
     private readonly AuthorizationService _authorizationService;
+    private readonly CategoryService _categoryService;
 
-    public VideoController(VideoPresentationHandler videoPresentationHandler, AuthorizationService authorizationService)
+    public VideoController(VideoPresentationHandler videoPresentationHandler, AuthorizationService authorizationService,
+        CategoryService categoryService)
     {
         _videoPresentationHandler = videoPresentationHandler;
         _authorizationService = authorizationService;
+        _categoryService = categoryService;
     }
 
-    public async Task<IActionResult> Search(EPlatform? platformQuery, string? nameQuery, string? authorQuery)
+    public async Task<IActionResult> Search(VideoSearchViewModel model)
     {
-        return View(new VideoSearchViewModel
-        {
-            PlatformQuery = platformQuery,
-            NameQuery = nameQuery,
-            AuthorQuery = authorQuery,
-            Videos = await _videoPresentationHandler.SearchVideosAsync(platformQuery, nameQuery, authorQuery),
-        });
+        model.CategoryPickerViewModel ??= new CategoryPickerPartialViewModel();
+        model.CategoryPickerViewModel.Prefix = nameof(VideoSearchViewModel.CategoryPickerViewModel);
+        model.CategoryPickerViewModel.Categories =
+            await _categoryService.GetAllCategoriesGroupedByPlatformAsync(User.GetUserIdIfExists());
+        model.Videos =
+            await _videoPresentationHandler.SearchVideosAsync(model.PlatformQuery, model.NameQuery, model.AuthorQuery,
+                model.CategoryPickerViewModel.SelectedCategoryIds.Select(kvp => kvp.Value).ToList());
+        return View(model);
     }
 
     // GET

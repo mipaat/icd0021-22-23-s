@@ -1,0 +1,46 @@
+@model WebApp.ViewModels.CategoryPickerPartialViewModel
+
+<div>
+    <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#category-collapse" aria-expanded="False" aria-controls="category-collapse">
+        Category filter
+    </button>
+    <div class="collapse" id="category-collapse">
+        @{
+            var index = 0;
+        }
+        @foreach (var platform in Model.Categories.Keys)
+        {
+            <div>
+                @{
+                    index++;
+                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="collapse" data-bs-target="#category-@platform-collapse" aria-expanded="False" aria-controls="category-@platform-collapse">
+                        @platform
+                    </button>
+                    <div class="collapse" id="category-@platform-collapse">
+                        @foreach (var category in Model.Categories[platform])
+                        {
+                            {
+                                index++;
+                                <label for="@Identifier(index)">@category.Name</label>
+                                <input name="@Identifier(index)" type="checkbox" checked="@Model.SelectedCategoryIds.Values.Contains(category.Id)" value="@category.Id"/>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@functions
+{
+    string Identifier(int index)
+    {
+        var result = $"{nameof(Model.SelectedCategoryIds)}[{index}]";
+        if (Model.Prefix.Length > 0)
+        {
+            result = $"{Model.Prefix}.{result}";
+        }
+        return result;
+    }
+}

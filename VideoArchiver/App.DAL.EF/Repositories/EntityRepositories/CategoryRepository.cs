@@ -10,11 +10,13 @@ namespace App.DAL.EF.Repositories.EntityRepositories;
 
 public class CategoryRepository : BaseAppEntityRepository<Domain.Category, CategoryWithCreator>, ICategoryRepository
 {
-    public CategoryRepository(AbstractAppDbContext dbContext, IMapper mapper, IAppUnitOfWork uow) : base(dbContext, mapper, uow)
+    public CategoryRepository(AbstractAppDbContext dbContext, IMapper mapper, IAppUnitOfWork uow) : base(dbContext,
+        mapper, uow)
     {
     }
 
-    public async Task<ICollection<CategoryWithCreator>> GetAllByPlatformAsync(EPlatform platform, IEnumerable<string>? idsOnPlatform = null)
+    public async Task<ICollection<CategoryWithCreator>> GetAllByPlatformAsync(EPlatform platform,
+        IEnumerable<string>? idsOnPlatform = null)
     {
         var query = Entities.Where(e => e.Platform == platform);
         if (idsOnPlatform != null)
@@ -33,5 +35,14 @@ public class CategoryRepository : BaseAppEntityRepository<Domain.Category, Categ
             .Where(e => e.Platform == platform)
             .ProjectTo<CategoryWithCreator>(Mapper.ConfigurationProvider)
             .FirstOrDefaultAsync());
+    }
+
+    public async Task<ICollection<CategoryWithCreator>> GetAllAsync(Guid? creatorId)
+    {
+        var query = creatorId == null
+            ? Entities.Where(e => e.IsPublic)
+            : Entities.Where(e => e.IsPublic || e.CreatorId == creatorId);
+        return AttachIfNotAttached<ICollection<CategoryWithCreator>, CategoryWithCreator>(
+            await query.ProjectTo<CategoryWithCreator>(Mapper.ConfigurationProvider).ToListAsync());
     }
 }

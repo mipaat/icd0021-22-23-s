@@ -4,6 +4,7 @@ using Base.WebHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Areas.Admin.ViewModels;
+#pragma warning disable CS1591
 
 namespace WebApp.Areas.Admin.Controllers;
 
@@ -11,32 +12,32 @@ namespace WebApp.Areas.Admin.Controllers;
 [Authorize(Roles = RoleNames.AdminOrSuperAdmin)]
 public class QueueItemsApprovalController : Controller
 {
-    private readonly ServiceUow ServiceUow;
+    private readonly ServiceUow _serviceUow;
 
     public QueueItemsApprovalController(ServiceUow serviceUow)
     {
-        ServiceUow = serviceUow;
+        _serviceUow = serviceUow;
     }
 
     public async Task<ActionResult> Index()
     {
         return View(new QueueItemsApprovalViewModel
         {
-            QueueItems = await ServiceUow.QueueItemService.GetAllAwaitingApprovalAsync(),
+            QueueItems = await _serviceUow.QueueItemService.GetAllAwaitingApprovalAsync(),
         });
     }
 
     public async Task<IActionResult> ApproveQueueItem([FromForm] Guid id, [FromForm] bool grantAccess = true)
     {
-        await ServiceUow.QueueItemService.ApproveAsync(id, User.GetUserId(), grantAccess);
-        await ServiceUow.SaveChangesAsync();
+        await _serviceUow.QueueItemService.ApproveAsync(id, User.GetUserId(), grantAccess);
+        await _serviceUow.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 
     public async Task<IActionResult> DeleteQueueItem([FromForm] Guid id)
     {
-        await ServiceUow.QueueItemService.DeleteAsync(id);
-        await ServiceUow.SaveChangesAsync();
+        await _serviceUow.QueueItemService.DeleteAsync(id);
+        await _serviceUow.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 }

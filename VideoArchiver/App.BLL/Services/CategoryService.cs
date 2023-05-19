@@ -1,5 +1,4 @@
 using App.BLL.Base;
-using App.BLL.DTO.Exceptions;
 using App.BLL.DTO.Mappers;
 using App.Common;
 using App.Common.Enums;
@@ -32,12 +31,6 @@ public class CategoryService : BaseService<CategoryService>
         });
     }
 
-    public async Task<CategoryWithCreator> GetCategoryAsync(Guid id)
-    {
-        var category = await Uow.Categories.GetByIdAsync(id) ?? throw new NotFoundException();
-        return _categoryMapper.Map(category)!;
-    }
-
     public Guid CreateCategory(LangString name, bool isPublic, Guid authorId)
     {
         var category = new DAL.DTO.Entities.CategoryWithCreator
@@ -51,5 +44,24 @@ public class CategoryService : BaseService<CategoryService>
         Uow.Categories.Add(category);
 
         return category.Id;
+    }
+
+    public async Task<ICollection<CategoryWithCreator>> GetAllCategoriesAsync(Guid? userId)
+    {
+        return (await Uow.Categories.GetAllAsync(userId)).Select(c => _categoryMapper.Map(c)!).ToList();
+    }
+
+    public async Task<Dictionary<EPlatform, ICollection<CategoryWithCreator>>>
+        GetAllCategoriesGroupedByPlatformAsync(Guid? userId)
+    {
+        var categories = await GetAllCategoriesAsync(userId);
+        var result = new Dictionary<EPlatform, ICollection<CategoryWithCreator>>();
+        foreach (var category in categories)
+        {
+            result.TryAdd(category.Platform, new List<CategoryWithCreator>());
+            result[category.Platform].Add(category);
+        }
+
+        return result;
     }
 }
