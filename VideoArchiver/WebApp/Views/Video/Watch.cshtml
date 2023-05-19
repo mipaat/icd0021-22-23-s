@@ -1,12 +1,40 @@
 @model WebApp.ViewModels.VideoViewModel
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewBag.Title = $"Video - {Model.Video.Title}";
+}
+
+@if (VideoCanBeEmbedded)
+{
+    <a asp-action="Watch" asp-route-id="@Model.Video.Id" asp-route-embedView="@(!Model.EmbedView)">@(Model.EmbedView ? "View archived version" : "View on platform")</a>
+}
+@if (ShowEmbedView)
+{
+    <iframe width="560" height="315" src="@(Model.Video.EmbedUrl ?? Model.Video.Url)" title="@Model.Video.Platform video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+}
+else
+{
+    <video controls width="560" height="315">
+        <source src="/api/v1/File/VideoFile/@Model.Video.Id"/>
+    </video>
 }
 
 <h1>@Model.Video.Title</h1>
 
 <p>@Model.Video.Description</p>
 
-<video controls autoplay><source src="/api/v1/File/VideoFile/@Model.Video.Id"/></video>
+<div>
+    @foreach (var comment in Model.Video.Comments)
+    {
+        <div>
+            @comment.Author.DisplayName
+            @comment.Content
+        </div>
+    }
+</div>
+
+@functions
+{
+    bool VideoCanBeEmbedded => Model.Video.EmbedUrl != null || Model.Video.Url != null;
+    bool ShowEmbedView => Model.EmbedView && VideoCanBeEmbedded;
+}

@@ -5,5 +5,6 @@ namespace WebApp.ViewModels;
 
 public class VideoViewModel
 {
+    public bool EmbedView { get; set; }
     public VideoWithAuthorAndComments Video { get; set; } = default!;
 }

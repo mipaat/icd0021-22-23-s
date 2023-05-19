@@ -36,12 +36,13 @@ public class VideoController : Controller
     }
 
     // GET
-    public async Task<IActionResult> Watch(Guid id)
+    public async Task<IActionResult> Watch(Guid id, bool embedView = false)
     {
         if (!await _authorizationService.IsAllowedToAccessVideo(User, id)) return Forbid();
         return View(new VideoViewModel
         {
-            Video = await _videoPresentationHandler.GetVideoAsync(id)
+            Video = await _videoPresentationHandler.GetVideoAsync(id),
+            EmbedView = embedView,
         });
     }
 }
