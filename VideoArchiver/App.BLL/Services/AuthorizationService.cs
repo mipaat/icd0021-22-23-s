@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using System.Security.Principal;
-using App.BLL.DTO;
 using App.Common;
 using App.Contracts.DAL;
 using App.DAL.DTO.Entities;
@@ -17,12 +16,12 @@ public class AuthorizationService
         _uow = uow;
     }
 
-    private static bool IsRoleAllowed(IPrincipal user) =>
-        user.IsInRole(RoleNames.Admin) || user.IsInRole(RoleNames.Helper);
+    public static bool IsAllowedToAccessVideoByRole(IPrincipal user) =>
+        user.IsInRole(RoleNames.Admin) || user.IsInRole(RoleNames.SuperAdmin);
 
     public async Task<bool> IsAllowedToAccessVideo(ClaimsPrincipal user, Guid videoId)
     {
-        if (IsRoleAllowed(user)) return true;
+        if (IsAllowedToAccessVideoByRole(user)) return true;
         var userId = user.GetUserIdIfExists();
         if (userId == null) return await _uow.EntityAccessPermissions.AllowedToAccessVideoAnonymouslyAsync(videoId);
         return await _uow.EntityAccessPermissions.AllowedToAccessVideoAsync(userId.Value, videoId);

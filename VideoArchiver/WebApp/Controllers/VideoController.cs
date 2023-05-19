@@ -31,7 +31,7 @@ public class VideoController : Controller
             await _categoryService.GetAllCategoriesGroupedByPlatformAsync(User.GetUserIdIfExists());
         model.Videos =
             await _videoPresentationHandler.SearchVideosAsync(model.PlatformQuery, model.NameQuery, model.AuthorQuery,
-                model.CategoryPickerViewModel.SelectedCategoryIds.Select(kvp => kvp.Value).ToList());
+                model.CategoryPickerViewModel.SelectedCategoryIds.Select(kvp => kvp.Value).ToList(), User);
         return View(model);
     }
 

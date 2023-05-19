@@ -1,11 +1,14 @@
+using System.Security.Claims;
 using App.BLL.DTO.Contracts;
 using App.BLL.DTO.Entities;
 using App.BLL.DTO.Mappers;
 using App.BLL.Exceptions;
+using App.BLL.Services;
 using App.Common;
 using App.Common.Enums;
 using App.Contracts.DAL;
 using AutoMapper;
+using Base.WebHelpers;
 
 namespace App.BLL;
 
@@ -46,8 +49,11 @@ public class VideoPresentationHandler
         return (await _uow.Videos.GetVideoFilesAsync(id))?.FirstOrDefault();
     }
 
-    public async Task<ICollection<VideoWithAuthor>> SearchVideosAsync(EPlatform? platformQuery, string? nameQuery, string? authorQuery, ICollection<Guid> categoryIds)
+    public async Task<ICollection<VideoWithAuthor>> SearchVideosAsync(EPlatform? platformQuery, string? nameQuery, string? authorQuery, ICollection<Guid> categoryIds, ClaimsPrincipal user)
     {
-        return (await _uow.Videos.SearchVideosAsync(platformQuery, nameQuery, authorQuery, categoryIds)).Select(v => _videoMapper.Map(v)).ToList();
+        var userId = user.GetUserIdIfExists();
+        var accessAllowed = AuthorizationService.IsAllowedToAccessVideoByRole(user);
+        return (await _uow.Videos.SearchVideosAsync(platformQuery, nameQuery, authorQuery, categoryIds, userId, accessAllowed))
+            .Select(v => _videoMapper.Map(v)).ToList();
     }
 }
