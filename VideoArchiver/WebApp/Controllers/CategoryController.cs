@@ -1,4 +1,6 @@
+using System.Net;
 using App.BLL.Config;
+using App.BLL.DTO.Entities;
 using App.BLL.Identity.Services;
 using App.BLL.Services;
 using App.Common;
@@ -29,6 +31,7 @@ public class CategoryController : Controller
 
     public IActionResult Create(CategoryCreateViewModel viewModel)
     {
+        viewModel.Category = new CategoryDataWithCreatorId();
         viewModel.SupportedUiCultures = _configuration.GetSupportedUiCultureNames();
         return View(viewModel);
     }
@@ -37,9 +40,9 @@ public class CategoryController : Controller
     [ActionName("Create")]
     public async Task<IActionResult> CreatePost([FromForm] CategoryCreateViewModel viewModel)
     {
+        viewModel.SupportedUiCultures = _configuration.GetSupportedUiCultureNames();
         if (!ModelState.IsValid)
         {
-            viewModel.SupportedUiCultures = _configuration.GetSupportedUiCultureNames();
             return View(viewModel);
         }
 
@@ -148,8 +151,12 @@ public class CategoryController : Controller
         return LocalRedirect(returnUrl);
     }
 
-    private RedirectToPageResult RedirectToSelectAuthor =>
-        RedirectToPage("SelectAuthor", new { ReturnUrl = HttpContext.GetFullPath() });
+    private LocalRedirectResult RedirectToSelectAuthor =>
+        LocalRedirect($"~/Identity/Account/SelectAuthor?returnUrl={WebUtility.UrlEncode(HttpContext.GetFullPath())}");
+
+    private LocalRedirectResult RedirectToSelectAuthorFromForm(CategoryManageEntityCategoriesViewModel model) =>
+        LocalRedirect(
+            $"~/Identity/Account/SelectAuthor?returnUrl={WebUtility.UrlEncode(HttpContext.Request.Path + model.ToReturnQueryString)}");
 
     public async Task<IActionResult> ManageEntityCategories(CategoryManageEntityCategoriesViewModel model)
     {
@@ -169,13 +176,38 @@ public class CategoryController : Controller
     public async Task<IActionResult> ManageEntityCategoriesPost(CategoryManageEntityCategoriesViewModel model)
     {
         var selectedAuthorId = HttpContext.Request.GetSelectedAuthorId();
-        if (selectedAuthorId == null) return RedirectToSelectAuthor; // TODO: add relevant form data to query parameters
-        if (!await _userService.IsUserSubAuthor(selectedAuthorId.Value, User)) return RedirectToSelectAuthor;
+        if (selectedAuthorId == null)
+            return RedirectToSelectAuthorFromForm(model); // TODO: add relevant form data to query parameters
+        if (!await _userService.IsUserSubAuthor(selectedAuthorId.Value, User))
+            return RedirectToSelectAuthorFromForm(model);
 
         await _categoryService.AddToCategories(selectedAuthorId.Value, model.Id, model.EntityType,
             model.SelectedCategoryIds);
         await _categoryService.ServiceUow.SaveChangesAsync();
 
-        return LocalRedirect(model.ReturnUrl);
+        return RedirectToAction(nameof(ManageEntityCategories),
+            new { model.Id, model.ReturnUrl, model.EntityType });
+    }
+
+    [Authorize(Roles = RoleNames.AdminOrSuperAdmin)]
+    public async Task<IActionResult> ManageEntityCategoriesPublic(CategoryManageEntityCategoriesViewModel model)
+    {
+        model.Categories = await _categoryService.GetAllAssignableCategoriesForAuthor(null);
+        model.SetSelectedCategoryIds(
+            await _categoryService.GetAllAssignedCategoryIds(null, model.Id, model.EntityType));
+
+        return View(model);
+    }
+
+    [Authorize(Roles = RoleNames.AdminOrSuperAdmin)]
+    [HttpPost]
+    [ActionName("ManageEntityCategoriesPublic")]
+    public async Task<IActionResult> ManageEntityCategoriesPublicPost(CategoryManageEntityCategoriesViewModel model)
+    {
+        await _categoryService.AddToCategories(null, model.Id, model.EntityType, model.SelectedCategoryIds);
+        await _categoryService.ServiceUow.SaveChangesAsync();
+
+        return RedirectToAction(nameof(ManageEntityCategoriesPublic),
+            new { model.Id, model.ReturnUrl, model.EntityType });
     }
 }

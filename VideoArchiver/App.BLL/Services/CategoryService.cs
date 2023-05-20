@@ -59,7 +59,8 @@ public class CategoryService : BaseService<CategoryService>
             .ToList();
     }
 
-    public async Task<ICollection<Guid>> GetAllAssignedCategoryIds(Guid authorId, Guid entityId, EEntityType entityType)
+    public async Task<ICollection<Guid>> GetAllAssignedCategoryIds(Guid? authorId, Guid entityId,
+        EEntityType entityType)
     {
         return entityType switch
         {
@@ -105,7 +106,7 @@ public class CategoryService : BaseService<CategoryService>
         await Uow.Categories.RemoveAsync(id);
     }
 
-    private async Task AddVideoToCategories(Guid authorId, Guid videoId, Dictionary<Guid, bool> categoryIds)
+    private async Task AddVideoToCategories(Guid? authorId, Guid videoId, Dictionary<Guid, bool> categoryIds)
     {
         var categories =
             await Uow.Categories.GetAllByIdsWithVideoAssignments(videoId, categoryIds.Keys, authorId);
@@ -113,6 +114,8 @@ public class CategoryService : BaseService<CategoryService>
         foreach (var categoryId in categoryIds)
         {
             var category = categories.First(c => c.Id == categoryId.Key);
+            if (authorId == null && !category.IsPublic)
+                throw new ApplicationException($"Can't anonymously perform private category assignment");
             if (categoryId.Value)
             {
                 if (category.VideoCategories.Any()) continue;
@@ -132,7 +135,7 @@ public class CategoryService : BaseService<CategoryService>
         }
     }
 
-    public async Task AddToCategories(Guid authorId, Guid entityId, EEntityType entityType,
+    public async Task AddToCategories(Guid? authorId, Guid entityId, EEntityType entityType,
         Dictionary<Guid, bool> categoryIds)
     {
         switch (entityType)

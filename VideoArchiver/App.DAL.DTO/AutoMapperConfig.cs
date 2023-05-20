@@ -30,7 +30,7 @@ public class AutoMapperConfig : Profile
         CreateMap<CategoryWithCreator, Domain.Category>()
             .ReverseMap();
         CreateMap<Domain.Category, CategoryWithCreatorAndVideoAssignments>()
-            .ReverseMap();
+            .ReverseMap().ForMember(c => c.VideoCategories, o => o.Ignore());
         CreateMap<Comment, Domain.Comment>().ReverseMap();
         CreateMap<CommentHistory, Domain.CommentHistory>().ReverseMap();
         CreateMap<PlaylistAuthor, Domain.PlaylistAuthor>().ReverseMap();

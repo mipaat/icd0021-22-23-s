@@ -90,9 +90,9 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
 
         if (categoryIds.Count > 0)
         {
-            query = query.Where(v =>
-                DbContext.VideoCategories
-                    .Count(vc => vc.VideoId == v.Id && (vc.AssignedById == null || vc.AssignedById == userAuthorId) && categoryIds.Contains(vc.CategoryId)) == categoryIds.Count);
+            query = query.Where(v => DbContext.VideoCategories
+                .Any(vc => vc.VideoId == v.Id && (vc.AssignedById == null || vc.AssignedById == userAuthorId) &&
+                           categoryIds.Contains(vc.CategoryId)));
         }
 
         if (!accessAllowed)

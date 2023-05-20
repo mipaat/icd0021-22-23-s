@@ -13,7 +13,7 @@ public class AuthorCategoryRepository : BaseAppEntityRepository<App.Domain.Autho
     {
     }
 
-    public async Task<ICollection<Guid>> GetAllCategoryIdsAsync(Guid authorId, Guid assignedByAuthorId)
+    public async Task<ICollection<Guid>> GetAllCategoryIdsAsync(Guid authorId, Guid? assignedByAuthorId)
     {
         return await Entities.Where(e => e.AuthorId == authorId && e.AssignedById == assignedByAuthorId)
             .Select(e => e.CategoryId)

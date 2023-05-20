@@ -20,4 +20,11 @@ public class CategoryManageEntityCategoriesViewModel
             SelectedCategoryIds[category.Id] = ids.Contains(category.Id);
         }
     }
+
+    public QueryString ToReturnQueryString => QueryString.Create(new List<KeyValuePair<string, string?>>
+    {
+        new(nameof(ReturnUrl), ReturnUrl),
+        new(nameof(EntityType), EntityType.ToString()),
+        new(nameof(Id), Id.ToString()),
+    });
 }

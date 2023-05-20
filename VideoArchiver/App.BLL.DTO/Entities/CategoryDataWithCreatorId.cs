@@ -5,7 +5,7 @@ namespace App.BLL.DTO.Entities;
 
 public class CategoryDataWithCreatorId
 {
-    [LangStringNotEmpty] public LangString Name { get; set; } = default!;
+    [LangStringNotEmpty] public LangString Name { get; set; } = new();
     public bool IsPublic { get; set; }
     public Guid? CreatorId { get; set; }
 }

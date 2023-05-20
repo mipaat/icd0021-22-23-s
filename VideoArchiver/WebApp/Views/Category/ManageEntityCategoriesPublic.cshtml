@@ -1,6 +1,6 @@
-@using App.BLL.DTO.Entities
 @using Base.WebHelpers
-@using WebApp.Authorization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using App.BLL.DTO.Entities
 @model WebApp.ViewModels.CategoryManageEntityCategoriesViewModel
 
 @{
@@ -11,15 +11,12 @@
 
 <a href="@Model.ReturnUrl">Return</a>
 <a asp-action="Create" asp-route-returnUrl="@Context.GetFullPath()">Create new</a>
-@if (User.IsAllowedToCreatePublicCategory())
-{
-    <a asp-action="ManageEntityCategoriesPublic" asp-route-returnUrl="@Model.ReturnUrl" asp-route-id="@Model.Id" asp-route-entityType="@Model.EntityType">
-        Manage public categories
-    </a>
-}
+<a asp-action="ManageEntityCategories" asp-route-returnUrl="@Model.ReturnUrl" asp-route-id="@Model.Id" asp-route-entityType="@Model.EntityType">
+    Manage personal categories
+</a>
 
 <div>
-    <form method="post" asp-action="ManageEntityCategories">
+    <form method="post" asp-action="ManageEntityCategoriesPublic">
         @Html.HiddenFor(m => m.ReturnUrl)
         @Html.HiddenFor(m => m.Id)
         <table class="table">

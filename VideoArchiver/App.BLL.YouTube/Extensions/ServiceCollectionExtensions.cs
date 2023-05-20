@@ -23,9 +23,9 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IPlatformVideoPresentationHandler, PresentationHandler>();
 
-        services.AddHostedService<CommentBackgroundService>();
-        services.AddHostedService<OfficialApiTimedBackgroundService>();
-        services.AddHostedService<PlaylistTimedBackgroundService>();
-        services.AddHostedService<VideoDownloadBackgroundService>();
+        // services.AddHostedService<CommentBackgroundService>();
+        // services.AddHostedService<OfficialApiTimedBackgroundService>();
+        // services.AddHostedService<PlaylistTimedBackgroundService>();
+        // services.AddHostedService<VideoDownloadBackgroundService>();
     }
 }

@@ -63,17 +63,34 @@ public class CategoryRepository : BaseAppEntityRepository<Domain.Category, Categ
     public Task<ICollection<CategoryWithCreator>> GetAllAssignableCategoriesForAuthor(Guid? authorId)
     {
         return GetAllAsync(c =>
-            c.Platform == EPlatform.This && c.IsAssignable && ((authorId != null && c.CreatorId == authorId) || c.IsPublic));
+            c.Platform == EPlatform.This && c.IsAssignable &&
+            ((authorId != null && c.CreatorId == authorId) || c.IsPublic));
     }
 
-    public async Task<ICollection<CategoryWithCreatorAndVideoAssignments>> GetAllByIdsWithVideoAssignments(Guid videoId, IEnumerable<Guid> ids, Guid? authorId)
+    public async Task<ICollection<CategoryWithCreatorAndVideoAssignments>> GetAllByIdsWithVideoAssignments(Guid videoId,
+        IEnumerable<Guid> ids, Guid? authorId)
     {
         return AttachIfNotAttached<ICollection<CategoryWithCreatorAndVideoAssignments>,
             CategoryWithCreatorAndVideoAssignments>(
             await Entities
-                .Where(c => ids.Contains(c.Id))
-                .Include(c => c.VideoCategories!.Where(e => e.AssignedById == authorId && e.VideoId == videoId))
-                .ProjectTo<CategoryWithCreatorAndVideoAssignments>(Mapper.ConfigurationProvider)
+                .Include(c => c.VideoCategories)
+                .Include(c => c.Creator)
+                .Where(c => ids.Contains(c.Id) && c.Platform == EPlatform.This && c.IsAssignable)
+                .Select(c => new CategoryWithCreatorAndVideoAssignments
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    IsPublic = c.IsPublic,
+                    IsAssignable = c.IsAssignable,
+                    Platform = c.Platform,
+                    IdOnPlatform = c.IdOnPlatform,
+                    CreatorId = c.CreatorId,
+                    Creator = Mapper.Map<AuthorBasic>(c.Creator),
+                    VideoCategories = c.VideoCategories!
+                        .Where(e => e.AssignedById == authorId && e.VideoId == videoId)
+                        .Select(vc => Mapper.Map<VideoCategoryOnlyIds>(vc))
+                        .ToList()
+                })
                 .ToListAsync());
     }
 }

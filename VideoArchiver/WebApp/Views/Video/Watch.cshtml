@@ -1,4 +1,5 @@
 @using Base.WebHelpers
+@using App.Common.Enums
 @model WebApp.ViewModels.VideoViewModel
 
 @{
@@ -20,7 +21,7 @@ else
     </video>
 }
 
-<a asp-controller="Category" asp-action="ManageEntityCategories" asp-route-id="@Model.Video.Id" asp-route-returnUrl="@Context.GetFullPath()">Manage categories</a>
+<a asp-controller="Category" asp-action="ManageEntityCategories" asp-route-id="@Model.Video.Id" asp-route-entityType="@EEntityType.Video" asp-route-returnUrl="@Context.GetFullPath()">Manage categories</a>
 
 <h1>@Model.Video.Title</h1>
 

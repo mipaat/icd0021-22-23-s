@@ -13,7 +13,7 @@ public class PlaylistCategoryRepository : BaseAppEntityRepository<App.Domain.Pla
     {
     }
 
-    public async Task<ICollection<Guid>> GetAllCategoryIdsAsync(Guid playlistId, Guid authorId)
+    public async Task<ICollection<Guid>> GetAllCategoryIdsAsync(Guid playlistId, Guid? authorId)
     {
         return await Entities.Where(e => e.PlaylistId == playlistId && e.AssignedById == authorId)
             .Select(e => e.CategoryId)

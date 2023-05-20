@@ -5,5 +5,5 @@ namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
 public interface IPlaylistCategoryRepository : IBaseEntityRepository<PlaylistCategory, App.DAL.DTO.Entities.Playlists.PlaylistCategory>
 {
-    public Task<ICollection<Guid>> GetAllCategoryIdsAsync(Guid playlistId, Guid authorId);
+    public Task<ICollection<Guid>> GetAllCategoryIdsAsync(Guid playlistId, Guid? authorId);
 }
