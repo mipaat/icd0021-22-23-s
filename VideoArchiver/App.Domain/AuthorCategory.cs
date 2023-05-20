@@ -10,4 +10,6 @@ public class AuthorCategory : AbstractIdDatabaseEntity
     public Guid CategoryId { get; set; }
 
     public bool AutoAssign { get; set; }
+    public Author? AssignedBy { get; set; }
+    public Guid? AssignedById { get; set; }
 }

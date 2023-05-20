@@ -21,7 +21,8 @@
         </form>
         <form method="post" asp-action="ApproveQueueItem">
             <input type="hidden" name="id" value="@queueItem.Id"/>
-            <input type="checkbox" name="grantAccess" checked="checked"/>
+            <label for="grantAccess">Grant submitter access?</label>
+            <input type="checkbox" name="grantAccess" id="grantAccess" checked="checked"/>
             <input type="submit" class="btn btn-danger" value="Approve"/>
         </form>
     </div>

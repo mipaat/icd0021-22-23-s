@@ -36,7 +36,6 @@ public class Video : BaseArchiveEntity
     
     public DateTime? LastCommentsFetch { get; set; }
 
-    public ICollection<VideoGame>? VideoGames { set; get; }
     public ICollection<VideoAuthor>? VideoAuthors { get; set; }
     public ICollection<Comment>? Comments { get; set; }
     public ICollection<VideoRating>? VideoRatings { get; set; }

@@ -51,12 +51,29 @@ public class CategoryRepository : BaseAppEntityRepository<Domain.Category, Categ
             .FirstOrDefaultAsync());
     }
 
-    public async Task<ICollection<CategoryWithCreator>> GetAllAsync(Guid? creatorId)
+    public async Task<ICollection<CategoryWithCreator>> GetAllPublicOrCreatedByAuthorAsync(Guid? creatorId)
     {
         var query = creatorId == null
             ? Entities.Where(e => e.IsPublic)
             : Entities.Where(e => e.IsPublic || e.CreatorId == creatorId);
         return AttachIfNotAttached<ICollection<CategoryWithCreator>, CategoryWithCreator>(
             await query.ProjectTo<CategoryWithCreator>(Mapper.ConfigurationProvider).ToListAsync());
+    }
+
+    public Task<ICollection<CategoryWithCreator>> GetAllAssignableCategoriesForAuthor(Guid? authorId)
+    {
+        return GetAllAsync(c =>
+            c.Platform == EPlatform.This && c.IsAssignable && ((authorId != null && c.CreatorId == authorId) || c.IsPublic));
+    }
+
+    public async Task<ICollection<CategoryWithCreatorAndVideoAssignments>> GetAllByIdsWithVideoAssignments(Guid videoId, IEnumerable<Guid> ids, Guid? authorId)
+    {
+        return AttachIfNotAttached<ICollection<CategoryWithCreatorAndVideoAssignments>,
+            CategoryWithCreatorAndVideoAssignments>(
+            await Entities
+                .Where(c => ids.Contains(c.Id))
+                .Include(c => c.VideoCategories!.Where(e => e.AssignedById == authorId && e.VideoId == videoId))
+                .ProjectTo<CategoryWithCreatorAndVideoAssignments>(Mapper.ConfigurationProvider)
+                .ToListAsync());
     }
 }

@@ -4,13 +4,13 @@ using App.BLL.DTO.Entities.Identity;
 using App.BLL.DTO.Exceptions;
 using App.BLL.DTO.Exceptions.Identity;
 using App.BLL.DTO.Mappers;
+using App.Common;
 using App.Common.Enums;
 using App.Contracts.DAL;
 using AutoMapper;
 using Base.WebHelpers;
 using Contracts.BLL;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 
@@ -120,8 +120,6 @@ public class UserService : IAppUowContainer
         await Task.Delay(_rnd.Next(minValueMs, maxValueMs));
     }
 
-    public const string SelectedUserAuthorCookieKey = "VideoArchiverSelectedUserAuthor";
-
     public async Task<ICollection<Author>> GetAllUserSubAuthorsAsync(ClaimsPrincipal user)
     {
         return (await Uow.Authors.GetAllUserSubAuthors(user.GetUserId()))
@@ -134,27 +132,10 @@ public class UserService : IAppUowContainer
         return await Uow.Authors.IsUserSubAuthor(authorId, user.GetUserId());
     }
 
-    public static void ClearSelectedAuthorCookies(HttpResponse httpResponse)
-    {
-        httpResponse.Cookies.Delete(SelectedUserAuthorCookieKey);
-    }
-
-    public static void SetSelectedAuthorCookies(HttpResponse httpResponse, Guid authorId)
-    {
-        ClearSelectedAuthorCookies(httpResponse);
-        httpResponse.Cookies.Append(SelectedUserAuthorCookieKey, authorId.ToString());
-    }
-
-    public static Guid? GetSelectedAuthorId(HttpRequest httpRequest)
-    {
-        httpRequest.Cookies.TryGetValue(SelectedUserAuthorCookieKey, out var id);
-        return id == null ? null : Guid.Parse(id);
-    }
-
     public async Task SignOutAsync()
     {
         await SignInManager.SignOutAsync();
-        ClearSelectedAuthorCookies(SignInManager.Context.Response);
+        SignInManager.Context.Response.ClearSelectedAuthorCookies();
     }
 
     public async Task SignOutTokenAsync(Guid userId, string refreshToken)

@@ -35,16 +35,8 @@ public class AppUnitOfWork : BaseUnitOfWork<AbstractAppDbContext>, IAppUnitOfWor
     public IAuthorHistoryRepository AuthorHistories =>
         _authorHistories ??= new AuthorHistoryRepository(DbContext, _mapper, this);
 
-    private IAuthorPubSubRepository? _authorPubSubs;
-    public IAuthorPubSubRepository AuthorPubSubs => _authorPubSubs ??= new AuthorPubSubRepository(DbContext, _mapper, this);
-
     private IAuthorRatingRepository? _authorRatings;
     public IAuthorRatingRepository AuthorRatings => _authorRatings ??= new AuthorRatingRepository(DbContext, _mapper, this);
-
-    private IAuthorSubscriptionRepository? _authorSubscriptions;
-
-    public IAuthorSubscriptionRepository AuthorSubscriptions =>
-        _authorSubscriptions ??= new AuthorSubscriptionRepository(DbContext, _mapper, this);
 
     private ICommentRepository? _comments;
     public ICommentRepository Comments => _comments ??= new CommentRepository(DbContext, _mapper, this);
@@ -53,19 +45,6 @@ public class AppUnitOfWork : BaseUnitOfWork<AbstractAppDbContext>, IAppUnitOfWor
 
     public ICommentHistoryRepository CommentHistories =>
         _commentHistories ??= new CommentHistoryRepository(DbContext, _mapper, this);
-
-    private ICommentReplyNotificationRepository? _commentReplyNotifications;
-
-    public ICommentReplyNotificationRepository CommentReplyNotifications =>
-        _commentReplyNotifications ??= new CommentReplyNotificationRepository(DbContext, _mapper, this);
-
-    private IExternalUserTokenRepository? _externalUserTokens;
-
-    public IExternalUserTokenRepository ExternalUserTokens =>
-        _externalUserTokens ??= new ExternalUserTokenRepository(DbContext, _mapper, this);
-
-    private IGameRepository? _games;
-    public IGameRepository Games => _games ??= new GameRepository(DbContext, _mapper, this);
 
     private IPlaylistAuthorRepository? _playlistAuthors;
 
@@ -125,9 +104,6 @@ public class AppUnitOfWork : BaseUnitOfWork<AbstractAppDbContext>, IAppUnitOfWor
 
     public IVideoCategoryRepository VideoCategories =>
         _videoCategories ??= new VideoCategoryRepository(DbContext, _mapper, this);
-
-    private IVideoGameRepository? _videoGames;
-    public IVideoGameRepository VideoGames => _videoGames ??= new VideoGameRepository(DbContext, _mapper, this);
 
     private IVideoHistoryRepository? _videoHistories;
     public IVideoHistoryRepository VideoHistories => _videoHistories ??= new VideoHistoryRepository(DbContext, _mapper, this);

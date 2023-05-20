@@ -63,7 +63,7 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
         return await Entities.Where(v => v.Id == videoId).Select(v => v.LocalVideoFiles).FirstOrDefaultAsync();
     }
 
-    public async Task<ICollection<VideoWithBasicAuthors>> SearchVideosAsync(EPlatform? platform, string? name, string? author, ICollection<Guid> categoryIds, Guid? userId, bool accessAllowed)
+    public async Task<ICollection<VideoWithBasicAuthors>> SearchVideosAsync(EPlatform? platform, string? name, string? author, ICollection<Guid> categoryIds, Guid? userId, Guid? userAuthorId, bool accessAllowed)
     {
         IQueryable<App.Domain.Video> query;
         if (name != null)
@@ -92,7 +92,7 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
         {
             query = query.Where(v =>
                 DbContext.VideoCategories
-                    .Count(vc => vc.VideoId == v.Id && categoryIds.Contains(vc.CategoryId)) == categoryIds.Count);
+                    .Count(vc => vc.VideoId == v.Id && (vc.AssignedById == null || vc.AssignedById == userAuthorId) && categoryIds.Contains(vc.CategoryId)) == categoryIds.Count);
         }
 
         if (!accessAllowed)

@@ -10,14 +10,9 @@ public interface IAppUnitOfWork : IBaseUnitOfWork
     public IAuthorCategoryRepository AuthorCategories { get; }
     public ICategoryRepository Categories { get; }
     public IAuthorHistoryRepository AuthorHistories { get; }
-    public IAuthorPubSubRepository AuthorPubSubs { get; }
     public IAuthorRatingRepository AuthorRatings { get; }
-    public IAuthorSubscriptionRepository AuthorSubscriptions { get; }
     public ICommentRepository Comments { get; }
     public ICommentHistoryRepository CommentHistories { get; }
-    public ICommentReplyNotificationRepository CommentReplyNotifications { get; }
-    public IExternalUserTokenRepository ExternalUserTokens { get; }
-    public IGameRepository Games { get; }
     public IPlaylistAuthorRepository PlaylistAuthors { get; }
     public IPlaylistCategoryRepository PlaylistCategories { get; }
     public IPlaylistRepository Playlists { get; }
@@ -31,7 +26,6 @@ public interface IAppUnitOfWork : IBaseUnitOfWork
     public IStatusChangeNotificationRepository StatusChangeNotifications { get; }
     public IVideoAuthorRepository VideoAuthors { get; }
     public IVideoCategoryRepository VideoCategories { get; }
-    public IVideoGameRepository VideoGames { get; }
     public IVideoHistoryRepository VideoHistories { get; }
     public IVideoRatingRepository VideoRatings { get; }
     public IVideoRepository Videos { get; }

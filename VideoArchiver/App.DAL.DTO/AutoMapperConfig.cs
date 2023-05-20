@@ -23,22 +23,19 @@ public class AutoMapperConfig : Profile
         CreateMap<Author, Domain.Author>().ReverseMap();
         CreateMap<Domain.Author, AuthorBasic>().ReverseMap();
         CreateMap<AuthorCategory, Domain.AuthorCategory>().ReverseMap();
+        CreateMap<Domain.AuthorCategory, AuthorCategoryOnlyIds>().ReverseMap();
         CreateMap<AuthorHistory, Domain.AuthorHistory>().ReverseMap();
-        CreateMap<AuthorPubSub, Domain.AuthorPubSub>().ReverseMap();
         CreateMap<AuthorRating, Domain.AuthorRating>().ReverseMap();
-        CreateMap<AuthorSubscription, Domain.AuthorSubscription>().ReverseMap();
 
         CreateMap<CategoryWithCreator, Domain.Category>()
             .ReverseMap();
+        CreateMap<Domain.Category, CategoryWithCreatorAndVideoAssignments>()
+            .ReverseMap();
         CreateMap<Comment, Domain.Comment>().ReverseMap();
         CreateMap<CommentHistory, Domain.CommentHistory>().ReverseMap();
-        CreateMap<CommentReplyNotification, Domain.CommentReplyNotification>().ReverseMap();
-        CreateMap<ExternalUserToken, Domain.ExternalUserToken>().ReverseMap();
-        CreateMap<Game, Domain.Game>().ReverseMap()
-            .ForMember(g => g.VideoGames,
-                o => o.MapFrom(s => s.VideoGames));
         CreateMap<PlaylistAuthor, Domain.PlaylistAuthor>().ReverseMap();
         CreateMap<PlaylistCategory, Domain.PlaylistCategory>().ReverseMap();
+        CreateMap<Domain.PlaylistCategory, PlaylistCategoryOnlyIds>().ReverseMap();
         CreateMap<PlaylistHistory, Domain.PlaylistHistory>().ReverseMap();
         CreateMap<PlaylistRating, Domain.PlaylistRating>().ReverseMap();
         CreateMap<PlaylistSubscription, Domain.PlaylistSubscription>().ReverseMap();
@@ -52,7 +49,7 @@ public class AutoMapperConfig : Profile
         CreateMap<StatusChangeNotification, Domain.StatusChangeNotification>().ReverseMap();
         CreateMap<VideoAuthor, Domain.VideoAuthor>().ReverseMap();
         CreateMap<VideoCategory, Domain.VideoCategory>().ReverseMap();
-        CreateMap<VideoGame, Domain.VideoGame>().ReverseMap();
+        CreateMap<Domain.VideoCategory, VideoCategoryOnlyIds>().ReverseMap();
         CreateMap<VideoHistory, Domain.VideoHistory>().ReverseMap();
         CreateMap<VideoRating, Domain.VideoRating>().ReverseMap();
         CreateMap<VideoUploadNotification, Domain.VideoUploadNotification>().ReverseMap();

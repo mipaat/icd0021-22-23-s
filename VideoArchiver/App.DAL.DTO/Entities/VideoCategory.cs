@@ -9,5 +9,6 @@ public class VideoCategory : AbstractIdDatabaseEntity
     public CategoryWithCreator? Category { get; set; }
     public Guid CategoryId { get; set; }
 
-    public bool AutoAssign { get; set; }
+    public AuthorBasic? AssignedBy { get; set; }
+    public Guid? AssignedById { get; set; }
 }

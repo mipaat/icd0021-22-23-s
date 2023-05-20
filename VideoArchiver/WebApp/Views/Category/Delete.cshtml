@@ -1,0 +1,14 @@
+@model WebApp.ViewModels.CategoryDeleteViewModel
+
+@{
+    ViewBag.Title = "Delete category";
+}
+
+<h2 class="text-danger">Are you sure you want to delete category '@Model.Category.Name'?</h2>
+
+<a href="@Model.ReturnUrl">Cancel</a>
+<form>
+    @Html.Hidden("id", Model.Category.Id)
+    @Html.Hidden("returnUrl", Model.ReturnUrl)
+    <input type="button" class="btn btn-danger" value="Delete"/>
+</form>

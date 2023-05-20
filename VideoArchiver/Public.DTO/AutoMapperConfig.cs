@@ -13,6 +13,5 @@ public class AutoMapperConfig : Profile
     /// </summary>
     public AutoMapperConfig()
     {
-        this.AddGameMap();
     }
 }

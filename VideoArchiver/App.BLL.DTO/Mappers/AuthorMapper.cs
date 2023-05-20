@@ -22,6 +22,7 @@ public static partial class AutoMapperConfigExtensions
     {
         config.CreateMap<App.DAL.DTO.Entities.Author, Author>();
         config.CreateMap<DAL.DTO.Entities.Author, Author>();
+        config.CreateMap<DAL.DTO.Entities.AuthorBasic, Author>();
         return config;
     }
 }

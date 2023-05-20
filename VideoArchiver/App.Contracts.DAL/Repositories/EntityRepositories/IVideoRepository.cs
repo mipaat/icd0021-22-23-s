@@ -26,5 +26,5 @@ public interface IVideoRepository : IBaseEntityRepository<App.Domain.Video, Vide
     public Task<ICollection<VideoFile>?> GetVideoFilesAsync(Guid videoId);
 
     public Task<ICollection<VideoWithBasicAuthors>>
-        SearchVideosAsync(EPlatform? platform, string? name, string? author, ICollection<Guid> categoryIds, Guid? userid, bool accessAllowed);
+        SearchVideosAsync(EPlatform? platform, string? name, string? author, ICollection<Guid> categoryIds, Guid? userid, Guid? userAuthorId, bool accessAllowed);
 }

@@ -11,6 +11,6 @@ public class SelectCultureController : Controller
         var requestCulture = new RequestCulture(culture);
         HttpContext.Response.Cookies.Delete(CookieRequestCultureProvider.DefaultCookieName);
         HttpContext.Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName, CookieRequestCultureProvider.MakeCookieValue(requestCulture));
-        return Redirect(returnUrl);
+        return LocalRedirect(returnUrl);
     }
 }

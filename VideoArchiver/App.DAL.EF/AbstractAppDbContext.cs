@@ -38,22 +38,16 @@ public class AbstractAppDbContext : IdentityDbContext<User, Role, Guid, Identity
     public DbSet<Author> Authors { get; set; } = default!;
     public DbSet<Playlist> Playlists { get; set; } = default!;
     public DbSet<Comment> Comments { get; set; } = default!;
-    public DbSet<Game> Games { get; set; } = default!;
     public DbSet<Category> Categories { get; set; } = default!;
 
     public DbSet<VideoAuthor> VideoAuthors { get; set; } = default!;
     public DbSet<PlaylistAuthor> PlaylistAuthors { get; set; } = default!;
     public DbSet<PlaylistVideo> PlaylistVideos { get; set; } = default!;
-    public DbSet<VideoGame> VideoGames { get; set; } = default!;
 
     public DbSet<VideoUploadNotification> VideoUploadNotifications { get; set; } = default!;
-    public DbSet<CommentReplyNotification> CommentReplyNotifications { get; set; } = default!;
     public DbSet<PlaylistSubscription> PlaylistSubscriptions { get; set; } = default!;
-    public DbSet<AuthorSubscription> AuthorSubscriptions { get; set; } = default!;
     public DbSet<StatusChangeEvent> StatusChangeEvents { get; set; } = default!;
     public DbSet<StatusChangeNotification> StatusChangeNotifications { get; set; } = default!;
-    public DbSet<AuthorPubSub> AuthorPubSubs { get; set; } = default!;
-    public DbSet<ExternalUserToken> ExternalUserTokens { get; set; } = default!;
     public DbSet<QueueItem> QueueItems { get; set; } = default!;
 
     public DbSet<VideoCategory> VideoCategories { get; set; } = default!;

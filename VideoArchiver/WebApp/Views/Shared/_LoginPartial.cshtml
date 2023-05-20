@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using App.Domain.Identity
-@using App.BLL.Identity.Services
+@using App.Common
 @inject SignInManager<User> SignInManager
 
 <ul class="navbar-nav">
@@ -30,7 +30,7 @@
 {
     string SelectedAuthorString(HttpRequest httpRequest)
     {
-        var selectedAuthorId = httpRequest.Cookies[UserService.SelectedUserAuthorCookieKey];
+        var selectedAuthorId = httpRequest.GetSelectedAuthorId();
         return selectedAuthorId == null ? "" : $" (Acting as {selectedAuthorId})";
     }
 }

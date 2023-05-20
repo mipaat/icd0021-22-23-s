@@ -18,6 +18,10 @@ public class LangString : Dictionary<string, string>
     {
     }
 
+    public LangString(Dictionary<string, string> source) : base(source)
+    {
+    }
+
     public LangString()
     {
     }
@@ -93,8 +97,8 @@ public class LangString : Dictionary<string, string>
 
     public override bool Equals(object? obj)
     {
-        if (obj is null || ReferenceEquals(this, obj)) return true;
         if (obj is not LangString other) return false;
+        if (ReferenceEquals(this, obj)) return true;
         if (Count != other.Count) return false;
         return Keys.All(other.ContainsKey) &&
                this.All(kvp => other.GetValueOrDefault(kvp.Key) == kvp.Value);

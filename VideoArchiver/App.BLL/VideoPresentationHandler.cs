@@ -49,11 +49,11 @@ public class VideoPresentationHandler
         return (await _uow.Videos.GetVideoFilesAsync(id))?.FirstOrDefault();
     }
 
-    public async Task<ICollection<VideoWithAuthor>> SearchVideosAsync(EPlatform? platformQuery, string? nameQuery, string? authorQuery, ICollection<Guid> categoryIds, ClaimsPrincipal user)
+    public async Task<ICollection<VideoWithAuthor>> SearchVideosAsync(EPlatform? platformQuery, string? nameQuery, string? authorQuery, ICollection<Guid> categoryIds, ClaimsPrincipal user, Guid? userAuthorId)
     {
         var userId = user.GetUserIdIfExists();
         var accessAllowed = AuthorizationService.IsAllowedToAccessVideoByRole(user);
-        return (await _uow.Videos.SearchVideosAsync(platformQuery, nameQuery, authorQuery, categoryIds, userId, accessAllowed))
+        return (await _uow.Videos.SearchVideosAsync(platformQuery, nameQuery, authorQuery, categoryIds, userId, userAuthorId, accessAllowed))
             .Select(v => _videoMapper.Map(v)).ToList();
     }
 }

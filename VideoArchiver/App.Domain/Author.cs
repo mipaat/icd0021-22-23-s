@@ -23,7 +23,6 @@ public class Author : BaseArchiveEntity
     public ICollection<VideoAuthor>? VideoAuthors { get; set; }
     public ICollection<PlaylistAuthor>? PlaylistAuthors { get; set; }
     public ICollection<VideoUploadNotification>? VideoUploadNotifications { get; set; }
-    public ICollection<CommentReplyNotification>? CommentReplyNotifications { get; set; }
     public ICollection<Comment>? Comments { get; set; }
     public ICollection<PlaylistSubscription>? PlaylistSubscriptions { get; set; }
     public ICollection<VideoRating>? VideoRatings { get; set; }
@@ -33,14 +32,13 @@ public class Author : BaseArchiveEntity
     [InverseProperty(nameof(AuthorRating.Rated))]
     public ICollection<AuthorRating>? ReceivedAuthorRatings { get; set; }
     public ICollection<Category>? Categories { get; set; }
+    [InverseProperty(nameof(AuthorCategory.Author))]
     public ICollection<AuthorCategory>? AuthorCategories { get; set; }
+    public ICollection<VideoCategory>? AssignedVideoCategories { get; set; }
+    public ICollection<PlaylistCategory>? AssignedPlaylistCategories { get; set; }
+    [InverseProperty(nameof(AuthorCategory.AssignedBy))]
+    public ICollection<AuthorCategory>? AssignedAuthorCategories { get; set; }
     public ICollection<StatusChangeEvent>? StatusChangeEvents { get; set; }
-    [InverseProperty(nameof(AuthorSubscription.SubscriptionTarget))]
-    public ICollection<AuthorSubscription>? SubscriberAuthorSubscriptions { get; set; }
-    [InverseProperty(nameof(AuthorSubscription.Subscriber))]
-    public ICollection<AuthorSubscription>? SubscribedAuthorSubscriptions { get; set; }
-    public ICollection<AuthorPubSub>? AuthorPubSubs { get; set; }
-    public ICollection<ExternalUserToken>? ExternalUserTokens { get; set; }
     public ICollection<QueueItem>? QueueItems { get; set; }
     public ICollection<EntityAccessPermission>? EntityAccessPermissions { get; set; }
 }

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using App.BLL.DTO.Entities;
 using App.BLL.Identity.Services;
+using App.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -30,6 +31,7 @@ public class SelectAuthor : PageModel
 
     public async Task<IActionResult> OnGetAsync(string? returnUrl = null)
     {
+        HttpContext.Response.ClearSelectedAuthorCookies();
         ReturnUrl = returnUrl;
         Authors = await _userService.GetAllUserSubAuthorsAsync(User);
         if (Authors.Count == 0)
@@ -58,7 +60,7 @@ public class SelectAuthor : PageModel
 
     private IActionResult SetSelectedAuthor(Guid authorId, string? returnUrl)
     {
-        UserService.SetSelectedAuthorCookies(Response, authorId);
+        Response.SetSelectedAuthorCookies(authorId);
         return LocalRedirect(returnUrl ?? Url.Content("~/"));
     }
 }

@@ -27,6 +27,7 @@ public class QueueItemsApprovalController : Controller
         });
     }
 
+    [HttpPost]
     public async Task<IActionResult> ApproveQueueItem([FromForm] Guid id, [FromForm] bool grantAccess = true)
     {
         await _serviceUow.QueueItemService.ApproveAsync(id, User.GetUserId(), grantAccess);
@@ -34,6 +35,7 @@ public class QueueItemsApprovalController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [HttpPost]
     public async Task<IActionResult> DeleteQueueItem([FromForm] Guid id)
     {
         await _serviceUow.QueueItemService.DeleteAsync(id);

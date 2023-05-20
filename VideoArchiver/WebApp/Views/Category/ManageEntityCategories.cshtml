@@ -1,0 +1,50 @@
+@using App.BLL.DTO.Entities
+@model WebApp.ViewModels.CategoryManageEntityCategoriesViewModel
+
+@{
+    ViewBag.Title = $"Manage {Model.EntityType} categories";
+}
+
+<h2>Manage @Model.EntityType categories</h2>
+
+<a href="@Model.ReturnUrl">Return</a>
+
+<div>
+    <form method="post" asp-action="ManageEntityCategories">
+        @Html.HiddenFor(m => m.ReturnUrl)
+        @Html.HiddenFor(m => m.Id)
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>@Model.EntityType in category?</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var category in Model.Categories)
+            {
+                <tr>
+                    <td>@category.Name</td>
+                    <td>
+                        <input type="checkbox" name="@Identifier(category)" value="true" checked="@Checked(category)"/>
+                        <input type="checkbox" name="@Identifier(category)" value="false" checked="@(!Checked(category))" class="d-none"/>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <input type="submit" class="btn btn-primary" value="Submit"/>
+    </form>
+</div>
+
+@functions
+{
+    string Identifier(CategoryWithCreator category) =>
+        $"{nameof(Model.SelectedCategoryIds)}[{category.Id}]";
+
+    bool Checked(CategoryWithCreator category)
+    {
+        Model.SelectedCategoryIds.TryGetValue(category.Id, out var assigned);
+        return assigned;
+    }
+}

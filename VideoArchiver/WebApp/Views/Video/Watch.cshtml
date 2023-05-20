@@ -1,3 +1,4 @@
+@using Base.WebHelpers
 @model WebApp.ViewModels.VideoViewModel
 
 @{
@@ -18,6 +19,8 @@ else
         <source src="/api/v1/File/VideoFile/@Model.Video.Id"/>
     </video>
 }
+
+<a asp-controller="Category" asp-action="ManageEntityCategories" asp-route-id="@Model.Video.Id" asp-route-returnUrl="@Context.GetFullPath()">Manage categories</a>
 
 <h1>@Model.Video.Title</h1>
 

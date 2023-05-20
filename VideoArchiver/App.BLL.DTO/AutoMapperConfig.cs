@@ -11,7 +11,6 @@ public class AutoMapperConfig : Profile
         this.AddAuthorMap()
             .AddVideoMap()
             .AddRefreshTokenMap()
-            .AddGameMap()
             .AddUserMap()
             .AddQueueItemMap()
             .AddCategoryMap();

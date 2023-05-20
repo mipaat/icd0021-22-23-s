@@ -48,4 +48,17 @@ public class VideoCategoryRepository : BaseAppEntityRepository<App.Domain.VideoC
     {
         return await Entities.AnyAsync(e => e.CategoryId == categoryId && e.VideoId == videoId);
     }
+
+    public async Task<ICollection<Guid>> GetAllCategoryIdsAsync(Guid videoId, Guid authorId)
+    {
+        return await Entities.Where(e => e.VideoId == videoId && e.AssignedById == authorId)
+            .Select(e => e.CategoryId)
+            .ToListAsync();
+    }
+
+    public void RemoveTracked(VideoCategoryOnlyIds entity)
+    {
+        var tracked = GetTrackedEntity(entity.Id)!;
+        Entities.Remove(tracked);
+    }
 }

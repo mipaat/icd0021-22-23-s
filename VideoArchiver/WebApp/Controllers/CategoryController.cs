@@ -1,6 +1,8 @@
 using App.BLL.Config;
 using App.BLL.Identity.Services;
 using App.BLL.Services;
+using App.Common;
+using Base.WebHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Areas.Identity.Pages.Account;
@@ -46,10 +48,10 @@ public class CategoryController : Controller
             viewModel.Category.IsPublic = false;
         }
 
-        var authorId = UserService.GetSelectedAuthorId(HttpContext.Request);
+        var authorId = HttpContext.Request.GetSelectedAuthorId();
         if (authorId == null || !await _userService.IsUserSubAuthor(authorId.Value, User))
         {
-            UserService.ClearSelectedAuthorCookies(HttpContext.Response);
+            HttpContext.Response.ClearSelectedAuthorCookies();
             return RedirectToPage(nameof(SelectAuthor));
         }
 
@@ -58,7 +60,7 @@ public class CategoryController : Controller
         _categoryService.CreateCategory(viewModel.Category);
         await _categoryService.ServiceUow.SaveChangesAsync();
 
-        if (viewModel.ReturnUrl != null) return Redirect(viewModel.ReturnUrl);
+        if (viewModel.ReturnUrl != null) return LocalRedirect(viewModel.ReturnUrl);
         return RedirectToAction(nameof(Details));
     }
 
@@ -79,7 +81,6 @@ public class CategoryController : Controller
     [ActionName("Edit")]
     public async Task<IActionResult> EditPost(CategoryEditViewModel model)
     {
-        
         model.SupportedUiCultures = _configuration.GetSupportedUiCultureNames();
         if (!ModelState.IsValid)
         {
@@ -90,7 +91,7 @@ public class CategoryController : Controller
         if (category == null) return NotFound();
         if (category.Creator == null) return Forbid();
         if (!await _userService.IsUserSubAuthor(category.Creator.Id, User)) return Forbid();
-        
+
         if (!User.IsAllowedToCreatePublicCategory())
         {
             model.Category.IsPublic = false;
@@ -113,13 +114,68 @@ public class CategoryController : Controller
             {
                 return Forbid();
             }
+
             userIsCreator = await _userService.IsUserSubAuthor(category.Creator.Id, User);
         }
+
         return View(new CategoryDetailsViewModel
         {
             Category = category,
             SupportedUiCultures = _configuration.GetSupportedUiCultureNames(),
             UserIsCreator = userIsCreator,
         });
+    }
+
+    public async Task<IActionResult> Delete(Guid id, string returnUrl = "~")
+    {
+        var category = await _categoryService.GetByIdAsync(id);
+        if (category == null) return NotFound();
+        if (category.Creator == null) return Forbid();
+        if (!await _userService.IsUserSubAuthor(category.Creator.Id, User)) return Forbid();
+        return View(new CategoryDeleteViewModel
+        {
+            Category = category,
+            ReturnUrl = returnUrl,
+        });
+    }
+
+    [HttpPost]
+    [ActionName("Delete")]
+    public async Task<IActionResult> DeletePost(Guid id, string returnUrl)
+    {
+        await _categoryService.DeleteAsync(id);
+        await _categoryService.ServiceUow.SaveChangesAsync();
+        return LocalRedirect(returnUrl);
+    }
+
+    private RedirectToPageResult RedirectToSelectAuthor =>
+        RedirectToPage("SelectAuthor", new { ReturnUrl = HttpContext.GetFullPath() });
+
+    public async Task<IActionResult> ManageEntityCategories(CategoryManageEntityCategoriesViewModel model)
+    {
+        var selectedAuthorId = HttpContext.Request.GetSelectedAuthorId();
+        if (selectedAuthorId == null) return RedirectToSelectAuthor;
+        if (!await _userService.IsUserSubAuthor(selectedAuthorId.Value, User)) return RedirectToSelectAuthor;
+
+        model.Categories = await _categoryService.GetAllAssignableCategoriesForAuthor(selectedAuthorId);
+        model.SetSelectedCategoryIds(
+            await _categoryService.GetAllAssignedCategoryIds(selectedAuthorId.Value, model.Id, model.EntityType));
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [ActionName("ManageEntityCategories")]
+    public async Task<IActionResult> ManageEntityCategoriesPost(CategoryManageEntityCategoriesViewModel model)
+    {
+        var selectedAuthorId = HttpContext.Request.GetSelectedAuthorId();
+        if (selectedAuthorId == null) return RedirectToSelectAuthor; // TODO: add relevant form data to query parameters
+        if (!await _userService.IsUserSubAuthor(selectedAuthorId.Value, User)) return RedirectToSelectAuthor;
+
+        await _categoryService.AddToCategories(selectedAuthorId.Value, model.Id, model.EntityType,
+            model.SelectedCategoryIds);
+        await _categoryService.ServiceUow.SaveChangesAsync();
+
+        return LocalRedirect(model.ReturnUrl);
     }
 }
