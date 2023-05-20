@@ -13,6 +13,23 @@ public class PlaylistVideoRepository :
     {
     }
 
+    protected override Domain.PlaylistVideo AfterMap(PlaylistVideo entity, Domain.PlaylistVideo mapped)
+    {
+        var trackedVideo = Uow.Videos.GetTrackedEntity(entity.VideoId);
+        if (trackedVideo != null)
+        {
+            mapped.Video = trackedVideo;
+        }
+
+        var trackedPlaylist = Uow.Playlists.GetTrackedEntity(entity.PlaylistId);
+        if (trackedPlaylist != null)
+        {
+            mapped.Playlist = trackedPlaylist;
+        }
+
+        return mapped;
+    }
+
     private App.Domain.PlaylistVideo AfterMap(BasicPlaylistVideo playlistVideo, App.Domain.PlaylistVideo mapped)
     {
         var trackedVideo = Uow.Videos.GetTrackedEntity(playlistVideo.Video.Id) ??

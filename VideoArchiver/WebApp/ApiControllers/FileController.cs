@@ -17,17 +17,17 @@ namespace WebApp.ApiControllers;
 public class FileController : ControllerBase
 {
     private readonly AuthorizationService _authorizationService;
-    private readonly VideoPresentationHandler _videoPresentationHandler;
+    private readonly VideoPresentationService _videoPresentationService;
 
     /// <summary>
     /// Construct a new FileController
     /// </summary>
     /// <param name="authorizationService">Service for checking if access to a file is allowed.</param>
-    /// <param name="videoPresentationHandler">Service for fetching relevant video presentation data (video file paths).</param>
-    public FileController(AuthorizationService authorizationService, VideoPresentationHandler videoPresentationHandler)
+    /// <param name="videoPresentationService">Service for fetching relevant video presentation data (video file paths).</param>
+    public FileController(AuthorizationService authorizationService, VideoPresentationService videoPresentationService)
     {
         _authorizationService = authorizationService;
-        _videoPresentationHandler = videoPresentationHandler;
+        _videoPresentationService = videoPresentationService;
     }
 
     /// <summary>
@@ -46,7 +46,7 @@ public class FileController : ControllerBase
         if (!await _authorizationService.IsAllowedToAccessVideo(User, videoId))
             return Results.Forbid();
 
-        var videoFile = await _videoPresentationHandler.GetVideoFileAsync(videoId);
+        var videoFile = await _videoPresentationService.GetVideoFileAsync(videoId);
         if (videoFile == null) return Results.NotFound();
         var filePath = videoFile.FilePath;
 

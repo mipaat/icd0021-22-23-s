@@ -3,6 +3,7 @@ using App.BLL;
 using App.BLL.Exceptions;
 using App.BLL.DTO.Entities;
 using App.BLL.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,14 +22,17 @@ namespace WebApp.ApiControllers;
 public class LinkSubmitController : ControllerBase
 {
     private readonly ServiceUow _serviceUow;
+    private readonly SubmissionResultMapper _submissionResultMapper;
 
     /// <summary>
     /// Construct a new LinkSubmitController.
     /// </summary>
     /// <param name="serviceUow">Unit of work object providing access to general BLL services.</param>
-    public LinkSubmitController(ServiceUow serviceUow)
+    /// <param name="mapper">Automapper for mapping BLL DTOs to API DTOs.</param>
+    public LinkSubmitController(ServiceUow serviceUow, IMapper mapper)
     {
         _serviceUow = serviceUow;
+        _submissionResultMapper = new SubmissionResultMapper(mapper);
     }
 
     /// <summary>
@@ -42,10 +46,10 @@ public class LinkSubmitController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<List<Public.DTO.v1.SubmissionResult>>> Submit([FromBody] Public.DTO.v1.LinkSubmission link)
     {
-        UrlSubmissionResults bllSubmissionResults;
+        UrlSubmissionResult bllSubmissionResult;
         try
         {
-            bllSubmissionResults = await _serviceUow.SubmitService.SubmitGenericUrlAsync(link.Link, User);
+            bllSubmissionResult = await _serviceUow.SubmitService.SubmitGenericUrlAsync(link.Link, User, link.SubmitPlaylist);
         }
         catch (UnrecognizedUrlException e)
         {
@@ -57,6 +61,6 @@ public class LinkSubmitController : ControllerBase
         }
 
         await _serviceUow.SaveChangesAsync();
-        return Ok(SubmissionResultMapper.Map(bllSubmissionResults));
+        return Ok(_submissionResultMapper.Map(bllSubmissionResult));
     }
 }

@@ -1,48 +1,30 @@
-using App.BLL.DTO.Enums;
 using App.Common.Enums;
+using App.DAL.DTO.Entities;
 
 namespace App.BLL.DTO.Entities;
 
 public class UrlSubmissionResult
 {
-    public readonly EUrlSubmissionResultType Type;
-    public readonly Guid Id;
-    public readonly EPlatform? Platform;
-    public readonly string? IdOnPlatform;
-    public readonly bool AlreadyAdded;
+    public Guid QueueItemId { get; set; }
+    public EEntityType Type { get; set; }
+    public Guid? EntityId { get; set; }
+    public EPlatform Platform { get; set; }
+    public string IdOnPlatform { get; set; }
+    public bool AlreadyAdded { get; set; }
 
-    public UrlSubmissionResult(Guid id, EUrlSubmissionResultType type, EPlatform? platform, string? idOnPlatform = null,
-        bool alreadyAdded = false)
+    public UrlSubmissionResult(QueueItem queueItem, bool alreadyAdded)
     {
-        Id = id;
-        Type = type;
-        Platform = platform;
-        IdOnPlatform = idOnPlatform;
-        AlreadyAdded = alreadyAdded;
-    }
-
-    public UrlSubmissionResult(App.DAL.DTO.Entities.QueueItem queueItem, bool alreadyAdded = false) :
-        this(queueItem.Id, EUrlSubmissionResultType.QueueItem, queueItem.Platform, queueItem.IdOnPlatform, alreadyAdded)
-    {
-    }
-
-    public UrlSubmissionResult(App.DAL.DTO.Base.BaseArchiveEntityNonMonitored entity, bool alreadyAdded = false) :
-        this(entity.Id, entity.UrlSubmissionResultType(), entity.Platform, entity.IdOnPlatform, alreadyAdded)
-    {
-    }
-}
-
-internal static class UrlSubmissionResultTypeExtensions
-{
-    public static EUrlSubmissionResultType UrlSubmissionResultType(
-        this App.DAL.DTO.Base.BaseArchiveEntityNonMonitored entity)
-    {
-        return entity switch
+        QueueItemId = queueItem.Id;
+        Type = queueItem.EntityType;
+        EntityId = queueItem.EntityType switch
         {
-            DAL.DTO.Entities.Video => EUrlSubmissionResultType.Video,
-            DAL.DTO.Entities.Playlists.Playlist => EUrlSubmissionResultType.Playlist,
-            DAL.DTO.Entities.Author => EUrlSubmissionResultType.Author,
-            _ => throw new ArgumentException($"Entity is not a valid {typeof(EUrlSubmissionResultType)}"),
+            EEntityType.Video => queueItem.VideoId,
+            EEntityType.Playlist => queueItem.PlaylistId,
+            EEntityType.Author => queueItem.AuthorId,
+            _ => throw new ArgumentOutOfRangeException(),
         };
+        Platform = queueItem.Platform;
+        IdOnPlatform = queueItem.IdOnPlatform;
+        AlreadyAdded = alreadyAdded;
     }
 }

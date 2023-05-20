@@ -13,7 +13,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ServiceUow>();
 
         services.AddScoped<SubmitService>();
-        services.AddScoped<VideoPresentationHandler>();
+        services.AddScoped<VideoPresentationService>();
         services.AddScoped<EntityUpdateService>();
         services.AddScoped<EntityConcurrencyResolver>();
         services.AddScoped<StatusChangeService>();

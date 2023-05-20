@@ -7,5 +7,5 @@ public class Author
     public Guid Id { get; set; }
     public string? UserName { get; set; }
     public string? DisplayName { get; set; }
-    public EPlatform Platform { get; set; } = default!;
+    public EPlatform Platform { get; set; }
 }

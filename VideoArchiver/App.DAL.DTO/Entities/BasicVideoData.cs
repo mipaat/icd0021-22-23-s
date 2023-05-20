@@ -7,5 +7,5 @@ public class BasicVideoData : IIdDatabaseEntity
 {
     public Guid Id { get; set; }
     public string IdOnPlatform { get; set; } = default!;
-    public EPlatform Platform { get; set; } = default!;
+    public EPlatform Platform { get; set; }
 }

@@ -196,7 +196,9 @@ public class PlaylistService : BaseYouTubeService<PlaylistService>
             var playlistVideo = new PlaylistVideo
             {
                 Playlist = playlist,
+                PlaylistId = playlist.Id,
                 Video = domainVideo,
+                VideoId = domainVideo.Id,
 
                 Position = position++,
             };

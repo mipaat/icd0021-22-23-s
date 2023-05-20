@@ -104,6 +104,19 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
             await query.ProjectTo<VideoWithBasicAuthors>(Mapper.ConfigurationProvider).ToListAsync());
     }
 
+    public async Task<ICollection<BasicVideoData>> GetAllBasicVideoDataByIds(IEnumerable<Guid> ids)
+    {
+        return await Entities
+            .Where(v => ids.Contains(v.Id))
+            .Select(v => new BasicVideoData
+            {
+                Id = v.Id,
+                IdOnPlatform = v.IdOnPlatform,
+                Platform = v.Platform,
+            })
+            .ToListAsync();
+    }
+
     public async Task<VideoWithComments?> GetByIdOnPlatformWithCommentsAsync(string idOnPlatform, EPlatform platform)
     {
         return AttachIfNotAttached(await Entities

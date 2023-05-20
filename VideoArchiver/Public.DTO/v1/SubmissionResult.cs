@@ -6,26 +6,36 @@ namespace Public.DTO.v1;
 public class SubmissionResult
 {
     /// <summary>
-    /// The type of the added entity, if one was added.
+    /// The ID of the created queue item.
+    /// </summary>
+    public Guid QueueItemId { get; set; }
+
+    /// <summary>
+    /// The type of the submission entity
     /// </summary>
     /// <example>Video</example>
-    public EEntityType? Type { get; set; }
+    public EEntityType Type { get; set; }
+
     /// <summary>
-    /// The platform of the added or queued entity.
+    /// The ID of the submission entity, if it exists.
+    /// Present if submission entity already existed in the archive,
+    /// or if the submitter was authorized to submit the entity without requiring admin approval.
+    /// </summary>
+    public Guid? EntityId { get; set; }
+
+    /// <summary>
+    /// The platform of the submission entity.
     /// </summary>
     /// <example>YouTube</example>
-    public EPlatform? Platform { get; set; }
+    public EPlatform Platform { get; set; }
+
     /// <summary>
-    /// The unique ID of the added entity or queue item (in the archive, not on its source platform).
+    /// The ID of the submission entity on its source platform.
     /// </summary>
-    public Guid Id { get; set; }
+    public string IdOnPlatform { get; set; } = default!;
+
     /// <summary>
-    /// Boolean indicating if the submission result is an archive entity or a queue entry awaiting approval.
-    /// </summary>
-    public bool IsQueueItem { get; set; }
-    /// <summary>
-    /// Boolean indicating if the entity was already present in the archive.
-    /// In this case, the entity referred to by this submission result's ID is that previously added entity. 
+    /// Boolean indicating if the entity was already present in the archive. 
     /// </summary>
     public bool AlreadyAdded { get; set; }
 }

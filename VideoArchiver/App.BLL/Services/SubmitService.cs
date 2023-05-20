@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Security.Principal;
 using App.BLL.Base;
-using App.BLL.DTO;
 using App.BLL.DTO.Contracts;
 using App.BLL.DTO.Entities;
 using App.BLL.Exceptions;
@@ -18,11 +17,12 @@ public class SubmitService : BaseService<SubmitService>
 {
     private readonly IEnumerable<IPlatformSubmissionHandler> _platformSubmissionHandlers;
 
-    public const string AllowedToSubmitRoles = $"{RoleNames.Admin},{RoleNames.Helper}";
+    public const string AllowedToSubmitRoles = $"{RoleNames.AdminOrSuperAdmin},{RoleNames.Helper}";
 
     private static readonly List<string> AllowedToAutoSubmitRoles = new()
     {
-        RoleNames.Admin
+        RoleNames.Admin,
+        RoleNames.SuperAdmin
     };
 
     public SubmitService(ServiceUow serviceUow, ILogger<SubmitService> logger, IMapper mapper,
@@ -37,18 +37,18 @@ public class SubmitService : BaseService<SubmitService>
         return AllowedToAutoSubmitRoles.Any(user.IsInRole);
     }
 
-    public async Task<UrlSubmissionResults> SubmitGenericUrlAsync(string url, ClaimsPrincipal user)
+    public async Task<UrlSubmissionResult> SubmitGenericUrlAsync(string url, ClaimsPrincipal user, bool submitPlaylist)
     {
-        return await SubmitGenericUrlAsync(url, user.GetUserId(), IsAllowedToAutoSubmit(user));
+        return await SubmitGenericUrlAsync(url, user.GetUserId(), IsAllowedToAutoSubmit(user), submitPlaylist);
     }
 
-    private async Task<UrlSubmissionResults> SubmitGenericUrlAsync(string url, Guid submitterId, bool autoSubmit)
+    private async Task<UrlSubmissionResult> SubmitGenericUrlAsync(string url, Guid submitterId, bool autoSubmit, bool submitPlaylist)
     {
         foreach (var urlHandler in _platformSubmissionHandlers)
         {
             if (urlHandler.IsPlatformUrl(url))
             {
-                return await urlHandler.SubmitUrl(url, submitterId, autoSubmit);
+                return await urlHandler.SubmitUrl(url, submitterId, autoSubmit, submitPlaylist);
             }
         }
 

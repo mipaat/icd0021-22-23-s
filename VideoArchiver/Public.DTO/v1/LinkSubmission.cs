@@ -13,4 +13,9 @@ public class LinkSubmission
     /// Or a YouTube playlist link: `https://www.youtube.com/playlist?list=PLgRdzXSueEUtWgnFTI77-_E7iawcqqf5f`
     /// </remarks>
     public string Link { get; set; } = default!;
+
+    /// <summary>
+    /// Whether to submit the whole playlist, when link is both a video and playlist URL.
+    /// </summary>
+    public bool SubmitPlaylist { get; set; }
 }

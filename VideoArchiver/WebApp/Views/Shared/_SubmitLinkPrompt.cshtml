@@ -1,8 +1,14 @@
-﻿@model Public.DTO.v1.LinkSubmission
+﻿@model WebApp.ViewModels.LinkSubmissionViewModel
 
 <h2>Add a YouTube link to the archive</h2>
-<form action="../SubmitLink/Submit" method="POST">
-    <label asp-for="Link"></label>
-    <input asp-for="Link"/>
+<form asp-controller="SubmitLink" asp-action="Submit" method="POST">
+    <div>
+        <label asp-for="Link">Link:</label>
+        <input asp-for="Link"/>
+    </div>
+    <div>
+        <label asp-for="SubmitPlaylist">Also submit playlist, if link is a video+playlist link:</label>
+        <input type="checkbox" asp-for="SubmitPlaylist"/>
+    </div>
     <input type="submit" value="Submit" class="btn btn-primary"/>
 </form>

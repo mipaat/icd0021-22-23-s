@@ -22,23 +22,26 @@ public class QueueItemService : BaseService<QueueItemService>
         _queueItemMapper = new QueueItemMapper(mapper);
     }
 
-    public async Task Add(Video video, Guid submitterId, bool autoSubmit)
+    public async Task<QueueItem> Add(Video video, Guid submitterId, bool autoSubmit)
     {
-        Uow.QueueItems.Add(new QueueItem(video, submitterId, autoSubmit));
+        var queueItem = Uow.QueueItems.Add(new QueueItem(video, submitterId, autoSubmit));
         if (autoSubmit) await ServiceUow.AuthorizationService.AuthorizeVideoIfNotAuthorized(submitterId, video.Id);
+        return queueItem;
     }
 
-    public async Task Add(Playlist playlist, Guid submitterId, bool autoSubmit)
+    public async Task<QueueItem> Add(Playlist playlist, Guid submitterId, bool autoSubmit)
     {
-        Uow.QueueItems.Add(new QueueItem(playlist, submitterId, autoSubmit));
+        var queueItem = Uow.QueueItems.Add(new QueueItem(playlist, submitterId, autoSubmit));
         if (autoSubmit)
             await ServiceUow.AuthorizationService.AuthorizePlaylistIfNotAuthorized(submitterId, playlist.Id);
+        return queueItem;
     }
 
-    public async Task Add(Author author, Guid submitterId, bool autoSubmit)
+    public async Task<QueueItem> Add(Author author, Guid submitterId, bool autoSubmit)
     {
-        Uow.QueueItems.Add(new QueueItem(author, submitterId, autoSubmit));
+        var queueItem = Uow.QueueItems.Add(new QueueItem(author, submitterId, autoSubmit));
         if (autoSubmit) await ServiceUow.AuthorizationService.AuthorizeAuthorIfNotAuthorized(submitterId, author.Id);
+        return queueItem;
     }
 
     public QueueItem Add(string idOnPlatform, EPlatform platform, EEntityType entityType, Guid submitterId, bool autoSubmit)

@@ -46,4 +46,9 @@ public class ServiceUow : BaseAppUowContainer
 
     private CategoryService? _categoryService;
     public CategoryService CategoryService => _categoryService ??= Services.GetRequiredService<CategoryService>();
+
+    private VideoPresentationService? _videoPresentationService;
+
+    public VideoPresentationService VideoPresentationService =>
+        _videoPresentationService ??= Services.GetRequiredService<VideoPresentationService>();
 }

@@ -20,56 +20,24 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformSubmiss
 
     public bool IsPlatformUrl(string url) => Url.IsYouTubeUrl(url);
 
-    public async Task<UrlSubmissionResults> SubmitUrl(string url, Guid submitterId, bool autoSubmit,
-        bool alsoSubmitPlaylist)
+    public async Task<UrlSubmissionResult> SubmitUrl(string url, Guid submitterId, bool autoSubmit,
+        bool submitPlaylist)
     {
-        // TODO: Scheduled fetching from YouTube official API (for localized titles/descriptions), accounting for rate limits
-        // TODO: Scheduled downloads? Comments?
-
-        // TODO: What to do when link is a video & playlist link?
-
-        var result = new UrlSubmissionResults();
-
         var isVideoUrl = Url.IsVideoUrl(url, out var videoId);
-        if (isVideoUrl)
+        var isPlaylistUrl = Url.IsPlaylistUrl(url, out var playlistId);
+        if (isVideoUrl && !(isPlaylistUrl && submitPlaylist))
         {
-            result.Add(await SubmitVideo(videoId!, submitterId, autoSubmit));
+            return await SubmitVideo(videoId!, submitterId, autoSubmit);
         }
 
-        if (Url.IsPlaylistUrl(url, out var playlistId))
+        if (isPlaylistUrl)
         {
-            if (isVideoUrl)
-            {
-                if (alsoSubmitPlaylist)
-                {
-                    result.Add(await SubmitPlaylist(playlistId!, submitterId, autoSubmit));
-                }
-                else
-                {
-                    var previouslyArchivedPlaylist =
-                        await Uow.Playlists.GetByIdOnPlatformAsync(playlistId!, EPlatform.YouTube);
-                    if (previouslyArchivedPlaylist == null)
-                    {
-                        result.ContainsNonArchivedPlaylist = true;
-                    }
-                    else
-                    {
-                        result.Add(new UrlSubmissionResult(previouslyArchivedPlaylist, true));
-                    }
-                }
-            }
-            else
-            {
-                result.Add(await SubmitPlaylist(playlistId!, submitterId, autoSubmit));
-            }
+            return await SubmitPlaylist(playlistId!, submitterId, autoSubmit);
         }
 
         // TODO: Authors
-        // TODO: Content fetching VS metadata fetching?
 
-        if (result.Count == 0) throw new UnrecognizedUrlException(url);
-
-        return result;
+        throw new UnrecognizedUrlException(url);
     }
 
     public bool CanHandle(EPlatform platform, EEntityType entityType)
@@ -98,22 +66,21 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformSubmiss
         var previouslyArchivedVideo = await Uow.Videos.GetByIdOnPlatformAsync(id, EPlatform.YouTube);
         if (previouslyArchivedVideo != null)
         {
-            await ServiceUow.QueueItemService.Add(previouslyArchivedVideo, submitterId, autoSubmit);
-            return new UrlSubmissionResult(previouslyArchivedVideo, true);
+            return new UrlSubmissionResult(
+                await ServiceUow.QueueItemService.Add(previouslyArchivedVideo, submitterId, autoSubmit), true);
         }
 
         var videoData = await YouTubeUow.VideoService.FetchVideoDataYtdl(id, false);
 
         if (!autoSubmit)
         {
-            var queueItem = ServiceUow.QueueItemService.Add(id, EPlatform.YouTube, EEntityType.Video, submitterId, autoSubmit);
-            return new UrlSubmissionResult(queueItem);
+            return new UrlSubmissionResult(
+                ServiceUow.QueueItemService.Add(id, EPlatform.YouTube, EEntityType.Video, submitterId, autoSubmit),
+                false);
         }
 
         var video = await YouTubeUow.VideoService.AddVideo(videoData);
-        await ServiceUow.QueueItemService.Add(video, submitterId, autoSubmit);
-
-        return new UrlSubmissionResult(video);
+        return new UrlSubmissionResult(await ServiceUow.QueueItemService.Add(video, submitterId, autoSubmit), false);
     }
 
     private async Task<UrlSubmissionResult> SubmitPlaylist(string id, Guid submitterId, bool autoSubmit)
@@ -121,21 +88,20 @@ public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformSubmiss
         var previouslyArchivedPlaylist = await Uow.Playlists.GetByIdOnPlatformAsync(id, EPlatform.YouTube);
         if (previouslyArchivedPlaylist != null)
         {
-            await ServiceUow.QueueItemService.Add(previouslyArchivedPlaylist, submitterId, autoSubmit);
-            return new UrlSubmissionResult(previouslyArchivedPlaylist, true);
+            return new UrlSubmissionResult(
+                await ServiceUow.QueueItemService.Add(previouslyArchivedPlaylist, submitterId, autoSubmit), true);
         }
 
         var playlistData = await YouTubeUow.PlaylistService.FetchPlaylistDataYtdl(id);
 
         if (!autoSubmit)
         {
-            var queueItem = ServiceUow.QueueItemService.Add(id, EPlatform.YouTube, EEntityType.Playlist, submitterId, autoSubmit);
-            return new UrlSubmissionResult(queueItem);
+            return new UrlSubmissionResult(
+                ServiceUow.QueueItemService.Add(id, EPlatform.YouTube, EEntityType.Playlist, submitterId, autoSubmit),
+                false);
         }
 
         var playlist = await YouTubeUow.PlaylistService.AddPlaylist(playlistData);
-        await ServiceUow.QueueItemService.Add(playlist, submitterId, autoSubmit);
-
-        return new UrlSubmissionResult(playlist);
+        return new UrlSubmissionResult(await ServiceUow.QueueItemService.Add(playlist, submitterId, autoSubmit), false);
     }
 }

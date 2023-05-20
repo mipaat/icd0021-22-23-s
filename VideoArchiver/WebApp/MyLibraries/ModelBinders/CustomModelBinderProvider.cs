@@ -7,9 +7,7 @@ public class CustomModelBinderProvider<T> : IModelBinderProvider
 {
     private static Type Type => typeof(T);
 
-    private static List<ICustomModelBinder> ModelBinders => new()
-    {
-    };
+    private static List<ICustomModelBinder> ModelBinders => new();
 
     public IModelBinder? GetBinder(ModelBinderProviderContext context)
     {

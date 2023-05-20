@@ -17,6 +17,7 @@ using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using AutoMapper;
 using Base.WebHelpers;
+using Base.WebHelpers.ModelBinders;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
@@ -45,7 +46,7 @@ public class Program
         builder.Services.AddScoped<IdentityAppDataInit>();
         builder.Services.AddScoped<IDbInitializer, DbInitializer>();
         builder.Services.AddScoped<AppDataInit>();
-
+        
         var jwtSettings = builder.Configuration.GetRequiredSection(JwtSettings.SectionKey).Get<JwtSettings>();
 
         builder.Services
@@ -65,6 +66,7 @@ public class Program
             });
 
         builder.Services.AddControllersWithViews()
+            .AddCommaSeparatedArrayModelBinderProvider()
             .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         const string corsAllowAllName = "CorsAllowAll";

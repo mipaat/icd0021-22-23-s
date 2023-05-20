@@ -1,3 +1,4 @@
+using App.Common.Enums;
 using AutoMapper;
 using Public.DTO.Mappers;
 
@@ -13,5 +14,9 @@ public class AutoMapperConfig : Profile
     /// </summary>
     public AutoMapperConfig()
     {
+        CreateMap<EPlatform, v1.EPlatform>();
+        CreateMap<EEntityType, v1.EEntityType>();
+
+        this.AddSubmissionResultMap();
     }
 }

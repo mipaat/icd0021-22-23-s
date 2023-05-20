@@ -9,7 +9,7 @@ namespace App.BLL.DTO.Contracts;
 public interface IPlatformSubmissionHandler
 {
     public bool IsPlatformUrl(string url);
-    public Task<UrlSubmissionResults> SubmitUrl(string url, Guid submitterId, bool autoSubmit, bool alsoSubmitPlaylist = false);
+    public Task<UrlSubmissionResult> SubmitUrl(string url, Guid submitterId, bool autoSubmit, bool submitPlaylist = false);
     public bool CanHandle(EPlatform platform, EEntityType entityType);
     public Task<Video> SubmitVideo(string idOnPlatform);
     public Task<Playlist> SubmitPlaylist(string idOnPlatform);
