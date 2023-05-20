@@ -49,9 +49,14 @@ public class PlaylistVideoRepository :
         return AfterMap(playlistVideo, Mapper.Map(playlistVideo, mapped));
     }
 
-    public void Add(BasicPlaylistVideo playlistVideo)
+    public void Add(BasicPlaylistVideo playlistVideo, Guid playlistId)
     {
-        AddBase(playlistVideo, Map, Map);
+        AddBase(playlistVideo, Map, v =>
+        {
+            var mapped = Map(v);
+            mapped.PlaylistId = playlistId;
+            return mapped;
+        });
     }
 
     public void Update(BasicPlaylistVideo playlistVideo)

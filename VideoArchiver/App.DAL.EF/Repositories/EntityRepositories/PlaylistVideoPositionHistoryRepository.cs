@@ -24,7 +24,7 @@ public class PlaylistVideoPositionHistoryRepository :
         var trackedEntity = Uow.PlaylistVideos.GetTrackedEntity(entity.PlaylistVideo.Id);
         if (trackedEntity != null)
         {
-            mapped.PlaylistVideo = Mapper.Map(entity.PlaylistVideo, mapped.PlaylistVideo);
+            mapped.PlaylistVideo = Mapper.Map(entity.PlaylistVideo, trackedEntity);
         }
 
         return mapped;

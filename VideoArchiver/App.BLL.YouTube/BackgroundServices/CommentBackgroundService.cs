@@ -84,6 +84,8 @@ public class CommentBackgroundService : BaseYouTubeBackgroundService<CommentBack
         try
         {
             await youTubeUow.CommentService.UpdateComments(videoId, ct);
+            Logger.LogInformation("Finished updating comments for video {IdOnPlatform} on platform {Platform}", videoId,
+                EPlatform.YouTube);
         }
         catch (VideoNotFoundOnPlatformException e)
         {

@@ -67,7 +67,7 @@ public class AutoMapperConfig : Profile
                 o => o.MapFrom(v => v.Comments));
         CreateMap<App.Domain.Video, VideoWithBasicAuthors>().ReverseMap();
         CreateMap<App.Domain.Video, VideoWithBasicAuthorsAndComments>();
-        CreateMap<App.Domain.Video, BasicVideoData>();
+        CreateMap<App.Domain.Video, BasicVideoData>().ReverseMap();
 
         CreateMap<App.Domain.EntityAccessPermission, EntityAccessPermission>().ReverseMap();
     }

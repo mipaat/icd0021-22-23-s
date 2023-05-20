@@ -9,6 +9,7 @@ using AutoMapper;
 using Google.Apis.YouTube.v3.Data;
 using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
+using YoutubeDLSharp.Options;
 using Video = App.DAL.DTO.Entities.Video;
 
 namespace App.BLL.YouTube.Services;
@@ -23,7 +24,16 @@ public class VideoService : BaseYouTubeService<VideoService>
 
     public async Task<VideoData> FetchVideoDataYtdl(string id, bool fetchComments, CancellationToken ct = default)
     {
-        var videoResult = await YoutubeDl.RunVideoDataFetch(Url.ToVideoUrl(id), fetchComments: fetchComments, ct: ct);
+        return await FetchVideoDataYtdl(id, fetchComments, 800, ct);
+    }
+
+    public async Task<VideoData> FetchVideoDataYtdl(string id, bool fetchComments, int maxComments, CancellationToken ct = default)
+    {
+        var options = new OptionSet
+        {
+            ExtractorArgs = $"youtube:max_comments={maxComments},all,all,all"
+        };
+        var videoResult = await YoutubeDl.RunVideoDataFetch(Url.ToVideoUrl(id), fetchComments: fetchComments, ct: ct, overrideOptions: options);
         if (videoResult is not { Success: true })
         {
             ct.ThrowIfCancellationRequested();

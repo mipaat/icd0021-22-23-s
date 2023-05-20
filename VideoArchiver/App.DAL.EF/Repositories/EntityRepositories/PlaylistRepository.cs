@@ -81,7 +81,7 @@ public class PlaylistRepository : BaseAppEntityRepository<App.Domain.Playlist, P
             var trackedPlaylistVideo = Uow.PlaylistVideos.GetTrackedEntity(playlistVideo.Id);
             if (trackedPlaylistVideo == null)
             {
-                Uow.PlaylistVideos.Add(playlistVideo);
+                Uow.PlaylistVideos.Add(playlistVideo, playlist.Id);
             }
             else
             {

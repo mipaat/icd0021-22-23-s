@@ -23,8 +23,10 @@ public class CommentService : BaseYouTubeService<CommentService>
 
     public async Task UpdateComments(string videoId, CancellationToken ct)
     {
-        var videoData = await YouTubeUow.VideoService.FetchVideoDataYtdl(videoId, true, ct);
+        var maxComments = 800;
+        var videoData = await YouTubeUow.VideoService.FetchVideoDataYtdl(videoId, true, maxComments, ct);
         var commentsFetched = DateTime.UtcNow;
+        Logger.LogInformation("Fetched {commentLength} comments from YouTube for video {videoId}", videoData.Comments.Length, videoId);
 
         VideoWithComments? video = null;
         for (var i = 0; i < 3 && video == null; i++)
@@ -40,18 +42,21 @@ public class CommentService : BaseYouTubeService<CommentService>
 
         video.LastCommentsFetch = commentsFetched;
 
-        await UpdateComments(video, videoData.Comments);
+        await UpdateComments(video, videoData.Comments, maxComments);
     }
 
-    private async Task UpdateComments(VideoWithComments video, CommentData[] commentDatas)
+    private async Task UpdateComments(VideoWithComments video, CommentData[] commentDatas, int maxComments)
     {
         // TODO: What to do if video has 20000 comments? Memory issues?
         var commentsWithoutParent = new List<(Comment Comment, string Parent)>();
-        foreach (var comment in video.Comments)
+        if (commentDatas.Length < maxComments)
         {
-            if (commentDatas.All(c => c.ID != comment.IdOnPlatform))
+            foreach (var comment in video.Comments)
             {
-                comment.DeletedAt = DateTime.UtcNow;
+                if (commentDatas.All(c => c.ID != comment.IdOnPlatform))
+                {
+                    comment.DeletedAt = DateTime.UtcNow;
+                }
             }
         }
 
