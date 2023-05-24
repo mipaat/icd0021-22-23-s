@@ -1,4 +1,3 @@
-using App.BLL.DTO.Entities;
 using App.BLL.DTO.Mappers;
 using AutoMapper;
 
@@ -13,7 +12,7 @@ public class AutoMapperConfig : Profile
             .AddRefreshTokenMap()
             .AddUserMap()
             .AddQueueItemMap()
-            .AddCategoryMap();
-        CreateMap<DAL.DTO.Entities.Comment, Comment>();
+            .AddCategoryMap()
+            .AddCommentMap();
     }
 }

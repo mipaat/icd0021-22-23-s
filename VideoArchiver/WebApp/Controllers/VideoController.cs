@@ -5,6 +5,7 @@ using App.Common;
 using Base.WebHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Utils;
 using WebApp.ViewModels;
 
 namespace WebApp.Controllers;
@@ -46,13 +47,19 @@ public class VideoController : Controller
     }
 
     // GET
-    public async Task<IActionResult> Watch(Guid id, bool embedView = false)
+    public async Task<IActionResult> Watch(Guid id, bool embedView = false, int commentsPage = 0, int commentsLimit = 50)
     {
         if (!await _authorizationService.IsAllowedToAccessVideo(User, id)) return Forbid();
+        commentsLimit = PaginationUtils.ClampLimit(commentsLimit);
+        var video = await _videoPresentationService.GetVideoAsync(id, commentsLimit, commentsPage);
+        var total = video.ArchivedRootCommentCount;
+        PaginationUtils.ConformValues(ref total, ref commentsLimit, ref commentsPage);
         return View(new VideoViewModel
         {
-            Video = await _videoPresentationService.GetVideoAsync(id),
+            Video = video,
             EmbedView = embedView,
+            CommentsPage = commentsPage,
+            CommentsLimit = commentsLimit,
         });
     }
 }

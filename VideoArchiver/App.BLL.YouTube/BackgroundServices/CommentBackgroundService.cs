@@ -84,6 +84,7 @@ public class CommentBackgroundService : BaseYouTubeBackgroundService<CommentBack
         try
         {
             await youTubeUow.CommentService.UpdateComments(videoId, ct);
+            await uow.SaveChangesAsync();
             Logger.LogInformation("Finished updating comments for video {IdOnPlatform} on platform {Platform}", videoId,
                 EPlatform.YouTube);
         }
@@ -97,7 +98,11 @@ public class CommentBackgroundService : BaseYouTubeBackgroundService<CommentBack
             Logger.LogWarning("Cancelled updating comments for video {IdOnPlatform} on platform {Platform}",
                 videoId, EPlatform.YouTube);
         }
-
-        await uow.SaveChangesAsync();
+        catch (Exception e)
+        {
+            Logger.LogError(e,
+                "Exception occurred when updating comments for video {IdOnPlatform} on platform {Platform}.",
+                videoId, EPlatform.YouTube);
+        }
     }
 }

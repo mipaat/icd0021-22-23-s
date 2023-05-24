@@ -82,6 +82,7 @@ public class VideoDownloadBackgroundService : BaseYouTubeBackgroundService<Video
         try
         {
             await youTubeUow.VideoService.DownloadVideo(videoId, ct);
+            await uow.SaveChangesAsync();
         }
         catch (VideoNotFoundOnPlatformException e)
         {
@@ -98,7 +99,11 @@ public class VideoDownloadBackgroundService : BaseYouTubeBackgroundService<Video
             Logger.LogWarning("Cancelled downloading video {IdOnPlatform} on platform {Platform}",
                 videoId, EPlatform.YouTube);
         }
-
-        await uow.SaveChangesAsync();
+        catch (Exception e)
+        {
+            Logger.LogError(e,
+                "Exception occurred when downloading video {IdOnPlatform} on platform {Platform}.",
+                videoId, EPlatform.YouTube);
+        }
     }
 }

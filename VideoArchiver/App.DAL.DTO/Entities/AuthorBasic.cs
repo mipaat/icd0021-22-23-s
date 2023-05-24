@@ -1,11 +1,11 @@
 using App.Common;
 using App.Common.Enums;
+using Domain.Base;
 
 namespace App.DAL.DTO.Entities;
 
-public class AuthorBasic
+public class AuthorBasic : AbstractIdDatabaseEntity
 {
-    public Guid Id { get; set; }
     public string? UserName { get; set; }
     public string? DisplayName { get; set; }
     

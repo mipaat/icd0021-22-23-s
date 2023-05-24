@@ -22,7 +22,6 @@ public class Author : BaseArchiveEntity
 
     public ICollection<VideoAuthor>? VideoAuthors { get; set; }
     public ICollection<PlaylistAuthor>? PlaylistAuthors { get; set; }
-    public ICollection<VideoUploadNotification>? VideoUploadNotifications { get; set; }
     public ICollection<Comment>? Comments { get; set; }
     public ICollection<PlaylistSubscription>? PlaylistSubscriptions { get; set; }
     public ICollection<VideoRating>? VideoRatings { get; set; }

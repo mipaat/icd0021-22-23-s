@@ -14,4 +14,8 @@ public class Video
 
     public EPlatform Platform { get; set; }
     public string IdOnPlatform { get; set; } = default!;
+
+    public int? CommentCount { get; set; }
+    public int ArchivedCommentCount { get; set; }
+    public int ArchivedRootCommentCount { get; set; }
 }

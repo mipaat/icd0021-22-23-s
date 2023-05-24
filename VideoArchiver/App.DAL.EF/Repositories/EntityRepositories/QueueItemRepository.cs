@@ -26,30 +26,30 @@ public class QueueItemRepository : BaseAppEntityRepository<App.Domain.QueueItem,
 
     protected override Domain.QueueItem AfterMap(QueueItem entity, Domain.QueueItem mapped)
     {
-        if (entity.Video != null)
+        if (entity.VideoId != null)
         {
-            var trackedVideo = Uow.Videos.GetTrackedEntity(entity.Video);
+            var trackedVideo = Uow.Videos.GetTrackedEntity(entity.VideoId.Value);
             if (trackedVideo != null)
             {
-                mapped.Video = Uow.Videos.Map(entity.Video, trackedVideo);
+                mapped.Video = trackedVideo;
             }
         }
 
-        if (entity.Playlist != null)
+        if (entity.PlaylistId != null)
         {
-            var trackedPlaylist = Uow.Playlists.GetTrackedEntity(entity.Playlist);
+            var trackedPlaylist = Uow.Playlists.GetTrackedEntity(entity.PlaylistId.Value);
             if (trackedPlaylist != null)
             {
-                mapped.Playlist = Uow.Playlists.Map(entity.Playlist, trackedPlaylist);
+                mapped.Playlist = trackedPlaylist;
             }
         }
 
-        if (entity.Author != null)
+        if (entity.AuthorId != null)
         {
-            var trackedAuthor = Uow.Authors.GetTrackedEntity(entity.Author);
+            var trackedAuthor = Uow.Authors.GetTrackedEntity(entity.AuthorId.Value);
             if (trackedAuthor != null)
             {
-                mapped.Author = Uow.Authors.Map(entity.Author, trackedAuthor);
+                mapped.Author = trackedAuthor;
             }
         }
 

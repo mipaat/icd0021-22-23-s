@@ -6,7 +6,7 @@ namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
 public interface IVideoAuthorRepository : IBaseEntityRepository<App.Domain.VideoAuthor, VideoAuthor>
 {
-    public Task SetVideoAuthor(Video video, Author author,
+    public Task SetVideoAuthor(Guid videoId, Guid authorId,
         EAuthorRole authorRole = EAuthorRole.Publisher);
 
     public Task<ICollection<VideoAuthor>> GetAllByVideoAndAuthor(Video video, Author author,

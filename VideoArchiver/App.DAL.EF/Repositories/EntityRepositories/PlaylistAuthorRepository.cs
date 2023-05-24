@@ -26,47 +26,31 @@ public class PlaylistAuthorRepository : BaseAppEntityRepository<App.Domain.Playl
 
     protected override Domain.PlaylistAuthor AfterMap(PlaylistAuthor entity, Domain.PlaylistAuthor mapped)
     {
-        if (entity.Author != null)
+        var trackedAuthor = Uow.Authors.GetTrackedEntity(entity.AuthorId);
+        if (trackedAuthor != null)
         {
-            var trackedAuthor = Uow.Authors.GetTrackedEntity(entity.Author);
-            if (trackedAuthor != null)
-            {
-                mapped.Author = Uow.Authors.Map(entity.Author, trackedAuthor);
-            }
-            else
-            {
-                mapped.Author = Uow.Authors.Map(entity.Author);
-            }
+            mapped.Author = trackedAuthor;
         }
 
-        if (entity.Playlist != null)
+        var trackedPlaylist = Uow.Playlists.GetTrackedEntity(entity.PlaylistId);
+        if (trackedPlaylist != null)
         {
-            var trackedPlaylist = Uow.Playlists.GetTrackedEntity(entity.Playlist);
-            if (trackedPlaylist != null)
-            {
-                mapped.Playlist = Uow.Playlists.Map(entity.Playlist, trackedPlaylist);
-            }
-            else
-            {
-                mapped.Playlist = Uow.Playlists.Map(entity.Playlist);
-            }
+            mapped.Playlist = trackedPlaylist;
         }
 
         return mapped;
     }
 
-    public async Task SetPlaylistAuthor(Playlist playlist, Author author,
+    public async Task SetPlaylistAuthor(Guid playlistId, Guid authorId,
         EAuthorRole authorRole = EAuthorRole.Publisher)
     {
-        var playlistAuthors = await GetAllByPlaylistAndAuthor(playlist, author, authorRole);
+        var playlistAuthors = await GetAllByPlaylistAndAuthor(playlistId, authorId, authorRole);
         if (playlistAuthors.Count > 0) return;
 
         var playlistAuthor = new PlaylistAuthor
         {
-            Playlist = playlist,
-            PlaylistId = playlist.Id,
-            Author = author,
-            AuthorId = author.Id,
+            PlaylistId = playlistId,
+            AuthorId = authorId,
             Role = authorRole,
         };
 

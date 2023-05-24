@@ -32,6 +32,10 @@ public abstract class BaseLockedTimedBackgroundService<TService> : BaseTimedBack
         {
             await DoLockedWork(state);
         }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Exception occurred when executing background service {ServiceType}.", typeof(TService));
+        }
         finally
         {
             lock (_lock)

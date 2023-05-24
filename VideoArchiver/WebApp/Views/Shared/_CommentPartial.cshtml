@@ -1,0 +1,18 @@
+@model App.BLL.DTO.Entities.Comment
+
+<div>
+    @Model.Author.DisplayName
+    @Model.Content
+</div>
+@if (Model.Replies.Count > 0)
+{
+    <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#comment-@Model.Id-collapse" aria-expanded="False" aria-controls="comment-@Model.Id-collapse">
+        @Model.Replies.Count replies
+    </button>
+    <div class="collapse" id="comment-@Model.Id-collapse">
+        @foreach (var reply in Model.Replies)
+        {
+            <partial name="_CommentPartial" model="@reply"/>
+        }
+    </div>
+}

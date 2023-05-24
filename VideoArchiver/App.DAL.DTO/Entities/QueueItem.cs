@@ -30,11 +30,8 @@ public class QueueItem : AbstractIdDatabaseEntity
 
     public DateTime? CompletedAt { get; set; }
 
-    public Author? Author { get; set; }
     public Guid? AuthorId { get; set; }
-    public Video? Video { get; set; }
     public Guid? VideoId { get; set; }
-    public Playlist? Playlist { get; set; }
     public Guid? PlaylistId { get; set; }
 
     public QueueItem()
@@ -57,7 +54,6 @@ public class QueueItem : AbstractIdDatabaseEntity
     public QueueItem(Video video, Guid submitterId, bool autoSubmit) :
         this(video.IdOnPlatform, video.Platform, EEntityType.Video, submitterId, autoSubmit)
     {
-        Video = video;
         VideoId = video.Id;
 
         CompletedAt = DateTime.UtcNow;
@@ -66,7 +62,6 @@ public class QueueItem : AbstractIdDatabaseEntity
     public QueueItem(Playlist playlist, Guid submitterId, bool autoSubmit) :
         this(playlist.IdOnPlatform, playlist.Platform, EEntityType.Playlist, submitterId, autoSubmit)
     {
-        Playlist = playlist;
         PlaylistId = playlist.Id;
 
         CompletedAt = DateTime.UtcNow;
@@ -75,7 +70,6 @@ public class QueueItem : AbstractIdDatabaseEntity
     public QueueItem(Author author, Guid submitterId, bool autoSubmit) :
         this(author.IdOnPlatform, author.Platform, EEntityType.Author, submitterId, autoSubmit)
     {
-        Author = author;
         AuthorId = author.Id;
 
         CompletedAt = DateTime.UtcNow;

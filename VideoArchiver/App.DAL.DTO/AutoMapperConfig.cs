@@ -26,13 +26,18 @@ public class AutoMapperConfig : Profile
         CreateMap<Domain.AuthorCategory, AuthorCategoryOnlyIds>().ReverseMap();
         CreateMap<AuthorHistory, Domain.AuthorHistory>().ReverseMap();
         CreateMap<AuthorRating, Domain.AuthorRating>().ReverseMap();
+        CreateMap<Author, AuthorBasic>();
 
         CreateMap<CategoryWithCreator, Domain.Category>()
             .ReverseMap();
         CreateMap<Domain.Category, CategoryWithCreatorAndVideoAssignments>()
             .ReverseMap().ForMember(c => c.VideoCategories, o => o.Ignore());
+
         CreateMap<Comment, Domain.Comment>().ReverseMap();
         CreateMap<CommentHistory, Domain.CommentHistory>().ReverseMap();
+        CreateMap<Domain.Comment, CommentRoot>();
+        CreateMap<Domain.Comment, CommentChild>();
+
         CreateMap<PlaylistAuthor, Domain.PlaylistAuthor>().ReverseMap();
         CreateMap<PlaylistCategory, Domain.PlaylistCategory>().ReverseMap();
         CreateMap<Domain.PlaylistCategory, PlaylistCategoryOnlyIds>().ReverseMap();
@@ -52,7 +57,6 @@ public class AutoMapperConfig : Profile
         CreateMap<Domain.VideoCategory, VideoCategoryOnlyIds>().ReverseMap();
         CreateMap<VideoHistory, Domain.VideoHistory>().ReverseMap();
         CreateMap<VideoRating, Domain.VideoRating>().ReverseMap();
-        CreateMap<VideoUploadNotification, Domain.VideoUploadNotification>().ReverseMap();
 
         CreateMap<Playlist, App.Domain.Playlist>().ReverseMap();
         CreateMap<App.Domain.Playlist, PlaylistWithBasicVideoData>().ReverseMap();
@@ -65,8 +69,17 @@ public class AutoMapperConfig : Profile
         CreateMap<App.Domain.Video, VideoWithComments>()
             .ForMember(v => v.Comments,
                 o => o.MapFrom(v => v.Comments));
-        CreateMap<App.Domain.Video, VideoWithBasicAuthors>().ReverseMap();
-        CreateMap<App.Domain.Video, VideoWithBasicAuthorsAndComments>();
+        CreateMap<App.Domain.Video, VideoWithBasicAuthors>()
+            .ForMember(v => v.ArchivedCommentCount,
+                o => o.MapFrom(v => v.Comments!.Count))
+            .ForMember(v => v.ArchivedRootCommentCount,
+                o => o.MapFrom(v => v.Comments!.Count(c => c.ConversationRootId == null)));
+        CreateMap<VideoWithBasicAuthors, App.Domain.Video>();
+        CreateMap<App.Domain.Video, VideoWithBasicAuthorsAndComments>()
+            .ForMember(v => v.ArchivedCommentCount,
+                o => o.MapFrom(v => v.Comments!.Count))
+            .ForMember(v => v.ArchivedRootCommentCount,
+                o => o.MapFrom(v => v.Comments!.Count(c => c.ConversationRootId == null)));
         CreateMap<App.Domain.Video, BasicVideoData>().ReverseMap();
 
         CreateMap<App.Domain.EntityAccessPermission, EntityAccessPermission>().ReverseMap();

@@ -26,7 +26,8 @@ public class CommentService : BaseYouTubeService<CommentService>
         var maxComments = 800;
         var videoData = await YouTubeUow.VideoService.FetchVideoDataYtdl(videoId, true, maxComments, ct);
         var commentsFetched = DateTime.UtcNow;
-        Logger.LogInformation("Fetched {commentLength} comments from YouTube for video {videoId}", videoData.Comments.Length, videoId);
+        Logger.LogInformation("Fetched {commentLength} comments from YouTube for video {videoId}",
+            videoData.Comments.Length, videoId);
 
         VideoWithComments? video = null;
         for (var i = 0; i < 3 && video == null; i++)
@@ -41,6 +42,7 @@ public class CommentService : BaseYouTubeService<CommentService>
         }
 
         video.LastCommentsFetch = commentsFetched;
+        Uow.Videos.Update(video);
 
         await UpdateComments(video, videoData.Comments, maxComments);
     }
@@ -48,7 +50,10 @@ public class CommentService : BaseYouTubeService<CommentService>
     private async Task UpdateComments(VideoWithComments video, CommentData[] commentDatas, int maxComments)
     {
         // TODO: What to do if video has 20000 comments? Memory issues?
+        // Update: Currently limiting amount of comments fetched from YT. Reassess later?
         var commentsWithoutParent = new List<(Comment Comment, string Parent)>();
+        var commentsWithoutRoot = new List<(Comment Comment, string Root)>();
+
         if (commentDatas.Length < maxComments)
         {
             foreach (var comment in video.Comments)
@@ -60,6 +65,12 @@ public class CommentService : BaseYouTubeService<CommentService>
             }
         }
 
+        var authorFetchArgs = commentDatas.Where(c => video.Comments
+                .All(e => e.IdOnPlatform != c.ID))
+            .DistinctBy(c => c.AuthorID)
+            .Select(c => new AuthorFetchArg(c.AuthorID, c.ToDalAuthor));
+        var addedOrFetchedAuthors = await YouTubeUow.AuthorService.AddOrGetAuthors(authorFetchArgs);
+
         foreach (var commentData in commentDatas)
         {
             var comment = commentData.ToDalComment();
@@ -70,8 +81,7 @@ public class CommentService : BaseYouTubeService<CommentService>
                 continue;
             }
 
-            await YouTubeUow.AuthorService.AddAndSetAuthorIfNotSet(comment, commentData);
-            comment.Video = video;
+            comment.AuthorId = addedOrFetchedAuthors.First(a => a.IdOnPlatform == commentData.AuthorID).Id;
             comment.VideoId = video.Id;
             if (commentData.Parent != "root")
             {
@@ -84,6 +94,17 @@ public class CommentService : BaseYouTubeService<CommentService>
                 {
                     comment.ReplyTarget = addedParentComment;
                 }
+
+                var rootId = commentData.Parent.Split('.')[0];
+                var addedRootComment = video.Comments.SingleOrDefault(c => c.IdOnPlatform == rootId);
+                if (addedRootComment == null)
+                {
+                    commentsWithoutRoot.Add((comment, rootId));
+                }
+                else
+                {
+                    comment.ConversationRoot = addedRootComment;
+                }
             }
 
             video.Comments.Add(comment);
@@ -95,6 +116,14 @@ public class CommentService : BaseYouTubeService<CommentService>
         {
             var parent = video.Comments.Single(c => c.IdOnPlatform == commentWithoutParent.Parent);
             commentWithoutParent.Comment.ReplyTarget = parent;
+            Uow.Comments.Update(commentWithoutParent.Comment);
+        }
+
+        foreach (var commentWithoutRoot in commentsWithoutRoot)
+        {
+            var root = video.Comments.Single(c => c.IdOnPlatform == commentWithoutRoot.Root);
+            commentWithoutRoot.Comment.ConversationRoot = root;
+            Uow.Comments.Update(commentWithoutRoot.Comment);
         }
     }
 }

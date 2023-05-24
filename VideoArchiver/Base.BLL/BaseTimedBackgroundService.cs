@@ -21,8 +21,8 @@ public abstract class BaseTimedBackgroundService<TService> : IHostedService, IDi
     {
         Logger.LogInformation("Starting background service");
 
-        Timer = new Timer(DoWork, null, TimeSpan.Zero, _period);
-        
+        Timer = new Timer(DoWorkInternal, null, TimeSpan.Zero, _period);
+
         return Task.CompletedTask;
     }
 
@@ -31,11 +31,24 @@ public abstract class BaseTimedBackgroundService<TService> : IHostedService, IDi
         Logger.LogInformation("Stopping background service");
 
         Timer?.Change(Timeout.Infinite, 0);
-        
+
         return Task.CompletedTask;
     }
 
     protected abstract void DoWork(object? _);
+
+    private void DoWorkInternal(object? _)
+    {
+        try
+        {
+            DoWork(_);
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Exception occurred when executing background service {ServiceType}.",
+                typeof(TService));
+        }
+    }
 
     protected virtual void Dispose(bool disposing)
     {

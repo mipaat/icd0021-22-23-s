@@ -1,5 +1,8 @@
 @using Base.WebHelpers
 @using App.Common.Enums
+@using Utils
+@using WebApp.Controllers
+@using WebApp.ViewModels
 @model WebApp.ViewModels.VideoViewModel
 
 @{
@@ -28,12 +31,15 @@ else
 <p>@Model.Video.Description</p>
 
 <div>
+    <h4>Comments</h4>
+    Comments on platform: @Model.Video.CommentCount Archived root comments: @Model.Video.ArchivedRootCommentCount Archived total comments: @Model.Video.ArchivedCommentCount
+    @if (!PaginationUtils.IsOnlyPage(Model.Video.ArchivedRootCommentCount, Model.CommentsLimit))
+    {
+        <partial name="_PaginationUiPartial" model="@PaginationViewModel"/>
+    }
     @foreach (var comment in Model.Video.Comments)
     {
-        <div>
-            @comment.Author.DisplayName
-            @comment.Content
-        </div>
+        <partial name="_CommentPartial" model="@comment"/>
     }
 </div>
 
@@ -41,4 +47,16 @@ else
 {
     bool VideoCanBeEmbedded => Model.Video.EmbedUrl != null || Model.Video.Url != null;
     bool ShowEmbedView => Model.EmbedView && VideoCanBeEmbedded;
+
+    PaginationUiPartialViewModel PaginationViewModel => new()
+    {
+        ControllerName = nameof(VideoController),
+        ActionName = nameof(VideoController.Watch),
+        RouteValues = new { Model.Video.Id, Model.EmbedView },
+        LimitParamName = nameof(Model.CommentsLimit),
+        PageParamName = nameof(Model.CommentsPage),
+        Limit = Model.CommentsLimit,
+        Page = Model.CommentsPage,
+        Total = Model.Video.ArchivedRootCommentCount,
+    };
 }

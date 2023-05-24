@@ -26,38 +26,30 @@ public class VideoAuthorRepository : BaseAppEntityRepository<App.Domain.VideoAut
 
     protected override Domain.VideoAuthor AfterMap(VideoAuthor entity, Domain.VideoAuthor mapped)
     {
-        if (entity.Author != null)
+        var trackedAuthor = Uow.Authors.GetTrackedEntity(entity.AuthorId);
+        if (trackedAuthor != null)
         {
-            var trackedAuthor = Uow.Authors.GetTrackedEntity(entity.Author);
-            if (trackedAuthor != null)
-            {
-                mapped.Author = Uow.Authors.Map(entity.Author, trackedAuthor);
-            }
+            mapped.Author = trackedAuthor;
         }
 
-        if (entity.Video != null)
+        var trackedVideo = Uow.Videos.GetTrackedEntity(entity.VideoId);
+        if (trackedVideo != null)
         {
-            var trackedVideo = Uow.Videos.GetTrackedEntity(entity.Video);
-            if (trackedVideo != null)
-            {
-                mapped.Video = Uow.Videos.Map(entity.Video, trackedVideo);
-            }
+            mapped.Video = trackedVideo;
         }
 
         return mapped;
     }
 
-    public async Task SetVideoAuthor(Video video, Author author, EAuthorRole authorRole = EAuthorRole.Publisher)
+    public async Task SetVideoAuthor(Guid videoId, Guid authorId, EAuthorRole authorRole = EAuthorRole.Publisher)
     {
-        var videoAuthors = await GetAllByVideoAndAuthor(video, author, authorRole);
+        var videoAuthors = await GetAllByVideoAndAuthor(videoId, authorId, authorRole);
         if (videoAuthors.Count > 0) return;
 
         var videoAuthor = new VideoAuthor
         {
-            Video = video,
-            VideoId = video.Id,
-            Author = author,
-            AuthorId = author.Id,
+            VideoId = videoId,
+            AuthorId = authorId,
             Role = authorRole,
         };
 

@@ -11,72 +11,75 @@ namespace App.BLL.YouTube.Services;
 
 public class AuthorService : BaseYouTubeService<AuthorService>
 {
-    private readonly Dictionary<string, Author> _cachedAuthors = new();
+    private readonly Dictionary<string, AuthorBasic> _cachedAuthors = new();
 
     public AuthorService(ServiceUow serviceUow, ILogger<AuthorService> logger, YouTubeUow youTubeUow, IMapper mapper) : base(serviceUow,
         logger, youTubeUow, mapper)
     {
     }
 
-    public async Task AddAndSetAuthorIfNotSet(Video domainVideo, VideoData videoData)
+    public async Task AddAndSetAuthorIfNotSet(Video video, VideoData videoData)
     {
-        var domainAuthor = await AddOrGetAuthor(videoData);
-        await Uow.VideoAuthors.SetVideoAuthor(domainVideo, domainAuthor);
+        var author = await AddOrGetAuthor(videoData);
+        await Uow.VideoAuthors.SetVideoAuthor(video.Id, author.Id);
     }
 
-    public async Task AddAndSetAuthorIfNotSet(Comment comment, CommentData commentData)
+    public async Task AddAndSetAuthorIfNotSet(Playlist playlist, VideoData playlistData)
     {
-        var author = await AddOrGetAuthor(commentData);
-        comment.Author = author;
-        comment.AuthorId = author.Id;
+        var author = await AddOrGetAuthor(playlistData);
+        await Uow.PlaylistAuthors.SetPlaylistAuthor(playlist.Id, author.Id);
     }
 
-    public async Task AddAndSetAuthorIfNotSet(Playlist domainPlaylist, VideoData playlistData)
-    {
-        var domainAuthor = await AddOrGetAuthor(playlistData);
-        await Uow.PlaylistAuthors.SetPlaylistAuthor(domainPlaylist, domainAuthor);
-    }
-
-    private async Task<Author> AddOrGetAuthor(VideoData videoData)
+    private async Task<AuthorBasic> AddOrGetAuthor(VideoData videoData)
     {
         return await AddOrGetAuthor(videoData.ChannelID, () => videoData.ToDalAuthor());
     }
 
-    private async Task<Author> AddOrGetAuthor(CommentData commentData)
+    private async Task<AuthorBasic> AddOrGetAuthor(string id, Func<Author> newAuthorFunc)
     {
-        return await AddOrGetAuthor(commentData.AuthorID, commentData.ToDalAuthor);
+        return (await AddOrGetAuthors(new[] { new AuthorFetchArg(id, newAuthorFunc) })).First();
     }
 
-    private async Task<Author> AddOrGetAuthor(string id, Func<Author> newAuthorFunc)
+    internal async Task<ICollection<AuthorBasic>> AddOrGetAuthors(IEnumerable<AuthorFetchArg> authorFetchArgs)
     {
-        if (id == "UCQ8FGmJWvddOBx7hCJxvfzA")
+        ICollection<AuthorBasic> authors = new List<AuthorBasic>();
+        var notCachedIds = new List<AuthorFetchArg>();
+        foreach (var arg in authorFetchArgs)
         {
-            Logger.LogInformation("GOOFY AHH");
-        }
-        var author = await GetDbOrCachedAuthor(id);
-        if (author == null)
-        {
-            author = newAuthorFunc();
-            Uow.Authors.Add(author);
-            await ServiceUow.ImageService.UpdateProfileImages(author);
-            _cachedAuthors.TryAdd(id, author);
-        }
-
-        return author;
-    }
-
-    private async Task<Author?> GetDbOrCachedAuthor(string id)
-    {
-        var author = _cachedAuthors.GetValueOrDefault(id);
-        if (author == null)
-        {
-            author = await Uow.Authors.GetByIdOnPlatformAsync(id, EPlatform.YouTube);
+            var author = _cachedAuthors.GetValueOrDefault(arg.AuthorId);
             if (author != null)
             {
-                _cachedAuthors.TryAdd(id, author);
+                authors.Add(author);
+            }
+            else
+            {
+                notCachedIds.Add(arg);
             }
         }
 
-        return author;
+        var fetchedAuthors = await Uow.Authors.GetAllBasicByIdsOnPlatformAsync(notCachedIds.Select(e => e.AuthorId), EPlatform.YouTube);
+
+        foreach (var arg in notCachedIds)
+        {
+            var fetchedAuthor = fetchedAuthors.FirstOrDefault(a => a.IdOnPlatform == arg.AuthorId);
+            if (fetchedAuthor != null)
+            {
+                _cachedAuthors.TryAdd(arg.AuthorId, fetchedAuthor);
+                authors.Add(fetchedAuthor);
+            }
+            else
+            {
+                var author = arg.NewAuthorFunc();
+                Uow.Authors.Add(author);
+                await ServiceUow.ImageService.UpdateProfileImages(author);
+                var basicAuthor = Mapper.Map<AuthorBasic>(author);
+                _cachedAuthors.TryAdd(arg.AuthorId, basicAuthor);
+                authors.Add(basicAuthor);
+            }
+        }
+
+        return authors;
     }
 }
+
+internal record AuthorFetchArg(string AuthorId, Func<Author> NewAuthorFunc);

@@ -44,7 +44,6 @@ public class AbstractAppDbContext : IdentityDbContext<User, Role, Guid, Identity
     public DbSet<PlaylistAuthor> PlaylistAuthors { get; set; } = default!;
     public DbSet<PlaylistVideo> PlaylistVideos { get; set; } = default!;
 
-    public DbSet<VideoUploadNotification> VideoUploadNotifications { get; set; } = default!;
     public DbSet<PlaylistSubscription> PlaylistSubscriptions { get; set; } = default!;
     public DbSet<StatusChangeEvent> StatusChangeEvents { get; set; } = default!;
     public DbSet<StatusChangeNotification> StatusChangeNotifications { get; set; } = default!;

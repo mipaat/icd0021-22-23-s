@@ -24,12 +24,12 @@ public class VideoPresentationService : BaseService<VideoPresentationService>
         _videoPresentationHandlers = videoPresentationHandlers;
     }
 
-    public async Task<VideoWithAuthorAndComments> GetVideoAsync(Guid id)
+    public async Task<VideoWithAuthorAndComments> GetVideoAsync(Guid id, int limit, int page)
     {
-        var dalVideo = await Uow.Videos.GetByIdWithBasicAuthorsAndCommentsAsync(id);
+        var dalVideo = await Uow.Videos.GetByIdWithBasicAuthorsAsync(id);
         if (dalVideo == null) throw new VideoNotFoundInArchiveException(id);
 
-        var video = _videoMapper.Map(dalVideo);
+        var video = await ServiceUow.CommentService.LoadVideoComments(_videoMapper.Map(dalVideo), limit, page);
 
         foreach (var presentationHandler in _videoPresentationHandlers)
         {

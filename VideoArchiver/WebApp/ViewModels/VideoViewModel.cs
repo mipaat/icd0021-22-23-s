@@ -7,4 +7,6 @@ public class VideoViewModel
 {
     public bool EmbedView { get; set; }
     public VideoWithAuthorAndComments Video { get; set; } = default!;
+    public int CommentsPage { get; set; }
+    public int CommentsLimit { get; set; }
 }

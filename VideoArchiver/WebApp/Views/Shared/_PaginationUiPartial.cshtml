@@ -1,0 +1,53 @@
+@using Utils
+@model WebApp.ViewModels.PaginationUiPartialViewModel
+
+<div>
+    @if (Model.Page > 0)
+    {
+        <a asp-action="@Model.ActionName" asp-controller="@ControllerName"
+           asp-all-route-data="@GetDictionary(Model.RouteValues, 0)">
+            First
+        </a>
+        @if (Model.Page > 1)
+        {
+            <a asp-action="@Model.ActionName" asp-controller="@ControllerName"
+               asp-all-route-data="@GetDictionary(Model.RouteValues, Model.Page - 1)">
+                Previous
+            </a>
+        }
+    }
+    @if (!PaginationUtils.IsLastPage(Model.Total, Model.Limit, Model.Page))
+    {
+        @if (Model.Page < PaginationUtils.GetLastPage(Model.Total, Model.Limit) - 1)
+        {
+            <a asp-action="@Model.ActionName" asp-controller="@ControllerName"
+               asp-all-route-data="@GetDictionary(Model.RouteValues, Model.Page + 1)">
+                Next
+            </a>
+        }
+        <a asp-action="@Model.ActionName" asp-controller="@ControllerName"
+           asp-all-route-data="@GetDictionary(Model.RouteValues, PaginationUtils.GetLastPage(Model.Total, Model.Limit))">
+            Last
+        </a>
+    }
+</div>
+
+@functions
+{
+    private string ControllerName => Model.ControllerName.EndsWith("Controller") ?
+        Model.ControllerName.Remove(Model.ControllerName.Length - "Controller".Length) :
+        Model.ControllerName;
+
+    private IDictionary<string, string> GetDictionary(object? routeValues, int page)
+    {
+        var result = new Dictionary<string, string>();
+        if (routeValues != null)
+        {
+            var routeValueDictionary = new RouteValueDictionary(routeValues);
+            result = routeValueDictionary.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToString() ?? "");
+        }
+        result[Model.PageParamName] = $"{page}";
+        result[Model.LimitParamName] = $"{Model.Limit}";
+        return result;
+    }
+}

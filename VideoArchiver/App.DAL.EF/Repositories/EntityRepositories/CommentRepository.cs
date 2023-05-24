@@ -2,6 +2,7 @@ using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DAL.EF.Repositories.EntityRepositories;
@@ -40,24 +41,31 @@ public class CommentRepository : BaseAppEntityRepository<App.Domain.Comment, Com
             }
         }
 
-        if (entity.Author != null)
+        var author = Uow.Authors.GetTrackedEntity(entity.AuthorId);
+        if (author != null)
         {
-            var author = Uow.Authors.GetTrackedEntity(entity.Author);
-            if (author != null)
-            {
-                mapped.Author = Uow.Authors.Map(entity.Author, author);
-            }
+            mapped.Author = author;
         }
 
-        if (entity.Video != null)
+        var video = Uow.Videos.GetTrackedEntity(entity.VideoId);
+        if (video != null)
         {
-            var video = Uow.Videos.GetTrackedEntity(entity.Video);
-            if (video != null)
-            {
-                mapped.Video = Uow.Videos.Map(entity.Video, video);
-            }
+            mapped.Video = video;
         }
 
         return mapped;
+    }
+
+    public async Task<ICollection<CommentRoot>> GetCommentRootsForVideo(Guid videoId, int limit, int skipAmount = 0)
+    {
+        return await Entities
+            .Where(c => c.VideoId == videoId && c.ConversationRootId == null)
+            .OrderByDescending(c => c.CreatedAt)
+            .ThenByDescending(c => c.Id)
+            .Skip(skipAmount)
+            .Take(limit)
+            .Include(c => c.ConversationReplies!.OrderBy(e => e.CreatedAt))
+            .ProjectTo<CommentRoot>(Mapper.ConfigurationProvider)
+            .ToListAsync();
     }
 }

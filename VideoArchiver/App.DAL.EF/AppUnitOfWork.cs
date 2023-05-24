@@ -114,11 +114,6 @@ public class AppUnitOfWork : BaseUnitOfWork<AbstractAppDbContext>, IAppUnitOfWor
     private IVideoRepository? _videos;
     public IVideoRepository Videos => _videos ??= new VideoRepository(DbContext, _mapper, this);
 
-    private IVideoUploadNotificationRepository? _videoUploadNotifications;
-
-    public IVideoUploadNotificationRepository VideoUploadNotifications =>
-        _videoUploadNotifications ??= new VideoUploadNotificationRepository(DbContext, _mapper, this);
-
     private IApiQuotaUsageRepository? _apiQuotaUsages;
 
     public IApiQuotaUsageRepository ApiQuotaUsages =>

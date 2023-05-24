@@ -51,4 +51,7 @@ public class ServiceUow : BaseAppUowContainer
 
     public VideoPresentationService VideoPresentationService =>
         _videoPresentationService ??= Services.GetRequiredService<VideoPresentationService>();
+
+    private CommentService? _commentService;
+    public CommentService CommentService => _commentService ??= Services.GetRequiredService<CommentService>();
 }

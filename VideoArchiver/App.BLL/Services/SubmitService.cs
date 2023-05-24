@@ -69,14 +69,12 @@ public class SubmitService : BaseService<SubmitService>
         {
             case EEntityType.Video:
                 var video = await handler.SubmitVideo(queueItem.IdOnPlatform);
-                queueItem.Video = video;
                 queueItem.VideoId = video.Id;
                 if (queueItem.GrantAccess)
                     await ServiceUow.AuthorizationService.AuthorizeVideoIfNotAuthorized(queueItem.AddedById, video.Id);
                 break;
             case EEntityType.Playlist:
                 var playlist = await handler.SubmitPlaylist(queueItem.IdOnPlatform);
-                queueItem.Playlist = playlist;
                 queueItem.PlaylistId = playlist.Id;
                 if (queueItem.GrantAccess)
                     await ServiceUow.AuthorizationService.AuthorizePlaylistIfNotAuthorized(queueItem.AddedById,
@@ -84,7 +82,6 @@ public class SubmitService : BaseService<SubmitService>
                 break;
             case EEntityType.Author:
                 var author = await handler.SubmitAuthor(queueItem.IdOnPlatform);
-                queueItem.Author = author;
                 queueItem.AuthorId = author.Id;
                 if (queueItem.GrantAccess)
                     await ServiceUow.AuthorizationService.AuthorizeAuthorIfNotAuthorized(queueItem.AddedById,

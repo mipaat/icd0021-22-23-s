@@ -11,4 +11,7 @@ public interface IAuthorRepository : IBaseEntityRepository<App.Domain.Author, Au
     public Task<ICollection<Author>> GetAllUserSubAuthors(Guid userId);
 
     public Task<bool> IsUserSubAuthor(Guid authorId, Guid userId);
+
+    public Task<ICollection<AuthorBasic>> GetAllBasicByIdsOnPlatformAsync(IEnumerable<string> idsOnPlatform,
+        EPlatform platform);
 }

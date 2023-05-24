@@ -5,9 +5,7 @@ namespace App.DAL.DTO.Entities;
 
 public class Comment : BaseArchiveEntityNonMonitored
 {
-    public Author? Author { get; set; }
     public Guid AuthorId { get; set; }
-    public Video? Video { get; set; }
     public Guid VideoId { get; set; }
     [ForeignKey(nameof(ReplyTargetId))]
     public Comment? ReplyTarget { get; set; }

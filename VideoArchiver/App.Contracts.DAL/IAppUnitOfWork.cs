@@ -29,7 +29,6 @@ public interface IAppUnitOfWork : IBaseUnitOfWork
     public IVideoHistoryRepository VideoHistories { get; }
     public IVideoRatingRepository VideoRatings { get; }
     public IVideoRepository Videos { get; }
-    public IVideoUploadNotificationRepository VideoUploadNotifications { get; }
 
     public IRefreshTokenRepository RefreshTokens { get; }
     public IUserRepository Users { get; }

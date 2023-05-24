@@ -21,6 +21,13 @@ public class VideoMapper
     {
         return _mapper.Map<VideoWithAuthor>(video);
     }
+
+    public VideoWithAuthorAndComments Map(VideoWithAuthor video, ICollection<Comment> comments)
+    {
+        var result = _mapper.Map<VideoWithAuthorAndComments>(video);
+        result.Comments = comments;
+        return result;
+    }
 }
 
 public static partial class AutoMapperConfigExtensions
@@ -33,6 +40,9 @@ public static partial class AutoMapperConfigExtensions
         config.CreateMap<DAL.DTO.Entities.VideoWithBasicAuthors, VideoWithAuthor>()
             .ForMember(v => v.Author, o =>
                 o.MapFrom(v => v.Authors.First()));
+        config.CreateMap<VideoWithAuthor, VideoWithAuthorAndComments>()
+            .ForMember(v => v.Comments,
+                o => o.Ignore());
         return config;
     }
 }

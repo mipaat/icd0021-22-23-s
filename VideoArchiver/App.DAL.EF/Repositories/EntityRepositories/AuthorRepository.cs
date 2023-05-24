@@ -31,4 +31,13 @@ public class AuthorRepository : BaseAppEntityRepository<App.Domain.Author, Autho
     {
         return await Entities.Where(a => a.Id == authorId && a.UserId == userId).AnyAsync();
     }
+
+    public async Task<ICollection<AuthorBasic>> GetAllBasicByIdsOnPlatformAsync(IEnumerable<string> idsOnPlatform, EPlatform platform)
+    {
+        return AttachIfNotAttached<ICollection<AuthorBasic>, AuthorBasic>(
+            await Entities
+                .Where(e => e.Platform == platform && idsOnPlatform.Contains(e.IdOnPlatform))
+                .ProjectTo<AuthorBasic>(Mapper.ConfigurationProvider)
+                .ToListAsync());
+    }
 }
