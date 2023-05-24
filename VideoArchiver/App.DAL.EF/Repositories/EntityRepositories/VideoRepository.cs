@@ -137,6 +137,12 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
             .ToListAsync();
     }
 
+    public async Task SetInternalPrivacyStatus(Guid videoId, EPrivacyStatus status)
+    {
+        await Entities.Where(v => v.Id == videoId)
+            .ExecuteUpdateAsync(e => e.SetProperty(v => v.InternalPrivacyStatus, status));
+    }
+
     public async Task<VideoWithComments?> GetByIdOnPlatformWithCommentsAsync(string idOnPlatform, EPlatform platform)
     {
         return AttachIfNotAttached(await Entities

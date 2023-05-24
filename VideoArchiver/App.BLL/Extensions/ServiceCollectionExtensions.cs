@@ -23,6 +23,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<CategoryService>();
         services.AddScoped<CommentService>();
         services.AddScoped<AuthorService>();
+        services.AddScoped<VideoService>();
 
         services.AddHostedService<QueueItemBackgroundService>();
     }

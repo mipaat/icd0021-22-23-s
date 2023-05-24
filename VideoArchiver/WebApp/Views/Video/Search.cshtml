@@ -14,9 +14,7 @@
     <label asp-for="AuthorQuery">Search author name:</label>
     <input asp-for="AuthorQuery"/>
     <label asp-for="SortingOptions">Sort by</label>
-    <select asp-for="SortingOptions" asp-items="@(Html.GetEnumSelectList<EVideoSortingOptions>())">
-        <option selected="selected" value="@EVideoSortingOptions.CreatedAt">@EVideoSortingOptions.CreatedAt</option>
-    </select>
+    <select asp-for="SortingOptions" asp-items="@(Html.GetEnumSelectList<EVideoSortingOptions>())"></select>
     <label asp-for="Descending">Sort descending</label>
     <input asp-for="Descending"/>
     <partial name="_CategoryPickerPartial" model="@Model.CategoryPickerViewModel" />

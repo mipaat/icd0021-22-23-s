@@ -110,4 +110,13 @@ public static class InputHelpers
         var lines = text.Split("\n").Select(html.Encode);
         return html.Raw(string.Join("<br/>", lines));
     }
+
+    public static IEnumerable<SelectListItem> GetEnumSelectList<TEnum>(this IHtmlHelper html, TEnum value) where TEnum : struct
+    {
+        var selectList = html.GetEnumSelectList<TEnum>();
+        var selectListItems = selectList.ToList();
+        var selected = selectListItems.FirstOrDefault(e => e.Value == Convert.ToInt32(value).ToString());
+        if (selected != null) selected.Selected = true;
+        return selectListItems;
+    }
 }

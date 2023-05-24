@@ -57,4 +57,7 @@ public class ServiceUow : BaseAppUowContainer
 
     private AuthorService? _authorService;
     public AuthorService AuthorService => _authorService ??= Services.GetRequiredService<AuthorService>();
+
+    private VideoService? _videoService;
+    public VideoService VideoService => _videoService ??= Services.GetRequiredService<VideoService>();
 }

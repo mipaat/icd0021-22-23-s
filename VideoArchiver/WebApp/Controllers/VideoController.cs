@@ -1,4 +1,5 @@
 #pragma warning disable 1591
+using App.BLL.DTO.Enums;
 using App.BLL.Identity.Services;
 using App.BLL.Services;
 using App.Common;
@@ -16,14 +17,16 @@ public class VideoController : Controller
     private readonly AuthorizationService _authorizationService;
     private readonly CategoryService _categoryService;
     private readonly UserService _userService;
+    private readonly VideoService _videoService;
 
     public VideoController(VideoPresentationService videoPresentationService, AuthorizationService authorizationService,
-        CategoryService categoryService, UserService userService)
+        CategoryService categoryService, UserService userService, VideoService videoService)
     {
         _videoPresentationService = videoPresentationService;
         _authorizationService = authorizationService;
         _categoryService = categoryService;
         _userService = userService;
+        _videoService = videoService;
     }
 
     [Authorize]
@@ -53,7 +56,8 @@ public class VideoController : Controller
     }
 
     // GET
-    public async Task<IActionResult> Watch(Guid id, bool embedView = false, int commentsPage = 0, int commentsLimit = 50)
+    public async Task<IActionResult> Watch(Guid id, bool embedView = false, int commentsPage = 0,
+        int commentsLimit = 50)
     {
         if (!await _authorizationService.IsAllowedToAccessVideo(User, id)) return Forbid();
         commentsLimit = PaginationUtils.ClampLimit(commentsLimit);
@@ -67,5 +71,13 @@ public class VideoController : Controller
             CommentsPage = commentsPage,
             CommentsLimit = commentsLimit,
         });
+    }
+
+    [Authorize(Roles = RoleNames.AdminOrSuperAdmin)]
+    [HttpPost]
+    public async Task<IActionResult> SetPrivacyStatus(Guid id, ESimplePrivacyStatus status, string? returnUrl)
+    {
+        await _videoService.SetInternalPrivacyStatus(id, status);
+        return returnUrl != null ? LocalRedirect(returnUrl) : RedirectToAction(nameof(Watch), new { id });
     }
 }

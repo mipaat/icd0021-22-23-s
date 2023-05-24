@@ -1,8 +1,9 @@
 @using Base.WebHelpers
 @using App.Common.Enums
-@using Utils
 @using WebApp.Controllers
 @using WebApp.ViewModels
+@using App.BLL.DTO.Mappers
+@using App.Common
 @model WebApp.ViewModels.VideoViewModel
 
 @{
@@ -33,7 +34,18 @@
 <h1>@Model.Video.Title</h1>
 
 <div>
-    <div>@Model.Video.</div>
+    <div>
+        @if (User.IsInRole(RoleNames.Admin) || User.IsInRole(RoleNames.SuperAdmin))
+        {
+            <form method="post" asp-action="SetPrivacyStatus">
+                @Html.Hidden("id", Model.Video.Id)
+                @Html.Hidden("returnUrl", Context.GetFullPath())
+                <label for="status">Set privacy status (in archive)</label>
+                <select name="status" id="status" asp-items="@(Html.GetEnumSelectList(PrivacyStatusMapper.Map(Model.Video.InternalPrivacyStatus)))"></select>
+                <input type="submit" class="btn btn-primary" value="Submit"/>
+            </form>
+        }
+    </div>
     <p>@Html.ToLineBreaks(Model.Video.Description)</p>
 </div>
 
