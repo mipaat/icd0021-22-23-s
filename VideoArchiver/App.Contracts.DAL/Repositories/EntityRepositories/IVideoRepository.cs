@@ -1,7 +1,9 @@
+using App.BLL.DTO.Entities;
 using App.Common;
 using App.Common.Enums;
 using App.DAL.DTO.Entities;
 using Contracts.DAL;
+using Video = App.DAL.DTO.Entities.Video;
 
 namespace App.Contracts.DAL.Repositories.EntityRepositories;
 
@@ -25,8 +27,8 @@ public interface IVideoRepository : IBaseEntityRepository<App.Domain.Video, Vide
     public Task<VideoWithBasicAuthorsAndComments> GetByIdWithBasicAuthorsAndCommentsAsync(Guid id);
     public Task<ICollection<VideoFile>?> GetVideoFilesAsync(Guid videoId);
 
-    public Task<ICollection<VideoWithBasicAuthors>>
-        SearchVideosAsync(EPlatform? platform, string? name, string? author, ICollection<Guid> categoryIds, Guid? userid, Guid? userAuthorId, bool accessAllowed);
+    public Task<ICollection<BasicVideoWithBasicAuthors>>
+        SearchVideosAsync(EPlatform? platform, string? name, string? author, ICollection<Guid> categoryIds, Guid? userid, Guid? userAuthorId, bool accessAllowed, int skipAmount, int limit, EVideoSortingOptions sortingOptions, bool descending);
 
     public Task<ICollection<BasicVideoData>> GetAllBasicVideoDataByIds(IEnumerable<Guid> ids);
 }

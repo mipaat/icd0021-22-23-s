@@ -9,6 +9,7 @@ using App.Common.Enums;
 using AutoMapper;
 using Base.WebHelpers;
 using Microsoft.Extensions.Logging;
+using Utils;
 
 namespace App.BLL.Services;
 
@@ -18,7 +19,9 @@ public class VideoPresentationService : BaseService<VideoPresentationService>
 
     private readonly VideoMapper _videoMapper;
 
-    public VideoPresentationService(IEnumerable<IPlatformVideoPresentationHandler> videoPresentationHandlers, ServiceUow serviceUow, ILogger<VideoPresentationService> logger, IMapper mapper) : base(serviceUow, logger, mapper)
+    public VideoPresentationService(IEnumerable<IPlatformVideoPresentationHandler> videoPresentationHandlers,
+        ServiceUow serviceUow, ILogger<VideoPresentationService> logger, IMapper mapper) : base(serviceUow, logger,
+        mapper)
     {
         _videoMapper = new VideoMapper(mapper);
         _videoPresentationHandlers = videoPresentationHandlers;
@@ -33,11 +36,9 @@ public class VideoPresentationService : BaseService<VideoPresentationService>
 
         foreach (var presentationHandler in _videoPresentationHandlers)
         {
-            if (presentationHandler.CanHandle(video))
-            {
-                video = presentationHandler.Handle(video);
-                break;
-            }
+            if (!presentationHandler.CanHandle(video)) continue;
+            presentationHandler.Handle(video);
+            break;
         }
 
         return video;
@@ -48,11 +49,31 @@ public class VideoPresentationService : BaseService<VideoPresentationService>
         return (await Uow.Videos.GetVideoFilesAsync(id))?.FirstOrDefault();
     }
 
-    public async Task<ICollection<VideoWithAuthor>> SearchVideosAsync(EPlatform? platformQuery, string? nameQuery, string? authorQuery, ICollection<Guid> categoryIds, ClaimsPrincipal user, Guid? userAuthorId)
+    public async Task<ICollection<BasicVideoWithAuthor>> SearchVideosAsync(
+        EPlatform? platformQuery, string? nameQuery, string? authorQuery, ICollection<Guid> categoryIds,
+        ClaimsPrincipal user, Guid? userAuthorId,
+        int page, int limit, EVideoSortingOptions sortingOptions, bool descending)
     {
         var userId = user.GetUserIdIfExists();
         var accessAllowed = AuthorizationService.IsAllowedToAccessVideoByRole(user);
-        return (await Uow.Videos.SearchVideosAsync(platformQuery, nameQuery, authorQuery, categoryIds, userId, userAuthorId, accessAllowed))
+        int? total = null;
+        PaginationUtils.ConformValues(ref total, ref limit, ref page);
+        var skipAmount = PaginationUtils.PageToSkipAmount(limit, page);
+        var videos = (await Uow.Videos.SearchVideosAsync(platform: platformQuery, name: nameQuery, author: authorQuery,
+                categoryIds: categoryIds,
+                userAuthorId: userAuthorId, userid: userId, accessAllowed: accessAllowed,
+                skipAmount: skipAmount, limit: limit, sortingOptions: sortingOptions, descending: descending))
             .Select(v => _videoMapper.Map(v)).ToList();
+        foreach (var video in videos)
+        {
+            foreach (var handler in _videoPresentationHandlers)
+            {
+                if (!handler.CanHandle(video)) continue;
+                handler.Handle(video);
+                break;
+            }
+        }
+
+        return videos;
     }
 }

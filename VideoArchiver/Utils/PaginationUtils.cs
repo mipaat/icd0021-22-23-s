@@ -2,12 +2,12 @@ namespace Utils;
 
 public static class PaginationUtils
 {
-    public static int ClampTotal(int total)
+    public static int? ClampTotal(int? total)
     {
-        return Math.Max(total, 0);
+        return total == null ? null : Math.Max(total.Value, 0);
     }
 
-    public static int ClampPage(int total, int limit, int page)
+    public static int ClampPage(int? total, int limit, int page)
     {
         return Math.Max(0, 
             Math.Min(GetLastPage(total, limit), page));
@@ -20,22 +20,24 @@ public static class PaginationUtils
         return page * limit;
     }
 
-    public static bool IsOnlyPage(int total, int limit)
+    public static bool IsOnlyPage(int? total, int limit)
     {
         return total <= limit;
     }
 
-    public static bool IsLastPage(int total, int limit, int page)
+    public static bool IsLastPage(int? total, int limit, int page)
     {
-        return page == GetLastPage(total, limit);
+        if (total == null) return false;
+        return page == GetLastPage(total.Value, limit);
     }
 
-    public static int GetLastPage(int total, int limit)
+    public static int GetLastPage(int? total, int limit)
     {
-        return Math.Max(total - 1, 0) / limit;
+        if (total == null) return int.MaxValue;
+        return Math.Max(total.Value - 1, 0) / limit;
     }
 
-    public static void ConformValues(ref int total, ref int limit, ref int page)
+    public static void ConformValues(ref int? total, ref int limit, ref int page)
     {
         total = ClampTotal(total);
         limit = ClampLimit(limit);

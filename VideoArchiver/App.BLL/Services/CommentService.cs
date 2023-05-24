@@ -23,7 +23,7 @@ public class CommentService : BaseService<CommentService>
 
     public async Task<VideoWithAuthorAndComments> LoadVideoComments(VideoWithAuthor video, int limit, int page)
     {
-        var total = video.ArchivedRootCommentCount;
+        int? total = video.ArchivedRootCommentCount;
         PaginationUtils.ConformValues(ref total, ref limit, ref page);
         var skipAmount = PaginationUtils.PageToSkipAmount(limit, page);
         var dalComments = await Uow.Comments.GetCommentRootsForVideo(video.Id, limit, skipAmount);

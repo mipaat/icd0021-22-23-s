@@ -36,13 +36,19 @@ public class VideoController : Controller
             return RedirectToPage("SelectAuthor", new { ReturnUrl = HttpContext.GetFullPath() });
         }
 
+        model.Limit = PaginationUtils.ClampLimit(model.Limit);
+        model.Page = PaginationUtils.ClampPage(null, model.Limit, model.Page);
         model.CategoryPickerViewModel.ActiveAuthorId = HttpContext.Request.GetSelectedAuthorId();
         model.CategoryPickerViewModel.Prefix = nameof(VideoSearchViewModel.CategoryPickerViewModel);
         model.CategoryPickerViewModel.SetCategories(
             await _categoryService.GetAllCategoriesFilterableForAuthorAsync(authorId));
         model.Videos =
-            await _videoPresentationService.SearchVideosAsync(model.PlatformQuery, model.NameQuery, model.AuthorQuery,
-                model.CategoryPickerViewModel.SelectedCategoryIds.Select(kvp => kvp.Value).ToList(), User, authorId);
+            await _videoPresentationService.SearchVideosAsync(
+                platformQuery: model.PlatformQuery, nameQuery: model.NameQuery, authorQuery: model.AuthorQuery,
+                categoryIds: model.CategoryPickerViewModel.SelectedCategoryIds.Select(kvp => kvp.Value).ToList(),
+                user: User, userAuthorId: authorId,
+                page: model.Page, limit: model.Limit,
+                sortingOptions: model.SortingOptions, descending: model.Descending);
         return View(model);
     }
 
@@ -52,7 +58,7 @@ public class VideoController : Controller
         if (!await _authorizationService.IsAllowedToAccessVideo(User, id)) return Forbid();
         commentsLimit = PaginationUtils.ClampLimit(commentsLimit);
         var video = await _videoPresentationService.GetVideoAsync(id, commentsLimit, commentsPage);
-        var total = video.ArchivedRootCommentCount;
+        int? total = video.ArchivedRootCommentCount;
         PaginationUtils.ConformValues(ref total, ref commentsLimit, ref commentsPage);
         return View(new VideoViewModel
         {

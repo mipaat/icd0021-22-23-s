@@ -85,6 +85,9 @@ public class AutoMapperConfig : Profile
             .ForMember(v => v.ArchivedRootCommentCount,
                 o => o.MapFrom(v => v.Comments!.Count(c => c.ConversationRootId == null)));
         CreateMap<App.Domain.Video, BasicVideoData>().ReverseMap();
+        CreateMap<App.Domain.Video, BasicVideoWithBasicAuthors>()
+            .ForMember(v => v.Authors,
+                o => o.MapFrom(v => v.VideoAuthors!.Select(va => va.Author)));
 
         CreateMap<App.Domain.EntityAccessPermission, EntityAccessPermission>().ReverseMap();
     }

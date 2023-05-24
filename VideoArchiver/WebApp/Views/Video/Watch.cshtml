@@ -13,16 +13,18 @@
 {
     <a asp-action="Watch" asp-route-id="@Model.Video.Id" asp-route-embedView="@(!Model.EmbedView)">@(Model.EmbedView ? "View archived version" : "View on platform")</a>
 }
-@if (ShowEmbedView)
-{
-    <iframe width="560" height="315" src="@(Model.Video.EmbedUrl ?? Model.Video.Url)" title="@Model.Video.Platform video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-}
-else
-{
-    <video controls width="560" height="315">
-        <source src="/api/v1/File/VideoFile/@Model.Video.Id"/>
-    </video>
-}
+<div>
+    @if (ShowEmbedView)
+    {
+        <iframe width="560" height="315" src="@(Model.Video.EmbedUrl ?? Model.Video.Url)" title="@Model.Video.Platform video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    }
+    else
+    {
+        <video controls width="560" height="315">
+            <source src="/api/v1/File/VideoFile/@Model.Video.Id"/>
+        </video>
+    }
+</div>
 
 <a asp-controller="Category" asp-action="ManageEntityCategories" asp-route-id="@Model.Video.Id" asp-route-entityType="@EEntityType.Video" asp-route-returnUrl="@Context.GetFullPath()">Manage categories</a>
 
@@ -30,15 +32,15 @@ else
 
 <h1>@Model.Video.Title</h1>
 
-<p>@Html.ToLineBreaks(Model.Video.Description)</p>
+<div>
+    <div>@Model.Video.</div>
+    <p>@Html.ToLineBreaks(Model.Video.Description)</p>
+</div>
 
 <div>
     <h4>Comments</h4>
     Comments on platform: @Model.Video.CommentCount Archived root comments: @Model.Video.ArchivedRootCommentCount Archived total comments: @Model.Video.ArchivedCommentCount
-    @if (!PaginationUtils.IsOnlyPage(Model.Video.ArchivedRootCommentCount, Model.CommentsLimit))
-    {
-        <partial name="_PaginationUiPartial" model="@PaginationViewModel"/>
-    }
+    <partial name="_PaginationUiPartial" model="@PaginationViewModel"/>
     @foreach (var comment in Model.Video.Comments)
     {
         <partial name="_CommentPartial" model="@comment"/>
@@ -60,5 +62,6 @@ else
         Limit = Model.CommentsLimit,
         Page = Model.CommentsPage,
         Total = Model.Video.ArchivedRootCommentCount,
+        AmountOnPage = Model.Video.Comments.Count,
     };
 }

@@ -1,3 +1,7 @@
+@using WebApp.ViewModels
+@using WebApp.Controllers
+@using Base.WebHelpers
+@using App.BLL.DTO.Entities
 @model WebApp.ViewModels.VideoSearchViewModel
 
 @{
@@ -9,8 +13,32 @@
     <input asp-for="NameQuery"/>
     <label asp-for="AuthorQuery">Search author name:</label>
     <input asp-for="AuthorQuery"/>
+    <label asp-for="SortingOptions">Sort by</label>
+    <select asp-for="SortingOptions" asp-items="@(Html.GetEnumSelectList<EVideoSortingOptions>())">
+        <option selected="selected" value="@EVideoSortingOptions.CreatedAt">@EVideoSortingOptions.CreatedAt</option>
+    </select>
+    <label asp-for="Descending">Sort descending</label>
+    <input asp-for="Descending"/>
     <partial name="_CategoryPickerPartial" model="@Model.CategoryPickerViewModel" />
     <input type="submit" class="btn btn-primary" value="Search"/>
 </form>
 
+<partial name="_PaginationUiPartial" model="@PaginationViewModel"/>
+
 <partial name="_VideoResultsPartial" model="@Model.Videos"/>
+
+@functions
+{
+    PaginationUiPartialViewModel PaginationViewModel => new()
+    {
+        ControllerName = nameof(VideoController),
+        ActionName = nameof(VideoController.Search),
+        RouteValues = Context.GetRouteValues(),
+        LimitParamName = nameof(Model.Limit),
+        PageParamName = nameof(Model.Page),
+        Limit = Model.Limit,
+        Page = Model.Page,
+        Total = null,
+        AmountOnPage = Model.Videos.Count,
+    };
+}

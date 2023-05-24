@@ -8,14 +8,16 @@ public record ThumbnailQuality(string Name, string ShortName, int Width, int Hei
     public static readonly ThumbnailQuality Standard = new("standard", "sd", 640, 480);
     public static readonly ThumbnailQuality MaxRes = new("maxres", "maxres", 1280, 720);
 
-    public static readonly IReadOnlyCollection<ThumbnailQuality> AllQualities = new[]
+    public static readonly IReadOnlyList<ThumbnailQuality> AllQualities = new[]
     {
         Default,
         Medium,
-        High,
         Standard,
+        High,
         MaxRes,
     };
+
+    public static IReadOnlyList<string> AllQualityNames => AllQualities.Select(q => q.Name).ToList();
 
     public static readonly IReadOnlyCollection<ThumbnailQuality> DefaultQualities = new[]
     {

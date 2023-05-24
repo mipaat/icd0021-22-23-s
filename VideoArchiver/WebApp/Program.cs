@@ -20,6 +20,7 @@ using Base.WebHelpers;
 using Base.WebHelpers.ModelBinders;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -153,6 +154,16 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "downloads", "profile_images")),
+            RequestPath = "/downloads/profile_images",
+        });
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "downloads", "thumbnails")),
+            RequestPath = "/downloads/thumbnails",
+        });
 
         app.UseRouting();
 

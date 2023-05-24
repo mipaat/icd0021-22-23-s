@@ -1,5 +1,6 @@
 using App.BLL.DTO.Contracts;
 using App.BLL.DTO.Entities;
+using App.BLL.YouTube.Utils;
 using App.Common.Enums;
 
 namespace App.BLL.YouTube.Services;
@@ -11,12 +12,29 @@ public class PresentationHandler : IPlatformVideoPresentationHandler, IPlatformA
         return video.Platform == EPlatform.YouTube;
     }
 
-    public VideoWithAuthorAndComments Handle(VideoWithAuthorAndComments video)
+    public bool CanHandle(BasicVideoWithAuthor video)
+    {
+        return video.Platform == EPlatform.YouTube;
+    }
+
+    public void Handle(VideoWithAuthorAndComments video)
     {
         video.Url = Url.ToVideoUrl(video.IdOnPlatform);
         video.EmbedUrl = Url.ToVideoEmbedUrl(video.IdOnPlatform);
         video.Author = Handle(video.Author);
-        return video;
+    }
+
+    public void Handle(BasicVideoWithAuthor video)
+    {
+        if (video.Thumbnails != null)
+        {
+            var thumbnails = video.Thumbnails
+                .OrderByDescending(i => i.Quality, new ThumbnailQualityComparer())
+                .ThenByDescending(i => i.Key, new ThumbnailTagComparer());
+            video.Thumbnail = thumbnails.FirstOrDefault();
+        }
+
+        video.Author = Handle(video.Author);
     }
 
     public bool CanHandle(Author author)

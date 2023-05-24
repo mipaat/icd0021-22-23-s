@@ -1,3 +1,4 @@
+using System.Dynamic;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Base.WebHelpers;
@@ -85,6 +87,22 @@ public static class InputHelpers
     {
         return context.Request.GetFullPath();
     }
+
+    public static object GetRouteValues(this HttpRequest request)
+    {
+        var queryValues = QueryHelpers.ParseQuery(request.QueryString.ToString());
+
+        dynamic customObject = new ExpandoObject();
+        
+        foreach (var query in queryValues)
+        {
+            ((IDictionary<string, object>)customObject)[query.Key] = query.Value;
+        }
+
+        return customObject;
+    }
+
+    public static object GetRouteValues(this HttpContext context) => context.Request.GetRouteValues();
 
     public static IHtmlContent ToLineBreaks(this IHtmlHelper html, string text)
     {

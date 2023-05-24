@@ -1,3 +1,4 @@
+using App.BLL.DTO.Entities;
 using App.Common;
 using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories;
@@ -7,6 +8,7 @@ using App.DAL.EF.Extensions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Video = App.DAL.DTO.Entities.Video;
 
 namespace App.DAL.EF.Repositories.EntityRepositories;
 
@@ -63,21 +65,24 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
         return await Entities.Where(v => v.Id == videoId).Select(v => v.LocalVideoFiles).FirstOrDefaultAsync();
     }
 
-    public async Task<ICollection<VideoWithBasicAuthors>> SearchVideosAsync(EPlatform? platform, string? name, string? author, ICollection<Guid> categoryIds, Guid? userId, Guid? userAuthorId, bool accessAllowed)
+    public async Task<ICollection<BasicVideoWithBasicAuthors>> SearchVideosAsync(EPlatform? platform, string? name,
+        string? author, ICollection<Guid> categoryIds, Guid? userId, Guid? userAuthorId, bool accessAllowed,
+        int skipAmount, int limit, EVideoSortingOptions sortingOptions, bool descending)
     {
         IQueryable<App.Domain.Video> query;
         if (name != null)
         {
             query = Entities.FromSql(
                 $"SELECT * FROM \"Videos\" c WHERE jsonb_path_exists(c.\"Title\", ('$.* ? (@ like_regex \"(?i)' || {name} || '\")')::jsonpath)");
-        } else
+        }
+        else
         {
             query = Entities;
         }
 
         query.Include(e => e.VideoAuthors!)
             .ThenInclude(e => e.Author);
-        
+
         if (platform != null)
         {
             query = query.Where(e => e.Platform == platform);
@@ -85,7 +90,8 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
 
         if (author != null)
         {
-            query = query.Where(e => e.VideoAuthors!.Select(a => a.Author!.UserName + a.Author!.DisplayName).Contains(author));
+            query = query.Where(e =>
+                e.VideoAuthors!.Select(a => a.Author!.UserName + a.Author!.DisplayName).Contains(author));
         }
 
         if (categoryIds.Count > 0)
@@ -100,8 +106,22 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
             query = query.WhereUserIsAllowedToAccessVideoOrVideoIsPublic(DbContext, userId);
         }
 
-        return AttachIfNotAttached<ICollection<VideoWithBasicAuthors>, VideoWithBasicAuthors>(
-            await query.ProjectTo<VideoWithBasicAuthors>(Mapper.ConfigurationProvider).ToListAsync());
+        switch (sortingOptions)
+        {
+            case EVideoSortingOptions.Duration:
+                query = descending ? query.OrderByDescending(v => v.Duration) : query.OrderBy(v => v.Duration);
+                break;
+            default:
+            case EVideoSortingOptions.CreatedAt:
+                query = descending
+                    ? query.OrderByDescending(v => v.CreatedAt).ThenByDescending(v => v.PublishedAt)
+                    : query.OrderBy(v => v.CreatedAt).ThenBy(v => v.PublishedAt);
+                break;
+        }
+
+        query = query.Skip(skipAmount).Take(limit);
+
+        return await query.ProjectTo<BasicVideoWithBasicAuthors>(Mapper.ConfigurationProvider).ToListAsync();
     }
 
     public async Task<ICollection<BasicVideoData>> GetAllBasicVideoDataByIds(IEnumerable<Guid> ids)

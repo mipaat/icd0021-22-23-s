@@ -1,42 +1,50 @@
 @using Utils
 @model WebApp.ViewModels.PaginationUiPartialViewModel
 
-<div>
-    @if (Model.Page > 0)
+@if(!PaginationUtils.IsOnlyPage(Model.Total, Model.Limit) && !(Model.Page == 0 && Model.AmountOnPage < Model.Limit))
     {
-        <a asp-action="@Model.ActionName" asp-controller="@ControllerName"
-           asp-all-route-data="@GetDictionary(Model.RouteValues, 0)">
-            First
-        </a>
-        @if (Model.Page > 1)
-        {
-            <a asp-action="@Model.ActionName" asp-controller="@ControllerName"
-               asp-all-route-data="@GetDictionary(Model.RouteValues, Model.Page - 1)">
-                Previous
-            </a>
-        }
+        <div>
+            @if (Model.Page > 0)
+            {
+                <a asp-action="@ActionName" asp-controller="@ControllerName"
+                   asp-all-route-data="@GetDictionary(Model.RouteValues, 0)">
+                    First
+                </a>
+                @if (Model.Page > 1)
+                {
+                    <a asp-action="@ActionName" asp-controller="@ControllerName"
+                       asp-all-route-data="@GetDictionary(Model.RouteValues, Model.Page - 1)">
+                        Previous
+                    </a>
+                }
+            }
+            @if (!PaginationUtils.IsLastPage(Model.Total, Model.Limit, Model.Page) && !(Model.AmountOnPage < Model.Limit))
+            {
+                @if (Model.Page < PaginationUtils.GetLastPage(Model.Total, Model.Limit) - 1)
+                {
+                    <a asp-action="@ActionName" asp-controller="@ControllerName"
+                       asp-all-route-data="@GetDictionary(Model.RouteValues, Model.Page + 1)">
+                        Next
+                    </a>
+                }
+                @if (Model.Total != null)
+                {
+                    <a asp-action="@ActionName" asp-controller="@ControllerName"
+                       asp-all-route-data="@GetDictionary(Model.RouteValues, PaginationUtils.GetLastPage(Model.Total, Model.Limit))">
+                        Last
+                    </a>
+                }
+            }
+        </div>
     }
-    @if (!PaginationUtils.IsLastPage(Model.Total, Model.Limit, Model.Page))
-    {
-        @if (Model.Page < PaginationUtils.GetLastPage(Model.Total, Model.Limit) - 1)
-        {
-            <a asp-action="@Model.ActionName" asp-controller="@ControllerName"
-               asp-all-route-data="@GetDictionary(Model.RouteValues, Model.Page + 1)">
-                Next
-            </a>
-        }
-        <a asp-action="@Model.ActionName" asp-controller="@ControllerName"
-           asp-all-route-data="@GetDictionary(Model.RouteValues, PaginationUtils.GetLastPage(Model.Total, Model.Limit))">
-            Last
-        </a>
-    }
-</div>
 
 @functions
 {
     private string ControllerName => Model.ControllerName.EndsWith("Controller") ?
         Model.ControllerName.Remove(Model.ControllerName.Length - "Controller".Length) :
         Model.ControllerName;
+
+    private string ActionName => Model.ActionName.EndsWith("Async") ? Model.ActionName.Remove(Model.ActionName.Length - "Async".Length) : Model.ActionName;
 
     private IDictionary<string, string> GetDictionary(object? routeValues, int page)
     {

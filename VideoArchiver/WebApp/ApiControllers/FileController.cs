@@ -71,39 +71,4 @@ public class FileController : ControllerBase
 
         return Results.File(stream, contentType, enableRangeProcessing: true);
     }
-
-    /// <summary>
-    /// Method for access to author profile image files.
-    /// Allows unauthorized access.
-    /// </summary>
-    /// <param name="authorId">The archive ID of the author whose profile image is requested.</param>
-    /// <param name="large">Boolean, whether or not the returned image should be large. Will work inconsistently or not at all.</param>
-    /// <returns>FileStream of the image file.</returns>
-    /// <response code="200">Profile image file fetched successfully.</response>
-    /// <response code="404">Author, profile image, or file not found.</response>
-    [HttpGet("{authorId:guid}")]
-    public async Task<IResult> AuthorProfileImageAsync(Guid authorId, bool large = false)
-    {
-        var imageFile = await _authorService.GetProfileImageAsync(authorId, large);
-        if (imageFile?.LocalFilePath == null) return Results.NotFound();
-        var filePath = imageFile.LocalFilePath;
-
-        var contentType = MimeTypesMap.GetMimeType(filePath);
-
-        FileStream stream;
-        try
-        {
-            stream = System.IO.File.OpenRead(filePath);
-        }
-        catch (FileNotFoundException)
-        {
-            return Results.NotFound();
-        }
-        catch (DirectoryNotFoundException)
-        {
-            return Results.NotFound();
-        }
-
-        return Results.File(stream, contentType);
-    }
 }

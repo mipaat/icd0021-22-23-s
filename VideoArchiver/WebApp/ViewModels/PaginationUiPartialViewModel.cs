@@ -10,5 +10,6 @@ public class PaginationUiPartialViewModel
     public string PageParamName { get; set; } = default!;
     public int Limit { get; set; }
     public int Page { get; set; }
-    public int Total { get; set; }
+    public int? Total { get; set; }
+    public int AmountOnPage { get; set; }
 }
