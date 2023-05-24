@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<QueueItemService>();
         services.AddScoped<CategoryService>();
         services.AddScoped<CommentService>();
+        services.AddScoped<AuthorService>();
 
         services.AddHostedService<QueueItemBackgroundService>();
     }

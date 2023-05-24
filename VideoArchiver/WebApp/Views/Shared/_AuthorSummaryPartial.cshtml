@@ -1,0 +1,30 @@
+@model App.BLL.DTO.Entities.Author
+
+<div>
+    <div class="d-inline-block">
+        <div class="image-load-container" width="40" height="40" alt="Author profile image" src="/api/v1/File/AuthorProfileImage/@Model.Id"></div>
+    </div>
+    <div class="d-inline-block">
+        @if (Model.UrlOnPlatform != null)
+        {
+            <a href="@Model.UrlOnPlatform">@NameDisplay</a>
+        }
+        else
+        {
+            @NameDisplay
+        }
+    </div>
+</div>
+
+@functions
+{
+    string NameDisplay
+    {
+        get
+        {
+            if (Model.DisplayName == null) return Model.UserName ?? Model.IdOnPlatform;
+            if (Model.UserName == null) return Model.DisplayName ?? Model.IdOnPlatform;
+            return $"{Model.DisplayName} ({Model.UserName})";
+        }
+    }
+}

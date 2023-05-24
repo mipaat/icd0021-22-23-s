@@ -54,4 +54,7 @@ public class ServiceUow : BaseAppUowContainer
 
     private CommentService? _commentService;
     public CommentService CommentService => _commentService ??= Services.GetRequiredService<CommentService>();
+
+    private AuthorService? _authorService;
+    public AuthorService AuthorService => _authorService ??= Services.GetRequiredService<AuthorService>();
 }

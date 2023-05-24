@@ -1,3 +1,4 @@
+using App.Common;
 using App.Common.Enums;
 using App.DAL.DTO.Entities;
 using Contracts.DAL;
@@ -14,4 +15,6 @@ public interface IAuthorRepository : IBaseEntityRepository<App.Domain.Author, Au
 
     public Task<ICollection<AuthorBasic>> GetAllBasicByIdsOnPlatformAsync(IEnumerable<string> idsOnPlatform,
         EPlatform platform);
+
+    public Task<ImageFileList?> GetProfileImagesForAuthor(Guid authorId);
 }

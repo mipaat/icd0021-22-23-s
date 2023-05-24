@@ -85,4 +85,11 @@ public static class InputHelpers
     {
         return context.Request.GetFullPath();
     }
+
+    public static IHtmlContent ToLineBreaks(this IHtmlHelper html, string text)
+    {
+        text = text.ReplaceLineEndings("\n");
+        var lines = text.Split("\n").Select(html.Encode);
+        return html.Raw(string.Join("<br/>", lines));
+    }
 }

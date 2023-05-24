@@ -70,12 +70,16 @@ public class AutoMapperConfig : Profile
             .ForMember(v => v.Comments,
                 o => o.MapFrom(v => v.Comments));
         CreateMap<App.Domain.Video, VideoWithBasicAuthors>()
+            .ForMember(v => v.Authors,
+                o => o.MapFrom(v => v.VideoAuthors!.Select(va => va.Author)))
             .ForMember(v => v.ArchivedCommentCount,
                 o => o.MapFrom(v => v.Comments!.Count))
             .ForMember(v => v.ArchivedRootCommentCount,
                 o => o.MapFrom(v => v.Comments!.Count(c => c.ConversationRootId == null)));
         CreateMap<VideoWithBasicAuthors, App.Domain.Video>();
         CreateMap<App.Domain.Video, VideoWithBasicAuthorsAndComments>()
+            .ForMember(v => v.Authors,
+                o => o.MapFrom(v => v.VideoAuthors!.Select(va => va.Author)))
             .ForMember(v => v.ArchivedCommentCount,
                 o => o.MapFrom(v => v.Comments!.Count))
             .ForMember(v => v.ArchivedRootCommentCount,

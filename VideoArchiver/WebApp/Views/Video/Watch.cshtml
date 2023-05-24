@@ -26,9 +26,11 @@ else
 
 <a asp-controller="Category" asp-action="ManageEntityCategories" asp-route-id="@Model.Video.Id" asp-route-entityType="@EEntityType.Video" asp-route-returnUrl="@Context.GetFullPath()">Manage categories</a>
 
+<partial name="_AuthorSummaryPartial" model="Model.Video.Author"/>
+
 <h1>@Model.Video.Title</h1>
 
-<p>@Model.Video.Description</p>
+<p>@Html.ToLineBreaks(Model.Video.Description)</p>
 
 <div>
     <h4>Comments</h4>

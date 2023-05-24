@@ -14,6 +14,7 @@ public class CommentMapper
 
     public Comment Map(DAL.DTO.Entities.CommentRoot comment)
     {
+        comment.ConversationReplies = comment.ConversationReplies.OrderBy(c => c.CreatedAt).ThenBy(c => c.Id).ToList();
         return _mapper.Map<Comment>(comment);
     }
 

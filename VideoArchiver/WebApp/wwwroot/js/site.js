@@ -8,3 +8,14 @@ for (const element of elements) {
     const culture = element.getAttribute("culture");
     element.textContent = (new Date(element.textContent)).toLocaleString(culture);
 }
+
+for (const element of document.getElementsByClassName("image-load-container")) {
+    const widthStr = element.getAttribute("width");
+    const heightStr = element.getAttribute("height");
+    const width = widthStr ? parseInt(widthStr) : null;
+    const height = heightStr ? parseInt(heightStr) : null;
+    const image = new Image(width, height);
+    image.alt = element.getAttribute("alt");
+    image.src = element.getAttribute("src");
+    element.appendChild(image);
+}

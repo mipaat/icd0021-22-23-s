@@ -1,5 +1,6 @@
 ﻿using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
+using App.Common;
 using App.DAL.DTO.Entities;
 using App.DAL.DTO.Entities.Playlists;
 using App.Common.Enums;
@@ -70,8 +71,20 @@ public class AuthorService : BaseYouTubeService<AuthorService>
             else
             {
                 var author = arg.NewAuthorFunc();
-                Uow.Authors.Add(author);
+                var channel = await YouTubeExplodeClient.Channels.GetAsync(author.IdOnPlatform);
+                author.ProfileImages = new ImageFileList();
+                foreach (var thumbnail in channel.Thumbnails)
+                {
+                    author.ProfileImages.Add(new ImageFile
+                    {
+                        Height = thumbnail.Resolution.Height,
+                        Width = thumbnail.Resolution.Width,
+                        Url = thumbnail.Url,
+                        Platform = EPlatform.YouTube,
+                    });
+                }
                 await ServiceUow.ImageService.UpdateProfileImages(author);
+                Uow.Authors.Add(author);
                 var basicAuthor = Mapper.Map<AuthorBasic>(author);
                 _cachedAuthors.TryAdd(arg.AuthorId, basicAuthor);
                 authors.Add(basicAuthor);

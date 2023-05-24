@@ -59,6 +59,11 @@ public static class Url
         return $"https://www.youtube.com/watch?v={id}";
     }
 
+    public static string ToAuthorUrl(string id)
+    {
+        return $"https://www.youtube.com/channel/{id}";
+    }
+
     public static string ToVideoEmbedUrl(string id)
     {
         return $"https://www.youtube-nocookie.com/embed/{id}";

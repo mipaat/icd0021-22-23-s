@@ -64,7 +64,7 @@ public class CommentRepository : BaseAppEntityRepository<App.Domain.Comment, Com
             .ThenByDescending(c => c.Id)
             .Skip(skipAmount)
             .Take(limit)
-            .Include(c => c.ConversationReplies!.OrderBy(e => e.CreatedAt))
+            .Include(c => c.ConversationReplies)
             .ProjectTo<CommentRoot>(Mapper.ConfigurationProvider)
             .ToListAsync();
     }

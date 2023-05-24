@@ -55,8 +55,8 @@ public static class ConversionExtensionsYtdl
             Platform = EPlatform.YouTube,
             IdOnPlatform = videoData.ChannelID,
 
-            UserName = Url.IsAuthorHandleUrl(videoData.ChannelUrl, out var handle) ? handle : null,
-            DisplayName = videoData.Channel,
+            UserName = videoData.UploaderID ?? (Url.IsAuthorHandleUrl(videoData.ChannelUrl, out var handle) ? handle : null),
+            DisplayName = videoData.Uploader ?? videoData.Channel,
 
             SubscriberCount = videoData.ChannelFollowerCount,
 

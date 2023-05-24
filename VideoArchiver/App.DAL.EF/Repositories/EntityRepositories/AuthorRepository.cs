@@ -1,4 +1,5 @@
-﻿using App.Common.Enums;
+﻿using App.Common;
+using App.Common.Enums;
 using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
@@ -39,5 +40,10 @@ public class AuthorRepository : BaseAppEntityRepository<App.Domain.Author, Autho
                 .Where(e => e.Platform == platform && idsOnPlatform.Contains(e.IdOnPlatform))
                 .ProjectTo<AuthorBasic>(Mapper.ConfigurationProvider)
                 .ToListAsync());
+    }
+
+    public async Task<ImageFileList?> GetProfileImagesForAuthor(Guid authorId)
+    {
+        return await Entities.Where(e => e.Id == authorId).Select(e => e.ProfileImages).FirstOrDefaultAsync();
     }
 }
