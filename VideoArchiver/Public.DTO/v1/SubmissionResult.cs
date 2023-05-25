@@ -11,7 +11,7 @@ public class SubmissionResult
     public Guid QueueItemId { get; set; }
 
     /// <summary>
-    /// The type of the submission entity
+    /// The type of the submission entity.
     /// </summary>
     /// <example>Video</example>
     public EEntityType Type { get; set; }

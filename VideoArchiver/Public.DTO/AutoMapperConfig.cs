@@ -17,6 +17,7 @@ public class AutoMapperConfig : Profile
         CreateMap<EPlatform, v1.EPlatform>();
         CreateMap<EEntityType, v1.EEntityType>();
 
-        this.AddSubmissionResultMap();
+        this.AddSubmissionResultMap()
+            .AddUserAuthorMap();
     }
 }

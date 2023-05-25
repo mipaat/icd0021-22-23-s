@@ -2,9 +2,12 @@ using System.Configuration;
 using System.Net;
 using App.BLL.DTO.Exceptions.Identity;
 using App.BLL.Identity;
+using AutoMapper;
 using Base.WebHelpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Public.DTO.Mappers;
 using Public.DTO.v1;
 using Public.DTO.v1.Identity;
 
@@ -19,15 +22,18 @@ namespace WebApp.ApiControllers.Identity;
 public class AccountController : ControllerBase
 {
     private readonly IdentityUow _identityUow;
+    private readonly UserAuthorMapper _userAuthorMapper;
 
     /// <summary>
-    /// Construct a new AccountController
+    /// Construct a new AccountController.
     /// </summary>
-    /// <param name="identityUow">Container for identity-related services</param>
+    /// <param name="identityUow">Container for identity-related services.</param>
+    /// <param name="mapper">Automapper for mapping BLL entities to API DTOs.</param>
     /// <exception cref="ConfigurationErrorsException">Provided configuration doesn't contain expected JWT settings</exception>
-    public AccountController(IdentityUow identityUow)
+    public AccountController(IdentityUow identityUow, IMapper mapper)
     {
         _identityUow = identityUow;
+        _userAuthorMapper = new UserAuthorMapper(mapper);
     }
 
     /// <summary>
@@ -184,7 +190,7 @@ public class AccountController : ControllerBase
     /// <param name="logout">The refresh token to delete.</param>
     /// <response code="200">Refresh token deleted successfully.</response>
     /// <response code="404">Refresh token's user not found.</response>
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost]
     public async Task<ActionResult> Logout(
         [FromBody] Logout logout)
@@ -203,5 +209,25 @@ public class AccountController : ControllerBase
                 Error = e.Message,
             });
         }
+    }
+
+    /// <summary>
+    /// Get list of authors that authenticated user can act as.
+    /// If none exist, a generic author will be created for the user.
+    /// </summary>
+    /// <returns>List of authors that authenticated user can act as.</returns>
+    /// <response code="200">Author list fetched successfully.</response>
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpGet]
+    public async Task<ActionResult<List<UserSubAuthor>>> ListUserSubAuthors()
+    {
+        var authors = await _identityUow.UserService.GetAllUserSubAuthorsAsync(User);
+        if (authors.Count == 0)
+        {
+            authors.Add(_identityUow.UserService.CreateAuthor(User));
+            await _identityUow.UserService.SaveChangesAsync();
+        }
+
+        return Ok(authors.Select(a => _userAuthorMapper.Map(a)));
     }
 }
