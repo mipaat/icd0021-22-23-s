@@ -29,8 +29,20 @@ public class TokenService
 
     protected IAppUnitOfWork Uow => _identityUow.Uow;
 
-    public async Task DeleteRefreshTokenAsync(Guid userId, string refreshToken)
+    public async Task DeleteRefreshTokenAsync(string jwt, string refreshToken)
     {
+        ClaimsPrincipal principal;
+        try
+        {
+            principal = IdentityHelpers.GetClaimsPrincipal(jwt, _jwtSettings.Key, _jwtSettings.Issuer, _jwtSettings.Audience);
+        }
+        catch (Exception)
+        {
+            throw new InvalidJwtException();
+        }
+
+        var userId = principal.GetUserIdIfExists() ?? throw new InvalidJwtException();
+
         var refreshTokens = await Uow.RefreshTokens.GetAllByUserIdAsync(userId, r =>
             r.RefreshToken == refreshToken ||
             r.PreviousRefreshToken == refreshToken);

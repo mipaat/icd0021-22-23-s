@@ -138,19 +138,12 @@ public class UserService : IAppUowContainer
         SignInManager.Context.Response.ClearSelectedAuthorCookies();
     }
 
-    public async Task SignOutTokenAsync(Guid userId, string refreshToken)
+    public async Task SignOutTokenAsync(string jwt, string refreshToken)
     {
         // Delete the refresh token - so user is kicked out after jwt expiration
         // We do not invalidate the jwt - that would require pipeline modification and checking against db on every request
         // So client can actually continue to use the jwt until it expires (keep the jwt expiration time short ~1 min)
-
-        var user = await Uow.Users.GetByIdAsync(userId);
-        if (user == null)
-        {
-            throw new UserNotFoundException();
-        }
-
-        await _identityUow.TokenService.DeleteRefreshTokenAsync(user.Id, refreshToken);
+        await _identityUow.TokenService.DeleteRefreshTokenAsync(jwt, refreshToken);
     }
 
     public Author CreateAuthor(ClaimsPrincipal user)

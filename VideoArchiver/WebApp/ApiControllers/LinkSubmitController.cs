@@ -1,4 +1,3 @@
-using System.Net;
 using App.BLL;
 using App.BLL.Exceptions;
 using App.BLL.DTO.Entities;
@@ -55,7 +54,7 @@ public class LinkSubmitController : ControllerBase
         {
             return BadRequest(new Public.DTO.v1.RestApiErrorResponse
             {
-                Status = HttpStatusCode.BadRequest,
+                ErrorType = Public.DTO.v1.EErrorType.UnrecognizedUrl,
                 Error = e.Message,
             });
         }

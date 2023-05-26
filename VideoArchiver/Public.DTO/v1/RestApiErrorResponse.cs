@@ -1,5 +1,3 @@
-using System.Net;
-
 namespace Public.DTO.v1;
 
 /// <summary>
@@ -8,9 +6,9 @@ namespace Public.DTO.v1;
 public class RestApiErrorResponse
 {
     /// <summary>
-    /// The HTTP status code identifying the type of error response.
+    /// Custom error code identifying the type of error.
     /// </summary>
-    public HttpStatusCode Status { get; set; }
+    public EErrorType ErrorType { get; set; }
     /// <summary>
     /// Text describing the error.
     /// </summary>

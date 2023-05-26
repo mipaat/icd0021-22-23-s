@@ -36,26 +36,27 @@ public static class IdentityHelpers
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
+    public static ClaimsPrincipal GetClaimsPrincipal(string jwt, string key, string issuer, string audience,
+        bool ignoreExpiration = true)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var validationParameters = GetValidationParameters(key, issuer, audience, !ignoreExpiration);
 
+        return tokenHandler.ValidateToken(jwt, validationParameters, out _);
+    }
+    
     public static bool ValidateToken(string jwt, string key,
         string issuer, string audience, bool ignoreExpiration = true)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var validationParameters = GetValidationParameters(key, issuer, audience);
+        var validationParameters = GetValidationParameters(key, issuer, audience, !ignoreExpiration);
 
-        SecurityToken validatedToken;
         try
         {
-            var principal = tokenHandler.ValidateToken(jwt, validationParameters, out validatedToken);
-        }
-        catch (SecurityTokenExpiredException)
-        {
-            // is it ok to be expired? since we are refreshing expired jwt
-            return ignoreExpiration;
+            tokenHandler.ValidateToken(jwt, validationParameters, out _);
         }
         catch (Exception)
         {
-            // something else was wrong
             return false;
         }
 
@@ -63,7 +64,7 @@ public static class IdentityHelpers
     }
 
     private static TokenValidationParameters GetValidationParameters(string key,
-        string issuer, string audience)
+        string issuer, string audience, bool validateLifeTime = true)
     {
         return new TokenValidationParameters
         {
@@ -72,7 +73,8 @@ public static class IdentityHelpers
             ValidAudience = audience,
             ValidateIssuerSigningKey = true,
             ValidateIssuer = true,
-            ValidateAudience = true
+            ValidateAudience = true,
+            ValidateLifetime = validateLifeTime,
         };
     }
 }

@@ -1,9 +1,7 @@
 using System.Configuration;
-using System.Net;
 using App.BLL.DTO.Exceptions.Identity;
 using App.BLL.Identity;
 using AutoMapper;
-using Base.WebHelpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -72,7 +70,7 @@ public class AccountController : ControllerBase
         {
             return BadRequest(new RestApiErrorResponse
             {
-                Status = HttpStatusCode.BadRequest,
+                ErrorType = EErrorType.UserAlreadyRegistered,
                 Error = e.Message,
             });
         }
@@ -80,7 +78,7 @@ public class AccountController : ControllerBase
         {
             return BadRequest(new RestApiErrorResponse
             {
-                Status = HttpStatusCode.BadRequest,
+                ErrorType = EErrorType.InvalidTokenExpirationRequested,
                 Error = e.Message,
             });
         }
@@ -115,7 +113,7 @@ public class AccountController : ControllerBase
         {
             return NotFound(new RestApiErrorResponse
             {
-                Status = HttpStatusCode.NotFound,
+                ErrorType = EErrorType.InvalidLoginCredentials,
                 Error = "Username/password problem",
             });
         }
@@ -123,7 +121,7 @@ public class AccountController : ControllerBase
         {
             return NotFound(new RestApiErrorResponse
             {
-                Status = HttpStatusCode.NotFound,
+                ErrorType = EErrorType.InvalidLoginCredentials,
                 Error = "Username/password problem",
             });
         }
@@ -131,7 +129,7 @@ public class AccountController : ControllerBase
         {
             return Unauthorized(new RestApiErrorResponse
             {
-                Status = HttpStatusCode.Unauthorized,
+                ErrorType = EErrorType.UserNotApproved,
                 Error = "This user account must be approved by an administrator before it can be used.",
             });
         }
@@ -169,7 +167,7 @@ public class AccountController : ControllerBase
         {
             return BadRequest(new RestApiErrorResponse
             {
-                Status = HttpStatusCode.BadRequest,
+                ErrorType = EErrorType.InvalidJwt,
                 Error = "Invalid JWT",
             });
         }
@@ -177,7 +175,7 @@ public class AccountController : ControllerBase
         {
             return BadRequest(new RestApiErrorResponse
             {
-                Status = HttpStatusCode.BadRequest,
+                ErrorType = EErrorType.InvalidRefreshToken,
                 Error = "Invalid refresh token (probably expired)",
             });
         }
@@ -189,24 +187,23 @@ public class AccountController : ControllerBase
     /// </summary>
     /// <param name="logout">The refresh token to delete.</param>
     /// <response code="200">Refresh token deleted successfully.</response>
-    /// <response code="404">Refresh token's user not found.</response>
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    /// <response code="400">Invalid JWT provided.</response>
     [HttpPost]
     public async Task<ActionResult> Logout(
         [FromBody] Logout logout)
     {
         try
         {
-            await _identityUow.UserService.SignOutTokenAsync(User.GetUserId(), logout.RefreshToken);
+            await _identityUow.UserService.SignOutTokenAsync(logout.Jwt, logout.RefreshToken);
             await _identityUow.SaveChangesAsync();
             return Ok();
         }
-        catch (UserNotFoundException e)
+        catch (InvalidJwtException)
         {
-            return NotFound(new RestApiErrorResponse
+            return BadRequest(new RestApiErrorResponse
             {
-                Status = HttpStatusCode.NotFound,
-                Error = e.Message,
+                ErrorType = EErrorType.InvalidJwt,
+                Error = "Provided JWT was invalid",
             });
         }
     }
