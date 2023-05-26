@@ -16,8 +16,11 @@ public class AutoMapperConfig : Profile
     {
         CreateMap<EPlatform, v1.EPlatform>();
         CreateMap<EEntityType, v1.EEntityType>();
+        CreateMap<App.BLL.DTO.Entities.Identity.Role, v1.Identity.Role>();
 
         this.AddSubmissionResultMap()
-            .AddUserAuthorMap();
+            .AddUserAuthorMap()
+            .AddUserMap()
+            .AddQueueItemMap();
     }
 }

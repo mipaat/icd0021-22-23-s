@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Public.DTO.Mappers;
+using Swashbuckle.AspNetCore.Annotations;
+using WebApp.MyLibraries;
 
 namespace WebApp.ApiControllers;
 
@@ -42,6 +44,8 @@ public class LinkSubmitController : ControllerBase
     /// These may be newly added entities, or previously added entities that match the submission.</returns>
     /// <response code="200">The submission was processed successfully.</response>
     /// <response code="400">The submitted URL didn't match any supported URL patterns.</response>
+    [SwaggerResponse(StatusCodes.Status200OK, null, typeof(List<Public.DTO.v1.SubmissionResult>))]
+    [SwaggerRestApiErrorResponse(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult<List<Public.DTO.v1.SubmissionResult>>> Submit([FromBody] Public.DTO.v1.LinkSubmission link)
     {

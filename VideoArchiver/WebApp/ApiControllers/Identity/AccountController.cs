@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Public.DTO.Mappers;
 using Public.DTO.v1;
 using Public.DTO.v1.Identity;
+using Swashbuckle.AspNetCore.Annotations;
+using WebApp.MyLibraries;
 
 namespace WebApp.ApiControllers.Identity;
 
@@ -43,8 +45,11 @@ public class AccountController : ControllerBase
     /// <response code="200">The registration was successful.</response>
     /// <response code="400">User with provided username is already registered.</response>
     /// <response code="202">The registration was successful, but must be approved by an administrator before the account can be used.</response>
+    [SwaggerRestApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [SwaggerRestApiErrorResponse(StatusCodes.Status202Accepted)]
+    [SwaggerResponse(StatusCodes.Status200OK, null, typeof(JwtResponse))]
     [HttpPost]
-    public async Task<ActionResult<JwtResponse?>> Register([FromBody] Register registrationData,
+    public async Task<ActionResult<JwtResponse>> Register([FromBody] Register registrationData,
         [FromQuery] int? expiresInSeconds = null)
     {
         try
@@ -93,6 +98,9 @@ public class AccountController : ControllerBase
     /// <response code="200">Login was successful.</response>
     /// <response code="404">Username or password was invalid.</response>
     /// <response code="401">Login isn't allowed, because the user account hasn't been approved yet.</response>
+    [SwaggerRestApiErrorResponse(StatusCodes.Status404NotFound)]
+    [SwaggerRestApiErrorResponse(StatusCodes.Status401Unauthorized)]
+    [SwaggerResponse(StatusCodes.Status200OK, null, typeof(JwtResponse))]
     [HttpPost]
     public async Task<ActionResult<JwtResponse>> LogIn([FromBody] Login loginData,
         [FromQuery] int? expiresInSeconds = null)
@@ -145,6 +153,9 @@ public class AccountController : ControllerBase
     /// <response code="200">Token refresh was successful.</response>
     /// <response code="400">Provided token/tokens was/were invalid.</response>
     /// <response code="404">JWT user not found or one matching refresh token not found.</response>
+    [SwaggerRestApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [SwaggerRestApiErrorResponse(StatusCodes.Status404NotFound)]
+    [SwaggerResponse(StatusCodes.Status200OK, null, typeof(JwtResponse))]
     [HttpPost]
     public async Task<ActionResult<JwtResponse>> RefreshToken(
         [FromBody] RefreshTokenModel refreshTokenModel,
@@ -188,6 +199,7 @@ public class AccountController : ControllerBase
     /// <param name="logout">The refresh token to delete.</param>
     /// <response code="200">Refresh token deleted successfully.</response>
     /// <response code="400">Invalid JWT provided.</response>
+    [SwaggerRestApiErrorResponse(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult> Logout(
         [FromBody] Logout logout)

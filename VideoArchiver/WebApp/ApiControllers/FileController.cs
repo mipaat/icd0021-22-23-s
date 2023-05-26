@@ -1,9 +1,9 @@
-using App.BLL;
 using App.BLL.Services;
 using HeyRed.Mime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Authorization;
+using WebApp.MyLibraries;
 
 namespace WebApp.ApiControllers;
 
@@ -18,19 +18,16 @@ public class FileController : ControllerBase
 {
     private readonly AuthorizationService _authorizationService;
     private readonly VideoPresentationService _videoPresentationService;
-    private readonly AuthorService _authorService;
 
     /// <summary>
     /// Construct a new FileController
     /// </summary>
     /// <param name="authorizationService">Service for checking if access to a file is allowed.</param>
     /// <param name="videoPresentationService">Service for fetching relevant video presentation data (video file paths).</param>
-    /// <param name="authorService">Service for fetching author profile image file paths.</param>
-    public FileController(AuthorizationService authorizationService, VideoPresentationService videoPresentationService, AuthorService authorService)
+    public FileController(AuthorizationService authorizationService, VideoPresentationService videoPresentationService)
     {
         _authorizationService = authorizationService;
         _videoPresentationService = videoPresentationService;
-        _authorService = authorService;
     }
 
     /// <summary>
@@ -41,6 +38,8 @@ public class FileController : ControllerBase
     /// <response code="200">Video file fetched successfully.</response>
     /// <response code="403">Access to video forbidden (or video doesn't exist).</response>
     /// <response code="404">Video file not found (or video doesn't exist).</response>
+    [SwaggerRestApiErrorResponse(StatusCodes.Status403Forbidden)]
+    [SwaggerRestApiErrorResponse(StatusCodes.Status404NotFound)]
     [HttpGet("{videoId:guid}")]
     [AllowAnonymous]
     [Authorize(AuthenticationSchemes = AuthenticationSchemeDefaults.IdentityAndJwt)]

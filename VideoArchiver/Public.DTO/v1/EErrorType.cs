@@ -15,10 +15,6 @@ public enum EErrorType
     /// </summary>
     InvalidLoginCredentials,
     /// <summary>
-    /// User does not exist.
-    /// </summary>
-    UserNotFound,
-    /// <summary>
     /// User account must be approved by an administrator before it can be used.
     /// </summary>
     UserNotApproved,
