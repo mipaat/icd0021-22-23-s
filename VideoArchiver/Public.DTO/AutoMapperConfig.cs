@@ -1,5 +1,6 @@
 using App.Common.Enums;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Public.DTO.Mappers;
 
 namespace Public.DTO;
@@ -9,18 +10,35 @@ namespace Public.DTO;
 /// </summary>
 public class AutoMapperConfig : Profile
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    
     /// <summary>
     /// Constructor for creating a new instance of this automapper configuration.
     /// </summary>
-    public AutoMapperConfig()
+    public AutoMapperConfig(IHttpContextAccessor httpContextAccessor)
     {
-        CreateMap<EPlatform, v1.EPlatform>();
+        _httpContextAccessor = httpContextAccessor;
+
         CreateMap<EEntityType, v1.EEntityType>();
         CreateMap<App.BLL.DTO.Entities.Identity.Role, v1.Identity.Role>();
 
         this.AddSubmissionResultMap()
             .AddUserAuthorMap()
             .AddUserMap()
-            .AddQueueItemMap();
+            .AddQueueItemMap()
+            .AddPlatformMap()
+            .AddSortingOptionsMap()
+            .AddVideoMap()
+            .AddAuthorMap()
+            .AddImageFileMap(GetWebsiteUrl)
+            .AddPrivacyStatusMap()
+            .AddLangStringMap();
+    }
+
+    private string GetWebsiteUrl()
+    {
+        var request = _httpContextAccessor.HttpContext?.Request;
+        if (request == null) throw new ApplicationException($"Can't get website base URL, {nameof(HttpContext)} is null");
+        return $"{request.Scheme}://{request.Host}{request.PathBase}";
     }
 }

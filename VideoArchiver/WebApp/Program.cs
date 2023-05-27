@@ -83,10 +83,13 @@ public class Program
             });
         });
 
-        builder.Services.AddAutoMapper(
+        builder.Services.AddAutoMapper((serviceProvider, mapperConfigurationExpression) =>
+            {
+                var httpContextAccessor = serviceProvider.GetRequiredService<IHttpContextAccessor>();
+                mapperConfigurationExpression.AddProfile(new Public.DTO.AutoMapperConfig(httpContextAccessor));
+            },
             typeof(AutoMapperConfig),
-            typeof(App.BLL.DTO.AutoMapperConfig),
-            typeof(Public.DTO.AutoMapperConfig)
+            typeof(App.BLL.DTO.AutoMapperConfig)
         );
         builder.Services.AddBllMappers();
 

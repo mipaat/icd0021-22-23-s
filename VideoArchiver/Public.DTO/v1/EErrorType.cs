@@ -18,6 +18,10 @@ public enum EErrorType
     /// User account must be approved by an administrator before it can be used.
     /// </summary>
     UserNotApproved,
+    /// <summary>
+    /// User attempted to perform an action on behalf of an author that isn't a sub-author of the user.
+    /// </summary>
+    UserAuthorMismatch,
 
     /// <summary>
     /// Requested token expiration time was invalid.
