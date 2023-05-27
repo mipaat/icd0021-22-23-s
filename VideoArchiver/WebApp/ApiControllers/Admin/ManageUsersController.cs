@@ -42,11 +42,22 @@ public class ManageUsersController : ControllerBase
     /// <returns>List of users with roles.</returns>
     /// <response code="200">Users fetched successfully.</response>
     [HttpGet]
-    public async Task<ActionResult<List<UserWithRoles>>> ListAll(UserFilter filter)
+    public async Task<ActionResult<List<UserWithRoles>>> ListAll([FromQuery] UserFilter filter)
     {
         var users = await _identityUow.UserService.GetUsersWithRoles(
             includeOnlyRequiringApproval: filter.IncludeOnlyNotApproved, nameQuery: filter.NameQuery);
         return Ok(users.Select(u => _userMapper.Map(u)));
+    }
+
+    /// <summary>
+    /// Get a list of the names of all roles on the platform.
+    /// </summary>
+    /// <returns>List of role names.</returns>
+    /// <response code="200">Role names fetched successfully.</response>
+    [HttpGet]
+    public ActionResult<List<string>> ListAllRoleNames()
+    {
+        return Ok(RoleNames.AllAsList);
     }
 
     /// <summary>
@@ -76,12 +87,28 @@ public class ManageUsersController : ControllerBase
     /// <param name="userId">The ID of the user to remove the role from.</param>
     /// <param name="roleName">The name of the role to remove.</param>
     /// <response code="200">Role removed from user / User already wasn't in role.</response>
-    /// <response code="403">The user making this request isn't allowed to remove the specified role from the specified user..</response>
+    /// <response code="403">The user making this request isn't allowed to remove the specified role from the specified user.</response>
     [HttpDelete]
     public async Task<IActionResult> RemoveRole(Guid userId, string roleName)
     {
         if (!User.IsAllowedToManageRole(roleName)) return Forbid();
         await _identityUow.UserService.RemoveUserFromRole(userId, roleName);
+        return Ok();
+    }
+
+    /// <summary>
+    /// Add a role to a user.
+    /// </summary>
+    /// <param name="userId">The ID of the user to add the role to.</param>
+    /// <param name="roleName">The name of the role to add.</param>
+    /// <response code="200">Role added to user / User already was in role.</response>
+    /// <response code="403">The user making this request isn't allowed to add the specified role to the specified user.</response>
+    [HttpPost]
+    public async Task<IActionResult> AddRole(Guid userId, string roleName)
+    {
+        if (!User.IsAllowedToManageRole(roleName)) return Forbid();
+        await _identityUow.UserService.AddUserToRole(userId, roleName);
+        await _identityUow.SaveChangesAsync();
         return Ok();
     }
 }

@@ -13,7 +13,6 @@ using App.BLL.YouTube;
 using App.BLL.YouTube.Extensions;
 using App.Contracts.DAL;
 using App.DAL.EF;
-using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using AutoMapper;
 using Base.WebHelpers;
@@ -24,6 +23,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using ApiVersion = Asp.Versioning.ApiVersion;
 using AutoMapperConfig = App.DAL.DTO.AutoMapperConfig;
 
 namespace WebApp;
@@ -65,6 +65,8 @@ public class Program
                     ClockSkew = TimeSpan.Zero,
                 };
             });
+
+        builder.Services.DisableApiErrorRedirects();
 
         builder.Services.AddControllersWithViews()
             .AddCommaSeparatedArrayModelBinderProvider()
