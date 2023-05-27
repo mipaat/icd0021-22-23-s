@@ -74,7 +74,7 @@ public class ApproveQueueItemController : ControllerBase
     /// <response code="200">Queue item deleted successfully.</response>
     /// <response code="404">Queue item with provided ID not found.</response>
     [HttpDelete]
-    public async Task<IActionResult> DeleteQueueItem([FromBody] Guid id)
+    public async Task<IActionResult> DeleteQueueItem([FromQuery] Guid id)
     {
         try
         {
@@ -84,6 +84,8 @@ public class ApproveQueueItemController : ControllerBase
         {
             return NotFound();
         }
+
+        await _serviceUow.SaveChangesAsync();
 
         return Ok();
     }

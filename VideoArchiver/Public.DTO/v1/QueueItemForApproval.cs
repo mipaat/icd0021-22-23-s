@@ -8,6 +8,10 @@ namespace Public.DTO.v1;
 public class QueueItemForApproval
 {
     /// <summary>
+    /// The unique ID of the queue item.
+    /// </summary>
+    public Guid Id { get; set; }
+    /// <summary>
     /// The platform of origin of the entity that this queue item is for.
     /// </summary>
     public EPlatform Platform { get; set; }
