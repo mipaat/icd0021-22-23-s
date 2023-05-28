@@ -23,7 +23,7 @@ public interface IVideoRepository : IBaseEntityRepository<App.Domain.Video, Vide
     public App.Domain.Video Map(BasicVideoData video, App.Domain.Video mapped);
     public Task<ICollection<string>> GetAllIdsOnPlatformNotDownloaded(EPlatform platform);
 
-    public Task<VideoWithBasicAuthors> GetByIdWithBasicAuthorsAsync(Guid id);
+    public Task<VideoWithBasicAuthors?> GetByIdWithBasicAuthorsAsync(Guid id);
     public Task<VideoWithBasicAuthorsAndComments> GetByIdWithBasicAuthorsAndCommentsAsync(Guid id);
     public Task<ICollection<VideoFile>?> GetVideoFilesAsync(Guid videoId);
 

@@ -30,20 +30,7 @@ public class FileController : ControllerBase
         _videoPresentationService = videoPresentationService;
     }
 
-    /// <summary>
-    /// Method for handling authorized (and unauthorized) access to video files.
-    /// </summary>
-    /// <param name="videoId">The ID of the video for which to return a file.</param>
-    /// <returns>FileStream of the video file</returns>
-    /// <response code="200">Video file fetched successfully.</response>
-    /// <response code="403">Access to video forbidden (or video doesn't exist).</response>
-    /// <response code="404">Video file not found (or video doesn't exist).</response>
-    [SwaggerRestApiErrorResponse(StatusCodes.Status403Forbidden)]
-    [SwaggerRestApiErrorResponse(StatusCodes.Status404NotFound)]
-    [HttpGet("{videoId:guid}")]
-    [AllowAnonymous]
-    [Authorize(AuthenticationSchemes = AuthenticationSchemeDefaults.IdentityAndJwt)]
-    public async Task<IResult> VideoFileAsync(Guid videoId)
+    private async Task<IResult> VideoFileInternalAsync(Guid videoId)
     {
         if (!await _authorizationService.IsAllowedToAccessVideo(User, videoId))
             return Results.Forbid();
@@ -69,5 +56,41 @@ public class FileController : ControllerBase
         }
 
         return Results.File(stream, contentType, enableRangeProcessing: true);
+    }
+
+    /// <summary>
+    /// Method for handling Identity Cookie authorized (and unauthorized) access to video files.
+    /// </summary>
+    /// <param name="videoId">The ID of the video for which to return a file.</param>
+    /// <returns>FileStream of the video file</returns>
+    /// <response code="200">Video file fetched successfully.</response>
+    /// <response code="403">Access to video forbidden (or video doesn't exist).</response>
+    /// <response code="404">Video file not found (or video doesn't exist).</response>
+    [SwaggerRestApiErrorResponse(StatusCodes.Status403Forbidden)]
+    [SwaggerRestApiErrorResponse(StatusCodes.Status404NotFound)]
+    [HttpGet("{videoId:guid}")]
+    [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = AuthenticationSchemeDefaults.IdentityCookie)]
+    public async Task<IResult> VideoFileAsync(Guid videoId)
+    {
+        return await VideoFileInternalAsync(videoId);
+    }
+
+    /// <summary>
+    /// Method for handling JWT bearer authorized (and unauthorized) access to video files.
+    /// </summary>
+    /// <param name="videoId">The ID of the video for which to return a file.</param>
+    /// <returns>FileStream of the video file</returns>
+    /// <response code="200">Video file fetched successfully.</response>
+    /// <response code="403">Access to video forbidden (or video doesn't exist).</response>
+    /// <response code="404">Video file not found (or video doesn't exist).</response>
+    [SwaggerRestApiErrorResponse(StatusCodes.Status403Forbidden)]
+    [SwaggerRestApiErrorResponse(StatusCodes.Status404NotFound)]
+    [HttpGet("{videoId:guid}")]
+    [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = AuthenticationSchemeDefaults.JwtBearer)]
+    public async Task<IResult> VideoFileJwtAsync(Guid videoId)
+    {
+        return await VideoFileInternalAsync(videoId);
     }
 }

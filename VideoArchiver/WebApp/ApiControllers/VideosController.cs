@@ -1,5 +1,6 @@
 using App.BLL.Identity.Services;
 using App.BLL.Services;
+using App.Common;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -20,9 +21,12 @@ public class VideosController : ControllerBase
 {
     private readonly VideoPresentationService _videoPresentationService;
     private readonly UserService _userService;
+    private readonly AuthorizationService _authorizationService;
+    private readonly VideoService _videoService;
     private readonly PlatformMapper _platformMapper;
     private readonly VideoMapper _videoMapper;
     private readonly SortingOptionsMapper _sortingOptionsMapper;
+    private readonly PrivacyStatusMapper _privacyStatusMapper;
 
     /// <summary>
     /// Construct a new VideosController.
@@ -30,13 +34,18 @@ public class VideosController : ControllerBase
     /// <param name="videoPresentationService">BLL service for handling video presentation.</param>
     /// <param name="mapper">Automapper for mapping BLL entities to API DTOs.</param>
     /// <param name="userService">BLL service for handling users.</param>
-    public VideosController(VideoPresentationService videoPresentationService, IMapper mapper, UserService userService)
+    /// <param name="authorizationService">BLL service for handling authorization.</param>
+    /// <param name="videoService">BLL service for managing videos.</param>
+    public VideosController(VideoPresentationService videoPresentationService, IMapper mapper, UserService userService, AuthorizationService authorizationService, VideoService videoService)
     {
         _videoPresentationService = videoPresentationService;
         _userService = userService;
+        _authorizationService = authorizationService;
+        _videoService = videoService;
         _videoMapper = new VideoMapper(mapper);
         _platformMapper = new PlatformMapper(mapper);
         _sortingOptionsMapper = new SortingOptionsMapper(mapper);
+        _privacyStatusMapper = new PrivacyStatusMapper(mapper);
     }
 
     /// <summary>
@@ -72,5 +81,40 @@ public class VideosController : ControllerBase
             sortingOptions: sortingOptions, descending: query.Descending
         );
         return Ok(_videoMapper.Map(videos));
+    }
+
+    /// <summary>
+    /// Fetch information about a video from the archive.
+    /// </summary>
+    /// <param name="id">The unique ID of the video.</param>
+    /// <returns>The fetched video.</returns>
+    /// <response code="200">Video fetched successfully.</response>
+    /// <response code="403">Access to video not allowed.</response>
+    /// <response code="404">Video not found.</response>
+    [HttpGet]
+    [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<ActionResult<VideoWithAuthor>> GetById(Guid id)
+    {
+        if (!await _authorizationService.IsAllowedToAccessVideo(User, id)) return Forbid();
+        var video = await _videoPresentationService.GetVideoWithAuthor(id);
+        if (video == null) return NotFound();
+        return Ok(_videoMapper.Map(video));
+    }
+
+    /// <summary>
+    /// Update a video's privacy status in the archive.
+    /// Requires administrator permissions.
+    /// </summary>
+    /// <param name="id">The unique ID of the video</param>
+    /// <param name="status">The new status to set the video's privacy to.</param>
+    /// <response code="200">Update executed successfully.
+    /// NB! This is also returned if the video doesn't exist.</response>
+    [HttpPut]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = RoleNames.AdminOrSuperAdmin)]
+    public async Task<IActionResult> SetPrivacyStatus(Guid id, ESimplePrivacyStatus status)
+    {
+        await _videoService.SetInternalPrivacyStatus(id, _privacyStatusMapper.MapSimpleBll(status));
+        return Ok();
     }
 }

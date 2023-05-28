@@ -27,7 +27,7 @@ public class VideoPresentationService : BaseService<VideoPresentationService>
         _videoPresentationHandlers = videoPresentationHandlers;
     }
 
-    public async Task<VideoWithAuthorAndComments> GetVideoAsync(Guid id, int limit, int page)
+    public async Task<VideoWithAuthorAndComments> GetVideoWithAuthorAndCommentsAsync(Guid id, int limit, int page)
     {
         var dalVideo = await Uow.Videos.GetByIdWithBasicAuthorsAsync(id);
         if (dalVideo == null) throw new VideoNotFoundInArchiveException(id);
@@ -39,6 +39,21 @@ public class VideoPresentationService : BaseService<VideoPresentationService>
             if (!presentationHandler.CanHandle(video)) continue;
             presentationHandler.Handle(video);
             break;
+        }
+
+        return video;
+    }
+
+    public async Task<VideoWithAuthor?> GetVideoWithAuthor(Guid id)
+    {
+        var dalVideo = await Uow.Videos.GetByIdWithBasicAuthorsAsync(id);
+        if (dalVideo == null) return null;
+        var video = _videoMapper.Map(dalVideo);
+
+        foreach (var presentationHandler in _videoPresentationHandlers)
+        {
+            if (!presentationHandler.CanHandle(video)) continue;
+            presentationHandler.Handle(video);
         }
 
         return video;

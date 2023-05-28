@@ -46,7 +46,7 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
             .ToListAsync();
     }
 
-    public async Task<VideoWithBasicAuthors> GetByIdWithBasicAuthorsAsync(Guid id)
+    public async Task<VideoWithBasicAuthors?> GetByIdWithBasicAuthorsAsync(Guid id)
     {
         return AttachIfNotAttached(await Entities
             .ProjectTo<VideoWithBasicAuthors>(Mapper.ConfigurationProvider)

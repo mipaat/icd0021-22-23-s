@@ -19,6 +19,11 @@ public class PrivacyStatusMapper : BaseMapper<App.Common.Enums.EPrivacyStatus, v
     {
         return Mapper.Map<App.Common.Enums.EPrivacyStatus>(privacyStatus);
     }
+
+    public App.BLL.DTO.Enums.ESimplePrivacyStatus MapSimpleBll(v1.ESimplePrivacyStatus privacyStatus)
+    {
+        return Mapper.Map<App.BLL.DTO.Enums.ESimplePrivacyStatus>(privacyStatus);
+    }
 }
 
 public static partial class AutoMapperConfigExtensions
@@ -27,6 +32,7 @@ public static partial class AutoMapperConfigExtensions
     {
         config.CreateMap<App.Common.Enums.EPrivacyStatus, v1.EPrivacyStatus>().ReverseMap();
         config.CreateMap<App.Common.Enums.EPrivacyStatus, v1.ESimplePrivacyStatus>().ReverseMap();
+        config.CreateMap<v1.ESimplePrivacyStatus, App.BLL.DTO.Enums.ESimplePrivacyStatus>();
         return config;
     }
 }

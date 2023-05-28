@@ -37,6 +37,11 @@ public class PresentationHandler : IPlatformVideoPresentationHandler, IPlatformA
         video.Author = Handle(video.Author);
     }
 
+    public void Handle(VideoWithAuthor video)
+    {
+        video.Author = Handle(video.Author);
+    }
+
     public bool CanHandle(Author author)
     {
         return author.Platform == EPlatform.YouTube;

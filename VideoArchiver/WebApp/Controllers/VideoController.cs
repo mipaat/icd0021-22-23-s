@@ -61,7 +61,7 @@ public class VideoController : Controller
     {
         if (!await _authorizationService.IsAllowedToAccessVideo(User, id)) return Forbid();
         commentsLimit = PaginationUtils.ClampLimit(commentsLimit);
-        var video = await _videoPresentationService.GetVideoAsync(id, commentsLimit, commentsPage);
+        var video = await _videoPresentationService.GetVideoWithAuthorAndCommentsAsync(id, commentsLimit, commentsPage);
         int? total = video.ArchivedRootCommentCount;
         PaginationUtils.ConformValues(ref total, ref commentsLimit, ref commentsPage);
         return View(new VideoViewModel
