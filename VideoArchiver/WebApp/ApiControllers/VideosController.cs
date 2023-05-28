@@ -66,7 +66,7 @@ public class VideosController : ControllerBase
 
         var videos = await _videoPresentationService.SearchVideosAsync(
             platformQuery: platformQuery, nameQuery: query.NameQuery, authorQuery: query.AuthorQuery,
-            categoryIds: query.CategoryIdsQuery ?? new List<Guid>(),
+            categoryIds: query.CategoryIdsQuery,
             user: User, userAuthorId: query.UserAuthorId,
             page: query.Page, limit: query.Limit,
             sortingOptions: sortingOptions, descending: query.Descending

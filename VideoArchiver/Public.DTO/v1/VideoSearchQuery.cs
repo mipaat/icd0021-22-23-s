@@ -9,7 +9,7 @@ public class VideoSearchQuery
     /// IDs of the categories that the selected videos must belong to.
     /// Currently ORed together (may be changed to AND later).
     /// </summary>
-    public List<Guid>? CategoryIdsQuery { get; set; } = null;
+    public Guid[]? CategoryIdsQuery { get; set; } = null;
     /// <summary>
     /// The ID of the author that the query is being made on behalf of.
     /// If specified, used for including private category assignments made by this author.
@@ -27,7 +27,6 @@ public class VideoSearchQuery
     public string? NameQuery { get; set; }
     /// <summary>
     /// Only include videos with authors whose names contain this string.
-    /// Currently case sensitive?
     /// </summary>
     public string? AuthorQuery { get; set; }
 

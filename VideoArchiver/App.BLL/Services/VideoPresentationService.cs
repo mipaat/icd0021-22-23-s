@@ -50,7 +50,7 @@ public class VideoPresentationService : BaseService<VideoPresentationService>
     }
 
     public async Task<ICollection<BasicVideoWithAuthor>> SearchVideosAsync(
-        EPlatform? platformQuery, string? nameQuery, string? authorQuery, ICollection<Guid> categoryIds,
+        EPlatform? platformQuery, string? nameQuery, string? authorQuery, ICollection<Guid>? categoryIds,
         ClaimsPrincipal user, Guid? userAuthorId,
         int page, int limit, EVideoSortingOptions sortingOptions, bool descending)
     {

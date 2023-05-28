@@ -28,7 +28,7 @@ public interface IVideoRepository : IBaseEntityRepository<App.Domain.Video, Vide
     public Task<ICollection<VideoFile>?> GetVideoFilesAsync(Guid videoId);
 
     public Task<ICollection<BasicVideoWithBasicAuthors>>
-        SearchVideosAsync(EPlatform? platform, string? name, string? author, ICollection<Guid> categoryIds, Guid? userid, Guid? userAuthorId, bool accessAllowed, int skipAmount, int limit, EVideoSortingOptions sortingOptions, bool descending);
+        SearchVideosAsync(EPlatform? platform, string? name, string? author, ICollection<Guid>? categoryIds, Guid? userid, Guid? userAuthorId, bool accessAllowed, int skipAmount, int limit, EVideoSortingOptions sortingOptions, bool descending);
 
     public Task<ICollection<BasicVideoData>> GetAllBasicVideoDataByIds(IEnumerable<Guid> ids);
     public Task SetInternalPrivacyStatus(Guid videoId, EPrivacyStatus status);

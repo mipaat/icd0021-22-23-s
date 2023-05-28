@@ -4,7 +4,7 @@ namespace Public.DTO.v1;
 /// Dictionary of localized/translated string values, with culture identifiers for keys.
 /// __UNKNOWN__ key may be used for a generic/unknown/unset culture.
 /// </summary>
-public abstract class LangString : Dictionary<string, string>
+public class LangString : Dictionary<string, string>
 {
     /// <summary>
     /// Construct a new LangString.

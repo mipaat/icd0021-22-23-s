@@ -66,7 +66,7 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
     }
 
     public async Task<ICollection<BasicVideoWithBasicAuthors>> SearchVideosAsync(EPlatform? platform, string? name,
-        string? author, ICollection<Guid> categoryIds, Guid? userId, Guid? userAuthorId, bool accessAllowed,
+        string? author, ICollection<Guid>? categoryIds, Guid? userId, Guid? userAuthorId, bool accessAllowed,
         int skipAmount, int limit, EVideoSortingOptions sortingOptions, bool descending)
     {
         IQueryable<App.Domain.Video> query;
@@ -90,11 +90,13 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
 
         if (author != null)
         {
-            query = query.Where(e =>
-                e.VideoAuthors!.Select(a => a.Author!.UserName + a.Author!.DisplayName).Contains(author));
+            var authorQuery = "%" + author + "%";
+            query = query.Where(v => v.VideoAuthors!
+                .Select(a => a.Author!.UserName + a.Author!.DisplayName)
+                .Any(n => Microsoft.EntityFrameworkCore.EF.Functions.ILike(n, authorQuery)));
         }
 
-        if (categoryIds.Count > 0)
+        if (categoryIds is { Count: > 0 })
         {
             query = query.Where(v => DbContext.VideoCategories
                 .Any(vc => vc.VideoId == v.Id && (vc.AssignedById == null || vc.AssignedById == userAuthorId) &&
