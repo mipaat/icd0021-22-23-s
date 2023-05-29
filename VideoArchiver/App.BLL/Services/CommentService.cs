@@ -24,9 +24,15 @@ public class CommentService : BaseService<CommentService>
     public async Task<VideoWithAuthorAndComments> LoadVideoComments(VideoWithAuthor video, int limit, int page)
     {
         int? total = video.ArchivedRootCommentCount;
+        var comments = await GetVideoComments(video.Id, limit, page, total);
+        return _videoMapper.Map(video, comments);
+    }
+
+    public async Task<ICollection<Comment>> GetVideoComments(Guid videoId, int limit, int page, int? total)
+    {
         PaginationUtils.ConformValues(ref total, ref limit, ref page);
         var skipAmount = PaginationUtils.PageToSkipAmount(limit, page);
-        var dalComments = await Uow.Comments.GetCommentRootsForVideo(video.Id, limit, skipAmount);
+        var dalComments = await Uow.Comments.GetCommentRootsForVideo(videoId, limit, skipAmount);
         var comments = dalComments.Select(c => _commentMapper.Map(c)).ToList();
         foreach (var comment in comments)
         {
@@ -47,6 +53,7 @@ public class CommentService : BaseService<CommentService>
                 }
             }
         }
-        return _videoMapper.Map(video, comments);
+
+        return comments;
     }
 }

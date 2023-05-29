@@ -33,7 +33,8 @@ public class AutoMapperConfig : Profile
             .AddImageFileMap(GetWebsiteUrl)
             .AddPrivacyStatusMap()
             .AddLangStringMap()
-            .AddCategoryMap();
+            .AddCategoryMap()
+            .AddCommentMap();
     }
 
     private string GetWebsiteUrl()

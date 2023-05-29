@@ -43,7 +43,7 @@ public class AccountController : ControllerBase
     /// <param name="expiresInSeconds">The amount of seconds the created JWT should be valid for.</param>
     /// <returns>New JWT and refresh token (with expiration date) for the registered account, if registration doesn't require further approval.</returns>
     /// <response code="200">The registration was successful.</response>
-    /// <response code="400">User with provided username is already registered.</response>
+    /// <response code="400">User with provided username is already registered or provided registration data was invalid.</response>
     /// <response code="202">The registration was successful, but must be approved by an administrator before the account can be used.</response>
     [SwaggerRestApiErrorResponse(StatusCodes.Status400BadRequest)]
     [SwaggerRestApiErrorResponse(StatusCodes.Status202Accepted)]
@@ -85,6 +85,14 @@ public class AccountController : ControllerBase
             {
                 ErrorType = EErrorType.InvalidTokenExpirationRequested,
                 Error = e.Message,
+            });
+        }
+        catch (IdentityOperationFailedException e)
+        {
+            return BadRequest(new RestApiErrorResponse
+            {
+                ErrorType = EErrorType.InvalidRegistrationData,
+                Error = string.Join(", ", e.Errors),
             });
         }
     }

@@ -15,6 +15,10 @@ public enum EErrorType
     /// </summary>
     InvalidLoginCredentials,
     /// <summary>
+    /// Provided details for registering an account were invalid.
+    /// </summary>
+    InvalidRegistrationData,
+    /// <summary>
     /// User account must be approved by an administrator before it can be used.
     /// </summary>
     UserNotApproved,

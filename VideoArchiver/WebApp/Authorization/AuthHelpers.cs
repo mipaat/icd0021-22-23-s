@@ -16,4 +16,7 @@ public static class AuthHelpers
 
     public static bool IsAllowedToCreatePublicCategory(this ClaimsPrincipal user) =>
         user.IsInRole(RoleNames.Admin) || user.IsInRole(RoleNames.SuperAdmin);
+
+    public static bool IsAllowedToSubmitEntity(this ClaimsPrincipal user) =>
+        user.IsInRole(RoleNames.Admin) || user.IsInRole(RoleNames.SuperAdmin) || user.IsInRole(RoleNames.Helper);
 }

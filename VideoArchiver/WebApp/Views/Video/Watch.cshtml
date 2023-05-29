@@ -27,7 +27,10 @@
     }
 </div>
 
-<a asp-controller="Category" asp-action="ManageEntityCategories" asp-route-id="@Model.Video.Id" asp-route-entityType="@EEntityType.Video" asp-route-returnUrl="@Context.GetFullPath()">Manage categories</a>
+@if (User.Identity?.IsAuthenticated ?? false)
+{
+    <a asp-controller="Category" asp-action="ManageEntityCategories" asp-route-id="@Model.Video.Id" asp-route-entityType="@EEntityType.Video" asp-route-returnUrl="@Context.GetFullPath()">Manage categories</a>
+}
 
 <partial name="_AuthorSummaryPartial" model="Model.Video.Author"/>
 
