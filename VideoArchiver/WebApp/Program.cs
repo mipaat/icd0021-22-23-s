@@ -175,17 +175,21 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+        var profileImagesDirectoryPath = Path.Combine(builder.Environment.ContentRootPath, "downloads",
+            "profile_images");
+        Utils.Utils.EnsureDirectoryExists(profileImagesDirectoryPath);
+        var thumbnailsDirectoryPath = Path.Combine(builder.Environment.ContentRootPath, "downloads", "thumbnails");
+        Utils.Utils.EnsureDirectoryExists(thumbnailsDirectoryPath);
         app.UseStaticFiles(new StaticFileOptions
         {
             FileProvider =
-                new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "downloads",
-                    "profile_images")),
+                new PhysicalFileProvider(profileImagesDirectoryPath),
             RequestPath = "/downloads/profile_images",
         });
         app.UseStaticFiles(new StaticFileOptions
         {
             FileProvider =
-                new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "downloads", "thumbnails")),
+                new PhysicalFileProvider(thumbnailsDirectoryPath),
             RequestPath = "/downloads/thumbnails",
         });
 
