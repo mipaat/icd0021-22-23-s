@@ -39,6 +39,8 @@ public class PresentationHandler : IPlatformVideoPresentationHandler, IPlatformA
 
     public void Handle(VideoWithAuthor video)
     {
+        video.Url = Url.ToVideoUrl(video.IdOnPlatform);
+        video.EmbedUrl = Url.ToVideoEmbedUrl(video.IdOnPlatform);
         video.Author = Handle(video.Author);
     }
 
