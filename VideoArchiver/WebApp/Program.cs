@@ -47,7 +47,7 @@ public class Program
         builder.Services.AddScoped<IdentityAppDataInit>();
         builder.Services.AddScoped<IDbInitializer, DbInitializer>();
         builder.Services.AddScoped<AppDataInit>();
-        
+
         var jwtSettings = builder.Configuration.GetRequiredSection(JwtSettings.SectionKey).Get<JwtSettings>();
 
         builder.Services
@@ -73,8 +73,23 @@ public class Program
             .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         const string corsAllowAllName = "CorsAllowAll";
+        const string corsAllowCredentialsName = "CorsAllowCredentials";
         builder.Services.AddCors(options =>
         {
+            var allowCredentialsOrigins = builder.Configuration.GetSection("AllowedCorsCredentialOrigins")
+                .Get<ICollection<string>>();
+            options.AddPolicy(corsAllowCredentialsName, policy =>
+            {
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+
+                if (allowCredentialsOrigins is { Count: > 0 })
+                {
+                    policy.WithOrigins(allowCredentialsOrigins.ToArray());
+                }
+
+                policy.AllowCredentials();
+            });
             options.AddPolicy(corsAllowAllName, policy =>
             {
                 policy.AllowAnyHeader();
@@ -132,7 +147,8 @@ public class Program
         var localizationOptions = new RequestLocalizationOptions
         {
             DefaultRequestCulture = new RequestCulture(defaultCulture),
-            SupportedCultures = CultureInfo.GetCultures(CultureTypes.AllCultures).Select(c => c.UseConstantDateTime()).ToList(),
+            SupportedCultures = CultureInfo.GetCultures(CultureTypes.AllCultures).Select(c => c.UseConstantDateTime())
+                .ToList(),
             SupportedUICultures = app.Configuration.GetSupportedUiCultures(),
         };
 
@@ -161,23 +177,28 @@ public class Program
         app.UseStaticFiles();
         app.UseStaticFiles(new StaticFileOptions
         {
-            FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "downloads", "profile_images")),
+            FileProvider =
+                new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "downloads",
+                    "profile_images")),
             RequestPath = "/downloads/profile_images",
         });
         app.UseStaticFiles(new StaticFileOptions
         {
-            FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "downloads", "thumbnails")),
+            FileProvider =
+                new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "downloads", "thumbnails")),
             RequestPath = "/downloads/thumbnails",
         });
 
         app.UseRouting();
 
         app.UseCors(corsAllowAllName);
+        app.UseCors(corsAllowCredentialsName);
 
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapAreaControllerRoute(name: "admin", areaName: "Admin", pattern: "Admin/{controller}/{action=Index}/{id?}");
+        app.MapAreaControllerRoute(name: "admin", areaName: "Admin",
+            pattern: "Admin/{controller}/{action=Index}/{id?}");
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -203,7 +224,7 @@ public class Program
         using var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
 
         var uow = scope.ServiceProvider.GetRequiredService<IAppUnitOfWork>();
-        
+
         var dbInitializer = scope.ServiceProvider.GetService<IDbInitializer>();
         dbInitializer?.RunDbInit(configuration.GetDbInitSettings());
 

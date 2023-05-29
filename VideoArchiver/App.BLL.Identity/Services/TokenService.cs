@@ -15,7 +15,7 @@ namespace App.BLL.Identity.Services;
 
 public class TokenService
 {
-    private IdentityUow _identityUow;
+    private readonly IdentityUow _identityUow;
     private readonly JwtSettings _jwtSettings;
     private readonly RefreshTokenMapper _refreshTokenMapper;
 
@@ -100,6 +100,31 @@ public class TokenService
         };
         Uow.RefreshTokens.Add(refreshToken);
         return _refreshTokenMapper.Map(refreshToken)!;
+    }
+
+    public async Task<ClaimsPrincipal> GetUserFromJwt(string jwt)
+    {
+        JwtSecurityToken jwtToken;
+        try
+        {
+            jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(jwt) ?? throw new InvalidJwtException();
+        }
+        catch (ArgumentException)
+        {
+            throw new InvalidJwtException();
+        }
+
+        if (!IdentityHelpers.ValidateToken(jwt, _jwtSettings.Key, _jwtSettings.Issuer, _jwtSettings.Audience, false))
+        {
+            throw new InvalidJwtException();
+        }
+
+        var userName = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value ??
+                       throw new InvalidJwtException();
+        var user = await _identityUow.UserManager.FindByNameAsync(userName) ??
+                   throw new UserNotFoundException(userName);
+        var claimsPrincipal = await _identityUow.SignInManager.CreateUserPrincipalAsync(user);
+        return claimsPrincipal;
     }
 
     public async Task<JwtResult> RefreshToken(string jwt, string refreshToken, int? expiresInSeconds = null)
