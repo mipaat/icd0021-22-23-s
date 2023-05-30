@@ -103,6 +103,26 @@
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>ManageEntityCategories.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Shared\_AdminDropdown.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>_AdminDropdown.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Shared\_Layout.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>_Layout.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Shared\_LoginPartial.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>_LoginPartial.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Shared\_SubmitLinkPrompt.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>_SubmitLinkPrompt.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\ViewModels\LinkSubmissionViewModel.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>LinkSubmissionViewModel.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
@@ -225,6 +245,31 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>ManageEntityCategories.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Shared\_AdminDropdown.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>_AdminDropdown.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Shared\_Layout.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>_Layout.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Shared\_LoginPartial.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>_LoginPartial.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Shared\_SubmitLinkPrompt.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>_SubmitLinkPrompt.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\ViewModels\LinkSubmissionViewModel.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>LinkSubmissionViewModel.resx</DependentUpon>
       </Compile>
     </ItemGroup>
 

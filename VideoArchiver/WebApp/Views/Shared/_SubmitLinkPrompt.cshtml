@@ -3,16 +3,16 @@
 
 @if (User.IsAllowedToSubmitEntity())
 {
-    <h2>Add a YouTube link to the archive</h2>
+    <h2>@App.Resources.WebApp.Views.Shared._SubmitLinkPrompt.AddLinkToArchive</h2>
     <form asp-controller="SubmitLink" asp-action="Submit" method="POST">
         <div>
-            <label asp-for="Link">Link:</label>
+            <label asp-for="Link"></label>
             <input asp-for="Link"/>
         </div>
         <div>
-            <label asp-for="SubmitPlaylist">Also submit playlist, if link is a video+playlist link:</label>
+            <label asp-for="SubmitPlaylist">@App.Resources.WebApp.Views.Shared._SubmitLinkPrompt.AlsoSubmitPlaylist</label>
             <input type="checkbox" asp-for="SubmitPlaylist"/>
         </div>
-        <input type="submit" value="Submit" class="btn btn-primary"/>
+        <input type="submit" value="@App.Resources.WebApp.Views.Shared._SubmitLinkPrompt.Submit" class="btn btn-primary"/>
     </form>
 }
