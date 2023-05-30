@@ -22,6 +22,7 @@ public class FileController : ControllerBase
     private readonly AuthorizationService _authorizationService;
     private readonly VideoPresentationService _videoPresentationService;
     private readonly TokenService _tokenService;
+    private readonly IWebHostEnvironment _environment;
 
     /// <summary>
     /// Construct a new FileController
@@ -29,12 +30,14 @@ public class FileController : ControllerBase
     /// <param name="authorizationService">Service for checking if access to a file is allowed.</param>
     /// <param name="videoPresentationService">Service for fetching relevant video presentation data (video file paths).</param>
     /// <param name="tokenService">Service for generating and validating video access tokens.</param>
+    /// <param name="environment">The web host environment, for getting content root path.</param>
     public FileController(AuthorizationService authorizationService, VideoPresentationService videoPresentationService,
-        TokenService tokenService)
+        TokenService tokenService, IWebHostEnvironment environment)
     {
         _authorizationService = authorizationService;
         _videoPresentationService = videoPresentationService;
         _tokenService = tokenService;
+        _environment = environment;
     }
 
     private async Task<IResult> VideoFileInternalAsync(Guid videoId, ClaimsPrincipal user)
@@ -51,7 +54,8 @@ public class FileController : ControllerBase
         FileStream stream;
         try
         {
-            stream = System.IO.File.OpenRead(filePath);
+            // Using ContentRootPath is necessary on some OSes / hosting scenarios?
+            stream = System.IO.File.OpenRead(Path.Combine(_environment.ContentRootPath, filePath));
         }
         catch (FileNotFoundException)
         {
