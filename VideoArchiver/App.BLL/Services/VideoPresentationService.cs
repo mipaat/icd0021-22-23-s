@@ -64,7 +64,7 @@ public class VideoPresentationService : BaseService<VideoPresentationService>
         return (await Uow.Videos.GetVideoFilesAsync(id))?.FirstOrDefault();
     }
 
-    public async Task<ICollection<BasicVideoWithAuthor>> SearchVideosAsync(
+    public async Task<List<BasicVideoWithAuthor>> SearchVideosAsync(
         EPlatform? platformQuery, string? nameQuery, string? authorQuery, ICollection<Guid>? categoryIds,
         ClaimsPrincipal user, Guid? userAuthorId,
         int page, int limit, EVideoSortingOptions sortingOptions, bool descending)

@@ -1,0 +1,96 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Common\Enums\EEntityType.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>EEntityType.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="App.BLL.DTO\Entities\BasicVideoWithAuthor.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>BasicVideoWithAuthor.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Video\Search.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Search.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\ViewModels\VideoSearchViewModel.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>VideoSearchViewModel.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="App.BLL.DTO\Entities\EVideoSortingOptions.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>EVideoSortingOptions.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Shared\_CategoryPickerPartial.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>_CategoryPickerPartial.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Common\Enums\EPlatform.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>EPlatform.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Shared\_VideoResultsPartial.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>_VideoResultsPartial.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Shared\_AuthorSummaryPartial.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>_AuthorSummaryPartial.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Common\Enums\EEntityType.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>EEntityType.resx</DependentUpon>
+      </Compile>
+      <Compile Update="App.BLL.DTO\Entities\BasicVideoWithAuthor.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>BasicVideoWithAuthor.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Video\Search.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Search.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\ViewModels\VideoSearchViewModel.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>VideoSearchViewModel.resx</DependentUpon>
+      </Compile>
+      <Compile Update="App.BLL.DTO\Entities\EVideoSortingOptions.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>EVideoSortingOptions.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Shared\_CategoryPickerPartial.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>_CategoryPickerPartial.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Common\Enums\EPlatform.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>EPlatform.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Shared\_VideoResultsPartial.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>_VideoResultsPartial.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Shared\_AuthorSummaryPartial.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>_AuthorSummaryPartial.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>

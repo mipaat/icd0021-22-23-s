@@ -2,7 +2,7 @@
 
 <div>
     <div class="d-inline-block">
-        <div class="image-load-container" width="40" height="40" alt="Author profile image" src="/@Model.ProfileImages?.FirstOrDefault()?.LocalFilePath"></div>
+        <div class="image-load-container" width="40" height="40" alt="@App.Resources.WebApp.Views.Shared._AuthorSummaryPartial.AuthorProfileImageAltText" src="/@Model.ProfileImages?.FirstOrDefault()?.LocalFilePath"></div>
     </div>
     <div class="d-inline-block">
         @if (Model.UrlOnPlatform != null)

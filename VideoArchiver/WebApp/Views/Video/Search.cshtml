@@ -5,20 +5,20 @@
 @model WebApp.ViewModels.VideoSearchViewModel
 
 @{
-    ViewBag.Title = "Search videos";
+    ViewBag.Title = App.Resources.WebApp.Views.Video.Search.PageTitle;
 }
 
 <form method="get">
-    <label asp-for="NameQuery">Search video name:</label>
+    <label asp-for="NameQuery"></label>
     <input asp-for="NameQuery"/>
-    <label asp-for="AuthorQuery">Search author name:</label>
+    <label asp-for="AuthorQuery"></label>
     <input asp-for="AuthorQuery"/>
-    <label asp-for="SortingOptions">Sort by</label>
-    <select asp-for="SortingOptions" asp-items="@(Html.GetEnumSelectList<EVideoSortingOptions>())"></select>
-    <label asp-for="Descending">Sort descending</label>
+    <label asp-for="SortingOptions"></label>
+    <select asp-for="SortingOptions" asp-items="@(Html.GetLocalizedEnumSelectList<EVideoSortingOptions>(Model.SortingOptions))"></select>
+    <label asp-for="Descending"></label>
     <input asp-for="Descending"/>
     <partial name="_CategoryPickerPartial" model="@Model.CategoryPickerViewModel" />
-    <input type="submit" class="btn btn-primary" value="Search"/>
+    <input type="submit" class="btn btn-primary" value="@App.Resources.WebApp.Views.Video.Search.SubmitSearch"/>
 </form>
 
 <partial name="_PaginationUiPartial" model="@PaginationViewModel"/>

@@ -1,13 +1,13 @@
-@model ICollection<App.BLL.DTO.Entities.BasicVideoWithAuthor>
+@model List<App.BLL.DTO.Entities.BasicVideoWithAuthor>
 
 <div>
     <table class="table">
         <thead>
         <tr>
-            <th>Video</th>
-            <th>Author</th>
-            <th>Thumbnail</th>
-            <th>Duration</th>
+            <th>@Html.DisplayNameFor(v => v[0].Title)</th>
+            <th>@Html.DisplayNameFor(v => v[0].Author)</th>
+            <th>@Html.DisplayNameFor(v => v[0].Thumbnail)</th>
+            <th>@Html.DisplayNameFor(v => v[0].Duration)</th>
         </tr>
         </thead>
         <tbody>
@@ -23,11 +23,11 @@
                 <td>
                     @if (video.Thumbnail?.LocalFilePath != null)
                     {
-                        <div class="image-load-container" width="160" height="90" alt="Thumbnail" src="/@video.Thumbnail.LocalFilePath"></div>
+                        <div class="image-load-container" width="160" height="90" alt="@App.Resources.WebApp.Views.Shared._VideoResultsPartial.ThumbnailAltText" src="/@video.Thumbnail.LocalFilePath"></div>
                     }
                     else
                     {
-                        <div>No thumbnails</div>
+                        <div>@App.Resources.WebApp.Views.Shared._VideoResultsPartial.NoThumbnails</div>
                     }
                 </td>
                 <td>

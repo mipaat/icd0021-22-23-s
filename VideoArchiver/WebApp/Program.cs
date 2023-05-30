@@ -98,6 +98,8 @@ public class Program
             });
         });
 
+        builder.Services.AddLocalization();
+
         builder.Services.AddAutoMapper((serviceProvider, mapperConfigurationExpression) =>
             {
                 var httpContextAccessor = serviceProvider.GetRequiredService<IHttpContextAccessor>();

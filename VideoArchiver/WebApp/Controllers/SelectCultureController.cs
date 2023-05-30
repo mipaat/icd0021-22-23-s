@@ -10,7 +10,11 @@ public class SelectCultureController : Controller
     {
         var requestCulture = new RequestCulture(culture);
         HttpContext.Response.Cookies.Delete(CookieRequestCultureProvider.DefaultCookieName);
-        HttpContext.Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName, CookieRequestCultureProvider.MakeCookieValue(requestCulture));
+        HttpContext.Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName, CookieRequestCultureProvider.MakeCookieValue(requestCulture),
+            new CookieOptions
+            {
+                Expires = DateTimeOffset.UtcNow.AddYears(1),
+            });
         return LocalRedirect(returnUrl);
     }
 }
