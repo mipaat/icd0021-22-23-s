@@ -1,4 +1,5 @@
 using App.BLL.DTO.Entities;
+using App.BLL.DTO.Enums;
 using App.Common;
 using App.Common.Enums;
 using App.DAL.DTO.Entities;

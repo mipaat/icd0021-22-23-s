@@ -23,10 +23,6 @@
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>VideoSearchViewModel.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="App.BLL.DTO\Entities\EVideoSortingOptions.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
-        <LastGenOutput>EVideoSortingOptions.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
       <EmbeddedResource Update="WebApp\Views\Shared\_CategoryPickerPartial.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>_CategoryPickerPartial.Designer.cs</LastGenOutput>
@@ -46,6 +42,22 @@
       <EmbeddedResource Update="WebApp\Views\Shared\_PaginationUiPartial.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>_PaginationUiPartial.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Video\Watch.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Watch.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="App.BLL.DTO\Enums\EVideoSortingOptions.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>EVideoSortingOptions.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="App.BLL.DTO\Enums\ESimplePrivacyStatus.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>ESimplePrivacyStatus.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Shared\_CommentPartial.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>_CommentPartial.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
 
@@ -69,11 +81,6 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>VideoSearchViewModel.resx</DependentUpon>
-      </Compile>
-      <Compile Update="App.BLL.DTO\Entities\EVideoSortingOptions.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>EVideoSortingOptions.resx</DependentUpon>
       </Compile>
       <Compile Update="WebApp\Views\Shared\_CategoryPickerPartial.Designer.cs">
         <DesignTime>True</DesignTime>
@@ -99,6 +106,26 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>_PaginationUiPartial.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Video\Watch.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Watch.resx</DependentUpon>
+      </Compile>
+      <Compile Update="App.BLL.DTO\Enums\EVideoSortingOptions.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>EVideoSortingOptions.resx</DependentUpon>
+      </Compile>
+      <Compile Update="App.BLL.DTO\Enums\ESimplePrivacyStatus.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>ESimplePrivacyStatus.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Shared\_CommentPartial.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>_CommentPartial.resx</DependentUpon>
       </Compile>
     </ItemGroup>
 

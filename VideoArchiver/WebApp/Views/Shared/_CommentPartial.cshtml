@@ -1,14 +1,13 @@
-@using Base.WebHelpers
 @model App.BLL.DTO.Entities.Comment
 
 <div>
     <partial name="_AuthorSummaryPartial" model="@Model.Author"/>
-    <p>@Html.ToLineBreaks(Model.Content)</p>
+    <span class="white-space-text-block">@Model.Content</span>
 </div>
 @if (Model.Replies.Count > 0)
 {
     <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#comment-@Model.Id-collapse" aria-expanded="False" aria-controls="comment-@Model.Id-collapse">
-        @Model.Replies.Count replies
+        @string.Format(App.Resources.WebApp.Views.Shared._CommentPartial.RepliesAmount, Model.Replies.Count)
     </button>
     <div class="collapse ms-4" id="comment-@Model.Id-collapse">
         @foreach (var reply in Model.Replies)

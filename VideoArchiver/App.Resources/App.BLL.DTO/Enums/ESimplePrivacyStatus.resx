@@ -1,4 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
     <resheader name="resmimetype">
         <value>text/microsoft-resx</value>
     </resheader>
@@ -11,19 +18,13 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="RangeResultsUnknownTotal" xml:space="preserve">
-        <value>Tulemused {0}-{1} (koguarv teadmata)</value>
+    <data name="Private" xml:space="preserve">
+        <value>Private</value>
     </data>
-    <data name="ResultsAmount" xml:space="preserve">
-        <value>{0} tulemust</value>
+    <data name="Unlisted" xml:space="preserve">
+        <value>Unlisted</value>
     </data>
-    <data name="RangeResultsKnownTotal" xml:space="preserve">
-        <value>Tulemused {0}-{1} (kokku {2})</value>
-    </data>
-    <data name="ResultsAmountOnPage" xml:space="preserve">
-        <value>{0} tulemust lehel</value>
-    </data>
-    <data name="NextPage" xml:space="preserve">
-        <value>Järgmine</value>
+    <data name="Public" xml:space="preserve">
+        <value>Public</value>
     </data>
 </root>

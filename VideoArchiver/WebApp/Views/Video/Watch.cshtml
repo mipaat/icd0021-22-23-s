@@ -4,15 +4,18 @@
 @using WebApp.ViewModels
 @using App.BLL.DTO.Mappers
 @using App.Common
+@using App.BLL.DTO.Enums
 @model WebApp.ViewModels.VideoViewModel
 
 @{
-    ViewBag.Title = $"Video - {Model.Video.Title}";
+    ViewBag.Title = $"{Model.Video.Title}";
 }
 
 @if (VideoCanBeEmbedded)
 {
-    <a asp-action="Watch" asp-route-id="@Model.Video.Id" asp-route-embedView="@(!Model.EmbedView)">@(Model.EmbedView ? "View archived version" : "View on platform")</a>
+    <a asp-action="Watch" asp-route-id="@Model.Video.Id" asp-route-embedView="@(!Model.EmbedView)">
+        @(Model.EmbedView ? App.Resources.WebApp.Views.Video.Watch.WatchArchived : App.Resources.WebApp.Views.Video.Watch.WatchOnPlatform)
+    </a>
 }
 <div>
     @if (ShowEmbedView)
@@ -29,7 +32,9 @@
 
 @if (User.Identity?.IsAuthenticated ?? false)
 {
-    <a asp-controller="Category" asp-action="ManageEntityCategories" asp-route-id="@Model.Video.Id" asp-route-entityType="@EEntityType.Video" asp-route-returnUrl="@Context.GetFullPath()">Manage categories</a>
+    <a asp-controller="Category" asp-action="ManageEntityCategories" asp-route-id="@Model.Video.Id" asp-route-entityType="@EEntityType.Video" asp-route-returnUrl="@Context.GetFullPath()">
+        @App.Resources.WebApp.Views.Video.Watch.ManageCategories
+    </a>
 }
 
 <partial name="_AuthorSummaryPartial" model="Model.Video.Author"/>
@@ -43,18 +48,20 @@
             <form method="post" asp-action="SetPrivacyStatus">
                 @Html.Hidden("id", Model.Video.Id)
                 @Html.Hidden("returnUrl", Context.GetFullPath())
-                <label for="status">Set privacy status (in archive)</label>
-                <select name="status" id="status" asp-items="@(Html.GetEnumSelectList(PrivacyStatusMapper.Map(Model.Video.InternalPrivacyStatus)))"></select>
-                <input type="submit" class="btn btn-primary" value="Submit"/>
+                <label for="status">@App.Resources.WebApp.Views.Video.Watch.SetArchivePrivacyStatus</label>
+                <select name="status" id="status" asp-items="@(Html.GetLocalizedEnumSelectList<ESimplePrivacyStatus>(PrivacyStatusMapper.Map(Model.Video.InternalPrivacyStatus)))"></select>
+                <input type="submit" class="btn btn-primary" value="@App.Resources.WebApp.Views.Video.Watch.SetArchivePrivacyStatusSubmit"/>
             </form>
         }
     </div>
-    <p>@Html.ToLineBreaks(Model.Video.Description)</p>
+    <span class="white-space-text-block">@Model.Video.Description</span>
 </div>
 
 <div>
-    <h4>Comments</h4>
-    Comments on platform: @Model.Video.CommentCount Archived root comments: @Model.Video.ArchivedRootCommentCount Archived total comments: @Model.Video.ArchivedCommentCount
+    <h4>@App.Resources.WebApp.Views.Video.Watch.Comments</h4>
+    @string.Format(App.Resources.WebApp.Views.Video.Watch.CommentsOnPlatformCount, Model.Video.CommentCount)
+    @string.Format(App.Resources.WebApp.Views.Video.Watch.ArchivedRootCommentsCount, Model.Video.ArchivedRootCommentCount)
+    @string.Format(App.Resources.WebApp.Views.Video.Watch.ArchivedTotalCommentsCount, Model.Video.ArchivedCommentCount)
     <partial name="_PaginationUiPartial" model="@PaginationViewModel"/>
     @foreach (var comment in Model.Video.Comments)
     {

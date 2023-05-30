@@ -104,13 +104,6 @@ public static class InputHelpers
 
     public static object GetRouteValues(this HttpContext context) => context.Request.GetRouteValues();
 
-    public static IHtmlContent ToLineBreaks(this IHtmlHelper html, string text)
-    {
-        text = text.ReplaceLineEndings("\n");
-        var lines = text.Split("\n").Select(html.Encode);
-        return html.Raw(string.Join("<br/>", lines));
-    }
-
     public static IEnumerable<SelectListItem> GetEnumSelectList<TEnum>(this IHtmlHelper html, TEnum value) where TEnum : struct
     {
         var selectList = html.GetEnumSelectList<TEnum>();

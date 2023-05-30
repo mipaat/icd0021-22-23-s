@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using App.BLL.DTO.Entities;
+using App.BLL.DTO.Enums;
 using App.Common.Enums;
 using Microsoft.AspNetCore.Mvc;
 

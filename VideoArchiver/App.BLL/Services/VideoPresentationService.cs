@@ -2,6 +2,7 @@ using System.Security.Claims;
 using App.BLL.Base;
 using App.BLL.DTO.Contracts;
 using App.BLL.DTO.Entities;
+using App.BLL.DTO.Enums;
 using App.BLL.DTO.Mappers;
 using App.BLL.Exceptions;
 using App.Common;

@@ -1,0 +1,41 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="WatchArchived" xml:space="preserve">
+        <value>Vaata arhiveeritud versiooni</value>
+    </data>
+    <data name="WatchOnPlatform" xml:space="preserve">
+        <value>Vaata algplatvormil</value>
+    </data>
+    <data name="ManageCategories" xml:space="preserve">
+        <value>Halda kategooriaid</value>
+    </data>
+    <data name="SetArchivePrivacyStatus" xml:space="preserve">
+        <value>Muuda privaatsusstaatust (arhiivis)</value>
+    </data>
+    <data name="SetArchivePrivacyStatusSubmit" xml:space="preserve">
+        <value>Muuda</value>
+    </data>
+    <data name="Comments" xml:space="preserve">
+        <value>Kommentaarid</value>
+    </data>
+    <data name="CommentsOnPlatformCount" xml:space="preserve">
+        <value>Kommentaare platvormil: {0}</value>
+    </data>
+    <data name="ArchivedRootCommentsCount" xml:space="preserve">
+        <value>Juurkommentaare arhiivis: {0}</value>
+    </data>
+    <data name="ArchivedTotalCommentsCount" xml:space="preserve">
+        <value>Kokku kommentaare arhiivis: {0}</value>
+    </data>
+</root>
