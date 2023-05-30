@@ -107,14 +107,14 @@ public class VideosController : ControllerBase
     /// Requires administrator permissions.
     /// </summary>
     /// <param name="id">The unique ID of the video</param>
-    /// <param name="status">The new status to set the video's privacy to.</param>
+    /// <param name="data">The privacy status to set the video to.</param>
     /// <response code="200">Update executed successfully.
     /// NB! This is also returned if the video doesn't exist.</response>
     [HttpPut]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = RoleNames.AdminOrSuperAdmin)]
-    public async Task<IActionResult> SetPrivacyStatus(Guid id, ESimplePrivacyStatus status)
+    public async Task<IActionResult> SetPrivacyStatus([FromQuery] Guid id, [FromBody] InternalPrivacyStatusUpdateData data)
     {
-        await _videoService.SetInternalPrivacyStatus(id, _privacyStatusMapper.MapSimpleBll(status));
+        await _videoService.SetInternalPrivacyStatus(id, _privacyStatusMapper.MapSimpleBll(data.Status));
         return Ok();
     }
 }
