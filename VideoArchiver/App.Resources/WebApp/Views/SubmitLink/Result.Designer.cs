@@ -7,28 +7,28 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace App.Resources.Common.Enums {
+namespace App.Resources.WebApp.Views.SubmitLink {
     using System;
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class EEntityType {
+    public class Result {
         
         private static System.Resources.ResourceManager resourceMan;
         
         private static System.Globalization.CultureInfo resourceCulture;
         
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal EEntityType() {
+        internal Result() {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         public static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("App.Resources.Common.Enums.EEntityType", typeof(EEntityType).Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("App.Resources.WebApp.Views.SubmitLink.Result", typeof(Result).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -45,21 +45,9 @@ namespace App.Resources.Common.Enums {
             }
         }
         
-        public static string Video {
+        public static string SubmissionProcessed {
             get {
-                return ResourceManager.GetString("Video", resourceCulture);
-            }
-        }
-        
-        public static string Author {
-            get {
-                return ResourceManager.GetString("Author", resourceCulture);
-            }
-        }
-        
-        public static string Playlist {
-            get {
-                return ResourceManager.GetString("Playlist", resourceCulture);
+                return ResourceManager.GetString("SubmissionProcessed", resourceCulture);
             }
         }
     }

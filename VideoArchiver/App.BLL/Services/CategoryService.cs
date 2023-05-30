@@ -77,7 +77,7 @@ public class CategoryService : BaseService<CategoryService>
         return await GetAllCategoriesAsync(authorId);
     }
 
-    public async Task<ICollection<CategoryWithCreator>> GetAllAssignableCategoriesForAuthor(Guid? authorId)
+    public async Task<List<CategoryWithCreator>> GetAllAssignableCategoriesForAuthor(Guid? authorId)
     {
         return (await Uow.Categories.GetAllAssignableCategoriesForAuthor(authorId))
             .Select(c => _categoryMapper.Map(c)!).ToList();

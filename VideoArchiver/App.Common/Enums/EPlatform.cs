@@ -7,8 +7,8 @@ namespace App.Common.Enums;
 [JsonConverter(typeof(PlatformJsonConverter))]
 public enum EPlatform
 {
-    [Display(Name = nameof(This), ResourceType = typeof(App.Resources.Common.Enums.EPlatform))]
+    [Display(Name = nameof(This), ResourceType = typeof(Resources.App.Common.Enums.EPlatform))]
     This,
-    [Display(Name = nameof(YouTube), ResourceType = typeof(App.Resources.Common.Enums.EPlatform))]
+    [Display(Name = nameof(YouTube), ResourceType = typeof(Resources.App.Common.Enums.EPlatform))]
     YouTube,
 }

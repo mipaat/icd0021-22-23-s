@@ -9,7 +9,7 @@ public class CategoryManageEntityCategoriesViewModel
     public EEntityType EntityType { get; set; }
     public Guid Id { get; set; }
     public string ReturnUrl { get; set; } = default!;
-    public ICollection<CategoryWithCreator> Categories { get; set; } = default!;
+    public List<CategoryWithCreator> Categories { get; set; } = default!;
     public Dictionary<Guid, bool> SelectedCategoryIds { get; set; } = default!;
 
     public void SetSelectedCategoryIds(ICollection<Guid> ids)

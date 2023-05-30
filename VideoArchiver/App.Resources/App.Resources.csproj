@@ -59,6 +59,50 @@
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>_CommentPartial.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\SubmitLink\Result.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Result.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Home\Index.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Index.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Category\Create.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Create.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="App.BLL.DTO\Entities\CategoryDataWithCreatorId.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>CategoryDataWithCreatorId.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="App.Common\Validation\LangStringNotEmptyAttribute.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>LangStringNotEmptyAttribute.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Category\Delete.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Delete.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Category\Details.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Details.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="App.BLL.DTO\Entities\CategoryWithCreator.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>CategoryWithCreator.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Category\Edit.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Edit.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="App.BLL.DTO\Entities\CategoryData.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>CategoryData.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Category\ManageEntityCategories.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>ManageEntityCategories.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
@@ -126,6 +170,61 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>_CommentPartial.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\SubmitLink\Result.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Result.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Home\Index.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Index.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Category\Create.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Create.resx</DependentUpon>
+      </Compile>
+      <Compile Update="App.BLL.DTO\Entities\CategoryDataWithCreatorId.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>CategoryDataWithCreatorId.resx</DependentUpon>
+      </Compile>
+      <Compile Update="App.Common\Validation\LangStringNotEmptyAttribute.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>LangStringNotEmptyAttribute.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Category\Delete.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Delete.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Category\Details.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Details.resx</DependentUpon>
+      </Compile>
+      <Compile Update="App.BLL.DTO\Entities\CategoryWithCreator.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>CategoryWithCreator.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Category\Edit.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Edit.resx</DependentUpon>
+      </Compile>
+      <Compile Update="App.BLL.DTO\Entities\CategoryData.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>CategoryData.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Category\ManageEntityCategories.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>ManageEntityCategories.resx</DependentUpon>
       </Compile>
     </ItemGroup>
 

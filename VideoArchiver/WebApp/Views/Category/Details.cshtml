@@ -1,21 +1,21 @@
 @using WebApp.ViewModels
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Base.WebHelpers
 @model CategoryDetailsViewModel
 
 @{
-    ViewBag.Title = "Category details";
+    ViewBag.Title = App.Resources.WebApp.Views.Category.Details.PageTitle;
 }
 
-<h2>Category details</h2>
+<h2>@App.Resources.WebApp.Views.Category.Details.PageTitle</h2>
 
 <div>
-    <label>
-        Platform: <span>@Model.Category.Platform</span>
-    </label>
+    <label asp-for="Category.Platform"></label>
+    @Html.Translate(Model.Category.Platform)
     <label asp-for="Category.IsPublic"></label>
     <input asp-for="Category.IsPublic" disabled="disabled"/>
     <div class="form-group">
-        <label asp-for="Category.Name">Name:</label>
+        <label asp-for="Category.Name"></label>
         @foreach (var culture in Model.SupportedUiCultures)
         {
             Model.Category.Name.TryGetValue(culture, out var cultureValue);
@@ -24,6 +24,6 @@
     </div>
     @if (Model.UserIsCreator)
     {
-        <a asp-action="Edit">Edit</a>
+        <a asp-action="Edit">@App.Resources.WebApp.Views.Category.Details.Edit</a>
     }
 </div>

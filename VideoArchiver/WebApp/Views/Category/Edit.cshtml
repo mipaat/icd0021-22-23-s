@@ -5,10 +5,10 @@
 @model WebApp.ViewModels.CategoryEditViewModel
 
 @{
-    ViewBag.Title = "Edit category";
+    ViewBag.Title = App.Resources.WebApp.Views.Category.Edit.PageTitle;
 }
 
-<h2>Edit category</h2>
+<h2>@App.Resources.WebApp.Views.Category.Edit.PageTitle</h2>
 
 <div>
     <form >
@@ -16,7 +16,7 @@
         <label asp-for="Category.IsPublic"></label>
         <input asp-for="Category.IsPublic" disabled="@(!User.IsAllowedToCreatePublicCategory())"/>
         <div class="form-group">
-            <label asp-for="Category.Name">Name:</label>
+            <label asp-for="Category.Name"></label>
             @foreach (var culture in Model.SupportedUiCultures)
             {
                 Model.Category.Name.TryGetValue(culture, out var cultureValue);
@@ -26,10 +26,10 @@
                 <span asp-validation-for="Category.Name" class="text-danger"></span>
             </div>
         </div>
-        <input type="submit" class="btn btn-primary" value="Submit"/>
+        <input type="submit" class="btn btn-primary" value="@App.Resources.WebApp.Views.Category.Edit.Submit"/>
     </form>
-    <a asp-action="Details" asp-route-id="@Model.Id">Details</a>
-    <a asp-action="Delete" asp-route-id="@Model.Id" asp-route-returnUrl="@Context.GetFullPath()">Delete</a>
+    <a asp-action="Details" asp-route-id="@Model.Id">@App.Resources.WebApp.Views.Category.Edit.Details</a>
+    <a asp-action="Delete" asp-route-id="@Model.Id" asp-route-returnUrl="@Context.GetFullPath()">@App.Resources.WebApp.Views.Category.Edit.Delete</a>
 </div>
 
 @section Scripts {

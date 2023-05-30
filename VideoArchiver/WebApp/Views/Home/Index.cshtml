@@ -1,10 +1,6 @@
 ﻿@using WebApp.Authorization
-@{
-    ViewData["Title"] = "Home Page";
-}
 
 <div class="text-center">
-    <h1>Welcome!</h1>
     @if (User.Identity is {IsAuthenticated: true })
     {
         @if (User.IsAllowedToSubmitEntity())
@@ -13,11 +9,11 @@
         }
         else
         {
-            <div>Sorry, you do not have permission to submit a link to the archive</div>
+            <div>@App.Resources.WebApp.Views.Home.Index.NoLinkSubmitPermission</div>
         }
     }
     else
     {
-        <p>Log in with an authorized account to submit a link to the archive</p>
+        <p>@App.Resources.WebApp.Views.Home.Index.NotLoggedInLinkSubmitMessage</p>
     }
 </div>

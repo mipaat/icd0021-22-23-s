@@ -7,28 +7,28 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace App.Resources.Common.Enums {
+namespace App.Resources.WebApp.Views.Category {
     using System;
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class EPlatform {
+    public class ManageEntityCategories {
         
         private static System.Resources.ResourceManager resourceMan;
         
         private static System.Globalization.CultureInfo resourceCulture;
         
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal EPlatform() {
+        internal ManageEntityCategories() {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         public static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("App.Resources.Common.Enums.EPlatform", typeof(EPlatform).Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("App.Resources.WebApp.Views.Category.ManageEntityCategories", typeof(ManageEntityCategories).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -45,15 +45,45 @@ namespace App.Resources.Common.Enums {
             }
         }
         
-        public static string This {
+        public static string PageTitle {
             get {
-                return ResourceManager.GetString("This", resourceCulture);
+                return ResourceManager.GetString("PageTitle", resourceCulture);
             }
         }
         
-        public static string YouTube {
+        public static string Return {
             get {
-                return ResourceManager.GetString("YouTube", resourceCulture);
+                return ResourceManager.GetString("Return", resourceCulture);
+            }
+        }
+        
+        public static string CreateNew {
+            get {
+                return ResourceManager.GetString("CreateNew", resourceCulture);
+            }
+        }
+        
+        public static string ManagePublicCategories {
+            get {
+                return ResourceManager.GetString("ManagePublicCategories", resourceCulture);
+            }
+        }
+        
+        public static string IsEntityInCategory {
+            get {
+                return ResourceManager.GetString("IsEntityInCategory", resourceCulture);
+            }
+        }
+        
+        public static string Submit {
+            get {
+                return ResourceManager.GetString("Submit", resourceCulture);
+            }
+        }
+        
+        public static string ManagePersonalCategories {
+            get {
+                return ResourceManager.GetString("ManagePersonalCategories", resourceCulture);
             }
         }
     }

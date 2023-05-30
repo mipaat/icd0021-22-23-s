@@ -1,6 +1,7 @@
+@using Base.WebHelpers
 @model WebApp.ViewModels.UrlSubmissionResultViewModel
 
 <div>
-    <div>Submission for @Model.Type on platform @Model.Platform with ID @Model.IdOnPlatform successfully processed.</div>
-    TODO: link to queue item page
+    @string.Format(App.Resources.WebApp.Views.SubmitLink.Result.SubmissionProcessed,
+        Html.Translate(Model.Type), Html.Translate(Model.Platform), Model.IdOnPlatform)
 </div>

@@ -4,15 +4,15 @@
 @model WebApp.ViewModels.CategoryManageEntityCategoriesViewModel
 
 @{
-    ViewBag.Title = $"Manage {Model.EntityType} categories";
+    ViewBag.Title = string.Format(App.Resources.WebApp.Views.Category.ManageEntityCategories.PageTitle, Model.EntityType);
 }
 
-<h2>Manage @Model.EntityType categories</h2>
+<h2>@string.Format(App.Resources.WebApp.Views.Category.ManageEntityCategories.PageTitle, Model.EntityType)</h2>
 
-<a href="@Model.ReturnUrl">Return</a>
-<a asp-action="Create" asp-route-returnUrl="@Context.GetFullPath()">Create new</a>
+<a href="@Model.ReturnUrl">@App.Resources.WebApp.Views.Category.ManageEntityCategories.Return</a>
+<a asp-action="Create" asp-route-returnUrl="@Context.GetFullPath()">@App.Resources.WebApp.Views.Category.ManageEntityCategories.CreateNew</a>
 <a asp-action="ManageEntityCategories" asp-route-returnUrl="@Model.ReturnUrl" asp-route-id="@Model.Id" asp-route-entityType="@Model.EntityType">
-    Manage personal categories
+    @App.Resources.WebApp.Views.Category.ManageEntityCategories.ManagePersonalCategories
 </a>
 
 <div>
@@ -22,8 +22,8 @@
         <table class="table">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>@Model.EntityType in category?</th>
+                <th>@Html.DisplayNameFor(m => m.Categories[0].Name)</th>
+                <th>@string.Format(App.Resources.WebApp.Views.Category.ManageEntityCategories.IsEntityInCategory, Html.Translate(Model.EntityType))</th>
             </tr>
             </thead>
             <tbody>
@@ -39,7 +39,7 @@
             }
             </tbody>
         </table>
-        <input type="submit" class="btn btn-primary" value="Submit"/>
+        <input type="submit" class="btn btn-primary" value="@App.Resources.WebApp.Views.Category.ManageEntityCategories.Submit"/>
     </form>
 </div>
 
