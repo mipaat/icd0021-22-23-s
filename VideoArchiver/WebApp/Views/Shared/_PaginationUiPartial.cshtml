@@ -1,45 +1,108 @@
 @using Utils
 @model WebApp.ViewModels.PaginationUiPartialViewModel
 
-@if(!PaginationUtils.IsOnlyPage(Model.Total, Model.Limit) && !(Model.Page == 0 && Model.AmountOnPage < Model.Limit))
+@{
+    int? totalPages = Model.Total == null ? null : Convert.ToInt32(Math.Ceiling(Model.Total.Value / (double)Model.Limit));
+    var pagesSelection = GetPagesSelection(totalPages);
+
+    @if (!PaginationUtils.IsOnlyPage(Model.Total, Model.Limit) && !(Model.Page == 0 && Model.AmountOnPage < Model.Limit))
     {
         <div>
-            @if (Model.Page > 0)
-            {
-                <a asp-action="@ActionName" asp-controller="@ControllerName"
-                   asp-all-route-data="@GetDictionary(Model.RouteValues, 0)">
-                    First
-                </a>
-                @if (Model.Page > 1)
-                {
-                    <a asp-action="@ActionName" asp-controller="@ControllerName"
-                       asp-all-route-data="@GetDictionary(Model.RouteValues, Model.Page - 1)">
-                        Previous
-                    </a>
+            <div class="d-flex gap-1">
+                @{
+                    int? previousPage = null;
+                    @foreach (var selectPage in pagesSelection)
+                    {
+                        @if (previousPage + 1 < selectPage)
+                        {
+                            <span class="rounded-3 p-2">...</span>
+                        }
+                        previousPage = selectPage;
+                        <a class="btn @(selectPage == Model.Page ? "btn-primary" : "btn-outline-primary")"
+                           asp-action="@ActionName"
+                           asp-controller="@ControllerName"
+                           asp-all-route-data="@GetDictionary(Model.RouteValues, selectPage)">
+                            @selectPage
+                        </a>
+                    }
+                    @if (Model.Total == null && Model.AmountOnPage >= Model.Limit)
+                    {
+                        <a class="btn btn-outline-primary" asp-action="@ActionName" asp-controller="@ControllerName" asp-all-route-data="@GetDictionary(Model.RouteValues, Model.Page + 1)">
+                            @App.Resources.WebApp.Views.Shared._PaginationUiPartial.NextPage
+                        </a>
+                    }
                 }
-            }
-            @if (!PaginationUtils.IsLastPage(Model.Total, Model.Limit, Model.Page) && !(Model.AmountOnPage < Model.Limit))
-            {
-                @if (Model.Page < PaginationUtils.GetLastPage(Model.Total, Model.Limit) - 1)
-                {
-                    <a asp-action="@ActionName" asp-controller="@ControllerName"
-                       asp-all-route-data="@GetDictionary(Model.RouteValues, Model.Page + 1)">
-                        Next
-                    </a>
-                }
-                @if (Model.Total != null)
-                {
-                    <a asp-action="@ActionName" asp-controller="@ControllerName"
-                       asp-all-route-data="@GetDictionary(Model.RouteValues, PaginationUtils.GetLastPage(Model.Total, Model.Limit))">
-                        Last
-                    </a>
-                }
-            }
+            </div>
         </div>
+        @if (Model.AmountOnPage == 0)
+        {
+            <div>@string.Format(App.Resources.WebApp.Views.Shared._PaginationUiPartial.ResultsAmountOnPage, 0)</div>
+        }
+        else if (Model.Total != null)
+        {
+            <div>@string.Format(App.Resources.WebApp.Views.Shared._PaginationUiPartial.RangeResultsKnownTotal, PageRangeStart, PageRangeEnd, Model.Total)</div>
+        }
+        else if (Model.AmountOnPage < Model.Limit)
+        {
+            <div>@string.Format(App.Resources.WebApp.Views.Shared._PaginationUiPartial.RangeResultsKnownTotal, PageRangeStart, PageRangeEnd, PageRangeEnd)</div>
+        }
+        else
+        {
+            <div>
+                @string.Format(App.Resources.WebApp.Views.Shared._PaginationUiPartial.RangeResultsUnknownTotal,
+                    PageRangeStart, PageRangeEnd)
+            </div>
+        }
     }
+    else
+    {
+        <div>@string.Format(App.Resources.WebApp.Views.Shared._PaginationUiPartial.ResultsAmount, Model.AmountOnPage)</div>
+    }
+}
 
 @functions
 {
+    private int PageRangeStart => Model.Limit * Model.Page + 1;
+    private int PageRangeEnd => Model.Limit * Model.Page + Model.AmountOnPage;
+    
+    private IEnumerable<int> GetPagesSelection(int? totalPages)
+    {
+        const int selectionAmountToShow = 5;
+        var pagesSelection = new List<int>();
+        var maxAddedPage = 0;
+        if (Model.Page - Math.Ceiling(selectionAmountToShow / 2d) > 0)
+        {
+            pagesSelection.Add(0);
+        }
+        var selectedAmount = 0;
+        var offset = 0;
+        while (selectedAmount < selectionAmountToShow)
+        {
+            var page = Convert.ToInt32(Model.Page - Math.Ceiling(selectionAmountToShow / 2d) + offset);
+            if (page < 0)
+            {
+                offset++;
+                continue;
+            }
+            if (page >= totalPages) break;
+            if (totalPages == null && page > Model.Page) break;
+            if (pagesSelection.Contains(page))
+            {
+                offset++;
+                continue;
+            }
+            maxAddedPage = page;
+            pagesSelection.Add(page);
+            offset++;
+            selectedAmount++;
+        }
+        if (totalPages != null && maxAddedPage < totalPages - 1)
+        {
+            pagesSelection.Add(totalPages.Value);
+        }
+        return pagesSelection;
+    }
+
     private string ControllerName => Model.ControllerName.EndsWith("Controller") ?
         Model.ControllerName.Remove(Model.ControllerName.Length - "Controller".Length) :
         Model.ControllerName;
@@ -52,6 +115,8 @@
         if (routeValues != null)
         {
             var routeValueDictionary = new RouteValueDictionary(routeValues);
+            routeValueDictionary.Remove(Model.PageParamName);
+            routeValueDictionary.Remove(Model.LimitParamName);
             result = routeValueDictionary.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToString() ?? "");
         }
         result[Model.PageParamName] = $"{page}";

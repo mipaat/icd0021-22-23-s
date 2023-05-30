@@ -43,6 +43,10 @@
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>_AuthorSummaryPartial.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Shared\_PaginationUiPartial.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>_PaginationUiPartial.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
@@ -90,6 +94,11 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>_AuthorSummaryPartial.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Shared\_PaginationUiPartial.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>_PaginationUiPartial.resx</DependentUpon>
       </Compile>
     </ItemGroup>
 
