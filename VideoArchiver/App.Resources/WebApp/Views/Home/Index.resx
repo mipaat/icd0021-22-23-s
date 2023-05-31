@@ -24,4 +24,7 @@
     <data name="NotLoggedInLinkSubmitMessage" xml:space="preserve">
         <value>Log in with an authorized account to submit a link to the archive</value>
     </data>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Front page</value>
+    </data>
 </root>

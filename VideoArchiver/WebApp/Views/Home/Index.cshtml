@@ -1,5 +1,9 @@
 ﻿@using WebApp.Authorization
 
+@{
+    ViewData["Title"] = App.Resources.WebApp.Views.Home.Index.PageTitle;
+}
+
 <div class="text-center">
     @if (User.Identity is {IsAuthenticated: true })
     {

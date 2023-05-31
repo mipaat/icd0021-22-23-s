@@ -56,5 +56,11 @@ namespace App.Resources.WebApp.Views.Home {
                 return ResourceManager.GetString("NotLoggedInLinkSubmitMessage", resourceCulture);
             }
         }
+        
+        public static string PageTitle {
+            get {
+                return ResourceManager.GetString("PageTitle", resourceCulture);
+            }
+        }
     }
 }

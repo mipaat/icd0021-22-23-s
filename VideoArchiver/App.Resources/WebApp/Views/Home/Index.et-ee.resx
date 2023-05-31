@@ -17,4 +17,7 @@
     <data name="NotLoggedInLinkSubmitMessage" xml:space="preserve">
         <value>Logige sisse vajalike õigustega kontoga, et arhiivi linke lisada</value>
     </data>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Esileht</value>
+    </data>
 </root>
