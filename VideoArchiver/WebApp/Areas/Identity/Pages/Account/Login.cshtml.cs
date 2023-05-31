@@ -55,14 +55,16 @@ namespace WebApp.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
-            [Required]
+            [Required(ErrorMessageResourceType = typeof(App.Resources.WebApp.Validation.Required), ErrorMessageResourceName = "ErrorMessage")]
+            [Display(ResourceType = typeof(App.Resources.WebApp.Areas.Identity.Pages.Account.LoginModel), Name = nameof(UserName), Prompt = nameof(UserName) + "Prompt")]
             public string UserName { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessageResourceType = typeof(App.Resources.WebApp.Validation.Required), ErrorMessageResourceName = "ErrorMessage")]
+            [Display(ResourceType = typeof(App.Resources.WebApp.Areas.Identity.Pages.Account.LoginModel), Name = nameof(Password), Prompt = nameof(Password) + "Prompt")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -70,7 +72,7 @@ namespace WebApp.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Display(Name = "Remember me?")]
+            [Display(ResourceType = typeof(App.Resources.WebApp.Areas.Identity.Pages.Account.LoginModel), Name = nameof(RememberMe))]
             public bool RememberMe { get; set; }
         }
 

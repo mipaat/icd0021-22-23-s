@@ -51,18 +51,18 @@ namespace WebApp.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
-            [Required]
-            [Display(Name = "Username")]
+            [Required(ErrorMessageResourceType = typeof(App.Resources.WebApp.Validation.Required), ErrorMessageResourceName = "ErrorMessage")]
+            [Display(Name = nameof(UserName), Prompt = nameof(UserName) + "Prompt", ResourceType = typeof(App.Resources.WebApp.Areas.Identity.Pages.Account.RegisterModel))]
             public string UserName { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessageResourceType = typeof(App.Resources.WebApp.Validation.Required), ErrorMessageResourceName = "ErrorMessage")]
+            [StringLength(100, ErrorMessageResourceType = typeof(App.Resources.WebApp.Validation.StringLength), ErrorMessageResourceName = "ErrorMessage", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = nameof(Password), Prompt = nameof(Password) + "Prompt", ResourceType = typeof(App.Resources.WebApp.Areas.Identity.Pages.Account.RegisterModel))]
             public string Password { get; set; }
 
             /// <summary>
@@ -70,8 +70,8 @@ namespace WebApp.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "ConfirmPassword", Prompt = "PasswordPrompt", ResourceType = typeof(App.Resources.WebApp.Areas.Identity.Pages.Account.RegisterModel))]
+            [Compare("Password", ErrorMessageResourceType = typeof(App.Resources.WebApp.Areas.Identity.Pages.Account.RegisterModel), ErrorMessageResourceName = "ComparePasswordErrorMessage")]
             public string ConfirmPassword { get; set; }
         }
 

@@ -371,7 +371,19 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Areas\Admin\Views\Shared\" />
+      <Compile Remove="Areas\Admin\Views\Shared\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Areas\Admin\Views\Shared\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Areas\Admin\Views\Shared\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Areas\Admin\Views\Shared\**" />
     </ItemGroup>
 
     <PropertyGroup>

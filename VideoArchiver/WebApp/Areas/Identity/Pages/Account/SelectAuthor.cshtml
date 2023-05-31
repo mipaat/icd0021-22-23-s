@@ -2,11 +2,11 @@
 @model WebApp.Areas.Identity.Pages.Account.SelectAuthor
 
 @{
-    ViewData["Title"] = "Select author";
+    ViewData["Title"] = App.Resources.WebApp.Areas.Identity.Pages.Account.SelectAuthor.PageTitle;
 }
 
 <div>
-    <h2>Choose an author to act as</h2>
+    <h2>@App.Resources.WebApp.Areas.Identity.Pages.Account.SelectAuthor.ChooseAuthorToActAs</h2>
     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
     @foreach (var author in Model.Authors)
     {

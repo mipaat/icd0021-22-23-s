@@ -10,4 +10,5 @@ public interface IUserRepository : IBaseEntityRepository<App.Domain.Identity.Use
     public Task<bool> IsInRoleAsync(Guid userid, Guid roleId);
     public void AddToRoles(Guid userId, params Guid[] roleIds);
     public Task RemoveFromRolesAsync(Guid userId, params Guid[] roleIds);
+    public Task DeleteRelatedEntitiesAsync(Guid userId);
 }

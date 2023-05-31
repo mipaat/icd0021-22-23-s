@@ -7,6 +7,7 @@ using App.BLL.DTO.Mappers;
 using App.Common;
 using App.Common.Enums;
 using App.Contracts.DAL;
+using App.Resources.WebApp.Areas.Identity.Pages.Account;
 using AutoMapper;
 using Base.WebHelpers;
 using Contracts.BLL;
@@ -237,5 +238,11 @@ public class UserService : IAppUowContainer
         var role = await RoleManager.FindByNameAsync(roleName) ?? throw new NotFoundException();
         if (!await Uow.Users.IsInRoleAsync(userId, role.Id)) return;
         await Uow.Users.RemoveFromRolesAsync(userId, role.Id);
+    }
+
+    public async Task<IdentityResult> DeleteAsync(App.Domain.Identity.User user)
+    {
+        await Uow.Users.DeleteRelatedEntitiesAsync(user.Id);
+        return await UserManager.DeleteAsync(user);
     }
 }

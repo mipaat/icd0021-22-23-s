@@ -2,15 +2,15 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model DeletePersonalDataModel
 @{
-    ViewData["Title"] = "Delete Personal Data";
-    ViewData["ActivePage"] = ManageNavPages.PersonalData;
+    ViewData["Title"] = App.Resources.WebApp.Areas.Identity.Pages.Account.Manage.DeletePersonalData.PageTitle;
+    ViewData["ActivePage"] = ManageNavPages.DeletePersonalData;
 }
 
-<h3>@ViewData["Title"]</h3>
+<h3>@App.Resources.WebApp.Areas.Identity.Pages.Account.Manage.DeletePersonalData.PageTitle</h3>
 
 <div class="alert alert-warning" role="alert">
     <p>
-        <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+        <strong>@App.Resources.WebApp.Areas.Identity.Pages.Account.Manage.DeletePersonalData.DeleteWarning</strong>
     </p>
 </div>
 
@@ -20,12 +20,12 @@
         @if (Model.RequirePassword)
         {
             <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter your password." />
+                <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
                 <label asp-for="Input.Password" class="form-label"></label>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
         }
-        <button class="w-100 btn btn-lg btn-danger" type="submit">Delete data and close my account</button>
+        <button class="w-100 btn btn-lg btn-danger" type="submit">@App.Resources.WebApp.Areas.Identity.Pages.Account.Manage.DeletePersonalData.SubmitButton</button>
     </form>
 </div>
 

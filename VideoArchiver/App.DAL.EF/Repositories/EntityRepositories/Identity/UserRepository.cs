@@ -1,6 +1,7 @@
 using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories.Identity;
 using App.DAL.DTO.Entities.Identity;
+using App.Resources.WebApp.Areas.Identity.Pages.Account;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Base.DAL.EF;
@@ -72,5 +73,15 @@ public class UserRepository : BaseAppEntityRepository<App.Domain.Identity.User, 
     {
         if (roleIds.Length == 0) return;
         await DbContext.UserRoles.Where(e => e.UserId == userId && roleIds.Contains(e.RoleId)).ExecuteDeleteAsync();
+    }
+
+    public async Task DeleteRelatedEntitiesAsync(Guid userId)
+    {
+        await DbContext.QueueItems.Where(q => q.AddedById == userId || q.ApprovedById == userId).ExecuteDeleteAsync();
+        await DbContext.RefreshTokens.Where(r => r.UserId == userId).ExecuteDeleteAsync();
+        await DbContext.Authors.Where(a => a.UserId == userId)
+            .ExecuteUpdateAsync(a => a.SetProperty(author => author.UserId, author => null));
+        await DbContext.EntityAccessPermissions.Where(e => e.UserId == userId).ExecuteDeleteAsync();
+        await DbContext.StatusChangeNotifications.Where(n => n.ReceiverId == userId).ExecuteDeleteAsync();
     }
 }

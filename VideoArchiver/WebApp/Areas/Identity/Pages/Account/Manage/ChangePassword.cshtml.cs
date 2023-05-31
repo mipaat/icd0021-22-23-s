@@ -51,19 +51,19 @@ namespace WebApp.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessageResourceType = typeof(App.Resources.WebApp.Validation.Required), ErrorMessageResourceName = "ErrorMessage")]
             [DataType(DataType.Password)]
-            [Display(Name = "Current password")]
+            [Display(ResourceType = typeof(App.Resources.WebApp.Areas.Identity.Pages.Account.Manage.ChangePasswordModel), Name = nameof(OldPassword), Prompt = nameof(OldPassword) + "Prompt")]
             public string OldPassword { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessageResourceType = typeof(App.Resources.WebApp.Validation.Required), ErrorMessageResourceName = "ErrorMessage")]
+            [StringLength(100, ErrorMessageResourceType = typeof(App.Resources.WebApp.Validation.StringLength), ErrorMessageResourceName = "ErrorMessage", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "New password")]
+            [Display(ResourceType = typeof(App.Resources.WebApp.Areas.Identity.Pages.Account.Manage.ChangePasswordModel), Name = nameof(NewPassword), Prompt = nameof(NewPassword) + "Prompt")]
             public string NewPassword { get; set; }
 
             /// <summary>
@@ -71,8 +71,8 @@ namespace WebApp.Areas.Identity.Pages.Account.Manage
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm new password")]
-            [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+            [Display(ResourceType = typeof(App.Resources.WebApp.Areas.Identity.Pages.Account.Manage.ChangePasswordModel), Name = nameof(ConfirmPassword), Prompt = nameof(ConfirmPassword) + "Prompt")]
+            [Compare("NewPassword", ErrorMessageResourceType = typeof(App.Resources.WebApp.Areas.Identity.Pages.Account.Manage.ChangePasswordModel), ErrorMessageResourceName = "ComparePasswordErrorMessage")]
             public string ConfirmPassword { get; set; }
         }
 
@@ -118,7 +118,7 @@ namespace WebApp.Areas.Identity.Pages.Account.Manage
 
             await _signInManager.RefreshSignInAsync(user);
             _logger.LogInformation("User changed their password successfully.");
-            StatusMessage = "Your password has been changed.";
+            StatusMessage = App.Resources.WebApp.Areas.Identity.Pages.Account.Manage.ChangePasswordModel.YourPasswordHasBeenChanged;
 
             return RedirectToPage();
         }

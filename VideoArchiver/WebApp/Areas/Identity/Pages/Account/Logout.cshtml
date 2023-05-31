@@ -2,21 +2,21 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model LogoutModel
 @{
-    ViewData["Title"] = "Log out";
+    ViewData["Title"] = App.Resources.WebApp.Areas.Identity.Pages.Account.Logout.PageTitle;
 }
 
 <header>
-    <h1>@ViewData["Title"]</h1>
+    <h1>@App.Resources.WebApp.Areas.Identity.Pages.Account.Logout.PageTitle</h1>
     @{
         if (User.Identity?.IsAuthenticated ?? false)
         {
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
+                <button type="submit" class="nav-link btn btn-link text-dark">@App.Resources.WebApp.Areas.Identity.Pages.Account.Logout.ClickHereToLogout</button>
             </form>
         }
         else
         {
-            <p>You have successfully logged out of the application.</p>
+            <p>@App.Resources.WebApp.Areas.Identity.Pages.Account.Logout.SuccessMessage</p>
         }
     }
 </header>

@@ -4,6 +4,7 @@
 #nullable disable
 
 using System.ComponentModel.DataAnnotations;
+using App.BLL.Identity.Services;
 using App.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +17,18 @@ namespace WebApp.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<DeletePersonalDataModel> _logger;
+        private readonly UserService _userService;
 
         public DeletePersonalDataModel(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            ILogger<DeletePersonalDataModel> logger)
+            ILogger<DeletePersonalDataModel> logger,
+            UserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _userService = userService;
         }
 
         /// <summary>
@@ -44,8 +48,9 @@ namespace WebApp.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessageResourceType = typeof(App.Resources.WebApp.Validation.Required), ErrorMessageResourceName = "ErrorMessage")]
             [DataType(DataType.Password)]
+            [Display(ResourceType = typeof(App.Resources.WebApp.Areas.Identity.Pages.Account.Manage.DeletePersonalDataModel), Name = nameof(Password), Prompt = nameof(Password) + "Prompt")]
             public string Password { get; set; }
         }
 
@@ -80,12 +85,12 @@ namespace WebApp.Areas.Identity.Pages.Account.Manage
             {
                 if (!await _userManager.CheckPasswordAsync(user, Input.Password))
                 {
-                    ModelState.AddModelError(string.Empty, "Incorrect password.");
+                    ModelState.AddModelError(string.Empty, App.Resources.WebApp.Areas.Identity.Pages.Account.Manage.DeletePersonalDataModel.IncorrectPassword);
                     return Page();
                 }
             }
 
-            var result = await _userManager.DeleteAsync(user);
+            var result = await _userService.DeleteAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
             if (!result.Succeeded)
             {
