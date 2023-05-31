@@ -10,8 +10,10 @@
 <h2>@App.Resources.WebApp.Views.Category.Details.PageTitle</h2>
 
 <div>
-    <label asp-for="Category.Platform"></label>
-    @Html.Translate(Model.Category.Platform)
+    <div>
+        <label asp-for="Category.Platform"></label>:
+        @Html.Translate(Model.Category.Platform)
+    </div>
     <label asp-for="Category.IsPublic"></label>
     <input asp-for="Category.IsPublic" disabled="disabled"/>
     <div class="form-group">
@@ -24,6 +26,6 @@
     </div>
     @if (Model.UserIsCreator)
     {
-        <a asp-action="Edit">@App.Resources.WebApp.Views.Category.Details.Edit</a>
+        <a asp-action="Edit" asp-route-id="@Model.Category.Id">@App.Resources.WebApp.Views.Category.Details.Edit</a>
     }
 </div>

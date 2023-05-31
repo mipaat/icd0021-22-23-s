@@ -45,9 +45,9 @@ namespace App.Resources.WebApp.Views.Category {
             }
         }
         
-        public static string PageTitle {
+        public static string PageTitlePersonal {
             get {
-                return ResourceManager.GetString("PageTitle", resourceCulture);
+                return ResourceManager.GetString("PageTitlePersonal", resourceCulture);
             }
         }
         
@@ -84,6 +84,12 @@ namespace App.Resources.WebApp.Views.Category {
         public static string ManagePersonalCategories {
             get {
                 return ResourceManager.GetString("ManagePersonalCategories", resourceCulture);
+            }
+        }
+        
+        public static string PageTitlePublic {
+            get {
+                return ResourceManager.GetString("PageTitlePublic", resourceCulture);
             }
         }
     }

@@ -1,0 +1,24 @@
+@using WebApp.Authorization
+@using WebApp.ViewModels
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model WebApp.ViewModels.CategoryFormViewModel
+
+@Html.HiddenFor(m => m.ReturnUrl)
+<label asp-for="Category.IsPublic"></label>
+<input asp-for="Category.IsPublic" disabled="@(!User.IsAllowedToCreatePublicCategory())"/>
+<div class="form-group">
+    <label asp-for="Category.Name"></label>
+    @foreach (var culture in Model.SupportedUiCultures)
+    {
+        Model.Category.Name.TryGetValue(culture, out var cultureValue);
+        @await Html.PartialAsync("_LangStringFormSectionPartial", new LangStringFormSectionPartialViewModel("Category.Name", culture, cultureValue))
+    }
+    <div>
+        <span asp-validation-for="Category.Name" class="text-danger"></span>
+    </div>
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial"/>
+}

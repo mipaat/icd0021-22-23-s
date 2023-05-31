@@ -1,5 +1,3 @@
-@using WebApp.Authorization
-@using WebApp.ViewModels
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Base.WebHelpers
 @model WebApp.ViewModels.CategoryEditViewModel
@@ -12,26 +10,9 @@
 
 <div>
     <form >
-        @Html.HiddenFor(m => m.Id)
-        <label asp-for="Category.IsPublic"></label>
-        <input asp-for="Category.IsPublic" disabled="@(!User.IsAllowedToCreatePublicCategory())"/>
-        <div class="form-group">
-            <label asp-for="Category.Name"></label>
-            @foreach (var culture in Model.SupportedUiCultures)
-            {
-                Model.Category.Name.TryGetValue(culture, out var cultureValue);
-                @await Html.PartialAsync("_LangStringFormSectionPartial", new LangStringFormSectionPartialViewModel("Category.Name", culture, cultureValue))
-            }
-            <div>
-                <span asp-validation-for="Category.Name" class="text-danger"></span>
-            </div>
-        </div>
+        <partial name="_CategoryFormPartial" model="Model"/>
         <input type="submit" class="btn btn-primary" value="@App.Resources.WebApp.Views.Category.Edit.Submit"/>
     </form>
     <a asp-action="Details" asp-route-id="@Model.Id">@App.Resources.WebApp.Views.Category.Edit.Details</a>
     <a asp-action="Delete" asp-route-id="@Model.Id" asp-route-returnUrl="@Context.GetFullPath()">@App.Resources.WebApp.Views.Category.Edit.Delete</a>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial"/>
-}

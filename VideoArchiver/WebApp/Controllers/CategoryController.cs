@@ -29,16 +29,16 @@ public class CategoryController : Controller
         _userService = userService;
     }
 
-    public IActionResult Create(CategoryCreateViewModel viewModel)
+    public IActionResult Create(CategoryFormViewModel viewModel)
     {
-        viewModel.Category = new CategoryDataWithCreatorId();
+        viewModel.Category = new CategoryData();
         viewModel.SupportedUiCultures = _configuration.GetSupportedUiCultureNames();
         return View(viewModel);
     }
 
     [HttpPost]
     [ActionName("Create")]
-    public async Task<IActionResult> CreatePost([FromForm] CategoryCreateViewModel viewModel)
+    public async Task<IActionResult> CreatePost([FromForm] CategoryFormViewModel viewModel)
     {
         viewModel.SupportedUiCultures = _configuration.GetSupportedUiCultureNames();
         if (!ModelState.IsValid)
@@ -58,9 +58,14 @@ public class CategoryController : Controller
             return RedirectToPage(nameof(SelectAuthor));
         }
 
-        viewModel.Category.CreatorId = authorId;
+        var categoryDataWithCreatorId = new CategoryDataWithCreatorId
+        {
+            CreatorId = authorId,
+            IsPublic = viewModel.Category.IsPublic,
+            Name = viewModel.Category.Name,
+        };
 
-        _categoryService.CreateCategory(viewModel.Category);
+        _categoryService.CreateCategory(categoryDataWithCreatorId);
         await _categoryService.ServiceUow.SaveChangesAsync();
 
         if (viewModel.ReturnUrl != null) return LocalRedirect(viewModel.ReturnUrl);
@@ -77,6 +82,11 @@ public class CategoryController : Controller
         {
             Id = id,
             SupportedUiCultures = _configuration.GetSupportedUiCultureNames(),
+            Category = new CategoryData
+            {
+                IsPublic = category.IsPublic,
+                Name = category.Name,
+            }
         });
     }
 
@@ -113,7 +123,7 @@ public class CategoryController : Controller
         var userIsCreator = false;
         if (category.Creator != null)
         {
-            if (!category.IsPublic)
+            if (!category.IsPublic && !await _userService.IsUserSubAuthor(category.Creator.Id, User))
             {
                 return Forbid();
             }
@@ -148,7 +158,7 @@ public class CategoryController : Controller
     {
         await _categoryService.DeleteAsync(id);
         await _categoryService.ServiceUow.SaveChangesAsync();
-        return LocalRedirect(returnUrl);
+        return LocalRedirect("/");
     }
 
     private LocalRedirectResult RedirectToSelectAuthor =>

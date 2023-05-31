@@ -1,59 +1,24 @@
-@using App.BLL.DTO.Entities
 @using Base.WebHelpers
 @using WebApp.Authorization
 @model WebApp.ViewModels.CategoryManageEntityCategoriesViewModel
 
 @{
-    ViewBag.Title = string.Format(App.Resources.WebApp.Views.Category.ManageEntityCategories.PageTitle, Model.EntityType);
+    ViewBag.Title = string.Format(App.Resources.WebApp.Views.Category.ManageEntityCategories.PageTitlePersonal, Model.EntityType);
 }
 
-<h2>@string.Format(App.Resources.WebApp.Views.Category.ManageEntityCategories.PageTitle, Model.EntityType)</h2>
+<h2>@string.Format(App.Resources.WebApp.Views.Category.ManageEntityCategories.PageTitlePersonal, Model.EntityType)</h2>
 
-<a href="@Model.ReturnUrl">@App.Resources.WebApp.Views.Category.ManageEntityCategories.Return</a>
-<a asp-action="Create" asp-route-returnUrl="@Context.GetFullPath()">@App.Resources.WebApp.Views.Category.ManageEntityCategories.CreateNew</a>
+<a class="btn btn-outline-primary" href="@Model.ReturnUrl">@App.Resources.WebApp.Views.Category.ManageEntityCategories.Return</a>
+<a class="btn btn-outline-primary" asp-action="Create" asp-route-returnUrl="@Context.GetFullPath()">@App.Resources.WebApp.Views.Category.ManageEntityCategories.CreateNew</a>
 @if (User.IsAllowedToCreatePublicCategory())
 {
-    <a asp-action="ManageEntityCategoriesPublic" asp-route-returnUrl="@Model.ReturnUrl" asp-route-id="@Model.Id" asp-route-entityType="@Model.EntityType">
+    <a class="btn btn-outline-primary" asp-action="ManageEntityCategoriesPublic" asp-route-returnUrl="@Model.ReturnUrl" asp-route-id="@Model.Id" asp-route-entityType="@Model.EntityType">
         @App.Resources.WebApp.Views.Category.ManageEntityCategories.ManagePublicCategories
     </a>
 }
 
 <div>
     <form method="post" asp-action="ManageEntityCategories">
-        @Html.HiddenFor(m => m.ReturnUrl)
-        @Html.HiddenFor(m => m.Id)
-        <table class="table">
-            <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(m => m.Categories[0].Name)</th>
-                <th>@string.Format(App.Resources.WebApp.Views.Category.ManageEntityCategories.IsEntityInCategory, Html.Translate(Model.EntityType))</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var category in Model.Categories)
-            {
-                <tr>
-                    <td>@category.Name</td>
-                    <td>
-                        <input type="checkbox" name="@Identifier(category)" value="true" checked="@Checked(category)"/>
-                        <input type="checkbox" name="@Identifier(category)" value="false" checked="checked" class="d-none"/>
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
-        <input type="submit" class="btn btn-primary" value="@App.Resources.WebApp.Views.Category.ManageEntityCategories.Submit"/>
+        <partial name="_ManageEntityCategoriesPartial" model="Model"/>
     </form>
 </div>
-
-@functions
-{
-    string Identifier(CategoryWithCreator category) =>
-        $"{nameof(Model.SelectedCategoryIds)}[{category.Id}]";
-
-    bool Checked(CategoryWithCreator category)
-    {
-        Model.SelectedCategoryIds.TryGetValue(category.Id, out var assigned);
-        return assigned;
-    }
-}

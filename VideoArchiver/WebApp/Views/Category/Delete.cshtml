@@ -7,8 +7,8 @@
 <h2 class="text-danger">@string.Format(App.Resources.WebApp.Views.Category.Delete.AreYouSure, Model.Category.Name)</h2>
 
 <a href="@Model.ReturnUrl">@App.Resources.WebApp.Views.Category.Delete.Cancel</a>
-<form>
+<form method="POST" asp-action="Delete">
     @Html.Hidden("id", Model.Category.Id)
     @Html.Hidden("returnUrl", Model.ReturnUrl)
-    <input type="button" class="btn btn-danger" value="@App.Resources.WebApp.Views.Category.Delete.DeleteSubmit"/>
+    <input type="submit" class="btn btn-danger" value="@App.Resources.WebApp.Views.Category.Delete.DeleteSubmit"/>
 </form>

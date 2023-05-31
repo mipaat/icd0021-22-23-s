@@ -1,0 +1,39 @@
+@using App.BLL.DTO.Entities
+@using Base.WebHelpers
+@model WebApp.ViewModels.CategoryManageEntityCategoriesViewModel
+
+@Html.HiddenFor(m => m.ReturnUrl)
+@Html.HiddenFor(m => m.Id)
+<table class="table">
+    <thead>
+    <tr>
+        <th>@Html.DisplayNameFor(m => m.Categories[0].Name)</th>
+        <th>@string.Format(App.Resources.WebApp.Views.Category.ManageEntityCategories.IsEntityInCategory, Html.Translate(Model.EntityType))</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var category in Model.Categories)
+    {
+        <tr>
+            <td><a asp-action="Details" asp-route-id="@category.Id">@category.Name</a></td>
+            <td>
+                <input type="checkbox" name="@Identifier(category)" value="true" checked="@Checked(category)"/>
+                <input type="checkbox" name="@Identifier(category)" value="false" checked="checked" class="d-none"/>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<input type="submit" class="btn btn-primary" value="@App.Resources.WebApp.Views.Category.ManageEntityCategories.Submit"/>
+
+@functions
+{
+    string Identifier(CategoryWithCreator category) =>
+        $"{nameof(Model.SelectedCategoryIds)}[{category.Id}]";
+
+    bool Checked(CategoryWithCreator category)
+    {
+        Model.SelectedCategoryIds.TryGetValue(category.Id, out var assigned);
+        return assigned;
+    }
+}
