@@ -1,17 +1,17 @@
 @model WebApp.Areas.Admin.ViewModels.UserManagementViewModel
 
 @{
-    ViewBag.Title = "Manage users";
+    ViewBag.Title = App.Resources.WebApp.Areas.Admin.Views.UserManagement.Index.PageTitle;
 }
 
-<h2 class="text-center mb-3">Manage users</h2>
+<h2 class="text-center mb-3">@App.Resources.WebApp.Areas.Admin.Views.UserManagement.Index.PageTitle</h2>
 
 <form method="get" asp-action="Index">
-    <label asp-for="NameQuery">Search by username</label>
+    <label asp-for="NameQuery"></label>
     <input asp-for="NameQuery" value="@Model.NameQuery"/>
-    <label asp-for="IncludeOnlyNotApproved">Include only non-approved users?</label>
+    <label asp-for="IncludeOnlyNotApproved"></label>
     <input asp-for="IncludeOnlyNotApproved" checked="@Model.IncludeOnlyNotApproved"/>
-    <input type="submit" class="btn btn-primary" value="Apply"/>
+    <input type="submit" class="btn btn-primary" value="@App.Resources.WebApp.Areas.Admin.Views.UserManagement.Index.Search"/>
 </form>
 
 @foreach (var user in Model.Users)
@@ -24,9 +24,9 @@
                 @Html.Hidden("id", user.Id)
                 @Html.HiddenFor(m => m.NameQuery)
                 @Html.HiddenFor(m => m.IncludeOnlyNotApproved)
-                <input type="submit" class="btn btn-success" value="Approve registration"/>
+                <input type="submit" class="btn btn-success" value="@App.Resources.WebApp.Areas.Admin.Views.UserManagement.Index.ApproveRegistration"/>
             </form>
         }
-        <a asp-action="ManageRoles" asp-route-userId="@user.Id" class="btn btn-outline-primary">Manage roles</a>
+        <a asp-action="ManageRoles" asp-route-userId="@user.Id" class="btn btn-outline-primary">@App.Resources.WebApp.Areas.Admin.Views.UserManagement.Index.ManageRoles</a>
     </div>
 }

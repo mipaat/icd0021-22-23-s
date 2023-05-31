@@ -195,6 +195,26 @@
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Index.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Areas\Admin\Views\QueueItemsApproval\Index.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Index.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="App.BLL.DTO\Entities\QueueItemForApproval.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>QueueItemForApproval.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Areas\Admin\Views\UserManagement\Index.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Index.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Areas\Admin\ViewModels\UserManagementViewModel.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>UserManagementViewModel.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Areas\Admin\Views\UserManagement\ManageRoles.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>ManageRoles.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
@@ -432,6 +452,31 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Index.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Areas\Admin\Views\QueueItemsApproval\Index.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Index.resx</DependentUpon>
+      </Compile>
+      <Compile Update="App.BLL.DTO\Entities\QueueItemForApproval.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>QueueItemForApproval.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Areas\Admin\Views\UserManagement\Index.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Index.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Areas\Admin\ViewModels\UserManagementViewModel.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>UserManagementViewModel.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Areas\Admin\Views\UserManagement\ManageRoles.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>ManageRoles.resx</DependentUpon>
       </Compile>
     </ItemGroup>
 

@@ -49,7 +49,7 @@ public class QueueItemService : BaseService<QueueItemService>
         return Uow.QueueItems.Add(new QueueItem(idOnPlatform, platform, entityType, submitterId, autoSubmit));
     }
 
-    public async Task<ICollection<QueueItemForApproval>> GetAllAwaitingApprovalAsync()
+    public async Task<List<QueueItemForApproval>> GetAllAwaitingApprovalAsync()
     {
         return (await Uow.QueueItems.GetAllAwaitingApprovalAsync()).Select(q => _queueItemMapper.Map(q)!).ToList();
     }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Queue items approval</value>
+    </data>
+    <data name="ExplainingTitle" xml:space="preserve">
+        <value>Queue items awaiting approval</value>
+    </data>
+    <data name="EntityOnPlatform" xml:space="preserve">
+        <value>{0} on platform {1}</value>
+    </data>
+    <data name="DeleteSubmit" xml:space="preserve">
+        <value>Delete</value>
+    </data>
+    <data name="GrantAccess" xml:space="preserve">
+        <value>Grant submitter access?</value>
+    </data>
+    <data name="ApproveSubmit" xml:space="preserve">
+        <value>Approve</value>
+    </data>
+</root>

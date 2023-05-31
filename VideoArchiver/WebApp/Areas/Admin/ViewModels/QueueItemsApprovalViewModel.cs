@@ -5,5 +5,5 @@ namespace WebApp.Areas.Admin.ViewModels;
 
 public class QueueItemsApprovalViewModel
 {
-    public ICollection<QueueItemForApproval> QueueItems { get; set; } = default!;
+    public List<QueueItemForApproval> QueueItems { get; set; } = default!;
 }

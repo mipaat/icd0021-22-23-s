@@ -1,11 +1,11 @@
 @model WebApp.Areas.Admin.ViewModels.ManageRolesViewModel
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = string.Format(App.Resources.WebApp.Areas.Admin.Views.UserManagement.ManageRoles.PageTitle, Model.User.UserName);
 }
 
-<h2>Manage roles for @Model.User.UserName</h2>
-<a asp-action="Index">Return to users</a>
+<h2>@string.Format(App.Resources.WebApp.Areas.Admin.Views.UserManagement.ManageRoles.PageTitle, Model.User.UserName)</h2>
+<a asp-action="Index">@App.Resources.WebApp.Areas.Admin.Views.UserManagement.ManageRoles.ReturnToUsers</a>
 
 <div class="container">
     <div class="row">
@@ -17,7 +17,7 @@
                     <form asp-action="RemoveRole">
                         @Html.Hidden("userId", Model.User.Id)
                         @Html.Hidden("roleName", role.Name)
-                        <input type="submit" class="btn btn-danger" value="Remove"/>
+                        <input type="submit" class="btn btn-danger" value="@App.Resources.WebApp.Areas.Admin.Views.UserManagement.ManageRoles.RemoveSubmit"/>
                     </form>
                 </div>
                 <br/>
@@ -31,7 +31,7 @@
                     <form asp-action="AddRole">
                         @Html.Hidden("userId", Model.User.Id)
                         @Html.Hidden("roleName", role)
-                        <input type="submit" class="btn btn-success" value="Add"/>
+                        <input type="submit" class="btn btn-success" value="@App.Resources.WebApp.Areas.Admin.Views.UserManagement.ManageRoles.AddSubmit"/>
                     </form>
                 </div>
                 <br/>
