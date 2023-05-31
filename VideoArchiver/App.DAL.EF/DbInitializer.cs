@@ -29,11 +29,6 @@ public class DbInitializer : IDbInitializer
             _dbContext.Database.EnsureDeleted();
         }
 
-        if (config.EnsureCreated)
-        {
-            _dbContext.Database.EnsureCreated();
-        }
-
         if (config.Migrate)
         {
             _dbContext.Database.Migrate();

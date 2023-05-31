@@ -50,5 +50,11 @@ namespace App.Resources.WebApp.Views.SubmitLink {
                 return ResourceManager.GetString("SubmissionProcessed", resourceCulture);
             }
         }
+        
+        public static string PageTitle {
+            get {
+                return ResourceManager.GetString("PageTitle", resourceCulture);
+            }
+        }
     }
 }

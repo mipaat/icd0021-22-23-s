@@ -6,7 +6,6 @@
 using System.ComponentModel.DataAnnotations;
 using App.BLL.Identity.Services;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -19,7 +18,6 @@ namespace WebApp.Areas.Identity.Pages.Account
 
         public RegisterModel(
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
             UserService userService)
         {
             _logger = logger;

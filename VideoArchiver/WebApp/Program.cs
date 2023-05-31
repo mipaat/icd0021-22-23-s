@@ -43,6 +43,7 @@ public class Program
                 .AddDefaultConcurrencyConflictResolvers(provider));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+        builder.Services.AddRazorPages(); // For account management
         builder.Services.AddCustomIdentity();
 
         builder.Services.AddScoped<IdentityAppDataInit>();
@@ -209,6 +210,9 @@ public class Program
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
+        app.MapControllerRoute(
+            name: "areas",
+            pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
         app.MapRazorPages();
 
         app.UseSwagger();

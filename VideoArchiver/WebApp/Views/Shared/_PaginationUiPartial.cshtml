@@ -22,7 +22,7 @@
                            asp-action="@ActionName"
                            asp-controller="@ControllerName"
                            asp-all-route-data="@GetDictionary(Model.RouteValues, selectPage)">
-                            @selectPage
+                            @(selectPage + 1)
                         </a>
                     }
                     @if (Model.Total == null && Model.AmountOnPage >= Model.Limit)

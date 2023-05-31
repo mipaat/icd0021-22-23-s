@@ -7,7 +7,6 @@ public class DbInitSettings
     public const string SectionKey = "DatabaseInit";
     
     public bool Migrate { get; set; }
-    public bool EnsureCreated { get; set; } = true;
     public bool DropDatabase { get; set; }
 }
 

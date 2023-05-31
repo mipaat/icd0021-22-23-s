@@ -6,7 +6,7 @@ namespace App.Common;
 [NotMapped]
 public class Caption
 {
-    public EPlatform Platform { get; set; } = default!;
+    public EPlatform Platform { get; set; }
     public string? IdOnPlatform { get; set; }
     public string Ext { get; set; } = default!;
     public string? FilePath { get; set; }
@@ -30,6 +30,7 @@ public class Caption
         return new Caption
         {
             IdOnPlatform = IdOnPlatform,
+            Platform = Platform,
             Ext = Ext,
             FilePath = FilePath,
             Url = Url,

@@ -1,0 +1,19 @@
+@page
+@model WebApp.Areas.Identity.Pages.Account.Manage.Index
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = App.Resources.WebApp.Areas.Identity.Pages.Account.Manage.Index.PageTitle;
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<h3>@App.Resources.WebApp.Areas.Identity.Pages.Account.Manage.Index.PageTitle</h3>
+<div class="row">
+    <div class="col-md-6">
+        @App.Resources.WebApp.Areas.Identity.Pages.Account.Manage.Index.SelectActionFromMenuOnLeft
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

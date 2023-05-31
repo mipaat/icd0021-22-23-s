@@ -1,6 +1,10 @@
 @using Base.WebHelpers
 @model WebApp.ViewModels.UrlSubmissionResultViewModel
 
+@{
+    ViewData["Title"] = App.Resources.WebApp.Views.SubmitLink.Result.PageTitle;
+}
+
 <div>
     @string.Format(App.Resources.WebApp.Views.SubmitLink.Result.SubmissionProcessed,
         Html.Translate(Model.Type), Html.Translate(Model.Platform), Model.IdOnPlatform)

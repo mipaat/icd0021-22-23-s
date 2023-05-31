@@ -82,16 +82,12 @@ public class EntityUpdateService
             StatisticsUpdater.UpdateStatistic(video.CommentCount, newVideoData.CommentCount, video, newVideoData,
                 ref changed);
 
-        // TODO: Custom logic
-        video.Captions = UpdateValueIgnoreNull(video.Captions, newVideoData.Captions, ref changed);
-        // TODO: Custom logic
+        video.Captions = UpdateCaptions(video.Captions, newVideoData.Captions, ref changed);
         video.AutomaticCaptions =
-            UpdateValueIgnoreNull(video.AutomaticCaptions, newVideoData.AutomaticCaptions, ref changed);
+            UpdateCaptions(video.AutomaticCaptions, newVideoData.AutomaticCaptions, ref changed);
         video.Thumbnails = UpdateThumbnails(video.Thumbnails, newVideoData.Thumbnails, ref changed);
-        // TODO: Custom logic
-        video.Tags = UpdateValueIgnoreNull(video.Tags, newVideoData.Tags, ref changed);
-        // TODO: Custom logic
-        video.LocalVideoFiles = UpdateValueIgnoreNull(video.LocalVideoFiles, newVideoData.LocalVideoFiles, ref changed);
+        video.Tags = UpdateStringListUnordered(video.Tags, newVideoData.Tags, ref changed);
+        video.LocalVideoFiles = UpdateVideoFiles(video.LocalVideoFiles, newVideoData.LocalVideoFiles, ref changed);
 
         video.IsLivestreamRecording =
             UpdateValueIgnoreNull(video.IsLivestreamRecording, newVideoData.IsLivestreamRecording, ref changed);
@@ -127,8 +123,7 @@ public class EntityUpdateService
             playlist.DefaultLanguage);
 
         playlist.Thumbnails = UpdateThumbnails(playlist.Thumbnails, newPlaylistData.Thumbnails, ref changed);
-        // TODO: Custom logic
-        playlist.Tags = UpdateValueIgnoreNull(playlist.Tags, newPlaylistData.Tags, ref changed);
+        playlist.Tags = UpdateStringListUnordered(playlist.Tags, newPlaylistData.Tags, ref changed);
 
         playlist.PublishedAt = UpdateValueIgnoreNull(playlist.PublishedAt, newPlaylistData.PublishedAt, ref changed);
         playlist.LastVideosFetch = newPlaylistData.LastVideosFetch ?? playlist.LastVideosFetch;
@@ -208,6 +203,58 @@ public class EntityUpdateService
         return newValue;
     }
 
+    private static CaptionsDictionary? UpdateCaptions(CaptionsDictionary? oldValue, CaptionsDictionary? newValue,
+        ref bool changed)
+    {
+        return UpdateValueIgnoreNull(oldValue, newValue, ref changed, UpdateCaptionsInternal);
+    }
+
+    private static CaptionsDictionary UpdateCaptionsInternal(CaptionsDictionary oldValue, CaptionsDictionary newValue,
+        ref bool changed)
+    {
+        var valueComparer = new Domain.Comparers.CaptionsDictionaryValueComparer();
+        UpdateChanged(ref changed, !valueComparer.EqualsExpression.Compile().Invoke(oldValue, newValue));
+        return newValue;
+    }
+
+    private static List<string>? UpdateStringListUnordered(List<string>? oldValue, List<string>? newValue,
+        ref bool changed)
+    {
+        return UpdateValueIgnoreNull(oldValue, newValue, ref changed, UpdateStringListUnorderedInternal);
+    }
+
+    private static List<string> UpdateStringListUnorderedInternal(List<string> oldValue, List<string> newValue, ref bool changed)
+    {
+        var valueComparer = new Domain.Comparers.StringListUnorderedValueComparer();
+        UpdateChanged(ref changed, !valueComparer.EqualsExpression.Compile().Invoke(oldValue, newValue));
+        return newValue;
+    }
+
+    private static List<VideoFile>? UpdateVideoFiles(List<VideoFile>? oldValue, List<VideoFile>? newValue,
+        ref bool changed)
+    {
+        return UpdateValueIgnoreNull(oldValue, newValue, ref changed, UpdateVideoFilesInternal);
+    }
+
+    private static List<VideoFile> UpdateVideoFilesInternal(List<VideoFile> oldValue, List<VideoFile> newValue,
+        ref bool changed)
+    {
+        if (oldValue.Count != newValue.Count)
+        {
+            changed = true;
+            return newValue;
+        }
+
+        foreach (var videoFile in oldValue.OrderBy(v => v.FilePath))
+        {
+            if (newValue.Any(v => v.FilePath == videoFile.FilePath)) continue;
+            changed = true;
+            return newValue;
+        }
+
+        return newValue;
+    }
+
     private static LangString? UpdateLangString(LangString? oldValue, LangString? newValue, ref bool changed,
         string? oldLanguage)
     {
@@ -251,7 +298,7 @@ public class EntityUpdateService
 
 internal delegate T CustomUpdateFunc<T>(T oldValue, T newValue, ref bool changed);
 
-internal class StatisticsUpdater
+internal static class StatisticsUpdater
 {
     private static bool IsChangeNotMild(long oldValue, long newValue) =>
         (newValue > oldValue * 1.2 || newValue < oldValue / 1.2) &&

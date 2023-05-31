@@ -1,7 +1,6 @@
 using App.BLL.Identity.Services;
 using App.DAL.EF;
 using App.Domain.Identity;
-using DAL;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,8 +12,7 @@ public static class ServiceCollectionExtensions
     {
         serviceCollection.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = false)
             .AddEntityFrameworkStores<AbstractAppDbContext>()
-            .AddDefaultTokenProviders()
-            .AddDefaultUI();
+            .AddDefaultTokenProviders();
         serviceCollection.Configure<IdentityOptions>(options =>
         {
             options.Password.RequireDigit = false;

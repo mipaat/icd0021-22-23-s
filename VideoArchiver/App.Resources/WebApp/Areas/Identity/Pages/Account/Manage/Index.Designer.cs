@@ -50,5 +50,11 @@ namespace App.Resources.WebApp.Areas.Identity.Pages.Account.Manage {
                 return ResourceManager.GetString("PageTitle", resourceCulture);
             }
         }
+        
+        public static string SelectActionFromMenuOnLeft {
+            get {
+                return ResourceManager.GetString("SelectActionFromMenuOnLeft", resourceCulture);
+            }
+        }
     }
 }

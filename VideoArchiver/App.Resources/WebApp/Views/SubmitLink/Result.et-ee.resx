@@ -14,4 +14,7 @@
     <data name="SubmissionProcessed" xml:space="preserve">
         <value>{0} ID-ga {2} platvormil {1} edukalt esitatud.</value>
     </data>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Esitus töödeldud</value>
+    </data>
 </root>

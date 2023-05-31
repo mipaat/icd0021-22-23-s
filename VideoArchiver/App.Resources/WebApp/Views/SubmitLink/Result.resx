@@ -21,4 +21,7 @@
     <data name="SubmissionProcessed" xml:space="preserve">
         <value>Submission for {0} on platform {1} with ID {2} successfully processed.</value>
     </data>
+    <data name="PageTitle" xml:space="preserve">
+        <value>Submission processed</value>
+    </data>
 </root>
