@@ -1,7 +1,6 @@
 using App.Contracts.DAL;
 using App.Contracts.DAL.Repositories.EntityRepositories.Identity;
 using App.DAL.DTO.Entities.Identity;
-using App.Resources.WebApp.Areas.Identity.Pages.Account;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Base.DAL.EF;
@@ -83,5 +82,9 @@ public class UserRepository : BaseAppEntityRepository<App.Domain.Identity.User, 
             .ExecuteUpdateAsync(a => a.SetProperty(author => author.UserId, author => null));
         await DbContext.EntityAccessPermissions.Where(e => e.UserId == userId).ExecuteDeleteAsync();
         await DbContext.StatusChangeNotifications.Where(n => n.ReceiverId == userId).ExecuteDeleteAsync();
+        await DbContext.UserLogins.Where(l => l.UserId == userId).ExecuteDeleteAsync();
+        await DbContext.UserTokens.Where(t => t.UserId == userId).ExecuteDeleteAsync();
+        await DbContext.UserClaims.Where(c => c.UserId == userId).ExecuteDeleteAsync();
+        await DbContext.UserRoles.Where(r => r.UserId == userId).ExecuteDeleteAsync();
     }
 }
