@@ -1,6 +1,7 @@
 using App.BLL.DTO.Exceptions;
 using App.BLL.Identity;
 using App.Common;
+using App.Common.Exceptions;
 using Base.WebHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

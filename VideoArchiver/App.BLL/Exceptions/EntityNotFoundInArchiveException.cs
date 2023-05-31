@@ -1,10 +1,12 @@
 using System.Text;
+using App.Common;
 using App.Common.Enums;
+using App.Common.Exceptions;
 using Utils;
 
 namespace App.BLL.Exceptions;
 
-public class EntityNotFoundInArchiveException : Exception
+public class EntityNotFoundInArchiveException : NotFoundException
 {
     public readonly Guid? Id;
     public readonly string? IdOnPlatform;

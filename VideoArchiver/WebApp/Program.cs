@@ -11,6 +11,7 @@ using App.BLL.Identity.Config;
 using App.BLL.Identity.Extensions;
 using App.BLL.YouTube;
 using App.BLL.YouTube.Extensions;
+using App.Common.Exceptions;
 using App.Contracts.DAL;
 using App.DAL.EF;
 using Asp.Versioning.ApiExplorer;
@@ -219,6 +220,18 @@ public class Program
                 options.SwaggerEndpoint(
                     $"/swagger/{description.GroupName}/swagger.json",
                     description.GroupName);
+            }
+        });
+
+        app.Use(async (context, next) =>
+        {
+            try
+            {
+                await next();
+            }
+            catch (NotFoundException)
+            {
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
             }
         });
 

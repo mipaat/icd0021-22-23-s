@@ -1,0 +1,8 @@
+@model string
+
+@{
+    ViewBag.Title = App.Resources.WebApp.Views.SubmitLink.UnrecognizedUrl.PageTitle;
+}
+
+<h2 class="text-danger">@App.Resources.WebApp.Views.SubmitLink.UnrecognizedUrl.PageTitle</h2>
+<h3>@string.Format(App.Resources.WebApp.Views.SubmitLink.UnrecognizedUrl.UrlMessage, Model)</h3>

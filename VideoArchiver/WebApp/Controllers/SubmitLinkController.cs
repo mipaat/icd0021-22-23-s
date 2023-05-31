@@ -1,5 +1,7 @@
 ﻿#pragma warning disable 1591
 using App.BLL;
+using App.BLL.DTO.Entities;
+using App.BLL.Exceptions;
 using App.BLL.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,10 +27,26 @@ public class SubmitLinkController : Controller
     [HttpPost]
     public async Task<IActionResult> Submit(LinkSubmissionViewModel linkSubmission)
     {
-        var result = await _serviceUow.SubmitService.SubmitGenericUrlAsync(linkSubmission.Link, User, linkSubmission.SubmitPlaylist);
+        UrlSubmissionResult result;
+        try
+        {
+            result = await _serviceUow.SubmitService.SubmitGenericUrlAsync(linkSubmission.Link, User,
+                linkSubmission.SubmitPlaylist);
+        }
+        catch (UnrecognizedUrlException)
+        {
+            return RedirectToAction(nameof(UnrecognizedUrl), new { Url = linkSubmission.Link });
+        }
+
         await _serviceUow.SaveChangesAsync();
 
         return RedirectToAction(nameof(Result), result);
+    }
+
+    [HttpGet]
+    public IActionResult UnrecognizedUrl(string url)
+    {
+        return View(url);
     }
 
     public IActionResult Result(UrlSubmissionResultViewModel model)

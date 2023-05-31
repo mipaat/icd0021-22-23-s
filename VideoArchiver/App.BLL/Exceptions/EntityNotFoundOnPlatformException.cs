@@ -1,9 +1,11 @@
+using App.Common;
 using App.Common.Enums;
+using App.Common.Exceptions;
 using Utils;
 
 namespace App.BLL.Exceptions;
 
-public class EntityNotFoundOnPlatformException : Exception
+public class EntityNotFoundOnPlatformException : NotFoundException
 {
     public readonly string IdOnPlatform;
     public readonly EPlatform Platform;

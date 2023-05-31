@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace Base.WebHelpers;
+namespace Base.WebHelpers.Middleware;
 
 public class RequestDebugMiddleware
 {

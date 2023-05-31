@@ -1,6 +1,7 @@
 using App.BLL;
 using App.BLL.DTO.Exceptions;
 using App.Common;
+using App.Common.Exceptions;
 using AutoMapper;
 using Base.WebHelpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

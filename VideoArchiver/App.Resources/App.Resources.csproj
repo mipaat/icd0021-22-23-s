@@ -215,6 +215,14 @@
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>ManageRoles.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Shared\Error.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Error.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\SubmitLink\UnrecognizedUrl.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>UnrecognizedUrl.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
@@ -477,6 +485,16 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>ManageRoles.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Shared\Error.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Error.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\SubmitLink\UnrecognizedUrl.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>UnrecognizedUrl.resx</DependentUpon>
       </Compile>
     </ItemGroup>
 
