@@ -98,5 +98,23 @@ namespace App.Resources.WebApp.Views.Video {
                 return ResourceManager.GetString("ArchivedTotalCommentsCount", resourceCulture);
             }
         }
+        
+        public static string LikesCount {
+            get {
+                return ResourceManager.GetString("LikesCount", resourceCulture);
+            }
+        }
+        
+        public static string CommentsNotYetFetched {
+            get {
+                return ResourceManager.GetString("CommentsNotYetFetched", resourceCulture);
+            }
+        }
+        
+        public static string CommentsLastFetched {
+            get {
+                return ResourceManager.GetString("CommentsLastFetched", resourceCulture);
+            }
+        }
     }
 }

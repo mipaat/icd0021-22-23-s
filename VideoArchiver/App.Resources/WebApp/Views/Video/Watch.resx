@@ -45,4 +45,13 @@
     <data name="ArchivedTotalCommentsCount" xml:space="preserve">
         <value>Total archived comments: {0}</value>
     </data>
+    <data name="LikesCount" xml:space="preserve">
+        <value>Likes: {0}</value>
+    </data>
+    <data name="CommentsNotYetFetched" xml:space="preserve">
+        <value>Comments not yet fetched</value>
+    </data>
+    <data name="CommentsLastFetched" xml:space="preserve">
+        <value>Last fetched</value>
+    </data>
 </root>

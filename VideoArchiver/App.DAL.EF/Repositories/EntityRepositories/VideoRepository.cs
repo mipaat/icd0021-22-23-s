@@ -117,8 +117,8 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
             default:
             case EVideoSortingOptions.CreatedAt:
                 query = descending
-                    ? query.OrderByDescending(v => v.CreatedAt).ThenByDescending(v => v.PublishedAt)
-                    : query.OrderBy(v => v.CreatedAt).ThenBy(v => v.PublishedAt);
+                    ? query.OrderByDescending(v => v.PublishedAt).ThenByDescending(v => v.CreatedAt)
+                    : query.OrderBy(v => v.PublishedAt).ThenBy(v => v.CreatedAt);
                 break;
         }
 

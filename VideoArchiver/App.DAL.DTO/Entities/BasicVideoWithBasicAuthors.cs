@@ -19,4 +19,8 @@ public class BasicVideoWithBasicAuthors : AbstractIdDatabaseEntity
     public string IdOnPlatform { get; set; } = default!;
 
     public ICollection<AuthorBasic> Authors { get; set; } = default!;
+
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? PublishedAt { get; set; }
+    public DateTime AddedToArchiveAt { get; set; }
 }

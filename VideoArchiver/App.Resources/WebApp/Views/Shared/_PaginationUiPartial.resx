@@ -22,13 +22,13 @@
         <value>Showing results {0}-{1} (of unknown total)</value>
     </data>
     <data name="ResultsAmount" xml:space="preserve">
-        <value>{0} results</value>
+        <value>Results: {0}</value>
     </data>
     <data name="RangeResultsKnownTotal" xml:space="preserve">
         <value>Showing {0}-{1} of {2} results</value>
     </data>
     <data name="ResultsAmountOnPage" xml:space="preserve">
-        <value>{0} results on page</value>
+        <value>Results on page: {0}</value>
     </data>
     <data name="NextPage" xml:space="preserve">
         <value>Next</value>

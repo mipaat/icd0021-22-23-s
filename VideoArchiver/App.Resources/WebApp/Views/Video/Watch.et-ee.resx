@@ -38,4 +38,13 @@
     <data name="ArchivedTotalCommentsCount" xml:space="preserve">
         <value>Kokku kommentaare arhiivis: {0}</value>
     </data>
+    <data name="LikesCount" xml:space="preserve">
+        <value>Meeldimisi: {0}</value>
+    </data>
+    <data name="CommentsNotYetFetched" xml:space="preserve">
+        <value>Kommentaare pole veel arhiveeritud</value>
+    </data>
+    <data name="CommentsLastFetched" xml:space="preserve">
+        <value>Viimati arhiveeritud</value>
+    </data>
 </root>

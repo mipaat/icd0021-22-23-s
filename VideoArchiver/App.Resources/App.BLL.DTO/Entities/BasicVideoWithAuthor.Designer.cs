@@ -68,5 +68,23 @@ namespace App.Resources.App.BLL.DTO.Entities {
                 return ResourceManager.GetString("Author", resourceCulture);
             }
         }
+        
+        public static string CreatedAt {
+            get {
+                return ResourceManager.GetString("CreatedAt", resourceCulture);
+            }
+        }
+        
+        public static string PublishedAt {
+            get {
+                return ResourceManager.GetString("PublishedAt", resourceCulture);
+            }
+        }
+        
+        public static string AddedToArchiveAt {
+            get {
+                return ResourceManager.GetString("AddedToArchiveAt", resourceCulture);
+            }
+        }
     }
 }

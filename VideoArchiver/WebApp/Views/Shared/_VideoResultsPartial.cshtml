@@ -1,3 +1,4 @@
+@using Base.WebHelpers
 @model List<App.BLL.DTO.Entities.BasicVideoWithAuthor>
 
 <div>
@@ -8,6 +9,8 @@
             <th>@Html.DisplayNameFor(v => v[0].Author)</th>
             <th>@Html.DisplayNameFor(v => v[0].Thumbnail)</th>
             <th>@Html.DisplayNameFor(v => v[0].Duration)</th>
+            <th>@Html.DisplayNameFor(v => v[0].CreatedAt)</th>
+            <th>@Html.DisplayNameFor(v => v[0].AddedToArchiveAt)</th>
         </tr>
         </thead>
         <tbody>
@@ -32,6 +35,12 @@
                 </td>
                 <td>
                     @video.Duration
+                </td>
+                <td>
+                    @Context.SpanFor(video.PublishedAt ?? video.CreatedAt)
+                </td>
+                <td>
+                    @Context.SpanFor(video.AddedToArchiveAt)
                 </td>
             </tr>
         }

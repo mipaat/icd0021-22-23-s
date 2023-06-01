@@ -39,6 +39,7 @@
 
 <partial name="_AuthorSummaryPartial" model="Model.Video.Author"/>
 
+<br/>
 <h1>@Model.Video.Title</h1>
 
 <div>
@@ -53,19 +54,34 @@
                 <input type="submit" class="btn btn-primary" value="@App.Resources.WebApp.Views.Video.Watch.SetArchivePrivacyStatusSubmit"/>
             </form>
         }
+        @Context.SpanFor(Model.Video.PublishedAt ?? Model.Video.CreatedAt)
+        @if (Model.Video.LikeCount != null)
+        {
+            <div>@string.Format(App.Resources.WebApp.Views.Video.Watch.LikesCount, Model.Video.LikeCount)</div>
+        }
     </div>
     <span class="white-space-text-block card card-body">@Model.Video.Description</span>
 </div>
 
 <div>
-    <h4>@App.Resources.WebApp.Views.Video.Watch.Comments</h4>
-    @string.Format(App.Resources.WebApp.Views.Video.Watch.CommentsOnPlatformCount, Model.Video.CommentCount)
-    @string.Format(App.Resources.WebApp.Views.Video.Watch.ArchivedRootCommentsCount, Model.Video.ArchivedRootCommentCount)
-    @string.Format(App.Resources.WebApp.Views.Video.Watch.ArchivedTotalCommentsCount, Model.Video.ArchivedCommentCount)
-    <partial name="_PaginationUiPartial" model="@PaginationViewModel"/>
-    @foreach (var comment in Model.Video.Comments)
+    @if (Model.Video.LastCommentsFetch == null)
     {
-        <partial name="_CommentPartial" model="@comment"/>
+        <h4>@App.Resources.WebApp.Views.Video.Watch.CommentsNotYetFetched</h4>
+    }
+    else
+    {
+        <h4>@App.Resources.WebApp.Views.Video.Watch.Comments</h4>
+        <h6>@App.Resources.WebApp.Views.Video.Watch.CommentsLastFetched: @Context.SpanFor(Model.Video.LastCommentsFetch)</h6>
+        @string.Format(App.Resources.WebApp.Views.Video.Watch.CommentsOnPlatformCount, Model.Video.CommentCount)<br/>
+        @string.Format(App.Resources.WebApp.Views.Video.Watch.ArchivedRootCommentsCount, Model.Video.ArchivedRootCommentCount)<br/>
+        @string.Format(App.Resources.WebApp.Views.Video.Watch.ArchivedTotalCommentsCount, Model.Video.ArchivedCommentCount)
+        <partial name="_PaginationUiPartial" model="@PaginationViewModel"/>
+        <div class="d-flex flex-column gap-1">
+            @foreach (var comment in Model.Video.Comments)
+            {
+                <partial name="_CommentPartial" model="@comment"/>
+            }
+        </div>
     }
 </div>
 

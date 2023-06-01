@@ -23,4 +23,13 @@
     <data name="Author" xml:space="preserve">
         <value>Autor</value>
     </data>
+    <data name="CreatedAt" xml:space="preserve">
+        <value>Loomishetk</value>
+    </data>
+    <data name="PublishedAt" xml:space="preserve">
+        <value>Avalikustamishetk</value>
+    </data>
+    <data name="AddedToArchiveAt" xml:space="preserve">
+        <value>Arhiivi lisatud</value>
+    </data>
 </root>

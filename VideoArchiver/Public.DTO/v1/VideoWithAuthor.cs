@@ -89,4 +89,30 @@ public class VideoWithAuthor
     /// The author (uploader) of the video.
     /// </summary>
     public Author Author { get; set; } = default!;
+
+    /// <summary>
+    /// When the video was last fetched using official means.
+    /// </summary>
+    public DateTime? LastFetchOfficial { get; set; }
+    /// <summary>
+    /// When the video was last successfully fetched using official means.
+    /// </summary>
+    public DateTime? LastSuccessfulFetchOfficial { get; set; }
+    /// <summary>
+    /// When the video was last fetched using unofficial means.
+    /// </summary>
+    public DateTime? LastFetchUnofficial { get; set; }
+    /// <summary>
+    /// When the video was last successfully fetched using unofficial means.
+    /// </summary>
+    public DateTime? LastSuccessfulFetchUnofficial { get; set; }
+    /// <summary>
+    /// When the video was (first) archived.
+    /// </summary>
+    public DateTime AddedToArchiveAt { get; set; } = DateTime.UtcNow;
+
+    /// <summary>
+    /// When the video's comments were last fetched.
+    /// </summary>
+    public DateTime? LastCommentsFetch { get; set; }
 }

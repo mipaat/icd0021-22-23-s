@@ -55,4 +55,17 @@ public class BasicVideoWithAuthor
     /// The author (uploader) of the video.
     /// </summary>
     public Author Author { get; set; } = default!;
+
+    /// <summary>
+    /// When the video was created.
+    /// </summary>
+    public DateTime? CreatedAt { get; set; }
+    /// <summary>
+    /// When the video was published.
+    /// </summary>
+    public DateTime? PublishedAt { get; set; }
+    /// <summary>
+    /// When the video was (first) archived.
+    /// </summary>
+    public DateTime AddedToArchiveAt { get; set; }
 }

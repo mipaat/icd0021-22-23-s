@@ -14,4 +14,10 @@
     <data name="RepliesAmount" xml:space="preserve">
         <value>Vastused ({0})</value>
     </data>
+    <data name="DeletedAt" xml:space="preserve">
+        <value>Kustutatud: </value>
+    </data>
+    <data name="LikesCount" xml:space="preserve">
+        <value>Meeldimisi: {0}</value>
+    </data>
 </root>

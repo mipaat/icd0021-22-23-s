@@ -27,4 +27,12 @@ public class Video
     public int? CommentCount { get; set; }
     public int ArchivedCommentCount { get; set; }
     public int ArchivedRootCommentCount { get; set; }
+
+    public DateTime? LastFetchOfficial { get; set; }
+    public DateTime? LastSuccessfulFetchOfficial { get; set; }
+    public DateTime? LastFetchUnofficial { get; set; }
+    public DateTime? LastSuccessfulFetchUnofficial { get; set; }
+    public DateTime AddedToArchiveAt { get; set; }
+    
+    public DateTime? LastCommentsFetch { get; set; }
 }

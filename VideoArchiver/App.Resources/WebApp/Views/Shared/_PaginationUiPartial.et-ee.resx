@@ -15,13 +15,13 @@
         <value>Tulemused {0}-{1} (koguarv teadmata)</value>
     </data>
     <data name="ResultsAmount" xml:space="preserve">
-        <value>{0} tulemust</value>
+        <value>Tulemusi: {0}</value>
     </data>
     <data name="RangeResultsKnownTotal" xml:space="preserve">
         <value>Tulemused {0}-{1} (kokku {2})</value>
     </data>
     <data name="ResultsAmountOnPage" xml:space="preserve">
-        <value>{0} tulemust lehel</value>
+        <value>Tulemusi lehel: {0}</value>
     </data>
     <data name="NextPage" xml:space="preserve">
         <value>Järgmine</value>

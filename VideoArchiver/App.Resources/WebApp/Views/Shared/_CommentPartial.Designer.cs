@@ -50,5 +50,17 @@ namespace App.Resources.WebApp.Views.Shared {
                 return ResourceManager.GetString("RepliesAmount", resourceCulture);
             }
         }
+        
+        public static string DeletedAt {
+            get {
+                return ResourceManager.GetString("DeletedAt", resourceCulture);
+            }
+        }
+        
+        public static string LikesCount {
+            get {
+                return ResourceManager.GetString("LikesCount", resourceCulture);
+            }
+        }
     }
 }

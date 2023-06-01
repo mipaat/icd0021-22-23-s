@@ -1,31 +1,33 @@
 @using Base.WebHelpers
 @model App.BLL.DTO.Entities.Comment
 
-<div>
-    <partial name="_AuthorSummaryPartial" model="@Model.Author"/>
-    @if (Model.CreatedAt != null)
-    {
-        <div>@Context.SpanFor(Model.CreatedAt)</div>
-    }
-    @if (Model.DeletedAt != null)
-    {
-        <div class="text-danger">Deleted: @Context.SpanFor(Model.DeletedAt)</div>
-    }
-    <div class="white-space-text-block card card-body">@Model.Content</div>
-    @if (Model.LikeCount != null)
-    {
-        <div>Likes: @Model.LikeCount</div>
-    }
-</div>
-@if (Model.Replies.Count > 0)
-{
-    <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#comment-@Model.Id-collapse" aria-expanded="False" aria-controls="comment-@Model.Id-collapse">
-        @string.Format(App.Resources.WebApp.Views.Shared._CommentPartial.RepliesAmount, Model.Replies.Count)
-    </button>
-    <div class="collapse ms-4" id="comment-@Model.Id-collapse">
-        @foreach (var reply in Model.Replies)
+<div class="border border-3 p-2 rounded-2">
+    <div>
+        <partial name="_AuthorSummaryPartial" model="@Model.Author"/>
+        @if (Model.CreatedAt != null)
         {
-            <partial name="_CommentPartial" model="@reply"/>
+            <div>@Context.SpanFor(Model.CreatedAt)</div>
+        }
+        @if (Model.DeletedAt != null)
+        {
+            <div class="text-danger">@App.Resources.WebApp.Views.Shared._CommentPartial.DeletedAt @Context.SpanFor(Model.DeletedAt)</div>
+        }
+        <div class="white-space-text-block border border-1 rounded-2 p-2">@Model.Content</div>
+        @if (Model.LikeCount != null)
+        {
+            <div>@string.Format(App.Resources.WebApp.Views.Shared._CommentPartial.LikesCount, Model.LikeCount)</div>
         }
     </div>
-}
+    @if (Model.Replies.Count > 0)
+    {
+        <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#comment-@Model.Id-collapse" aria-expanded="False" aria-controls="comment-@Model.Id-collapse">
+            @string.Format(App.Resources.WebApp.Views.Shared._CommentPartial.RepliesAmount, Model.Replies.Count)
+        </button>
+        <div class="collapse ms-4" id="comment-@Model.Id-collapse">
+            @foreach (var reply in Model.Replies)
+            {
+                <partial name="_CommentPartial" model="@reply"/>
+            }
+        </div>
+    }
+</div>

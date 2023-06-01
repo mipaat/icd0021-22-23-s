@@ -21,4 +21,10 @@
     <data name="RepliesAmount" xml:space="preserve">
         <value>Replies ({0})</value>
     </data>
+    <data name="DeletedAt" xml:space="preserve">
+        <value>Deleted: </value>
+    </data>
+    <data name="LikesCount" xml:space="preserve">
+        <value>Likes: {0}</value>
+    </data>
 </root>

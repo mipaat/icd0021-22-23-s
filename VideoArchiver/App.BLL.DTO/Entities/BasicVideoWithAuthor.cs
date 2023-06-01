@@ -25,4 +25,11 @@ public class BasicVideoWithAuthor : AbstractIdDatabaseEntity
 
     [Display(Name = nameof(Author), ResourceType = typeof(Resources.App.BLL.DTO.Entities.BasicVideoWithAuthor))]
     public Author Author { get; set; } = default!;
+
+    [Display(Name = nameof(CreatedAt), ResourceType = typeof(Resources.App.BLL.DTO.Entities.BasicVideoWithAuthor))]
+    public DateTime? CreatedAt { get; set; }
+    [Display(Name = nameof(PublishedAt), ResourceType = typeof(Resources.App.BLL.DTO.Entities.BasicVideoWithAuthor))]
+    public DateTime? PublishedAt { get; set; }
+    [Display(Name = nameof(AddedToArchiveAt), ResourceType = typeof(Resources.App.BLL.DTO.Entities.BasicVideoWithAuthor))]
+    public DateTime AddedToArchiveAt { get; set; }
 }
