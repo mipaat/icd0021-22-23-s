@@ -7,10 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace App.Resources.WebApp.Areas.Identity.Pages.Account {
-    using System;
-    
-    
+namespace App.Resources.WebApp.Views.Shared {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -28,7 +25,7 @@ namespace App.Resources.WebApp.Areas.Identity.Pages.Account {
         public static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("App.Resources.WebApp.Areas.Identity.Pages.Account.AccessDenied", typeof(AccessDenied).Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("App.Resources.WebApp.Views.Shared.AccessDenied", typeof(AccessDenied).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

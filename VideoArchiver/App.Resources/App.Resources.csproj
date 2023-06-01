@@ -123,10 +123,6 @@
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>LinkSubmissionViewModel.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="WebApp\Areas\Identity\Pages\Account\AccessDenied.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
-        <LastGenOutput>AccessDenied.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
       <EmbeddedResource Update="WebApp\Areas\Identity\Pages\Account\AwaitingApproval.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Awaiting approval.Designer.cs</LastGenOutput>
@@ -222,6 +218,10 @@
       <EmbeddedResource Update="WebApp\Views\SubmitLink\UnrecognizedUrl.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>UnrecognizedUrl.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\Shared\AccessDenied.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>AccessDenied.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
 
@@ -371,11 +371,6 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>LinkSubmissionViewModel.resx</DependentUpon>
       </Compile>
-      <Compile Update="WebApp\Areas\Identity\Pages\Account\AccessDenied.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>AccessDenied.resx</DependentUpon>
-      </Compile>
       <Compile Update="WebApp\Areas\Identity\Pages\Account\AwaitingApproval.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
@@ -495,6 +490,11 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>UnrecognizedUrl.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\Shared\AccessDenied.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>AccessDenied.resx</DependentUpon>
       </Compile>
     </ItemGroup>
 

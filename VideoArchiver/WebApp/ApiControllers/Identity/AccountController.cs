@@ -155,8 +155,7 @@ public class AccountController : ControllerBase
     /// Get a new JWT and refresh token, using existing JWT and refresh token.
     /// </summary>
     /// <param name="refreshTokenModel">Tokens to refresh</param>
-    /// <param name="expiresInSeconds">The amount of seconds the created JWT should be valid for.
-    /// Cannot be larger than maximum expiration time (configured in settings).</param>
+    /// <param name="expiresInSeconds">The amount of seconds the created JWT should be valid for.</param>
     /// <returns>Refreshed JWT and refresh token (with expiration date), if refreshing was successful.</returns>
     /// <response code="200">Token refresh was successful.</response>
     /// <response code="400">Provided token/tokens was/were invalid.</response>

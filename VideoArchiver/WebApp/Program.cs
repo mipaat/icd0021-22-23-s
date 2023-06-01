@@ -68,7 +68,11 @@ public class Program
                 };
             });
 
-        builder.Services.DisableApiErrorRedirects();
+        builder.Services.DisableApiErrorRedirects(accessDeniedRedirect: context =>
+        {
+            context.Response.Redirect("/Home/AccessDenied");
+            return context.Response.CompleteAsync();
+        });
 
         builder.Services.AddControllersWithViews()
             .AddCommaSeparatedArrayModelBinderProvider()

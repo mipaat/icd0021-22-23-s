@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -6,7 +8,7 @@ namespace Base.WebHelpers;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection DisableApiErrorRedirects(this IServiceCollection services,
-        string apiPrefix = "/api")
+        string apiPrefix = "/api", Func<RedirectContext<CookieAuthenticationOptions>, Task>? accessDeniedRedirect = null)
     {
         services.ConfigureApplicationCookie(options =>
         {
@@ -22,7 +24,7 @@ public static class ServiceCollectionExtensions
                 await oldRedirectToLogin(context);
             };
 
-            var oldRedirectToAccessDenied = options.Events.OnRedirectToAccessDenied;
+            var defaultAccessDeniedRedirect = accessDeniedRedirect ?? options.Events.OnRedirectToAccessDenied;
             options.Events.OnRedirectToAccessDenied = async context =>
             {
                 if (context.Request.Path.StartsWithSegments(apiPrefix))
@@ -31,7 +33,7 @@ public static class ServiceCollectionExtensions
                     return;
                 }
 
-                await oldRedirectToAccessDenied(context);
+                await defaultAccessDeniedRedirect(context);
             };
         });
 

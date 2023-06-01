@@ -89,7 +89,7 @@ public class VideosController : ControllerBase
     /// <param name="id">The unique ID of the video.</param>
     /// <returns>The fetched video.</returns>
     /// <response code="200">Video fetched successfully.</response>
-    /// <response code="403">Access to video not allowed.</response>
+    /// <response code="403">Access to video not allowed or video not found.</response>
     /// <response code="404">Video not found.</response>
     [HttpGet]
     [AllowAnonymous]
