@@ -22,8 +22,45 @@ public class Comment
     /// </summary>
     public DateTime? CreatedAt { get; set; }
     /// <summary>
+    /// When the comment was deleted.
+    /// </summary>
+    public DateTime? DeletedAt { get; set; }
+    /// <summary>
     /// Replies to the comment.
     /// Currently the API returns replies only for root comments and flattens them.
     /// </summary>
     public ICollection<Comment> Replies { get; set; } = default!;
+    /// <summary>
+    /// The amount of upvotes this comment has received.
+    /// </summary>
+    public int? LikeCount { get; set; }
+    /// <summary>
+    /// The amount of downvotes this comment has received.
+    /// </summary>
+    public int? DislikeCount { get; set; }
+    /// <summary>
+    /// Whether the comment has been marked as favorite by the video author.
+    /// </summary>
+    public bool? IsFavorited { get; set; }
+    
+    /// <summary>
+    /// When the comment was last fetched using official means.
+    /// </summary>
+    public DateTime? LastFetchOfficial { get; set; }
+    /// <summary>
+    /// When the comment was last successfully fetched using official means.
+    /// </summary>
+    public DateTime? LastSuccessfulFetchOfficial { get; set; }
+    /// <summary>
+    /// When the comment was last fetched using unofficial means.
+    /// </summary>
+    public DateTime? LastFetchUnofficial { get; set; }
+    /// <summary>
+    /// When the comment was last successfully fetched using unofficial means.
+    /// </summary>
+    public DateTime? LastSuccessfulFetchUnofficial { get; set; }
+    /// <summary>
+    /// When the comment was first archived.
+    /// </summary>
+    public DateTime AddedToArchiveAt { get; set; }
 }

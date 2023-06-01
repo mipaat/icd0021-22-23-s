@@ -1,8 +1,21 @@
+@using Base.WebHelpers
 @model App.BLL.DTO.Entities.Comment
 
 <div>
     <partial name="_AuthorSummaryPartial" model="@Model.Author"/>
-    <span class="white-space-text-block">@Model.Content</span>
+    @if (Model.CreatedAt != null)
+    {
+        <div>@Context.SpanFor(Model.CreatedAt)</div>
+    }
+    @if (Model.DeletedAt != null)
+    {
+        <div class="text-danger">Deleted: @Context.SpanFor(Model.DeletedAt)</div>
+    }
+    <div class="white-space-text-block card card-body">@Model.Content</div>
+    @if (Model.LikeCount != null)
+    {
+        <div>Likes: @Model.LikeCount</div>
+    }
 </div>
 @if (Model.Replies.Count > 0)
 {
