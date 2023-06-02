@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApp.Areas.Identity.Pages.Account;
 using WebApp.Authorization;
 using WebApp.ViewModels;
+using IAuthorizationService = App.BLL.Contracts.Services.IAuthorizationService;
 
 #pragma warning disable CS1591
 
@@ -21,12 +22,14 @@ public class CategoryController : Controller
     private readonly ICategoryService _categoryService;
     private readonly UserService _userService;
     private readonly IConfiguration _configuration;
+    private readonly IAuthorizationService _authorizationService;
 
-    public CategoryController(ICategoryService categoryService, IConfiguration configuration, UserService userService)
+    public CategoryController(ICategoryService categoryService, IConfiguration configuration, UserService userService, IAuthorizationService authorizationService)
     {
         _categoryService = categoryService;
         _configuration = configuration;
         _userService = userService;
+        _authorizationService = authorizationService;
     }
 
     public IActionResult Create(CategoryFormViewModel viewModel)
@@ -170,6 +173,7 @@ public class CategoryController : Controller
 
     public async Task<IActionResult> ManageEntityCategories(CategoryManageEntityCategoriesViewModel model)
     {
+        if (!await _authorizationService.IsAllowedToAccessEntity(model.EntityType, model.Id, User)) return Forbid();
         var selectedAuthorId = HttpContext.Request.GetSelectedAuthorId();
         if (selectedAuthorId == null) return RedirectToSelectAuthor;
         if (!await _userService.IsUserSubAuthor(selectedAuthorId.Value, User)) return RedirectToSelectAuthor;
@@ -185,6 +189,7 @@ public class CategoryController : Controller
     [ActionName("ManageEntityCategories")]
     public async Task<IActionResult> ManageEntityCategoriesPost(CategoryManageEntityCategoriesViewModel model)
     {
+        if (!await _authorizationService.IsAllowedToAccessEntity(model.EntityType, model.Id, User)) return Forbid();
         var selectedAuthorId = HttpContext.Request.GetSelectedAuthorId();
         if (selectedAuthorId == null)
             return RedirectToSelectAuthorFromForm(model); // TODO: add relevant form data to query parameters
@@ -202,6 +207,7 @@ public class CategoryController : Controller
     [Authorize(Roles = RoleNames.AdminOrSuperAdmin)]
     public async Task<IActionResult> ManageEntityCategoriesPublic(CategoryManageEntityCategoriesViewModel model)
     {
+        if (!await _authorizationService.IsAllowedToAccessEntity(model.EntityType, model.Id, User)) return Forbid();
         model.Categories = await _categoryService.GetAllAssignableCategoriesForAuthor(null);
         model.SetSelectedCategoryIds(
             await _categoryService.GetAllAssignedCategoryIds(null, model.Id, model.EntityType));
@@ -214,6 +220,7 @@ public class CategoryController : Controller
     [ActionName("ManageEntityCategoriesPublic")]
     public async Task<IActionResult> ManageEntityCategoriesPublicPost(CategoryManageEntityCategoriesViewModel model)
     {
+        if (!await _authorizationService.IsAllowedToAccessEntity(model.EntityType, model.Id, User)) return Forbid();
         await _categoryService.AddToCategories(null, model.Id, model.EntityType, model.SelectedCategoryIds);
         await _categoryService.ServiceUow.SaveChangesAsync();
 

@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using App.BLL.Contracts.Services;
 using App.Common;
+using App.Common.Enums;
 using App.DAL.Contracts;
 using App.DAL.DTO.Entities;
 using Base.WebHelpers;
@@ -26,6 +27,15 @@ public class AuthorizationService : IAuthorizationService
         var userId = user.GetUserIdIfExists();
         if (userId == null) return await _uow.EntityAccessPermissions.AllowedToAccessVideoAnonymouslyAsync(videoId);
         return await _uow.EntityAccessPermissions.AllowedToAccessVideoAsync(userId.Value, videoId);
+    }
+
+    public async Task<bool> IsAllowedToAccessEntity(EEntityType entityType, Guid entityId, ClaimsPrincipal user)
+    {
+        return entityType switch
+        {
+            EEntityType.Video => await IsAllowedToAccessVideo(user, entityId),
+            _ => throw new NotImplementedException(), // TODO: Other entities
+        };
     }
 
     private void AuthorizeVideo(Guid userId, Guid videoId)
