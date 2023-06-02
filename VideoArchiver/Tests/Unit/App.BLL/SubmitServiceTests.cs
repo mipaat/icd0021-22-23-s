@@ -224,6 +224,27 @@ public class SubmitServiceTests
         _authorizationServiceMock.Verify(x => x.AuthorizeAuthorIfNotAuthorized(queueItem.AddedById, It.IsAny<Guid>()),
             grantAccessAuthorTimes);
     }
+
+    [Fact]
+    public async void TestSubmitQueueItemsAsyncNoHandlersAsync()
+    {
+        var queueItem = new QueueItem { Platform = EPlatform.This, EntityType = EEntityType.Author };
+        await SubmitService.SubmitQueueItemAsync(queueItem);
+        _queueItemRepoMock.Verify(x => x.Remove(It.Is<QueueItem>(e => e == queueItem)), Times.Once);
+    }
+
+    [Fact]
+    public async void TestSubmitQueueItemsAsyncInvalidEntityTypeAsync()
+    {
+        var queueItem = new QueueItem
+        {
+            Platform = EPlatform.YouTube, IdOnPlatform = "CQLMFP34fpU",
+            EntityType = (EEntityType)99
+        };
+        BaseArrangeTestSubmitQueueItem(queueItem);
+
+        await Assert.ThrowsAnyAsync<ArgumentException>(async () => await SubmitService.SubmitQueueItemAsync(queueItem));
+    }
 }
 
 internal class AllowedToAutoSubmitUsersGenerator : TestDataGenerator
