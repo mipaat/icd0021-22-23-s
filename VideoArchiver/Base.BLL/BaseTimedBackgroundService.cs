@@ -30,7 +30,13 @@ public abstract class BaseTimedBackgroundService<TService> : IHostedService, IDi
     {
         Logger.LogInformation("Stopping background service");
 
-        Timer?.Change(Timeout.Infinite, 0);
+        try
+        {
+            Timer?.Change(Timeout.Infinite, 0);
+        }
+        catch (ObjectDisposedException)
+        {
+        }
 
         return Task.CompletedTask;
     }

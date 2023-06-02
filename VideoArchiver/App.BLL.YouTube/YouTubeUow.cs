@@ -50,7 +50,7 @@ public class YouTubeUow : BaseAppUowContainer, IDisposable
     public YoutubeDL YoutubeDl =>
         _youtubeDl ??= new YoutubeDL
         {
-            OutputFolder = AppPaths.GetVideosDirectory(EPlatform.YouTube),
+            OutputFolder = AppPaths.GetVideosDirectory(EPlatform.YouTube, Config),
             RestrictFilenames = true,
             OverwriteFiles = false,
         };

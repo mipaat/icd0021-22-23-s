@@ -13,7 +13,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AbstractAppDbCont
         return CreateDbContext();
     }
 
-    private static AbstractAppDbContext CreateDbContext(IConfiguration? configuration = null)
+    public static AbstractAppDbContext CreateDbContext(IConfiguration? configuration = null)
     {
         configuration ??= GetDefaultConfig();
         var connectionInfos = GetConnectionInfos(configuration);

@@ -17,19 +17,19 @@ public class ImageService : BaseService<ImageService>, IImageService
 
     public async Task UpdateProfileImages(Author author)
     {
-        await UpdateImages(author.ProfileImages, AppPaths.GetProfileImagesDirectory(author.Platform),
+        await UpdateImages(author.ProfileImages, AppPaths.GetProfileImagesDirectory(author.Platform, ServiceUow.Config),
             author.IdOnPlatform);
     }
 
     public async Task UpdateThumbnails(Video video)
     {
-        await UpdateImages(video.Thumbnails, AppPaths.GetThumbnailsDirectory(video.Platform),
+        await UpdateImages(video.Thumbnails, AppPaths.GetThumbnailsDirectory(video.Platform, ServiceUow.Config),
             video.IdOnPlatform);
     }
 
     public async Task UpdateThumbnails(Playlist playlist)
     {
-        await UpdateImages(playlist.Thumbnails, AppPaths.GetThumbnailsDirectory(playlist.Platform),
+        await UpdateImages(playlist.Thumbnails, AppPaths.GetThumbnailsDirectory(playlist.Platform, ServiceUow.Config),
             playlist.IdOnPlatform);
     }
 
