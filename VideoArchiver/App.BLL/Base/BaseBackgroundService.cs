@@ -1,3 +1,4 @@
+using App.BLL.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -8,13 +9,13 @@ public abstract class BaseBackgroundService<TBackgroundService> : BackgroundServ
 {
     protected readonly IServiceProvider Services;
     protected readonly ILogger<TBackgroundService> Logger;
-    protected readonly ServiceContext ServiceContext;
+    protected readonly IServiceContext ServiceContext;
 
     protected BaseBackgroundService(IServiceProvider services, ILogger<TBackgroundService> logger)
     {
         Services = services;
         Logger = logger;
-        ServiceContext = services.GetRequiredService<ServiceContext>();
+        ServiceContext = services.GetRequiredService<IServiceContext>();
     }
 
     public override Task StartAsync(CancellationToken cancellationToken)

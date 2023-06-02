@@ -1,4 +1,5 @@
 ﻿using App.BLL.Base;
+using App.BLL.Contracts;
 using App.BLL.YouTube.Services;
 using App.Common;
 using App.Common.Enums;
@@ -30,11 +31,11 @@ public class YouTubeUow : BaseAppUowContainer, IDisposable
 
     public YouTubeSettings YouTubeConfig => YouTubeSettings.FromConfiguration(Config);
 
-    public readonly ServiceUow ServiceUow;
+    public readonly IServiceUow ServiceUow;
 
     public readonly IMapper Mapper;
 
-    public YouTubeUow(ServiceUow serviceUow, YouTubeContext context, IMapper mapper) : base(serviceUow.Uow)
+    public YouTubeUow(IServiceUow serviceUow, YouTubeContext context, IMapper mapper) : base(serviceUow.Uow)
     {
         ServiceUow = serviceUow;
         Context = context;

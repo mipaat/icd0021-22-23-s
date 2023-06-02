@@ -1,18 +1,20 @@
+using App.BLL.Contracts;
+using App.BLL.Contracts.Services;
 using App.BLL.Extensions;
-using App.Contracts.DAL;
 using App.DAL.DTO.Base;
 using App.DAL.DTO.Entities;
 using App.DAL.DTO.Entities.Playlists;
 using App.Common;
+using App.DAL.Contracts;
 
 namespace App.BLL.Services;
 
-public class EntityUpdateService
+public class EntityUpdateService : IEntityUpdateService
 {
-    private readonly ServiceUow? _serviceUow;
+    private readonly IServiceUow? _serviceUow;
     private IAppUnitOfWork? Uow => _serviceUow?.Uow;
 
-    public EntityUpdateService(ServiceUow? serviceUow)
+    public EntityUpdateService(IServiceUow? serviceUow)
     {
         _serviceUow = serviceUow;
     }
@@ -137,7 +139,7 @@ public class EntityUpdateService
         }
     }
 
-    public ImageFileList? UpdateThumbnails(ImageFileList? thumbnails, ImageFileList? newThumbnails,
+    private ImageFileList? UpdateThumbnails(ImageFileList? thumbnails, ImageFileList? newThumbnails,
         ref bool changed)
     {
         return UpdateValueIgnoreNull(thumbnails, newThumbnails, ref changed,

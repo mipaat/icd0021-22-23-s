@@ -1,6 +1,6 @@
 using App.BLL.Base;
 using App.BLL.Identity.Services;
-using App.Contracts.DAL;
+using App.DAL.Contracts;
 using App.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;

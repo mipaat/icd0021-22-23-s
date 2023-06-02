@@ -1,4 +1,4 @@
-using App.Contracts.DAL;
+using App.DAL.Contracts;
 using App.DAL.DTO.Entities;
 using Microsoft.Extensions.DependencyInjection;
 

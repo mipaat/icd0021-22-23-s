@@ -1,7 +1,7 @@
 ﻿using App.Common;
 using App.Common.Enums;
-using App.Contracts.DAL;
-using App.Contracts.DAL.Repositories.EntityRepositories;
+using App.DAL.Contracts;
+using App.DAL.Contracts.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;

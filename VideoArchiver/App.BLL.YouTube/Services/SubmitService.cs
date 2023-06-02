@@ -1,10 +1,9 @@
+using App.BLL.Contracts;
 using App.BLL.Exceptions;
 using App.BLL.YouTube.Base;
-using App.BLL.DTO.Contracts;
 using App.BLL.DTO.Entities;
 using App.Common.Enums;
 using App.DAL.DTO.Entities.Playlists;
-using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Author = App.DAL.DTO.Entities.Author;
 using Video = App.DAL.DTO.Entities.Video;
@@ -13,8 +12,8 @@ namespace App.BLL.YouTube.Services;
 
 public class SubmitService : BaseYouTubeService<SubmitService>, IPlatformSubmissionHandler
 {
-    public SubmitService(ServiceUow serviceUow, ILogger<SubmitService> logger, YouTubeUow youTubeUow, IMapper mapper) :
-        base(serviceUow, logger, youTubeUow, mapper)
+    public SubmitService(IServiceUow serviceUow, ILogger<SubmitService> logger, YouTubeUow youTubeUow) :
+        base(serviceUow, logger, youTubeUow)
     {
     }
 

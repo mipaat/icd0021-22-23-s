@@ -1,8 +1,8 @@
 using App.BLL.Base;
+using App.BLL.Contracts;
+using App.BLL.Contracts.Services;
 using App.BLL.DTO.Entities;
-using App.BLL.DTO.Exceptions;
 using App.BLL.DTO.Mappers;
-using App.Common;
 using App.Common.Enums;
 using App.Common.Exceptions;
 using App.DAL.DTO.Entities;
@@ -14,12 +14,12 @@ using Video = App.DAL.DTO.Entities.Video;
 
 namespace App.BLL.Services;
 
-public class QueueItemService : BaseService<QueueItemService>
+public class QueueItemService : BaseService<QueueItemService>, IQueueItemService
 {
     private readonly QueueItemMapper _queueItemMapper;
     
-    public QueueItemService(ServiceUow serviceUow, ILogger<QueueItemService> logger, IMapper mapper) :
-        base(serviceUow, logger, mapper)
+    public QueueItemService(IServiceUow serviceUow, ILogger<QueueItemService> logger, IMapper mapper) :
+        base(serviceUow, logger)
     {
         _queueItemMapper = new QueueItemMapper(mapper);
     }

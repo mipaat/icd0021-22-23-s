@@ -1,10 +1,11 @@
-using App.BLL.Services;
+using App.BLL.Contracts.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Public.DTO.Mappers;
 using Public.DTO.v1;
+using IAuthorizationService = App.BLL.Contracts.Services.IAuthorizationService;
 
 namespace WebApp.ApiControllers;
 
@@ -16,8 +17,8 @@ namespace WebApp.ApiControllers;
 [Route("api/v{version:apiVersion}/[controller]/[action]")]
 public class CommentController : ControllerBase
 {
-    private readonly AuthorizationService _authorizationService;
-    private readonly CommentService _commentService;
+    private readonly IAuthorizationService _authorizationService;
+    private readonly ICommentService _commentService;
     private readonly CommentMapper _commentMapper;
 
     /// <summary>
@@ -26,7 +27,7 @@ public class CommentController : ControllerBase
     /// <param name="authorizationService">BLL service for handling authorization.</param>
     /// <param name="commentService">BLL service for handling comments.</param>
     /// <param name="mapper">Automapper for mapping BLL entities to API DTOs.</param>
-    public CommentController(AuthorizationService authorizationService, CommentService commentService, IMapper mapper)
+    public CommentController(IAuthorizationService authorizationService, ICommentService commentService, IMapper mapper)
     {
         _authorizationService = authorizationService;
         _commentService = commentService;

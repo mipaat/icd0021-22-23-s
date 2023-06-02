@@ -1,10 +1,10 @@
+using App.BLL.Contracts;
+using App.BLL.Contracts.Services;
 using App.BLL.Exceptions;
-using App.BLL.Services;
 using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
 using App.DAL.DTO.Entities;
 using App.Common.Enums;
-using AutoMapper;
 using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
 
@@ -12,11 +12,11 @@ namespace App.BLL.YouTube.Services;
 
 public class CommentService : BaseYouTubeService<CommentService>
 {
-    private readonly EntityUpdateService _entityUpdateService;
+    private readonly IEntityUpdateService _entityUpdateService;
 
-    public CommentService(ServiceUow serviceUow, ILogger<CommentService> logger, YouTubeUow youTubeUow,
-        EntityUpdateService entityUpdateService, IMapper mapper) :
-        base(serviceUow, logger, youTubeUow, mapper)
+    public CommentService(IServiceUow serviceUow, ILogger<CommentService> logger, YouTubeUow youTubeUow,
+        IEntityUpdateService entityUpdateService) :
+        base(serviceUow, logger, youTubeUow)
     {
         _entityUpdateService = entityUpdateService;
     }

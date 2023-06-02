@@ -5,7 +5,7 @@ using App.BLL.DTO.Entities.Identity;
 using App.BLL.DTO.Exceptions.Identity;
 using App.BLL.DTO.Mappers;
 using App.BLL.Identity.Config;
-using App.Contracts.DAL;
+using App.DAL.Contracts;
 using AutoMapper;
 using Base.WebHelpers;
 using Microsoft.Extensions.Configuration;

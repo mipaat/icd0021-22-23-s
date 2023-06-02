@@ -1,8 +1,8 @@
-using App.Contracts.DAL;
-using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
 using App.DAL.DTO.Entities.Playlists;
 using App.Common.Enums;
+using App.DAL.Contracts;
+using App.DAL.Contracts.Repositories.EntityRepositories;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;

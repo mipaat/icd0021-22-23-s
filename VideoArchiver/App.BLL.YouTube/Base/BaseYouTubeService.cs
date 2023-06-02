@@ -1,4 +1,5 @@
 ﻿using App.BLL.Base;
+using App.BLL.Contracts;
 using AutoMapper;
 using Google.Apis.YouTube.v3;
 using Microsoft.Extensions.Logging;
@@ -23,9 +24,8 @@ public abstract class BaseYouTubeService<TYouTubeService> : BaseService<TYouTube
 
     protected IMapper Mapper => YouTubeUow.Mapper;
 
-    protected BaseYouTubeService(ServiceUow serviceUow, ILogger<TYouTubeService> logger, YouTubeUow youTubeUow,
-        IMapper mapper) :
-        base(serviceUow, logger, mapper)
+    protected BaseYouTubeService(IServiceUow serviceUow, ILogger<TYouTubeService> logger, YouTubeUow youTubeUow) :
+        base(serviceUow, logger)
     {
         YouTubeUow = youTubeUow;
     }

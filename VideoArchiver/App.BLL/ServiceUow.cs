@@ -1,15 +1,16 @@
 using App.BLL.Base;
-using App.BLL.Services;
-using App.Contracts.DAL;
+using App.BLL.Contracts;
+using App.BLL.Contracts.Services;
+using App.DAL.Contracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace App.BLL;
 
-public class ServiceUow : BaseAppUowContainer
+public class ServiceUow : BaseAppUowContainer, IServiceUow
 {
-    public readonly IServiceProvider Services;
-    public readonly IConfiguration Config;
+    public IServiceProvider Services { get; }
+    public IConfiguration Config { get; }
 
     public ServiceUow(IAppUnitOfWork uow, IServiceProvider services, IConfiguration config) : base(uow)
     {
@@ -17,47 +18,47 @@ public class ServiceUow : BaseAppUowContainer
         Config = config;
     }
 
-    private ServiceContext? _serviceContext;
-    public ServiceContext ServiceContext => _serviceContext ??= Services.GetRequiredService<ServiceContext>();
+    private IServiceContext? _serviceContext;
+    public IServiceContext ServiceContext => _serviceContext ??= Services.GetRequiredService<IServiceContext>();
 
-    private StatusChangeService? _statusChangeService;
+    private IStatusChangeService? _statusChangeService;
 
-    public StatusChangeService StatusChangeService =>
-        _statusChangeService ??= Services.GetRequiredService<StatusChangeService>();
+    public IStatusChangeService StatusChangeService =>
+        _statusChangeService ??= Services.GetRequiredService<IStatusChangeService>();
 
-    private EntityUpdateService? _entityUpdateService;
+    private IEntityUpdateService? _entityUpdateService;
 
-    public EntityUpdateService EntityUpdateService =>
-        _entityUpdateService ??= Services.GetRequiredService<EntityUpdateService>();
+    public IEntityUpdateService EntityUpdateService =>
+        _entityUpdateService ??= Services.GetRequiredService<IEntityUpdateService>();
 
-    private ImageService? _imageService;
-    public ImageService ImageService => _imageService ??= Services.GetRequiredService<ImageService>();
+    private IImageService? _imageService;
+    public IImageService ImageService => _imageService ??= Services.GetRequiredService<IImageService>();
 
-    private AuthorizationService? _authorizationService;
+    private IAuthorizationService? _authorizationService;
 
-    public AuthorizationService AuthorizationService =>
-        _authorizationService ??= Services.GetRequiredService<AuthorizationService>();
+    public IAuthorizationService AuthorizationService =>
+        _authorizationService ??= Services.GetRequiredService<IAuthorizationService>();
 
-    private QueueItemService? _queueItemService;
-    public QueueItemService QueueItemService => _queueItemService ??= Services.GetRequiredService<QueueItemService>();
+    private IQueueItemService? _queueItemService;
+    public IQueueItemService QueueItemService => _queueItemService ??= Services.GetRequiredService<IQueueItemService>();
 
-    private SubmitService? _submitService;
-    public SubmitService SubmitService => _submitService ??= Services.GetRequiredService<SubmitService>();
+    private ISubmitService? _submitService;
+    public ISubmitService SubmitService => _submitService ??= Services.GetRequiredService<ISubmitService>();
 
-    private CategoryService? _categoryService;
-    public CategoryService CategoryService => _categoryService ??= Services.GetRequiredService<CategoryService>();
+    private ICategoryService? _categoryService;
+    public ICategoryService CategoryService => _categoryService ??= Services.GetRequiredService<ICategoryService>();
 
-    private VideoPresentationService? _videoPresentationService;
+    private IVideoPresentationService? _videoPresentationService;
 
-    public VideoPresentationService VideoPresentationService =>
-        _videoPresentationService ??= Services.GetRequiredService<VideoPresentationService>();
+    public IVideoPresentationService VideoPresentationService =>
+        _videoPresentationService ??= Services.GetRequiredService<IVideoPresentationService>();
 
-    private CommentService? _commentService;
-    public CommentService CommentService => _commentService ??= Services.GetRequiredService<CommentService>();
+    private ICommentService? _commentService;
+    public ICommentService CommentService => _commentService ??= Services.GetRequiredService<ICommentService>();
 
-    private AuthorService? _authorService;
-    public AuthorService AuthorService => _authorService ??= Services.GetRequiredService<AuthorService>();
+    private IAuthorService? _authorService;
+    public IAuthorService AuthorService => _authorService ??= Services.GetRequiredService<IAuthorService>();
 
-    private VideoService? _videoService;
-    public VideoService VideoService => _videoService ??= Services.GetRequiredService<VideoService>();
+    private IVideoService? _videoService;
+    public IVideoService VideoService => _videoService ??= Services.GetRequiredService<IVideoService>();
 }

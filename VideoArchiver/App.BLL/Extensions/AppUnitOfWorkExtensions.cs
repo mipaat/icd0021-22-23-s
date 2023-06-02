@@ -1,5 +1,5 @@
 using App.BLL.Services;
-using App.Contracts.DAL;
+using App.DAL.Contracts;
 using App.Domain;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;

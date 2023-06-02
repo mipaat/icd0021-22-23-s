@@ -1,5 +1,5 @@
 using App.BLL.YouTube.Base;
-using App.Contracts.DAL;
+using App.DAL.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 

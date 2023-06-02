@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
-using App.Contracts.DAL;
-using App.Contracts.DAL.Repositories.EntityRepositories.Identity;
+using App.DAL.Contracts;
+using App.DAL.Contracts.Repositories.EntityRepositories.Identity;
 using App.DAL.DTO.Entities.Identity;
 using AutoMapper;
 

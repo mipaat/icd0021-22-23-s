@@ -1,10 +1,10 @@
 using App.BLL.DTO.Entities;
 using App.BLL.DTO.Enums;
 using App.Common;
-using App.Contracts.DAL;
-using App.Contracts.DAL.Repositories.EntityRepositories;
 using App.DAL.DTO.Entities;
 using App.Common.Enums;
+using App.DAL.Contracts;
+using App.DAL.Contracts.Repositories.EntityRepositories;
 using App.DAL.EF.Extensions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;

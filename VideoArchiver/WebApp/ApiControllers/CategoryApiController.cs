@@ -1,5 +1,5 @@
+using App.BLL.Contracts.Services;
 using App.BLL.Identity.Services;
-using App.BLL.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +19,7 @@ namespace WebApp.ApiControllers;
 [Route("api/v{version:apiVersion}/Categories/[action]")]
 public class CategoryApiController : ControllerBase
 {
-    private readonly CategoryService _categoryService;
+    private readonly ICategoryService _categoryService;
     private readonly UserService _userService;
     private readonly CategoryMapper _categoryMapper;
 
@@ -29,7 +29,7 @@ public class CategoryApiController : ControllerBase
     /// <param name="categoryService">BLL service for managing categories.</param>
     /// <param name="userService">BLL service for handling users.</param>
     /// <param name="mapper">Automapper for mapping BLL entities to API DTOs.</param>
-    public CategoryApiController(CategoryService categoryService, UserService userService, IMapper mapper)
+    public CategoryApiController(ICategoryService categoryService, UserService userService, IMapper mapper)
     {
         _categoryService = categoryService;
         _userService = userService;

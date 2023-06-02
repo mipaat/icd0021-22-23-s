@@ -1,12 +1,13 @@
 using System.Security.Claims;
+using App.BLL.Contracts.Services;
 using App.BLL.DTO.Exceptions.Identity;
 using App.BLL.Identity.Services;
-using App.BLL.Services;
 using HeyRed.Mime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Authorization;
+using IAuthorizationService = App.BLL.Contracts.Services.IAuthorizationService;
 
 namespace WebApp.ApiControllers;
 
@@ -19,8 +20,8 @@ namespace WebApp.ApiControllers;
 [Route("api/v{version:apiVersion}/[controller]/[action]")]
 public class FileController : ControllerBase
 {
-    private readonly AuthorizationService _authorizationService;
-    private readonly VideoPresentationService _videoPresentationService;
+    private readonly IAuthorizationService _authorizationService;
+    private readonly IVideoPresentationService _videoPresentationService;
     private readonly TokenService _tokenService;
     private readonly IWebHostEnvironment _environment;
 
@@ -31,7 +32,7 @@ public class FileController : ControllerBase
     /// <param name="videoPresentationService">Service for fetching relevant video presentation data (video file paths).</param>
     /// <param name="tokenService">Service for generating and validating video access tokens.</param>
     /// <param name="environment">The web host environment, for getting content root path.</param>
-    public FileController(AuthorizationService authorizationService, VideoPresentationService videoPresentationService,
+    public FileController(IAuthorizationService authorizationService, IVideoPresentationService videoPresentationService,
         TokenService tokenService, IWebHostEnvironment environment)
     {
         _authorizationService = authorizationService;

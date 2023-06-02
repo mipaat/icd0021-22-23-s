@@ -1,4 +1,5 @@
-using App.BLL.Services;
+using App.BLL.Contracts;
+using App.BLL.Contracts.Services;
 using App.Domain;
 using AutoMapper;
 using Base.Mapping;
@@ -6,13 +7,13 @@ using Contracts.DAL;
 
 namespace App.BLL;
 
-public class EntityConcurrencyResolver
+public class EntityConcurrencyResolver : IEntityConcurrencyResolver
 {
-    private readonly EntityUpdateService _entityUpdateService;
+    private readonly IEntityUpdateService _entityUpdateService;
     private readonly BaseMapper<Video, App.DAL.DTO.Entities.Video> _videoMapper;
     private readonly BaseMapper<Comment, App.DAL.DTO.Entities.Comment> _commentMapper;
 
-    public EntityConcurrencyResolver(EntityUpdateService entityUpdateService, IMapper mapper)
+    public EntityConcurrencyResolver(IEntityUpdateService entityUpdateService, IMapper mapper)
     {
         _entityUpdateService = entityUpdateService;
         _videoMapper = new BaseMapper<Video, App.DAL.DTO.Entities.Video>(mapper);

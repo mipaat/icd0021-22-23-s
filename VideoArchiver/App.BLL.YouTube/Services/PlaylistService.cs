@@ -1,10 +1,10 @@
-﻿using App.BLL.Exceptions;
+﻿using App.BLL.Contracts;
+using App.BLL.Exceptions;
 using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
 using App.DAL.DTO.Entities;
 using App.DAL.DTO.Entities.Playlists;
 using App.Common.Enums;
-using AutoMapper;
 using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
 
@@ -12,8 +12,8 @@ namespace App.BLL.YouTube.Services;
 
 public class PlaylistService : BaseYouTubeService<PlaylistService>
 {
-    public PlaylistService(ServiceUow serviceUow, ILogger<PlaylistService> logger, YouTubeUow youTubeUow, IMapper mapper) : base(
-        serviceUow, logger, youTubeUow, mapper)
+    public PlaylistService(IServiceUow serviceUow, ILogger<PlaylistService> logger, YouTubeUow youTubeUow) : base(
+        serviceUow, logger, youTubeUow)
     {
     }
 

@@ -5,7 +5,7 @@ namespace Base.BLL;
 
 public abstract class BaseAppUowContainer<TAppUow> : IAppUowContainer where TAppUow : IBaseUnitOfWork
 {
-    public readonly TAppUow Uow;
+    public TAppUow Uow { get; }
 
     protected BaseAppUowContainer(TAppUow uow)
     {

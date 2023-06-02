@@ -1,8 +1,8 @@
 using App.BLL.Config;
+using App.BLL.Contracts;
 using App.BLL.YouTube.Base;
 using App.BLL.YouTube.DTO;
 using App.Common;
-using AutoMapper;
 using Google.Apis.YouTube.v3.Data;
 using Microsoft.Extensions.Logging;
 
@@ -10,8 +10,8 @@ namespace App.BLL.YouTube.Services;
 
 public class ApiService : BaseYouTubeService<ApiService>
 {
-    public ApiService(ServiceUow serviceUow, ILogger<ApiService> logger, YouTubeUow youTubeUow, IMapper mapper) : base(serviceUow,
-        logger, youTubeUow, mapper)
+    public ApiService(IServiceUow serviceUow, ILogger<ApiService> logger, YouTubeUow youTubeUow) : base(serviceUow,
+        logger, youTubeUow)
     {
     }
 

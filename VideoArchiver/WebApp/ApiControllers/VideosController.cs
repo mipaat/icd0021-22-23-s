@@ -1,5 +1,5 @@
+using App.BLL.Contracts.Services;
 using App.BLL.Identity.Services;
-using App.BLL.Services;
 using App.Common;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Public.DTO.Mappers;
 using Public.DTO.v1;
 using Swashbuckle.AspNetCore.Annotations;
+using IAuthorizationService = App.BLL.Contracts.Services.IAuthorizationService;
 
 namespace WebApp.ApiControllers;
 
@@ -19,10 +20,10 @@ namespace WebApp.ApiControllers;
 [Route("api/v{version:apiVersion}/[controller]/[action]")]
 public class VideosController : ControllerBase
 {
-    private readonly VideoPresentationService _videoPresentationService;
+    private readonly IVideoPresentationService _videoPresentationService;
     private readonly UserService _userService;
-    private readonly AuthorizationService _authorizationService;
-    private readonly VideoService _videoService;
+    private readonly IAuthorizationService _authorizationService;
+    private readonly IVideoService _videoService;
     private readonly PlatformMapper _platformMapper;
     private readonly VideoMapper _videoMapper;
     private readonly SortingOptionsMapper _sortingOptionsMapper;
@@ -36,7 +37,7 @@ public class VideosController : ControllerBase
     /// <param name="userService">BLL service for handling users.</param>
     /// <param name="authorizationService">BLL service for handling authorization.</param>
     /// <param name="videoService">BLL service for managing videos.</param>
-    public VideosController(VideoPresentationService videoPresentationService, IMapper mapper, UserService userService, AuthorizationService authorizationService, VideoService videoService)
+    public VideosController(IVideoPresentationService videoPresentationService, IMapper mapper, UserService userService, IAuthorizationService authorizationService, IVideoService videoService)
     {
         _videoPresentationService = videoPresentationService;
         _userService = userService;

@@ -1,4 +1,4 @@
-using App.BLL.DTO.Contracts;
+using App.BLL.Contracts;
 using App.BLL.DTO.Entities;
 using App.BLL.YouTube.Utils;
 using App.Common.Enums;

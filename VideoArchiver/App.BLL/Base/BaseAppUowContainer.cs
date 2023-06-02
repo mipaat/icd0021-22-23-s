@@ -1,10 +1,10 @@
-using App.Contracts.DAL;
+using App.DAL.Contracts;
 
 namespace App.BLL.Base;
 
 public class BaseAppUowContainer : global::Base.BLL.BaseAppUowContainer<IAppUnitOfWork>
 {
-    public BaseAppUowContainer(IAppUnitOfWork uow) : base(uow)
+    protected BaseAppUowContainer(IAppUnitOfWork uow) : base(uow)
     {
     }
 }

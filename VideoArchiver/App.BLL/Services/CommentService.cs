@@ -1,5 +1,6 @@
 using App.BLL.Base;
-using App.BLL.DTO.Contracts;
+using App.BLL.Contracts;
+using App.BLL.Contracts.Services;
 using App.BLL.DTO.Entities;
 using App.BLL.DTO.Mappers;
 using AutoMapper;
@@ -8,13 +9,13 @@ using Utils;
 
 namespace App.BLL.Services;
 
-public class CommentService : BaseService<CommentService>
+public class CommentService : BaseService<CommentService>, ICommentService
 {
     private readonly CommentMapper _commentMapper;
     private readonly VideoMapper _videoMapper;
     private readonly IEnumerable<IPlatformAuthorPresentationHandler> _authorPresentationHandlers;
 
-    public CommentService(ServiceUow serviceUow, ILogger<CommentService> logger, IMapper mapper, IEnumerable<IPlatformAuthorPresentationHandler> authorPresentationHandlers) : base(serviceUow, logger, mapper)
+    public CommentService(IServiceUow serviceUow, ILogger<CommentService> logger, IMapper mapper, IEnumerable<IPlatformAuthorPresentationHandler> authorPresentationHandlers) : base(serviceUow, logger)
     {
         _authorPresentationHandlers = authorPresentationHandlers;
         _commentMapper = new CommentMapper(mapper);

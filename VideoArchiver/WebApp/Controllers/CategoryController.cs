@@ -1,8 +1,8 @@
 using System.Net;
 using App.BLL.Config;
+using App.BLL.Contracts.Services;
 using App.BLL.DTO.Entities;
 using App.BLL.Identity.Services;
-using App.BLL.Services;
 using App.Common;
 using Base.WebHelpers;
 using Microsoft.AspNetCore.Authorization;
@@ -18,11 +18,11 @@ namespace WebApp.Controllers;
 [Authorize]
 public class CategoryController : Controller
 {
-    private readonly CategoryService _categoryService;
+    private readonly ICategoryService _categoryService;
     private readonly UserService _userService;
     private readonly IConfiguration _configuration;
 
-    public CategoryController(CategoryService categoryService, IConfiguration configuration, UserService userService)
+    public CategoryController(ICategoryService categoryService, IConfiguration configuration, UserService userService)
     {
         _categoryService = categoryService;
         _configuration = configuration;

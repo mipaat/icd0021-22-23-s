@@ -1,17 +1,17 @@
 using System.Security.Cryptography;
 using App.BLL.Base;
+using App.BLL.Contracts;
+using App.BLL.Contracts.Services;
 using App.DAL.DTO.Entities;
 using App.DAL.DTO.Entities.Playlists;
 using App.Common;
-using AutoMapper;
 using Microsoft.Extensions.Logging;
 
 namespace App.BLL.Services;
 
-public class ImageService : BaseService<ImageService>
+public class ImageService : BaseService<ImageService>, IImageService
 {
-    public ImageService(ServiceUow serviceUow, ILogger<ImageService> logger, IMapper mapper) : base(serviceUow, logger,
-        mapper)
+    public ImageService(IServiceUow serviceUow, ILogger<ImageService> logger) : base(serviceUow, logger)
     {
     }
 

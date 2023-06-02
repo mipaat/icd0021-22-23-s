@@ -1,20 +1,20 @@
-using App.Contracts.DAL;
-using AutoMapper;
+using App.BLL.Contracts;
+using App.DAL.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace App.BLL.Base;
 
-public abstract class BaseService<TService>
+public abstract class BaseService<TService> : IBaseService
 {
-    public readonly ServiceUow ServiceUow;
+    public IServiceUow ServiceUow { get; }
     protected readonly ILogger<TService> Logger;
 
-    protected BaseService(ServiceUow serviceUow, ILogger<TService> logger, IMapper mapper)
+    protected BaseService(IServiceUow serviceUow, ILogger<TService> logger)
     {
         ServiceUow = serviceUow;
         Logger = logger;
     }
 
     protected IAppUnitOfWork Uow => ServiceUow.Uow;
-    protected ServiceContext ServiceContext => ServiceUow.ServiceContext;
+    protected IServiceContext ServiceContext => ServiceUow.ServiceContext;
 }

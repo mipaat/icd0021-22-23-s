@@ -1,13 +1,14 @@
 using App.BLL.Base;
+using App.BLL.Contracts;
+using App.BLL.Contracts.Services;
 using App.Common;
-using AutoMapper;
 using Microsoft.Extensions.Logging;
 
 namespace App.BLL.Services;
 
-public class AuthorService : BaseService<AuthorService>
+public class AuthorService : BaseService<AuthorService>, IAuthorService
 {
-    public AuthorService(ServiceUow serviceUow, ILogger<AuthorService> logger, IMapper mapper) : base(serviceUow, logger, mapper)
+    public AuthorService(IServiceUow serviceUow, ILogger<AuthorService> logger) : base(serviceUow, logger)
     {
     }
 

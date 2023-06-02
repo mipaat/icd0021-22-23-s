@@ -1,4 +1,4 @@
-using App.BLL;
+using App.BLL.Contracts;
 using App.BLL.Exceptions;
 using App.BLL.DTO.Entities;
 using App.BLL.Services;
@@ -22,7 +22,7 @@ namespace WebApp.ApiControllers;
     AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class LinkSubmitController : ControllerBase
 {
-    private readonly ServiceUow _serviceUow;
+    private readonly IServiceUow _serviceUow;
     private readonly SubmissionResultMapper _submissionResultMapper;
 
     /// <summary>
@@ -30,7 +30,7 @@ public class LinkSubmitController : ControllerBase
     /// </summary>
     /// <param name="serviceUow">Unit of work object providing access to general BLL services.</param>
     /// <param name="mapper">Automapper for mapping BLL DTOs to API DTOs.</param>
-    public LinkSubmitController(ServiceUow serviceUow, IMapper mapper)
+    public LinkSubmitController(IServiceUow serviceUow, IMapper mapper)
     {
         _serviceUow = serviceUow;
         _submissionResultMapper = new SubmissionResultMapper(mapper);

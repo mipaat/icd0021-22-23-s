@@ -1,4 +1,6 @@
 using App.BLL.BackgroundServices;
+using App.BLL.Contracts;
+using App.BLL.Contracts.Services;
 using App.BLL.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,22 +10,22 @@ public static class ServiceCollectionExtensions
 {
     public static void AddGeneralBll(this IServiceCollection services)
     {
-        services.AddSingleton<ServiceContext>();
+        services.AddSingleton<IServiceContext, ServiceContext>();
 
-        services.AddScoped<ServiceUow>();
+        services.AddScoped<IServiceUow, ServiceUow>();
 
-        services.AddScoped<SubmitService>();
-        services.AddScoped<VideoPresentationService>();
-        services.AddScoped<EntityUpdateService>();
-        services.AddScoped<EntityConcurrencyResolver>();
-        services.AddScoped<StatusChangeService>();
-        services.AddScoped<ImageService>();
-        services.AddScoped<AuthorizationService>();
-        services.AddScoped<QueueItemService>();
-        services.AddScoped<CategoryService>();
-        services.AddScoped<CommentService>();
-        services.AddScoped<AuthorService>();
-        services.AddScoped<VideoService>();
+        services.AddScoped<ISubmitService, SubmitService>();
+        services.AddScoped<IVideoPresentationService, VideoPresentationService>();
+        services.AddScoped<IEntityUpdateService, EntityUpdateService>();
+        services.AddScoped<IEntityConcurrencyResolver, EntityConcurrencyResolver>();
+        services.AddScoped<IStatusChangeService, StatusChangeService>();
+        services.AddScoped<IImageService, ImageService>();
+        services.AddScoped<IAuthorizationService, AuthorizationService>();
+        services.AddScoped<IQueueItemService, QueueItemService>();
+        services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<ICommentService, CommentService>();
+        services.AddScoped<IAuthorService, AuthorService>();
+        services.AddScoped<IVideoService, VideoService>();
 
         services.AddHostedService<QueueItemBackgroundService>();
     }

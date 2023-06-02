@@ -1,10 +1,10 @@
-﻿using App.BLL.YouTube.Base;
+﻿using App.BLL.Contracts;
+using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
 using App.Common;
 using App.DAL.DTO.Entities;
 using App.DAL.DTO.Entities.Playlists;
 using App.Common.Enums;
-using AutoMapper;
 using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
 
@@ -14,8 +14,8 @@ public class AuthorService : BaseYouTubeService<AuthorService>
 {
     private readonly Dictionary<string, AuthorBasic> _cachedAuthors = new();
 
-    public AuthorService(ServiceUow serviceUow, ILogger<AuthorService> logger, YouTubeUow youTubeUow, IMapper mapper) : base(serviceUow,
-        logger, youTubeUow, mapper)
+    public AuthorService(IServiceUow serviceUow, ILogger<AuthorService> logger, YouTubeUow youTubeUow) : base(serviceUow,
+        logger, youTubeUow)
     {
     }
 

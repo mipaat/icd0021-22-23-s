@@ -1,5 +1,5 @@
 ﻿#pragma warning disable 1591
-using App.BLL;
+using App.BLL.Contracts;
 using App.BLL.DTO.Entities;
 using App.BLL.Exceptions;
 using App.BLL.Services;
@@ -12,9 +12,9 @@ namespace WebApp.Controllers;
 [Authorize(Roles = SubmitService.AllowedToSubmitRoles)]
 public class SubmitLinkController : Controller
 {
-    private readonly ServiceUow _serviceUow;
+    private readonly IServiceUow _serviceUow;
 
-    public SubmitLinkController(ServiceUow serviceUow)
+    public SubmitLinkController(IServiceUow serviceUow)
     {
         _serviceUow = serviceUow;
     }

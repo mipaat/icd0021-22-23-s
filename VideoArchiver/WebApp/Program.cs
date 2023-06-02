@@ -12,7 +12,7 @@ using App.BLL.Identity.Extensions;
 using App.BLL.YouTube;
 using App.BLL.YouTube.Extensions;
 using App.Common.Exceptions;
-using App.Contracts.DAL;
+using App.DAL.Contracts;
 using App.DAL.EF;
 using Asp.Versioning.ApiExplorer;
 using AutoMapper;

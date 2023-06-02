@@ -1,13 +1,14 @@
 using System.Security.Claims;
 using System.Security.Principal;
+using App.BLL.Contracts.Services;
 using App.Common;
-using App.Contracts.DAL;
+using App.DAL.Contracts;
 using App.DAL.DTO.Entities;
 using Base.WebHelpers;
 
 namespace App.BLL.Services;
 
-public class AuthorizationService
+public class AuthorizationService : IAuthorizationService
 {
     private readonly IAppUnitOfWork _uow;
 

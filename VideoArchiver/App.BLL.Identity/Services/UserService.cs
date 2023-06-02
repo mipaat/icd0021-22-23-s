@@ -7,7 +7,7 @@ using App.BLL.DTO.Mappers;
 using App.Common;
 using App.Common.Enums;
 using App.Common.Exceptions;
-using App.Contracts.DAL;
+using App.DAL.Contracts;
 using App.Resources.WebApp.Areas.Identity.Pages.Account;
 using AutoMapper;
 using Base.WebHelpers;

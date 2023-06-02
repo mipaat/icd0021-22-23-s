@@ -1,19 +1,19 @@
 ﻿using System.Security.Claims;
 using System.Security.Principal;
 using App.BLL.Base;
-using App.BLL.DTO.Contracts;
+using App.BLL.Contracts;
+using App.BLL.Contracts.Services;
 using App.BLL.DTO.Entities;
 using App.BLL.Exceptions;
 using App.Common;
 using App.Common.Enums;
 using App.DAL.DTO.Entities;
-using AutoMapper;
 using Base.WebHelpers;
 using Microsoft.Extensions.Logging;
 
 namespace App.BLL.Services;
 
-public class SubmitService : BaseService<SubmitService>
+public class SubmitService : BaseService<SubmitService>, ISubmitService
 {
     private readonly IEnumerable<IPlatformSubmissionHandler> _platformSubmissionHandlers;
 
@@ -25,9 +25,9 @@ public class SubmitService : BaseService<SubmitService>
         RoleNames.SuperAdmin
     };
 
-    public SubmitService(ServiceUow serviceUow, ILogger<SubmitService> logger, IMapper mapper,
+    public SubmitService(IServiceUow serviceUow, ILogger<SubmitService> logger,
         IEnumerable<IPlatformSubmissionHandler> platformSubmissionHandlers) :
-        base(serviceUow, logger, mapper)
+        base(serviceUow, logger)
     {
         _platformSubmissionHandlers = platformSubmissionHandlers;
     }
@@ -55,7 +55,7 @@ public class SubmitService : BaseService<SubmitService>
         throw new UnrecognizedUrlException(url);
     }
 
-    public async Task SubmitQueueItem(QueueItem queueItem)
+    public async Task SubmitQueueItemAsync(QueueItem queueItem)
     {
         var handler = _platformSubmissionHandlers
             .FirstOrDefault(h => h.CanHandle(queueItem.Platform, queueItem.EntityType));

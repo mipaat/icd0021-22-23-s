@@ -1,5 +1,5 @@
 using App.Common;
-using App.Contracts.DAL;
+using App.DAL.Contracts;
 using App.Domain;
 using App.Domain.Identity;
 using Microsoft.AspNetCore.Identity;

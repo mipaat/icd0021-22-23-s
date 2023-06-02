@@ -1,4 +1,4 @@
-using App.Contracts.DAL;
+using App.DAL.Contracts;
 using AutoMapper;
 using Base.DAL.EF;
 using Domain.Base;

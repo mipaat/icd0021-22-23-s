@@ -1,4 +1,6 @@
 using App.BLL.Base;
+using App.BLL.Contracts;
+using App.BLL.Contracts.Services;
 using App.BLL.DTO.Entities;
 using App.BLL.DTO.Mappers;
 using App.Common.Enums;
@@ -10,12 +12,12 @@ using Video = App.DAL.DTO.Entities.Video;
 
 namespace App.BLL.Services;
 
-public class CategoryService : BaseService<CategoryService>
+public class CategoryService : BaseService<CategoryService>, ICategoryService
 {
     private readonly CategoryMapper _categoryMapper;
 
-    public CategoryService(ServiceUow serviceUow, ILogger<CategoryService> logger, IMapper mapper) : base(serviceUow,
-        logger, mapper)
+    public CategoryService(IServiceUow serviceUow, ILogger<CategoryService> logger, IMapper mapper) : base(serviceUow,
+        logger)
     {
         _categoryMapper = new CategoryMapper(mapper);
     }
@@ -53,7 +55,7 @@ public class CategoryService : BaseService<CategoryService>
         Uow.Categories.Update(_categoryMapper.Map(data, id));
     }
 
-    public async Task<ICollection<CategoryWithCreator>> GetAllCategoriesAsync(Guid? authorId)
+    private async Task<ICollection<CategoryWithCreator>> GetAllCategoriesAsync(Guid? authorId)
     {
         return (await Uow.Categories.GetAllPublicOrCreatedByAuthorAsync(authorId)).Select(c => _categoryMapper.Map(c)!)
             .ToList();

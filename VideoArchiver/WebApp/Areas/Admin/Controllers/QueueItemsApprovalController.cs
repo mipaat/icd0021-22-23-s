@@ -1,4 +1,4 @@
-using App.BLL;
+using App.BLL.Contracts;
 using App.Common;
 using Base.WebHelpers;
 using Microsoft.AspNetCore.Authorization;
@@ -12,9 +12,9 @@ namespace WebApp.Areas.Admin.Controllers;
 [Authorize(Roles = RoleNames.AdminOrSuperAdmin)]
 public class QueueItemsApprovalController : Controller
 {
-    private readonly ServiceUow _serviceUow;
+    private readonly IServiceUow _serviceUow;
 
-    public QueueItemsApprovalController(ServiceUow serviceUow)
+    public QueueItemsApprovalController(IServiceUow serviceUow)
     {
         _serviceUow = serviceUow;
     }

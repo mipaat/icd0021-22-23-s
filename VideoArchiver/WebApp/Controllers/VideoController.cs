@@ -1,26 +1,27 @@
 #pragma warning disable 1591
+using App.BLL.Contracts.Services;
 using App.BLL.DTO.Enums;
 using App.BLL.Identity.Services;
-using App.BLL.Services;
 using App.Common;
 using Base.WebHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Utils;
 using WebApp.ViewModels;
+using IAuthorizationService = App.BLL.Contracts.Services.IAuthorizationService;
 
 namespace WebApp.Controllers;
 
 public class VideoController : Controller
 {
-    private readonly VideoPresentationService _videoPresentationService;
-    private readonly AuthorizationService _authorizationService;
-    private readonly CategoryService _categoryService;
+    private readonly IVideoPresentationService _videoPresentationService;
+    private readonly IAuthorizationService _authorizationService;
+    private readonly ICategoryService _categoryService;
     private readonly UserService _userService;
-    private readonly VideoService _videoService;
+    private readonly IVideoService _videoService;
 
-    public VideoController(VideoPresentationService videoPresentationService, AuthorizationService authorizationService,
-        CategoryService categoryService, UserService userService, VideoService videoService)
+    public VideoController(IVideoPresentationService videoPresentationService, IAuthorizationService authorizationService,
+        ICategoryService categoryService, UserService userService, IVideoService videoService)
     {
         _videoPresentationService = videoPresentationService;
         _authorizationService = authorizationService;

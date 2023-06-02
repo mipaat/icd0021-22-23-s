@@ -1,5 +1,4 @@
-using App.BLL;
-using App.BLL.DTO.Exceptions;
+using App.BLL.Contracts;
 using App.Common;
 using App.Common.Exceptions;
 using AutoMapper;
@@ -21,7 +20,7 @@ namespace WebApp.ApiControllers.Admin;
 [Authorize(Roles = RoleNames.AdminOrSuperAdmin, AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class ApproveQueueItemController : ControllerBase
 {
-    private readonly ServiceUow _serviceUow;
+    private readonly IServiceUow _serviceUow;
     private readonly QueueItemMapper _queueItemMapper;
 
     /// <summary>
@@ -29,7 +28,7 @@ public class ApproveQueueItemController : ControllerBase
     /// </summary>
     /// <param name="serviceUow">UOW container for general BLL services.</param>
     /// <param name="mapper">Automapper for mapping BLL entities to public API DTOs.</param>
-    public ApproveQueueItemController(ServiceUow serviceUow, IMapper mapper)
+    public ApproveQueueItemController(IServiceUow serviceUow, IMapper mapper)
     {
         _serviceUow = serviceUow;
         _queueItemMapper = new QueueItemMapper(mapper);

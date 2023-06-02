@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using App.BLL.Base;
-using App.BLL.DTO.Contracts;
+using App.BLL.Contracts;
+using App.BLL.Contracts.Services;
 using App.BLL.DTO.Entities;
 using App.BLL.DTO.Enums;
 using App.BLL.DTO.Mappers;
@@ -14,15 +15,14 @@ using Utils;
 
 namespace App.BLL.Services;
 
-public class VideoPresentationService : BaseService<VideoPresentationService>
+public class VideoPresentationService : BaseService<VideoPresentationService>, IVideoPresentationService
 {
     private readonly IEnumerable<IPlatformVideoPresentationHandler> _videoPresentationHandlers;
 
     private readonly VideoMapper _videoMapper;
 
     public VideoPresentationService(IEnumerable<IPlatformVideoPresentationHandler> videoPresentationHandlers,
-        ServiceUow serviceUow, ILogger<VideoPresentationService> logger, IMapper mapper) : base(serviceUow, logger,
-        mapper)
+        IServiceUow serviceUow, ILogger<VideoPresentationService> logger, IMapper mapper) : base(serviceUow, logger)
     {
         _videoMapper = new VideoMapper(mapper);
         _videoPresentationHandlers = videoPresentationHandlers;

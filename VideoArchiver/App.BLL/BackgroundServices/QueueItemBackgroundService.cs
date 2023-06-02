@@ -1,5 +1,6 @@
 using App.BLL.Base;
-using App.Contracts.DAL;
+using App.BLL.Contracts;
+using App.DAL.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Utils;
@@ -54,7 +55,7 @@ public class QueueItemBackgroundService : BaseBackgroundService<QueueItemBackgro
         Logger.LogInformation("Started handling approved queue item {Id}", queueItemId);
 
         using var scope = Services.CreateScope();
-        var serviceUow = scope.ServiceProvider.GetRequiredService<ServiceUow>();
+        var serviceUow = scope.ServiceProvider.GetRequiredService<IServiceUow>();
         var uow = serviceUow.Uow;
 
         var queueItem = await uow.QueueItems.GetByIdAsync(queueItemId);
@@ -66,7 +67,7 @@ public class QueueItemBackgroundService : BaseBackgroundService<QueueItemBackgro
 
         try
         {
-            await serviceUow.SubmitService.SubmitQueueItem(queueItem);
+            await serviceUow.SubmitService.SubmitQueueItemAsync(queueItem);
         }
         catch (Exception e)
         {

@@ -1,5 +1,5 @@
 using App.Common.Enums;
-using App.Contracts.DAL;
+using App.DAL.Contracts;
 using App.DAL.DTO.Entities;
 
 namespace App.BLL;

@@ -1,3 +1,4 @@
+using App.BLL.Contracts;
 using App.BLL.Exceptions;
 using App.BLL.YouTube.Base;
 using App.BLL.YouTube.Extensions;
@@ -5,7 +6,6 @@ using App.BLL.YouTube.Utils;
 using App.Common;
 using App.DAL.DTO.Entities;
 using App.Common.Enums;
-using AutoMapper;
 using Google.Apis.YouTube.v3.Data;
 using Microsoft.Extensions.Logging;
 using YoutubeDLSharp.Metadata;
@@ -16,9 +16,9 @@ namespace App.BLL.YouTube.Services;
 
 public class VideoService : BaseYouTubeService<VideoService>
 {
-    public VideoService(ServiceUow serviceUow, ILogger<VideoService> logger, YouTubeUow youTubeUow, IMapper mapper) :
+    public VideoService(IServiceUow serviceUow, ILogger<VideoService> logger, YouTubeUow youTubeUow) :
         base(serviceUow,
-            logger, youTubeUow, mapper)
+            logger, youTubeUow)
     {
     }
 
