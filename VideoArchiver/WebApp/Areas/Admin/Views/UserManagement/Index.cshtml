@@ -16,11 +16,11 @@
 
 @foreach (var user in Model.Users)
 {
-    <div class="dashboard-item">
+    <div id="manage-@user.UserName" class="dashboard-item">
         @user.UserName<br/>
         @if (!user.IsApproved)
         {
-            <form asp-action="ApproveRegistration">
+            <form id="approve-@user.UserName" asp-action="ApproveRegistration">
                 @Html.Hidden("id", user.Id)
                 @Html.HiddenFor(m => m.NameQuery)
                 @Html.HiddenFor(m => m.IncludeOnlyNotApproved)

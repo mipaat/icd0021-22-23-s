@@ -14,7 +14,7 @@
             {
                 <div>
                     @role.Name
-                    <form asp-action="RemoveRole">
+                    <form id="remove-@(role.Name)-form" asp-action="RemoveRole">
                         @Html.Hidden("userId", Model.User.Id)
                         @Html.Hidden("roleName", role.Name)
                         <input type="submit" class="btn btn-danger" value="@App.Resources.WebApp.Areas.Admin.Views.UserManagement.ManageRoles.RemoveSubmit"/>
@@ -28,7 +28,7 @@
             {
                 <div>
                     @role
-                    <form asp-action="AddRole">
+                    <form id="add-@(role)-form" asp-action="AddRole">
                         @Html.Hidden("userId", Model.User.Id)
                         @Html.Hidden("roleName", role)
                         <input type="submit" class="btn btn-success" value="@App.Resources.WebApp.Areas.Admin.Views.UserManagement.ManageRoles.AddSubmit"/>
