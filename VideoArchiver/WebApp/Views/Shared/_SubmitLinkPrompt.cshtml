@@ -4,7 +4,7 @@
 @if (User.IsAllowedToSubmitEntity())
 {
     <h2>@App.Resources.WebApp.Views.Shared._SubmitLinkPrompt.AddLinkToArchive</h2>
-    <form asp-controller="SubmitLink" asp-action="Submit" method="POST">
+    <form id="link-submit-form" asp-controller="SubmitLink" asp-action="Submit" method="POST">
         <div>
             <label asp-for="Link"></label>
             <input asp-for="Link"/>
