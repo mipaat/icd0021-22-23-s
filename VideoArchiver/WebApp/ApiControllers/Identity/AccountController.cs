@@ -46,7 +46,7 @@ public class AccountController : ControllerBase
     /// <response code="400">User with provided username is already registered or provided registration data was invalid.</response>
     /// <response code="202">The registration was successful, but must be approved by an administrator before the account can be used.</response>
     [SwaggerRestApiErrorResponse(StatusCodes.Status400BadRequest)]
-    [SwaggerRestApiErrorResponse(StatusCodes.Status202Accepted)]
+    [SwaggerResponse(StatusCodes.Status202Accepted)]
     [SwaggerResponse(StatusCodes.Status200OK, null, typeof(JwtResponse))]
     [HttpPost]
     public async Task<ActionResult<JwtResponse>> Register([FromBody] Register registrationData,

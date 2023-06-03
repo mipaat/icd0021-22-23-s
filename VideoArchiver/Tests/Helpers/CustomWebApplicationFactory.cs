@@ -56,6 +56,9 @@ public class CustomWebApplicationFactory<TStartup>
                     AppPaths.DownloadsPathConfigKey, testingDownloadsPath
                 },
                 {
+                    "InitializeAppData", "false"
+                },
+                {
                     $"{IdentityAppDataInitSettings.SectionKey}:{nameof(IdentityAppDataInitSettings.SeedIdentity)}",
                     "true"
                 },

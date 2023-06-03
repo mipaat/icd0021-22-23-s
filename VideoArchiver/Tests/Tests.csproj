@@ -34,8 +34,4 @@
       <ProjectReference Include="..\WebApp\WebApp.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Integration\API\" />
-    </ItemGroup>
-
 </Project>
