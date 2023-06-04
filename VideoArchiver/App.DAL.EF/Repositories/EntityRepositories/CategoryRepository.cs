@@ -5,6 +5,7 @@ using App.DAL.DTO.Entities;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Utils;
 
 namespace App.DAL.EF.Repositories.EntityRepositories;
 
@@ -44,6 +45,7 @@ public class CategoryRepository : BaseAppEntityRepository<Domain.Category, Categ
 
     public async Task<CategoryWithCreator?> GetByNameAsync(EPlatform platform, string name)
     {
+        name = name.PostgresRegexEscapeString();
         return AttachIfNotAttached(await Entities.FromSql(
                 $"SELECT * FROM \"Categories\" c WHERE jsonb_path_exists(c.\"Name\", ('$.* ? (@ like_regex \"(?i)' || {name} || '\")')::jsonpath)")
             .Where(e => e.Platform == platform)

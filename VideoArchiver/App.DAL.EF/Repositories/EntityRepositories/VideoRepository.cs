@@ -1,4 +1,3 @@
-using App.BLL.DTO.Entities;
 using App.BLL.DTO.Enums;
 using App.Common;
 using App.DAL.DTO.Entities;
@@ -9,6 +8,7 @@ using App.DAL.EF.Extensions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Utils;
 using Video = App.DAL.DTO.Entities.Video;
 
 namespace App.DAL.EF.Repositories.EntityRepositories;
@@ -73,6 +73,7 @@ public class VideoRepository : BaseAppEntityRepository<App.Domain.Video, Video>,
         IQueryable<App.Domain.Video> query;
         if (name != null)
         {
+            name = name.PostgresRegexEscapeString();
             query = Entities.FromSql(
                 $"SELECT * FROM \"Videos\" c WHERE jsonb_path_exists(c.\"Title\", ('$.* ? (@ like_regex \"(?i)' || {name} || '\")')::jsonpath)");
         }

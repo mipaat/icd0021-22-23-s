@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace Utils;
 
 public static class Utils
@@ -45,5 +47,10 @@ public static class Utils
         }
 
         return relativePath.Replace('/', Path.DirectorySeparatorChar);
+    }
+
+    public static string PostgresRegexEscapeString(this string value)
+    {
+        return Regex.Escape(value).Replace("\\", "\\\\").Replace("\"", "\\\"");
     }
 }
