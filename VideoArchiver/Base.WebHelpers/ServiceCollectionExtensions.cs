@@ -8,11 +8,12 @@ namespace Base.WebHelpers;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection DisableApiErrorRedirects(this IServiceCollection services,
-        string apiPrefix = "/api", Func<RedirectContext<CookieAuthenticationOptions>, Task>? accessDeniedRedirect = null)
+        string apiPrefix = "/api", Func<RedirectContext<CookieAuthenticationOptions>, Task>? accessDeniedRedirect = null,
+        Func<RedirectContext<CookieAuthenticationOptions>, Task>? loginRedirect = null)
     {
         services.ConfigureApplicationCookie(options =>
         {
-            var oldRedirectToLogin = options.Events.OnRedirectToLogin;
+            var defaultLoginRedirect = loginRedirect ?? options.Events.OnRedirectToLogin;
             options.Events.OnRedirectToLogin = async context =>
             {
                 if (context.Request.Path.StartsWithSegments(apiPrefix))
@@ -21,7 +22,7 @@ public static class ServiceCollectionExtensions
                     return;
                 }
 
-                await oldRedirectToLogin(context);
+                await defaultLoginRedirect(context);
             };
 
             var defaultAccessDeniedRedirect = accessDeniedRedirect ?? options.Events.OnRedirectToAccessDenied;

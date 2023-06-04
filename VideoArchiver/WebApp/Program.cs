@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Web;
 using App.BLL;
 using App.BLL.Config;
 using App.BLL.DTO;
@@ -67,6 +68,10 @@ builder.Services
 builder.Services.DisableApiErrorRedirects(accessDeniedRedirect: context =>
 {
     context.Response.Redirect("/Home/AccessDenied");
+    return context.Response.CompleteAsync();
+}, loginRedirect: context =>
+{
+    context.Response.Redirect($"/Identity/Account/Login?returnUrl={HttpUtility.UrlEncode(context.Request.GetFullPath())}");
     return context.Response.CompleteAsync();
 });
 

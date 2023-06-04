@@ -25,11 +25,14 @@
                             @App.Resources.WebApp.Views.Shared._Layout.Home
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Video" asp-action="Search">
-                            @App.Resources.WebApp.Views.Shared._Layout.VideoSearch
-                        </a>
-                    </li>
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Video" asp-action="Search">
+                                @App.Resources.WebApp.Views.Shared._Layout.VideoSearch
+                            </a>
+                        </li>
+                    }
                     @if (User.IsInRole(RoleNames.Admin))
                     {
                         <partial name="_AdminDropdown"/>
