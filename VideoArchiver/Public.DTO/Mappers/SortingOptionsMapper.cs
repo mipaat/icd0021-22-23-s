@@ -1,5 +1,6 @@
 using App.BLL.DTO.Enums;
 using AutoMapper;
+using AutoMapper.Extensions.EnumMapping;
 using Base.Mapping;
 
 #pragma warning disable CS1591
@@ -16,7 +17,7 @@ public static partial class AutoMapperConfigExtensions
 {
     public static AutoMapperConfig AddSortingOptionsMap(this AutoMapperConfig config)
     {
-        config.CreateMap<v1.EVideoSortingOptions, EVideoSortingOptions>();
+        config.CreateMap<v1.EVideoSortingOptions, EVideoSortingOptions>().ConvertUsingEnumMapping(opt => opt.MapByName());
         return config;
     }
 }

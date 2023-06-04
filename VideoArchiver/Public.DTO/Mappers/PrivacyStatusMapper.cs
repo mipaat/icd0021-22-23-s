@@ -1,4 +1,5 @@
 using AutoMapper;
+using AutoMapper.Extensions.EnumMapping;
 using Base.Mapping;
 #pragma warning disable CS1591
 
@@ -30,9 +31,14 @@ public static partial class AutoMapperConfigExtensions
 {
     public static AutoMapperConfig AddPrivacyStatusMap(this AutoMapperConfig config)
     {
-        config.CreateMap<App.Common.Enums.EPrivacyStatus, v1.EPrivacyStatus>().ReverseMap();
-        config.CreateMap<App.Common.Enums.EPrivacyStatus, v1.ESimplePrivacyStatus>().ReverseMap();
-        config.CreateMap<v1.ESimplePrivacyStatus, App.BLL.DTO.Enums.ESimplePrivacyStatus>();
+        config.CreateMap<App.Common.Enums.EPrivacyStatus, v1.EPrivacyStatus>()
+            .ConvertUsingEnumMapping(opt => opt.MapByName())
+            .ReverseMap();
+        config.CreateMap<App.Common.Enums.EPrivacyStatus, v1.ESimplePrivacyStatus>()
+            .ConvertUsingEnumMapping(opt => opt.MapByName())
+            .ReverseMap();
+        config.CreateMap<v1.ESimplePrivacyStatus, App.BLL.DTO.Enums.ESimplePrivacyStatus>()
+            .ConvertUsingEnumMapping(opt => opt.MapByName());
         return config;
     }
 }

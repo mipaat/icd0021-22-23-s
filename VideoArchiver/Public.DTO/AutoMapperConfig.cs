@@ -1,5 +1,6 @@
 using App.Common.Enums;
 using AutoMapper;
+using AutoMapper.Extensions.EnumMapping;
 using Microsoft.AspNetCore.Http;
 using Public.DTO.Mappers;
 
@@ -19,7 +20,7 @@ public class AutoMapperConfig : Profile
     {
         _httpContextAccessor = httpContextAccessor;
 
-        CreateMap<EEntityType, v1.EEntityType>();
+        CreateMap<EEntityType, v1.EEntityType>().ConvertUsingEnumMapping(opt => opt.MapByName());
         CreateMap<App.BLL.DTO.Entities.Identity.Role, v1.Identity.Role>();
 
         this.AddSubmissionResultMap()
