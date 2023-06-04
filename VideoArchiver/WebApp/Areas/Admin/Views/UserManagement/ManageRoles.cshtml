@@ -1,3 +1,4 @@
+@using WebApp.Authorization
 @model WebApp.Areas.Admin.ViewModels.ManageRolesViewModel
 
 @{
@@ -17,7 +18,7 @@
                     <form id="remove-@(role.Name)-form" asp-action="RemoveRole">
                         @Html.Hidden("userId", Model.User.Id)
                         @Html.Hidden("roleName", role.Name)
-                        <input type="submit" class="btn btn-danger" value="@App.Resources.WebApp.Areas.Admin.Views.UserManagement.ManageRoles.RemoveSubmit"/>
+                        <input @DisabledFor(role.Name) type="submit" class="btn btn-danger" value="@App.Resources.WebApp.Areas.Admin.Views.UserManagement.ManageRoles.RemoveSubmit"/>
                     </form>
                 </div>
                 <br/>
@@ -31,7 +32,7 @@
                     <form id="add-@(role)-form" asp-action="AddRole">
                         @Html.Hidden("userId", Model.User.Id)
                         @Html.Hidden("roleName", role)
-                        <input type="submit" class="btn btn-success" value="@App.Resources.WebApp.Areas.Admin.Views.UserManagement.ManageRoles.AddSubmit"/>
+                        <input @DisabledFor(role) type="submit" class="btn btn-success" value="@App.Resources.WebApp.Areas.Admin.Views.UserManagement.ManageRoles.AddSubmit"/>
                     </form>
                 </div>
                 <br/>
@@ -39,3 +40,11 @@
         </div>
     </div>
 </div>
+
+@functions
+{
+    string DisabledFor(string roleName)
+    {
+        return !User.IsAllowedToManageRole(roleName) ? "disabled=\"disabled\"" : "";
+    }
+}
