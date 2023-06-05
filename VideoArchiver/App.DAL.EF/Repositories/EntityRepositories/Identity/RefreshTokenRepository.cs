@@ -3,6 +3,7 @@ using App.DAL.Contracts;
 using App.DAL.Contracts.Repositories.EntityRepositories.Identity;
 using App.DAL.DTO.Entities.Identity;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.DAL.EF.Repositories.EntityRepositories.Identity;
 
@@ -42,5 +43,13 @@ public class RefreshTokenRepository : BaseAppEntityRepository<App.Domain.Identit
         return await GetAllByUserIdAsync(userId, r =>
             (r.RefreshToken == refreshToken && r.ExpiresAt > DateTime.UtcNow) ||
             (r.PreviousRefreshToken == refreshToken && r.PreviousExpiresAt > DateTime.UtcNow));
+    }
+
+    public async Task ExecuteDeleteUserRefreshTokensAsync(Guid userId, string refreshToken)
+    {
+        await Entities
+            .Where(r => r.UserId == userId &&
+                        r.RefreshToken == refreshToken || r.PreviousRefreshToken == refreshToken)
+            .ExecuteDeleteAsync();
     }
 }

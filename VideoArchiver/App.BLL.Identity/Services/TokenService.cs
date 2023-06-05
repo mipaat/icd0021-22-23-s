@@ -43,14 +43,7 @@ public class TokenService
 
         var userId = principal.GetUserIdIfExists() ?? throw new InvalidJwtException();
 
-        var refreshTokens = await Uow.RefreshTokens.GetAllByUserIdAsync(userId, r =>
-            r.RefreshToken == refreshToken ||
-            r.PreviousRefreshToken == refreshToken);
-
-        foreach (var appRefreshToken in refreshTokens)
-        {
-            Uow.RefreshTokens.Remove(appRefreshToken);
-        }
+        await Uow.RefreshTokens.ExecuteDeleteUserRefreshTokensAsync(userId, refreshToken);
     }
 
     public async Task DeleteExpiredRefreshTokensAsync(Guid userId)

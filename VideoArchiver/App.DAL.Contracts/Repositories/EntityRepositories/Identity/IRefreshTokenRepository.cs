@@ -11,4 +11,6 @@ public interface IRefreshTokenRepository : IBaseEntityRepository<RefreshToken, A
 
     public Task<ICollection<App.DAL.DTO.Entities.Identity.RefreshToken>> GetAllValidByUserIdAndRefreshTokenAsync(
         Guid userId, string refreshToken);
+
+    public Task ExecuteDeleteUserRefreshTokensAsync(Guid userId, string refreshToken);
 }

@@ -214,7 +214,6 @@ public class AccountController : ControllerBase
         try
         {
             await _identityUow.UserService.SignOutTokenAsync(logout.Jwt, logout.RefreshToken);
-            await _identityUow.SaveChangesAsync();
             return Ok();
         }
         catch (InvalidJwtException)
