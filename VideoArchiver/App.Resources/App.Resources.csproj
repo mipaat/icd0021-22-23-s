@@ -227,6 +227,10 @@
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>AppDataInit.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="WebApp\Views\SubmitLink\InvalidUrl.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>InvalidUrl.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
@@ -504,6 +508,11 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>AppDataInit.resx</DependentUpon>
+      </Compile>
+      <Compile Update="WebApp\Views\SubmitLink\InvalidUrl.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>InvalidUrl.resx</DependentUpon>
       </Compile>
     </ItemGroup>
 

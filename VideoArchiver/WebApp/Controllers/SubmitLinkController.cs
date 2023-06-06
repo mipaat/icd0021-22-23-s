@@ -3,6 +3,7 @@ using App.BLL.Contracts;
 using App.BLL.DTO.Entities;
 using App.BLL.Exceptions;
 using App.BLL.Services;
+using App.Common.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.ViewModels;
@@ -37,6 +38,10 @@ public class SubmitLinkController : Controller
         {
             return RedirectToAction(nameof(UnrecognizedUrl), new { Url = linkSubmission.Link });
         }
+        catch (NotFoundException)
+        {
+            return RedirectToAction(nameof(InvalidUrl), new { Url = linkSubmission.Link });
+        }
 
         await _serviceUow.SaveChangesAsync();
 
@@ -44,9 +49,15 @@ public class SubmitLinkController : Controller
     }
 
     [HttpGet]
+    public IActionResult InvalidUrl(string url)
+    {
+        return View(model: url);
+    }
+
+    [HttpGet]
     public IActionResult UnrecognizedUrl(string url)
     {
-        return View(url);
+        return View(model: url);
     }
 
     public IActionResult Result(UrlSubmissionResultViewModel model)
