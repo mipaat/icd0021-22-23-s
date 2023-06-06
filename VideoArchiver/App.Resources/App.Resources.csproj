@@ -223,6 +223,10 @@
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>AccessDenied.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="App.BLL\AppDataInit.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>AppDataInit.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
@@ -495,6 +499,11 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>AccessDenied.resx</DependentUpon>
+      </Compile>
+      <Compile Update="App.BLL\AppDataInit.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>AppDataInit.resx</DependentUpon>
       </Compile>
     </ItemGroup>
 

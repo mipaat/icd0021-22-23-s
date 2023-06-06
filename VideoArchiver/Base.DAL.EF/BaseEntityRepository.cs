@@ -137,14 +137,7 @@ public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext, TUow
         var trackedEntity = GetTrackedEntity(entity.Id);
         if (trackedEntity != null)
         {
-            if (DbContext.ChangeTracker.AutoDetectChangesEnabled)
-            {
-                mapTo(entity, trackedEntity);
-            }
-            else
-            {
-                Entities.Update(mapTo(entity, trackedEntity));
-            }
+            Entities.Update(mapTo(entity, trackedEntity));
         }
         else
         {
