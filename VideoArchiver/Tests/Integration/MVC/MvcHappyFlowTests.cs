@@ -7,6 +7,7 @@ using Tests.Helpers;
 
 namespace Tests.Integration.MVC;
 
+[Collection("IntegrationSequential")]
 public class MvcHappyFlowTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {
     private readonly HttpClient _client;

@@ -1,8 +1,10 @@
 using System.Configuration;
 using App.BLL.Identity.Config;
 using App.Common;
+using App.DAL.Contracts;
 using App.DAL.EF;
 using Base.Tests;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 
@@ -56,6 +58,10 @@ public class CustomWebApplicationFactory<TStartup>
                     AppPaths.DownloadsPathConfigKey, testingDownloadsPath
                 },
                 {
+                    $"{DbInitSettings.SectionKey}:{nameof(DbInitSettings.Migrate)}",
+                    "false"
+                },
+                {
                     "InitializeAppData", "false"
                 },
                 {
@@ -91,7 +97,7 @@ public class CustomWebApplicationFactory<TStartup>
             var dbContext = scopedServices.GetRequiredService<AbstractAppDbContext>();
 
             dbContext.Database.EnsureDeleted();
-            dbContext.Database.EnsureCreated();
+            dbContext.Database.Migrate();
         });
     }
 

@@ -13,6 +13,7 @@ using Tests.Helpers;
 
 namespace Tests.Integration.API;
 
+[Collection("IntegrationSequential")]
 public class ApiHappyFlowTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {
     private readonly HttpClient _client;
