@@ -21,7 +21,8 @@
         <form method="post" asp-action="ApproveQueueItem">
             <input type="hidden" name="id" value="@queueItem.Id"/>
             <label for="grantAccess">@App.Resources.WebApp.Areas.Admin.Views.QueueItemsApproval.Index.GrantAccess</label>
-            <input type="checkbox" name="grantAccess" id="grantAccess" checked="checked"/>
+            <input type="checkbox" name="grantAccess" id="grantAccess" value="true" checked="checked"/>
+            <input type="hidden" name="grantAccess" value="false"/>
             <input type="submit" class="btn btn-success" value="@App.Resources.WebApp.Areas.Admin.Views.QueueItemsApproval.Index.ApproveSubmit"/>
         </form>
     </div>
