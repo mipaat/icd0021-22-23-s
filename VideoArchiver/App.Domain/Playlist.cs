@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using App.Common;
 using App.Domain.Base;
 
@@ -8,7 +9,7 @@ public class Playlist : BaseArchiveEntity
     public LangString? Title { get; set; }
     public LangString? Description { get; set; }
 
-    public string? DefaultLanguage { get; set; }
+    [MaxLength(32)] public string? DefaultLanguage { get; set; }
 
     public ImageFileList? Thumbnails { get; set; }
     public List<string>? Tags { get; set; }

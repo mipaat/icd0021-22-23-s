@@ -11,11 +11,11 @@ public class AuthorHistory : AbstractIdDatabaseEntity
 
     [MaxLength(64)] public string IdOnPlatform { get; set; } = default!;
 
-    public string? UserName { get; set; }
-    public string? DisplayName { get; set; }
+    [MaxLength(1024)] public string? UserName { get; set; }
+    [MaxLength(1024)] public string? DisplayName { get; set; }
     public LangString? Bio { get; set; }
 
-    public int? SubscriberCount { get; set; }
+    public long? SubscriberCount { get; set; }
 
     public ImageFileList? ProfileImages { get; set; }
     public ImageFileList? Banners { get; set; }

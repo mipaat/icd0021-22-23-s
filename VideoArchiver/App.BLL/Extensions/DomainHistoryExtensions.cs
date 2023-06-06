@@ -76,6 +76,8 @@ public static class DomainHistoryExtensions
             Title = playlist.Title,
             Description = playlist.Description,
 
+            DefaultLanguage = playlist.DefaultLanguage,
+
             Thumbnails = playlist.Thumbnails,
             Tags = playlist.Tags,
 

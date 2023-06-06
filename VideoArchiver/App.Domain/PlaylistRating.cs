@@ -13,5 +13,5 @@ public class PlaylistRating : AbstractIdDatabaseEntity
     public string? Comment { get; set; }
 
     public Category? Category { get; set; }
-    public Guid CategoryId { get; set; }
+    public Guid? CategoryId { get; set; }
 }

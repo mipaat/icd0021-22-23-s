@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using App.Common;
 using App.Domain.Base;
@@ -7,8 +8,8 @@ namespace App.Domain;
 
 public class Author : BaseArchiveEntity
 {
-    public string? UserName { get; set; }
-    public string? DisplayName { get; set; }
+    [MaxLength(1024)] public string? UserName { get; set; }
+    [MaxLength(1024)] public string? DisplayName { get; set; }
     public LangString? Bio { get; set; }
 
     public long? SubscriberCount { get; set; }

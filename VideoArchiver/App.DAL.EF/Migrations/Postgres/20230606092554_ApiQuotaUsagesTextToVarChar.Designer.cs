@@ -5,17 +5,20 @@ using App.Common;
 using App.DAL.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace DAL.Migrations.Postgres
+namespace App.DAL.EF.Migrations.Postgres
 {
     [DbContext(typeof(PostgresAppDbContext))]
-    partial class PostgresAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230606092554_ApiQuotaUsagesTextToVarChar")]
+    partial class ApiQuotaUsagesTextToVarChar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,8 +68,7 @@ namespace DAL.Migrations.Postgres
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("DisplayName")
-                        .HasMaxLength(1024)
-                        .HasColumnType("character varying(1024)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("Download")
                         .HasColumnType("boolean");
@@ -125,8 +127,7 @@ namespace DAL.Migrations.Postgres
                         .HasColumnType("uuid");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(1024)
-                        .HasColumnType("character varying(1024)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -186,8 +187,7 @@ namespace DAL.Migrations.Postgres
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("DisplayName")
-                        .HasMaxLength(1024)
-                        .HasColumnType("character varying(1024)");
+                        .HasColumnType("text");
 
                     b.Property<string>("IdOnPlatform")
                         .IsRequired()
@@ -200,8 +200,8 @@ namespace DAL.Migrations.Postgres
                     b.Property<string>("ProfileImages")
                         .HasColumnType("jsonb");
 
-                    b.Property<long?>("SubscriberCount")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("SubscriberCount")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Thumbnails")
                         .HasColumnType("jsonb");
@@ -210,8 +210,7 @@ namespace DAL.Migrations.Postgres
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(1024)
-                        .HasColumnType("character varying(1024)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -226,7 +225,7 @@ namespace DAL.Migrations.Postgres
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CategoryId")
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Comment")
@@ -613,8 +612,7 @@ namespace DAL.Migrations.Postgres
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("DefaultLanguage")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
+                        .HasColumnType("text");
 
                     b.Property<LangString>("Description")
                         .HasColumnType("jsonb");
@@ -748,10 +746,6 @@ namespace DAL.Migrations.Postgres
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("DefaultLanguage")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
                     b.Property<LangString>("Description")
                         .HasColumnType("jsonb");
 
@@ -797,7 +791,7 @@ namespace DAL.Migrations.Postgres
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CategoryId")
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Comment")
@@ -1337,7 +1331,7 @@ namespace DAL.Migrations.Postgres
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CategoryId")
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Comment")
@@ -1500,7 +1494,8 @@ namespace DAL.Migrations.Postgres
                     b.HasOne("App.Domain.Category", "Category")
                         .WithMany("AuthorRatings")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("App.Domain.Author", "Rated")
                         .WithMany("ReceivedAuthorRatings")
@@ -1704,7 +1699,8 @@ namespace DAL.Migrations.Postgres
                     b.HasOne("App.Domain.Category", "Category")
                         .WithMany("PlaylistRatings")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("App.Domain.Playlist", "Playlist")
                         .WithMany("PlaylistRatings")
@@ -1931,7 +1927,8 @@ namespace DAL.Migrations.Postgres
                     b.HasOne("App.Domain.Category", "Category")
                         .WithMany("VideoRatings")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("App.Domain.Video", "Video")
                         .WithMany("VideoRatings")
