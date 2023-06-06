@@ -10,10 +10,10 @@
 @foreach (var queueItem in Model.QueueItems)
 {
     <div class="dashboard-item">
-        @string.Format(App.Resources.WebApp.Areas.Admin.Views.QueueItemsApproval.Index.EntityOnPlatform, Html.Translate(queueItem.EntityType), Html.Translate(queueItem.Platform))
-        @Html.DisplayNameFor(m => m.QueueItems[0].IdOnPlatform): @queueItem.IdOnPlatform
-        @Html.DisplayNameFor(m => m.QueueItems[0].AddedAt): @queueItem.AddedAt.ToSpan(Context)
-        @Html.DisplayNameFor(m => m.QueueItems[0].AddedBy): @queueItem.AddedBy.UserName
+        @string.Format(App.Resources.WebApp.Areas.Admin.Views.QueueItemsApproval.Index.EntityOnPlatform, Html.Translate(queueItem.EntityType), Html.Translate(queueItem.Platform))<br />
+        @Html.DisplayNameFor(m => m.QueueItems[0].IdOnPlatform): @queueItem.IdOnPlatform<br/>
+        @Html.DisplayNameFor(m => m.QueueItems[0].AddedAt): @queueItem.AddedAt.ToSpan(Context)<br/>
+        @Html.DisplayNameFor(m => m.QueueItems[0].AddedBy): @queueItem.AddedBy.UserName<br/>
         <form method="post" asp-action="DeleteQueueItem">
             <input type="hidden" name="id" value="@queueItem.Id"/>
             <input type="submit" class="btn btn-danger" value="@App.Resources.WebApp.Areas.Admin.Views.QueueItemsApproval.Index.DeleteSubmit"/>
