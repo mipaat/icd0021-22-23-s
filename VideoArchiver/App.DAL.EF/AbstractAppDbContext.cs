@@ -1,3 +1,4 @@
+using App.Common;
 using App.Common.Enums;
 using App.Domain;
 using App.Domain.Comparers;
@@ -69,6 +70,29 @@ public class AbstractAppDbContext : IdentityDbContext<User, Role, Guid, Identity
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        builder.Entity<PlaylistHistory>().Property(e => e.Title)
+            .HasConversion(e => e, e => e, new JsonSerializableValueComparer<LangString>());
+        builder.Entity<PlaylistHistory>().Property(e => e.Description)
+            .HasConversion(e => e, e => e, new JsonSerializableValueComparer<LangString>());
+        builder.Entity<Playlist>().Property(e => e.Title)
+            .HasConversion(e => e, e => e, new JsonSerializableValueComparer<LangString>());
+        builder.Entity<Playlist>().Property(e => e.Description)
+            .HasConversion(e => e, e => e, new JsonSerializableValueComparer<LangString>());
+        builder.Entity<Author>().Property(e => e.Bio)
+            .HasConversion(e => e, e => e, new JsonSerializableValueComparer<LangString>());
+        builder.Entity<AuthorHistory>().Property(e => e.Bio)
+            .HasConversion(e => e, e => e, new JsonSerializableValueComparer<LangString>());
+        builder.Entity<Category>().Property(e => e.Name)
+            .HasConversion(e => e, e => e, new JsonSerializableValueComparer<LangString>());
+        builder.Entity<Video>().Property(e => e.Title)
+            .HasConversion(e => e, e => e, new JsonSerializableValueComparer<LangString>());
+        builder.Entity<Video>().Property(e => e.Description)
+            .HasConversion(e => e, e => e, new JsonSerializableValueComparer<LangString>());
+        builder.Entity<VideoHistory>().Property(e => e.Title)
+            .HasConversion(e => e, e => e, new JsonSerializableValueComparer<LangString>());
+        builder.Entity<VideoHistory>().Property(e => e.Description)
+            .HasConversion(e => e, e => e, new JsonSerializableValueComparer<LangString>());
 
         builder.Entity<UserRole>()
             .HasOne(e => e.User)

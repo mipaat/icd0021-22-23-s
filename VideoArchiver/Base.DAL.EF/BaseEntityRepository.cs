@@ -137,7 +137,7 @@ public class BaseEntityRepository<TDomainEntity, TEntity, TKey, TDbContext, TUow
         var trackedEntity = GetTrackedEntity(entity.Id);
         if (trackedEntity != null)
         {
-            Entities.Update(mapTo(entity, trackedEntity));
+            mapTo(entity, trackedEntity);
         }
         else
         {
