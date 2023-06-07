@@ -5,6 +5,11 @@ namespace Tests.Helpers;
 
 public static class TestUsers
 {
+    public static readonly ClaimsPrincipal EmptyUser = new(new[]
+    {
+        new ClaimsIdentity()
+    });
+    
     public static readonly ClaimsPrincipal AdminUser = new(new[]
     {
         new ClaimsIdentity(new[]

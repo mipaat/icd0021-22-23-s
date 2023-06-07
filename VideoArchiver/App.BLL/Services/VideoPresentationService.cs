@@ -55,6 +55,7 @@ public class VideoPresentationService : BaseService<VideoPresentationService>, I
         {
             if (!presentationHandler.CanHandle(video)) continue;
             presentationHandler.Handle(video);
+            break;
         }
 
         return video;
